@@ -7,7 +7,9 @@ import router from 'umi/router';
 import GlobalHeader from '@/components/GlobalHeader';
 import TopNavHeader from '@/components/TopNavHeader';
 import styles from './Header.less';
+import Authorized from '@/utils/Authorized';
 
+// eslint-disable-next-line no-unused-vars
 const { Header } = Layout;
 
 class HeaderView extends PureComponent {
@@ -98,11 +100,13 @@ class HeaderView extends PureComponent {
           this.setState({
             visible: true,
           });
-        } else if (scrollTop > 300 && visible) {
+        }
+        if (scrollTop > 300 && visible) {
           this.setState({
             visible: false,
           });
-        } else if (scrollTop < 300 && !visible) {
+        }
+        if (scrollTop < 300 && !visible) {
           this.setState({
             visible: true,
           });
@@ -119,12 +123,14 @@ class HeaderView extends PureComponent {
     const { visible } = this.state;
     const isTop = layout === 'topmenu';
     const width = this.getHeadWidth();
+    // eslint-disable-next-line no-unused-vars
     const HeaderDom = visible ? (
-      <Header style={{ padding: 0, width }} className={fixedHeader ? styles.fixedHeader : ''}>
+      <div style={{ padding: 0, width }} className={fixedHeader ? styles.fixedHeader : ''}>
         {isTop && !isMobile ? (
           <TopNavHeader
             theme={navTheme}
             mode="horizontal"
+            Authorized={Authorized}
             onCollapse={handleMenuCollapse}
             onNoticeClear={this.handleNoticeClear}
             onMenuClick={this.handleMenuClick}
@@ -140,11 +146,17 @@ class HeaderView extends PureComponent {
             {...this.props}
           />
         )}
-      </Header>
+      </div>
     ) : null;
     return (
       <Animate component="" transitionName="fade">
-        {HeaderDom}
+        <GlobalHeader
+          onCollapse={handleMenuCollapse}
+          onNoticeClear={this.handleNoticeClear}
+          onMenuClick={this.handleMenuClick}
+          onNoticeVisibleChange={this.handleNoticeVisibleChange}
+          {...this.props}
+        />
       </Animate>
     );
   }
@@ -153,9 +165,7 @@ class HeaderView extends PureComponent {
 export default connect(({ user, global, setting, loading }) => ({
   currentUser: user.currentUser,
   collapsed: global.collapsed,
-  fetchingMoreNotices: loading.effects['global/fetchMoreNotices'],
   fetchingNotices: loading.effects['global/fetchNotices'],
-  loadedAllNotices: global.loadedAllNotices,
   notices: global.notices,
   setting,
 }))(HeaderView);

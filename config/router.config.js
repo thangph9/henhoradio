@@ -12,16 +12,20 @@ export default [
   },
   // front-end
   {
-    path: '/',
+    path: '/home',
     component: '../layouts/HomeLayout',
-    Routes: ['src/pages/Authorized'],
-    authority: ['admin', 'user'],
-    routes: [
-      { path: '/', redirect: '/search' },
-      { path: '/search', component: './Home/HomePage' },
-      {
-        component: '404',
-      },
-    ],
+    routes: [{ path: '/home', component: './HomePage/NewFeed' }],
+  },
+  {
+    path: '/profile',
+    component: '../layouts/HomeLayout',
+    routes: [{ path: '/profile', component: './HomePage/ProfileUser' }],
+  },
+  {
+    path: '/',
+    routes: [{ path: '/', redirect: '/login' }, { path: '/login', component: './Login' }],
+  },
+  {
+    component: '404',
   },
 ];

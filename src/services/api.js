@@ -116,7 +116,12 @@ export async function fakeRegister(params) {
     body: params,
   });
 }
-
+export async function loginAccount(params) {
+  return request('/api/authentication/login', {
+    method: 'POST',
+    body: params,
+  });
+}
 export async function queryNotices(params = {}) {
   return request(`/api/notices?${stringify(params)}`);
 }
