@@ -14,7 +14,9 @@ export default function Result({
 }) {
   const iconMap = {
     error: <Icon className={styles.error} type="close-circle" theme="filled" />,
-    success: <Icon className={styles.success} type="check-circle" theme="filled" />,
+    success: (
+      <Icon className={`${styles.success} icon-success`} type="check-circle" theme="filled" />
+    ),
   };
   const clsString = classNames(styles.result, className);
   return (

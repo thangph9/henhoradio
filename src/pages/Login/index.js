@@ -1,3 +1,6 @@
+/* eslint-disable react/sort-comp */
+/* eslint-disable prefer-destructuring */
+/* eslint-disable react/no-did-update-set-state */
 /* eslint-disable arrow-body-style */
 /* eslint-disable react/no-array-index-key */
 /* eslint-disable class-methods-use-this */
@@ -12,7 +15,8 @@
 /* eslint-disable prefer-template */
 import React, { PureComponent } from 'react';
 import { connect } from 'dva';
-import { Form, Input, Icon, Button, Popover, Progress, Select } from 'antd';
+import { Redirect } from 'react-router-dom';
+import { Form, Input, Icon, Button, Popover, Progress, Select, message } from 'antd';
 // import {Link} from 'react-router-dom'
 import styles from './styles.less';
 
@@ -27,14 +31,8 @@ class FormLogin extends PureComponent {
   handleSubmit = e => {
     e.preventDefault();
     const { form } = this.props;
-    const email = form.getFieldValue('username');
-    const filter = /^([a-zA-Z0-9_\.\-])+\@(([a-zA-Z0-9\-])+\.)+([a-zA-Z0-9]{2,4})+$/;
-    if (!filter.test(email)) {
-      return;
-    }
     form.validateFields((err, values) => {
       if (!err) {
-        console.log(values);
         this.props.dispatch({
           type: 'authentication/login',
           payload: values,
@@ -46,19 +44,6 @@ class FormLogin extends PureComponent {
   handleChange = value => {
     this.setState({ value });
   };
-
-  handleBlurEmail(e) {
-    const email = e.target.value;
-    const filter = /^([a-zA-Z0-9_\.\-])+\@(([a-zA-Z0-9\-])+\.)+([a-zA-Z0-9]{2,4})+$/;
-    if (!filter.test(email)) {
-      this.props.form.setFields({
-        username: {
-          value: email,
-          errors: [new Error('Sai định dạng Email! Vui lòng kiểm tra lại')],
-        },
-      });
-    }
-  }
 
   render() {
     // eslint-disable-next-line react/destructuring-assignment
@@ -393,7 +378,10 @@ class FormRegister extends PureComponent {
       // if (this.state.value.length > 0) {
       if (values.password === values.repassword) {
         if (!err && day && month && year && gender) {
-          console.log(values);
+          this.props.dispatch({
+            type: 'authentication/register',
+            payload: values,
+          });
         }
       }
       // }
@@ -463,13 +451,6 @@ class FormRegister extends PureComponent {
       });
     }
   };
-
-  handleChangeOTP() {
-    this.setState({
-      help_otp: '',
-      stt_otp: '',
-    });
-  }
 
   validRepassword() {
     const { form } = this.props;
@@ -784,22 +765,63 @@ class FormRegister extends PureComponent {
 }
 
 // eslint-disable-next-line react/no-multi-comp
-@connect(({ loading }) => ({
+@connect(({ loading, authentication }) => ({
   submitting: loading.effects['form/submitRegularForm'],
+  authentication,
 }))
 class Login extends PureComponent {
   state = {
-    statusPage: true,
+    statusPage: false,
   };
 
+  componentDidMount() {
+    if (this.props.location.query.ref === '0') {
+      this.setState({
+        statusPage: false,
+      });
+    }
+    if (this.props.location.query.ref === '1') {
+      this.setState({
+        statusPage: true,
+      });
+    }
+  }
+
   handleClickToggleStatus() {
-    this.setState({
-      statusPage: !this.state.statusPage,
-    });
+    this.setState(
+      {
+        statusPage: !this.state.statusPage,
+      },
+      () => {
+        const pathname = this.props.location.pathname;
+        if (this.state.statusPage === false) {
+          this.props.history.push({ pathname, search: '?ref=0' });
+        } else this.props.history.push({ pathname, search: '?ref=1' });
+      }
+    );
+  }
+
+  componentWillReceiveProps(nextProps) {
+    if (this.props.authentication.login !== nextProps.authentication.login) {
+      if (
+        nextProps.authentication.login.status === 'error' &&
+        nextProps.authentication.login.timeline !== this.props.authentication.login.timeline
+      ) {
+        message.warning(nextProps.authentication.login.message);
+      }
+    }
+    if (this.props.authentication.register !== nextProps.authentication.register) {
+      if (nextProps.authentication.register.status === 'ok') {
+        console.log(nextProps);
+        nextProps.history.push({ pathname: '/registerresult' });
+      }
+    }
   }
 
   render() {
-    console.log(this.props);
+    if (localStorage['antd-pro-authority'] && localStorage.token) {
+      return <Redirect to="/home" />;
+    }
     return (
       <div id="wrapper" style={{ position: 'relative' }} className={styles['homepageRegister']}>
         <div
@@ -882,7 +904,7 @@ class Login extends PureComponent {
                 >
                   <span>
                     {this.state.statusPage === false
-                      ? 'Đăng nhập bằng tài khoản Email'
+                      ? 'Đăng nhập bằng số điện thoại'
                       : 'Đăng ký tài khoản mới'}
                   </span>
                 </div>
@@ -906,11 +928,13 @@ class Login extends PureComponent {
                 style={{ fontSize: '30px', marginRight: '10px', color: '#fff' }}
                 type="facebook"
                 theme="filled"
+                className="icon-login-page"
               />
               <Icon
                 style={{ fontSize: '30px', marginRight: '10px', color: '#fff' }}
                 type="instagram"
                 theme="filled"
+                className="icon-login-page"
               />
             </div>
             <div className={styles['homepageLinks--top__right']}>
@@ -973,7 +997,7 @@ class Login extends PureComponent {
                 >
                   <span>
                     {this.state.statusPage === false
-                      ? 'Đăng nhập bằng tài khoản Email'
+                      ? 'Đăng nhập bằng số điện thoại'
                       : 'Đăng ký tài khoản mới'}
                   </span>
                 </div>

@@ -122,6 +122,12 @@ export async function loginAccount(params) {
     body: params,
   });
 }
+export async function RegisterAccount(params) {
+  return request('/api/authentication/register', {
+    method: 'POST',
+    body: params,
+  });
+}
 export async function queryNotices(params = {}) {
   return request(`/api/notices?${stringify(params)}`);
 }

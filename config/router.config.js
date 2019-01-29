@@ -5,15 +5,21 @@ export default [
     component: '../layouts/BlankLayout',
     routes: [{ path: '/login', component: './Login' }],
   },
+  {
+    path: '/test',
+    component: '../layouts/BlankLayout',
+    routes: [{ path: '/test', component: './User/RegisterResult.js' }],
+  },
   // front-end
   {
     path: '/',
     component: '../layouts/HomeLayout',
-    Routes: ['src/pages/Authorized'],
-    authority: ['member'],
+    // Routes: ['src/pages/Authorized'],
+    // authority: ['member'],
     routes: [
       { path: '/home', component: './HomePage/NewFeed' },
       { path: '/profile', component: './HomePage/ProfileUser' },
+      { path: '/registerresult', component: './ResgisterResult' },
       {
         component: '404',
       },
