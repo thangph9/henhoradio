@@ -15,6 +15,7 @@ class FormLogin extends PureComponent {
     e.preventDefault();
     const { form, dispatch } = this.props;
     form.validateFields((err, values) => {
+      console.log(err, values);
       if (!err) {
         dispatch({
           type: 'authentication/login',

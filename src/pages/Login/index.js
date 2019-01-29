@@ -40,6 +40,9 @@ class Login extends PureComponent {
       ) {
         message.warning(nextProps.authentication.login.message);
       }
+      if (nextProps.authentication.login.status === 'ok') {
+        nextProps.history.push({ pathname: '/home' });
+      }
     }
     if (authentication.register !== nextProps.authentication.register) {
       if (nextProps.authentication.register.status === 'ok') {

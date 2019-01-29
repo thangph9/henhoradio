@@ -551,7 +551,7 @@ class FormRegister extends PureComponent {
           {getFieldDecorator('year', {
             onChange: this.handleChangeYear,
           })(
-            <Select style={{ width: '30%', float: 'right' }} placeholder="Năm">
+            <Select style={{ width: '30%', marginLeft: '16px' }} placeholder="Năm">
               {years.map(v => (
                 <Option key={v} value={v}>
                   {v}
