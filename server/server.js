@@ -1,7 +1,7 @@
 const express = require('express');
 // const https = require('https');
 // const http = require('http');
-const bodyParser = require('body-parser'); // eslint-disable-line
+const bodyParser = require('body-parser');
 const path = require('path');
 
 const api = require('./api');
