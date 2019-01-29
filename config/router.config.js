@@ -1,22 +1,17 @@
 export default [
   // user
   {
-    path: '/user',
-    component: '../layouts/UserLayout',
-    routes: [
-      { path: '/user', redirect: '/user/login' },
-      { path: '/user/login', component: './User/Login' },
-      { path: '/user/register', component: './User/Register' },
-      { path: '/user/register-result', component: './User/RegisterResult' },
-    ],
+    path: '/login',
+    component: '../layouts/BlankLayout',
+    routes: [{ path: '/login', component: './Login' }],
   },
   // front-end
   {
     path: '/',
     component: '../layouts/HomeLayout',
+    Routes: ['src/pages/Authorized'],
+    authority: ['member'],
     routes: [
-      { path: '/', redirect: '/login' },
-      { path: '/login', component: './Login' },
       { path: '/home', component: './HomePage/NewFeed' },
       { path: '/profile', component: './HomePage/ProfileUser' },
       {
