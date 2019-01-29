@@ -12,18 +12,17 @@ export default [
   },
   // front-end
   {
-    path: '/home',
-    component: '../layouts/HomeLayout',
-    routes: [{ path: '/home', component: './HomePage/NewFeed' }],
-  },
-  {
-    path: '/profile',
-    component: '../layouts/HomeLayout',
-    routes: [{ path: '/profile', component: './HomePage/ProfileUser' }],
-  },
-  {
     path: '/',
-    routes: [{ path: '/', redirect: '/login' }, { path: '/login', component: './Login' }],
+    component: '../layouts/HomeLayout',
+    routes: [
+      { path: '/', redirect: '/login' },
+      { path: '/login', component: './Login' },
+      { path: '/home', component: './HomePage/NewFeed' },
+      { path: '/profile', component: './HomePage/ProfileUser' },
+      {
+        component: '404',
+      },
+    ],
   },
   {
     component: '404',
