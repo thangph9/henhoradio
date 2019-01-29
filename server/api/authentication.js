@@ -1,6 +1,6 @@
-const async = require('async'); // eslint-disable-line
+const async = require('async');
 const fs = require('fs');
-const express = require('express'); // eslint-disable-line
+const express = require('express');
 const driver = require('cassandra-driver');
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
