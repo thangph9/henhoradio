@@ -227,7 +227,10 @@ class Login extends PureComponent {
                   />
                 </div>
 
-                <h1 style={{ color: '#fff' }} className={(styles['h1--step1'], styles.fw500)}>
+                <h1
+                  style={{ color: '#fff' }}
+                  className={styles['h1--step1'].concat(' ', styles.fw500)}
+                >
                   Chat với bạn <strong>mới</strong> khắp thế giới.
                 </h1>
                 <p className={styles['mb--slack']}>
@@ -240,6 +243,7 @@ class Login extends PureComponent {
               <div className={styles['tw3-pane__content']}>
                 <div
                   className={styles.divider.concat(
+                    ' ',
                     styles.hor,
                     ' ',
                     styles.full,
