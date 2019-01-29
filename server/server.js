@@ -1,4 +1,4 @@
-const express = require('express'); // eslint-disable-line
+const express = require('express');
 // const https = require('https');
 // const http = require('http');
 const bodyParser = require('body-parser'); // eslint-disable-line
