@@ -77,7 +77,7 @@ class FormLogin extends PureComponent {
                 message: 'Nhập sai định dạng hoặc chưa đủ chữ số！',
               },
             ],
-          })(<Input size="large" />)}
+          })(<Input />)}
         </Form.Item>
         <Form.Item label="Mật khẩu">
           {getFieldDecorator('password', {
@@ -87,7 +87,7 @@ class FormLogin extends PureComponent {
                 message: 'Vui lòng nhập mật khẩu!',
               },
             ],
-          })(<Input type="password" size="large" />)}
+          })(<Input type="password" />)}
         </Form.Item>
         <Form.Item>
           <Button
@@ -613,7 +613,7 @@ class FormRegister extends PureComponent {
                 message: 'Nhập tên bạn',
               },
             ],
-          })(<Input size="large" placeholder="Ví dụ bạn là Trí" />)}
+          })(<Input placeholder="Ví dụ bạn là Trí" />)}
         </Form.Item>
         <Form.Item
           label="Giới tính"
@@ -623,7 +623,7 @@ class FormRegister extends PureComponent {
             required: true,
             message: 'Nhập giới tính',
           })(
-            <Select size="large" placeholder="Bạn là..." onChange={e => this.handleChangeGender(e)}>
+            <Select placeholder="Bạn là..." onChange={e => this.handleChangeGender(e)}>
               <Option value="men">Nam</Option>
               <Option value="woman">Nữ</Option>
             </Select>
@@ -633,7 +633,6 @@ class FormRegister extends PureComponent {
           {getFieldDecorator('day', {})(
             <Select
               style={{ width: '30%' }}
-              size="large"
               placeholder="Ngày"
               onChange={e => this.handleChangeDay(e)}
             >
@@ -657,7 +656,6 @@ class FormRegister extends PureComponent {
           {getFieldDecorator('month', {})(
             <Select
               style={{ width: '30%', marginLeft: '16px' }}
-              size="large"
               placeholder="Tháng"
               onChange={e => this.handleChangeMonth(e)}
             >
@@ -673,7 +671,6 @@ class FormRegister extends PureComponent {
           {getFieldDecorator('year', {})(
             <Select
               style={{ width: '30%', float: 'right' }}
-              size="large"
               placeholder="Năm"
               onChange={e => this.handleChangeYear(e)}
             >
@@ -698,14 +695,14 @@ class FormRegister extends PureComponent {
                 message: 'Yêu cầu nhập địa chỉ',
               },
             ],
-          })(<Input size="large" placeholder="Ví dụ Hà Nội" />)}
+          })(<Input placeholder="Ví dụ Hà Nội" />)}
         </Form.Item>
         <Form.Item
           label="Bạn ở đây để"
           style={{ width: '45%', display: 'inline-block', float: 'right', marginBottom: '0px' }}
         >
           {getFieldDecorator('intent', {})(
-            <Select size="large" placeholder="Chọn..." onChange={e => this.handleChangeIntent(e)}>
+            <Select placeholder="Chọn..." onChange={e => this.handleChangeIntent(e)}>
               <Option value="chat">Chat</Option>
               <Option value="pal">Kết bạn</Option>
               <Option value="dating">Hẹn hò</Option>
@@ -724,7 +721,7 @@ class FormRegister extends PureComponent {
                 message: 'Nhập sai định dạng hoặc chưa đủ chữ số！',
               },
             ],
-          })(<Input size="large" placeholder="Số điện thoại là tài khoản đăng nhập" />)}
+          })(<Input placeholder="Số điện thoại là tài khoản đăng nhập" />)}
         </Form.Item>
         <Form.Item help={help} label="Mật khẩu" style={{ marginBottom: '0px' }}>
           <Popover
@@ -745,7 +742,7 @@ class FormRegister extends PureComponent {
                   validator: this.checkPassword,
                 },
               ],
-            })(<Input size="large" type="password" placeholder="Tối thiểu 6 ký tự" />)}
+            })(<Input type="password" placeholder="Tối thiểu 6 ký tự" />)}
           </Popover>
         </Form.Item>
         <Form.Item label="Nhập lại">
@@ -759,7 +756,6 @@ class FormRegister extends PureComponent {
           })(
             <Input
               onBlur={e => this.validRepassword(e)}
-              size="large"
               type="password"
               placeholder="Nhập lại mật khẩu"
             />
