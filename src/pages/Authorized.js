@@ -9,14 +9,7 @@ const Authorized = RenderAuthorized(Authority);
 export default ({ children }) => (
   <Authorized
     authority={children.props.route.authority}
-    noMatch={
-      <Redirect
-        to={{
-          pathname: 'login',
-          search: '?ref=0',
-        }}
-      />
-    }
+    noMatch={<Redirect to={`/login`.concat('?ref=0')} />}
   >
     {children}
   </Authorized>
