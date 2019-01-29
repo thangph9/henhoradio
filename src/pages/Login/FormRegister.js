@@ -356,7 +356,7 @@ class FormRegister extends PureComponent {
     console.log(value);
   };
 
-  handleChangeMonth(value) {
+  handleChangeMonth = value => {
     const { form } = this.props;
     const year = form.getFieldValue('year');
     if (year % 4 === 0 && value === 2) {
@@ -420,9 +420,9 @@ class FormRegister extends PureComponent {
         }
       );
     }
-  }
+  };
 
-  handleChangeYear(value) {
+  handleChangeYear = value => {
     const { form } = this.props;
     const month = form.getFieldValue('month');
     if (value % 4 === 0 && month === 2) {
@@ -456,7 +456,7 @@ class FormRegister extends PureComponent {
         }
       );
     }
-  }
+  };
 
   validRepassword() {
     const { form } = this.props;

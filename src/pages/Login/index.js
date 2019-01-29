@@ -60,8 +60,8 @@ class Login extends PureComponent {
       },
       () => {
         if (statusPage === false) {
-          history.push({ pathname, search: '?ref=0' });
-        } else history.push({ pathname, search: '?ref=1' });
+          history.push({ pathname, search: '?ref=1' });
+        } else history.push({ pathname, search: '?ref=0' });
       }
     );
   }
