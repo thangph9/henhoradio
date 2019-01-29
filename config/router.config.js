@@ -14,9 +14,10 @@ export default [
   {
     path: '/',
     component: '../layouts/HomeLayout',
-    // Routes: ['src/pages/Authorized'],
-    // authority: ['member'],
+    Routes: ['src/pages/Authorized'],
+    authority: ['member'],
     routes: [
+      { path: '/', redirect: '/home' },
       { path: '/home', component: './HomePage/NewFeed' },
       { path: '/profile', component: './HomePage/ProfileUser' },
       { path: '/registerresult', component: './ResgisterResult' },
