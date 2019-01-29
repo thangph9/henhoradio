@@ -9,7 +9,8 @@ _roadhog-api-doc
 # production
 /dist
 /.vscode
-
+/mock
+/server
 # misc
 .DS_Store
 npm-debug.log*
