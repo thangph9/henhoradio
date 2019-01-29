@@ -77,10 +77,18 @@ class Login extends PureComponent {
     return (
       <div id="wrapper" style={{ position: 'relative' }} className={styles.homepageRegister}>
         <div
-          className={(styles['tw3-homepage--abstract'], styles['tw3-homepage--abstract--mobile'])}
+          className={styles['tw3-homepage--abstract'].concat(
+            ' ',
+            styles['tw3-homepage--abstract--mobile']
+          )}
         >
-          <div className={(styles.homepageContainer__content__form, styles.registerContainer)}>
-            <div className={(styles['tw3-pane'], styles['tw3-pane--left'])}>
+          <div
+            className={styles.homepageContainer__content__form.concat(
+              ' ',
+              styles.registerContainer
+            )}
+          >
+            <div className={styles['tw3-pane'].concat(' ', styles['tw3-pane--left'])}>
               <div className={styles['tw3-pane__content']}>
                 <div className={styles.logo}>
                   <img
@@ -90,22 +98,31 @@ class Login extends PureComponent {
                   />
                 </div>
 
-                <h1 style={{ color: '#fff' }} className={(styles['h1--step1'], styles.fw500)}>
+                <h1
+                  style={{ color: '#fff' }}
+                  className={styles['h1--step1'].concat(' ', styles.fw500)}
+                >
                   Chat với bạn <strong>mới</strong> khắp thế giới.
                 </h1>
                 <div
                   style={{ background: 'none' }}
-                  className={
-                    (styles['tw3-homepage--abstract--mobile__tabs'], styles['tw3-tabsHolder'])
-                  }
+                  className={styles['tw3-homepage--abstract--mobile__tabs'].concat(
+                    ' ',
+                    styles['tw3-tabsHolder']
+                  )}
                 >
                   <span
                     style={{ cursor: 'pointer' }}
                     onClick={() => this.handleClickToggleStatus()}
                     className={
                       statusPage === true
-                        ? (styles['tw3-tab'], styles.jsHomepageSwitch, styles.selected)
-                        : (styles['tw3-tab'], styles.jsHomepageSwitch)
+                        ? styles['tw3-tab'].concat(
+                            ' ',
+                            styles.jsHomepageSwitch,
+                            ' ',
+                            styles.selected
+                          )
+                        : styles['tw3-tab'].concat(' ', styles.jsHomepageSwitch)
                     }
                   >
                     ĐĂNG KÝ
@@ -115,8 +132,13 @@ class Login extends PureComponent {
                     onClick={() => this.handleClickToggleStatus()}
                     className={
                       statusPage === false
-                        ? (styles['tw3-tab'], styles.jsHomepageSwitch, styles.selected)
-                        : (styles['tw3-tab'], styles.jsHomepageSwitch)
+                        ? styles['tw3-tab'].concat(
+                            ' ',
+                            styles.jsHomepageSwitch,
+                            ' ',
+                            styles.selected
+                          )
+                        : styles['tw3-tab'].concat(' ', styles.jsHomepageSwitch)
                     }
                   >
                     ĐĂNG NHẬP
@@ -124,9 +146,18 @@ class Login extends PureComponent {
                 </div>
               </div>
             </div>
-            <div className={(styles['tw3-pane'], styles['tw3-pane--right'])}>
+            <div className={styles['tw3-pane'].concat(' ', styles['tw3-pane--right'])}>
               <div className={styles['tw3-pane__content']}>
-                <div className={(styles.divider, styles.hor, styles.full, styles['mb--default'])}>
+                <div
+                  className={styles.divider.concat(
+                    ' ',
+                    styles.hor,
+                    ' ',
+                    styles.full,
+                    ' ',
+                    styles['mb--default']
+                  )}
+                >
                   <span>
                     {statusPage === false
                       ? 'Đăng nhập bằng số điện thoại'
@@ -143,9 +174,12 @@ class Login extends PureComponent {
           </div>
         </div>
         <div
-          className={(styles['tw3-homepage--abstract'], styles['tw3-homepage--abstract--desktop'])}
+          className={styles['tw3-homepage--abstract'].concat(
+            ' ',
+            styles['tw3-homepage--abstract--desktop']
+          )}
         >
-          <div className={(styles.homepageLinks, styles['homepageLinks--top'])}>
+          <div className={styles.homepageLinks.concat(' ', styles['homepageLinks--top'])}>
             <div className={styles['homepageLinks--top__left']}>
               <Icon
                 style={{ fontSize: '30px', marginRight: '10px', color: '#fff' }}
@@ -163,20 +197,27 @@ class Login extends PureComponent {
             <div className={styles['homepageLinks--top__right']}>
               <span
                 onClick={() => this.handleClickToggleStatus()}
-                className={
-                  (styles['tw3-button'],
+                className={styles['tw3-button'].concat(
+                  ' ',
                   styles['tw3-button--orange'],
+                  ' ',
                   styles['tw3-button--rounded'],
-                  styles.loginButton)
-                }
+                  ' ',
+                  styles.loginButton
+                )}
                 data-page="login"
               >
                 {statusPage === false ? 'Đăng ký' : 'Đăng nhập'}
               </span>
             </div>
           </div>
-          <div className={(styles.homepageContainer__content__form, styles.registerContainer)}>
-            <div className={(styles['tw3-pane'], styles['tw3-pane--left'])}>
+          <div
+            className={styles.homepageContainer__content__form.concat(
+              ' ',
+              styles.registerContainer
+            )}
+          >
+            <div className={styles['tw3-pane'].concat(' ', styles['tw3-pane--left'])}>
               <div className={styles['tw3-pane__content']}>
                 <div className={styles.logo}>
                   <img
@@ -195,9 +236,17 @@ class Login extends PureComponent {
                 </p>
               </div>
             </div>
-            <div className={(styles['tw3-pane'], styles['tw3-pane--right'])}>
+            <div className={styles['tw3-pane'].concat(' ', styles['tw3-pane--right'])}>
               <div className={styles['tw3-pane__content']}>
-                <div className={(styles.divider, styles.hor, styles.full, styles['mb--default'])}>
+                <div
+                  className={styles.divider.concat(
+                    styles.hor,
+                    ' ',
+                    styles.full,
+                    ' ',
+                    styles['mb--default']
+                  )}
+                >
                   <span>
                     {statusPage === false
                       ? 'Đăng nhập bằng số điện thoại'
@@ -215,7 +264,7 @@ class Login extends PureComponent {
         </div>
         <div
           style={{ background: '#fff', height: 0 }}
-          className={(styles.homepageLinks, styles['homepageLinks--bottom'])}
+          className={styles.homepageLinks.concat(' ', styles['homepageLinks--bottom'])}
         >
           <div className={styles['homepageLinks--bottom__links']}>
             <ul>
