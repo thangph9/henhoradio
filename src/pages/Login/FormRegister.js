@@ -517,13 +517,9 @@ class FormRegister extends PureComponent {
           {getFieldDecorator('gender', {
             required: true,
             message: 'Nhập giới tính',
+            onChange: this.handleChangeGender,
           })(
-            <Select
-              placeholder="Bạn là..."
-              onChange={e => {
-                this.handleChangeGender(e);
-              }}
-            >
+            <Select placeholder="Bạn là...">
               <Option value="men">Nam</Option>
               <Option value="woman">Nữ</Option>
             </Select>
