@@ -271,7 +271,14 @@ class FormRegister extends PureComponent {
       });
     }
     form.validateFields((err, values) => {
-      // if (this.state.value.length > 0) {
+      if (values.password !== values.repassword) {
+        form.setFields({
+          repassword: {
+            value: values.repassword,
+            errors: [new Error('Nhập lại mật khẩu sai vui lòng kiểm tra lại!')],
+          },
+        });
+      }
       if (values.password === values.repassword) {
         if (!err && day && month && year && gender) {
           dispatch({
@@ -280,7 +287,6 @@ class FormRegister extends PureComponent {
           });
         }
       }
-      // }
     });
   };
 
@@ -346,10 +352,22 @@ class FormRegister extends PureComponent {
 
   handleChangeGender = value => {
     console.log(value);
+    // eslint-disable-next-line react/destructuring-assignment
+    this.props.form.setFields({
+      gender: {
+        errors: '',
+      },
+    });
   };
 
   handleChangeDay = value => {
     console.log(value);
+    // eslint-disable-next-line react/destructuring-assignment
+    this.props.form.setFields({
+      day: {
+        errors: '',
+      },
+    });
   };
 
   handleChangeIntent = value => {
@@ -529,14 +547,14 @@ class FormRegister extends PureComponent {
           {getFieldDecorator('day', {
             onChange: this.handleChangeDay,
           })(
-            <Select style={{ width: '30%' }} placeholder="Ngày">
+            <Select style={{}} placeholder="Ngày">
               {monthSelected.length > 0 ? A : B}
             </Select>
           )}
           {getFieldDecorator('month', {
             onChange: this.handleChangeMonth,
           })(
-            <Select style={{ width: '30%', marginLeft: '16px' }} placeholder="Tháng">
+            <Select placeholder="Tháng">
               {months.map(v => (
                 <Option key={v} value={v}>
                   {v}
@@ -547,7 +565,7 @@ class FormRegister extends PureComponent {
           {getFieldDecorator('year', {
             onChange: this.handleChangeYear,
           })(
-            <Select style={{ width: '30%', marginLeft: '16px' }} placeholder="Năm">
+            <Select placeholder="Năm">
               {years.map(v => (
                 <Option key={v} value={v}>
                   {v}
