@@ -324,7 +324,7 @@
 }
 .header__nav-item___MQLXP .header__nav-link___3W4sc {
   display: inline-block;
-  font-size: 16px;
+  font-size: 12px;
   line-height: 1rem;
   padding-top: 16px;
   padding-bottom: 0;
@@ -505,7 +505,7 @@
 }
 .header__navbar-right___2_zf5 {
   float: right;
-  display: block;
+  display: inherit;
 }
 .header__mobile-nav-cat___1wJ9O {
   margin: auto;
@@ -775,7 +775,7 @@
   }
   .header__navbar-right___2_zf5 {
     position: absolute;
-    right: 0.1px !important;
+    right: 150px !important;
   }
 }
 @media (min-width: 992px) {

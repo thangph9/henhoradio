@@ -1,7 +1,7 @@
 import React, { PureComponent } from 'react';
 import { Link } from 'react-router-dom';
 import Debounce from 'lodash-decorators/debounce';
-import { Icon } from 'antd';
+import { Icon, Avatar, Button } from 'antd';
 import styles from './styles.less';
 
 // eslint-disable-next-line no-undef
@@ -56,12 +56,12 @@ class GlobalHeader extends PureComponent {
               className={`${styles['hidden-md-up']} ${styles['header__my-navbar-toggler___2PiaS']}`}
             >
               <button className={`${styles['header__btn-icon___17D-i']}`} type="button">
-                <i onClick={() => this.hanldeInfomation()} className={`${styles['ic-ic-user']}`} />
+                <Icon style={{ display: 'block', fontSize: '20px' }} type="user" />
               </button>
             </div>
             <Link to={`/home`} className={`${styles['header__navbar-brand___SzzgD']}`}>
               <img
-                style={{ position: 'relative', top: '6px', width: '82px', height: '23px' }}
+                style={{ position: 'relative', width: '82px', height: '23px' }}
                 src="https://twoo-a.akamaihd.net/static/7156520574362430695506/images/logos/logo-twoo-flat@2x.png"
               />
             </Link>
@@ -87,7 +87,10 @@ class GlobalHeader extends PureComponent {
                     to={`/Amazon`}
                     className={`${styles['header__nav-link___3W4sc']}`}
                   >
-                    <Icon style={{ display: 'block', fontSize: '25px' }} type="like" />
+                    <Icon
+                      style={{ display: 'block', fontSize: '20px', marginBottom: '2px' }}
+                      type="like"
+                    />
                     Khám phá
                   </Link>
                 </li>
@@ -97,7 +100,10 @@ class GlobalHeader extends PureComponent {
                     to={`/ebay`}
                     className={`${styles['header__nav-link___3W4sc']}`}
                   >
-                    <Icon style={{ display: 'block', fontSize: '25px' }} type="search" />
+                    <Icon
+                      style={{ display: 'block', fontSize: '20px', marginBottom: '2px' }}
+                      type="search"
+                    />
                     Tìm kiếm
                   </Link>
                 </li>
@@ -107,7 +113,10 @@ class GlobalHeader extends PureComponent {
                     to={`/adidas`}
                     className={`${styles['header__nav-link___3W4sc']}`}
                   >
-                    <Icon style={{ display: 'block', fontSize: '25px' }} type="message" />
+                    <Icon
+                      style={{ display: 'block', fontSize: '20px', marginBottom: '2px' }}
+                      type="message"
+                    />
                     Chat
                   </Link>
                 </li>
@@ -117,7 +126,10 @@ class GlobalHeader extends PureComponent {
                     to={`/nike`}
                     className={`${styles['header__nav-link___3W4sc']}`}
                   >
-                    <Icon style={{ display: 'block', fontSize: '25px' }} type="heart" />
+                    <Icon
+                      style={{ display: 'block', fontSize: '20px', marginBottom: '2px' }}
+                      type="heart"
+                    />
                     Người bạn thích
                   </Link>
                 </li>
@@ -127,7 +139,10 @@ class GlobalHeader extends PureComponent {
                     to={`/nike`}
                     className={`${styles['header__nav-link___3W4sc']}`}
                   >
-                    <Icon style={{ display: 'block', fontSize: '25px' }} type="eye" />
+                    <Icon
+                      style={{ display: 'block', fontSize: '20px', marginBottom: '2px' }}
+                      type="eye"
+                    />
                     Khách thăm
                   </Link>
                 </li>
@@ -137,12 +152,16 @@ class GlobalHeader extends PureComponent {
                     to={`/nike`}
                     className={`${styles['header__nav-link___3W4sc']}`}
                   >
-                    <Icon style={{ display: 'block', fontSize: '25px' }} type="team" />
+                    <Icon
+                      style={{ display: 'block', fontSize: '20px', marginBottom: '2px' }}
+                      type="team"
+                    />
                     Bạn bè
                   </Link>
                 </li>
               </ul>
               <ul
+                style={{ top: '-5px' }}
                 className={`${styles['header__navbar-nav___9cfBy']} ${
                   styles['header__navbar-right___2_zf5']
                 }`}
@@ -150,7 +169,7 @@ class GlobalHeader extends PureComponent {
                 {this.state.open ? (
                   <li className={`${styles['header__nav-item___MQLXP']}`}>
                     <div className={`${styles['auth-buttons__auth___33bfZ']}`}>
-                      {localStorage.account ? (
+                      {localStorage.account && (
                         <span
                           style={{ cursor: 'pointer' }}
                           onClick={() => this.handleOpenAccount('open')}
@@ -160,29 +179,9 @@ class GlobalHeader extends PureComponent {
                             ' ' +
                             styles['language-dropdown__dropdown-toggle___3DM4H']}`}
                         >
-                          <Icon style={{ display: 'block', fontSize: '25px' }} type="user" />
+                          <Icon style={{ display: 'block', fontSize: '20px' }} type="user" />
                           Tài khoản
                         </span>
-                      ) : (
-                        <Link
-                          to={'/login'}
-                          className={`${styles['auth-buttons__nav-link___1DCMU']} ${
-                            styles['auth-buttons__btn-sign-in___1nV-O']
-                          }`}
-                        >
-                          Đăng nhập
-                        </Link>
-                      )}
-                      {!localStorage.account && (
-                        <Link
-                          to={'/register'}
-                          className={`${styles['auth-buttons__nav-link___1DCMU']} ${
-                            styles['auth-buttons__btn-register___3sIO1']
-                          }`}
-                          href="/auth/register"
-                        >
-                          Tạo tài khoản
-                        </Link>
                       )}
                     </div>
                     <div
@@ -260,7 +259,7 @@ class GlobalHeader extends PureComponent {
                 ) : (
                   <li className={`${styles['header__nav-item___MQLXP']}`}>
                     <div className={`${styles['auth-buttons__auth___33bfZ']}`}>
-                      {localStorage.account ? (
+                      {localStorage.account && (
                         <span
                           style={{ cursor: 'pointer', paddingTop: '10px' }}
                           onClick={() => this.handleOpenAccount('open')}
@@ -271,32 +270,14 @@ class GlobalHeader extends PureComponent {
                         >
                           <Icon style={{ display: 'block', fontSize: '28px' }} type="user" />
                         </span>
-                      ) : (
-                        <Link
-                          to={'/login'}
-                          className={`${styles['auth-buttons__nav-link___1DCMU']} ${
-                            styles['auth-buttons__btn-sign-in___1nV-O']
-                          }`}
-                          href="/auth/signin?redirect=/"
-                        >
-                          Đăng nhập
-                        </Link>
-                      )}
-                      {!localStorage.account && (
-                        <Link
-                          to={'/register'}
-                          className={`${styles['auth-buttons__nav-link___1DCMU']} ${
-                            styles['auth-buttons__btn-register___3sIO1']
-                          }`}
-                          href="/auth/register"
-                        >
-                          Tạo tài khoản
-                        </Link>
                       )}
                     </div>
                   </li>
                 )}
-                <li className={`${styles['header__nav-item___MQLXP']}`}>
+                <li
+                  style={{ marginLeft: '10px' }}
+                  className={`${styles['header__nav-item___MQLXP']}`}
+                >
                   <div className={`${styles['auth-buttons__auth___33bfZ']}`}>
                     <span
                       style={{ cursor: 'pointer', paddingTop: '10px' }}
@@ -306,7 +287,97 @@ class GlobalHeader extends PureComponent {
                       }`}
                       href="/auth/signin?redirect=/"
                     >
-                      <Icon style={{ display: 'block', fontSize: '28px' }} type="bell" />
+                      <Button
+                        type="primary"
+                        style={{
+                          background: '#4CAF50',
+                          borderColor: '#4CAF50',
+                          color: '#fff',
+                          borderRadius: '20px',
+                          fontSize: '12px',
+                        }}
+                        block
+                      >
+                        Gói cao cấp
+                      </Button>
+                    </span>
+                  </div>
+                </li>
+                <li
+                  style={{ marginLeft: '10px' }}
+                  className={`${styles['header__nav-item___MQLXP']}`}
+                >
+                  <div className={`${styles['auth-buttons__auth___33bfZ']}`}>
+                    <span
+                      style={{ cursor: 'pointer', paddingTop: '10px' }}
+                      onClick={() => this.handleOpenAccount('open')}
+                      className={`${styles['auth-buttons__nav-link___1DCMU']} ${
+                        styles['auth-buttons__btn-sign-in___1nV-O']
+                      }`}
+                      href="/auth/signin?redirect=/"
+                    >
+                      <Button
+                        icon="thunderbolt"
+                        type="primary"
+                        style={{
+                          background: '#fff',
+                          borderColor: '#6d7c85',
+                          color: '#6d7c85',
+                          borderRadius: '20px',
+                          fontSize: '12px',
+                        }}
+                        block
+                      >
+                        Tín dụng
+                      </Button>
+                    </span>
+                  </div>
+                </li>
+                <li className={`${styles['header__nav-item___MQLXP']}`}>
+                  <div className={`${styles['auth-buttons__auth___33bfZ']}`}>
+                    <span
+                      style={{ cursor: 'pointer', paddingTop: '13px' }}
+                      onClick={() => this.handleOpenAccount('open')}
+                      className={`${styles['auth-buttons__nav-link___1DCMU']} ${
+                        styles['auth-buttons__btn-sign-in___1nV-O']
+                      }`}
+                      href="/auth/signin?redirect=/"
+                    >
+                      <Avatar style={{ backgroundColor: '#f9f9f9' }} size={30} icon="user" />
+                    </span>
+                  </div>
+                </li>
+                <li
+                  style={{ marginLeft: '10px' }}
+                  className={`${styles['header__nav-item___MQLXP']}`}
+                >
+                  <div className={`${styles['auth-buttons__auth___33bfZ']}`}>
+                    <span
+                      style={{ cursor: 'pointer', paddingTop: '13px' }}
+                      onClick={() => this.handleOpenAccount('open')}
+                      className={`${styles['auth-buttons__nav-link___1DCMU']} ${
+                        styles['auth-buttons__btn-sign-in___1nV-O']
+                      }`}
+                      href="/auth/signin?redirect=/"
+                    >
+                      <Icon style={{ display: 'block', fontSize: '25px' }} type="bell" />
+                    </span>
+                  </div>
+                </li>
+                <li
+                  style={{ marginLeft: '10px' }}
+                  className={`${styles['header__nav-item___MQLXP']}`}
+                >
+                  <div className={`${styles['auth-buttons__auth___33bfZ']}`}>
+                    <span
+                      style={{ cursor: 'pointer', paddingTop: '14px' }}
+                      onClick={() => this.handleOpenAccount('open')}
+                      className={`${styles['auth-buttons__nav-link___1DCMU']} ${
+                        styles['auth-buttons__btn-sign-in___1nV-O']
+                      }`}
+                      href="/auth/signin?redirect=/"
+                    >
+                      <Icon type="ellipsis" style={{ display: 'block', fontSize: '25px' }} />
                     </span>
                   </div>
                 </li>
@@ -328,22 +399,22 @@ class GlobalHeader extends PureComponent {
             <ul className={`${styles['header__mobile-nav-cat___1wJ9O']}`}>
               <li className={`${styles['header__nav-item___MQLXP']}`}>
                 <Link to={`/amazon`} className={`${styles['header__nav-link___3W4sc']}`}>
-                  Amazon
+                  Khám phá
                 </Link>
               </li>
               <li className={`${styles['header__nav-item___MQLXP']}`}>
                 <Link to={`/ebay`} className={`${styles['header__nav-link___3W4sc']}`}>
-                  Ebay
+                  Tìm kiếm
                 </Link>
               </li>
               <li className={`${styles['header__nav-item___MQLXP']}`}>
                 <Link to={`/adidas`} className={`${styles['header__nav-link___3W4sc']}`}>
-                  Adidas
+                  Chat
                 </Link>
               </li>
               <li className={`${styles['header__nav-item___MQLXP']}`}>
                 <Link to={`/nike`} className={`${styles['header__nav-link___3W4sc']}`}>
-                  Nike
+                  Bạn Bè
                 </Link>
               </li>
             </ul>

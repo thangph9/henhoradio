@@ -44,7 +44,7 @@ import { connect } from 'dva';
 import { Link, Redirect } from 'react-router-dom';
 import moment from 'moment';
 import { formatMessage, FormattedMessage } from 'umi/locale';
-import { Skeleton, Switch, List, Avatar, Icon } from 'antd';
+import { Skeleton, Switch, List, Avatar, Icon, Card } from 'antd';
 import styles from '../index.less';
 
 const listData = [];
@@ -59,6 +59,7 @@ for (let i = 0; i < 3; i++) {
       'We supply a series of design principles, practical patterns and high quality design resources (Sketch and Axure), to help people create their product prototypes beautifully and efficiently.',
   });
 }
+const { Meta } = Card;
 const IconText = ({ type, text }) => (
   <span>
     <Icon type={type} style={{ marginRight: 8 }} />
@@ -75,42 +76,132 @@ class NewFeed extends PureComponent {
       <div className={styles['jsx-157584619'] + ' ' + styles['content']}>
         <div className={styles['jsx-3523037850'] + ' ' + styles['container']}>
           <div className={styles['jsx-3523037850'] + ' ' + styles['row']}>
-            <List
-              itemLayout="vertical"
-              size="large"
-              dataSource={listData}
-              renderItem={item => (
-                <div
-                  style={{ marginBottom: '10px', paddingLeft: '10px' }}
-                  className={
-                    styles['jsx-3523037850'] + ' ' + styles['col-md-9'] + ' ' + styles['box-shadow']
-                  }
-                >
-                  <List.Item
-                    key={item.title}
-                    actions={[
-                      <IconText type="star-o" text="156" />,
-                      <IconText type="like-o" text="156" />,
-                      <IconText type="message" text="2" />,
-                    ]}
-                    extra={
-                      <img
-                        width={272}
-                        alt="logo"
-                        src="https://gw.alipayobjects.com/zos/rmsportal/mqaQswcyDLcXyDKnZfES.png"
-                      />
-                    }
-                  >
-                    <List.Item.Meta
-                      avatar={<Avatar src={item.avatar} />}
-                      title={<a href={item.href}>{item.title}</a>}
-                      description={item.description}
-                    />
-                    {item.content}
-                  </List.Item>
-                </div>
-              )}
-            />
+            <div className={styles['col-3']}>
+              <Card
+                hoverable
+                style={{ width: '100%', borderRadius: '5px' }}
+                cover={
+                  <img
+                    alt="example"
+                    src="https://twoo03-a.akamaihd.net/c/c1584f35e457ddcee431e92ff87bba05_1_5_0_612_612_215_215_0006475337.jpg"
+                  />
+                }
+              >
+                <Meta title="Trân 26 tuổi" description="Phan Rang, Bát Tràng" />
+              </Card>
+            </div>
+            <div className={styles['col-3']}>
+              <Card
+                hoverable
+                style={{ width: '100%', borderRadius: '5px' }}
+                cover={
+                  <img
+                    alt="example"
+                    src="https://twoo03-a.akamaihd.net/c/c1584f35e457ddcee431e92ff87bba05_1_5_0_612_612_215_215_0006475337.jpg"
+                  />
+                }
+              >
+                <Meta title="Trân 26 tuổi" description="Phan Rang, Bát Tràng" />
+              </Card>
+            </div>
+            <div className={styles['col-3']}>
+              <Card
+                hoverable
+                style={{ width: '100%', borderRadius: '5px' }}
+                cover={
+                  <img
+                    alt="example"
+                    src="https://twoo03-a.akamaihd.net/c/c1584f35e457ddcee431e92ff87bba05_1_5_0_612_612_215_215_0006475337.jpg"
+                  />
+                }
+              >
+                <Meta title="Trân 26 tuổi" description="Phan Rang, Bát Tràng" />
+              </Card>
+            </div>
+            <div className={styles['col-3']}>
+              <Card
+                hoverable
+                style={{ width: '100%', borderRadius: '5px' }}
+                cover={
+                  <img
+                    alt="example"
+                    src="https://twoo03-a.akamaihd.net/c/c1584f35e457ddcee431e92ff87bba05_1_5_0_612_612_215_215_0006475337.jpg"
+                  />
+                }
+              >
+                <Meta title="Trân 26 tuổi" description="Phan Rang, Bát Tràng" />
+              </Card>
+            </div>
+            <div className={styles['col-3']}>
+              <Card
+                hoverable
+                style={{ width: '100%', borderRadius: '5px' }}
+                cover={
+                  <img
+                    alt="example"
+                    src="https://twoo03-a.akamaihd.net/c/c1584f35e457ddcee431e92ff87bba05_1_5_0_612_612_215_215_0006475337.jpg"
+                  />
+                }
+              >
+                <Meta title="Trân 26 tuổi" description="Phan Rang, Bát Tràng" />
+              </Card>
+            </div>
+            <div className={styles['col-3']}>
+              <Card
+                hoverable
+                style={{ width: '100%', borderRadius: '5px' }}
+                cover={
+                  <img
+                    alt="example"
+                    src="https://twoo03-a.akamaihd.net/c/c1584f35e457ddcee431e92ff87bba05_1_5_0_612_612_215_215_0006475337.jpg"
+                  />
+                }
+              >
+                <Meta title="Trân 26 tuổi" description="Phan Rang, Bát Tràng" />
+              </Card>
+            </div>
+            <div className={styles['col-3']}>
+              <Card
+                hoverable
+                style={{ width: '100%', borderRadius: '5px' }}
+                cover={
+                  <img
+                    alt="example"
+                    src="https://twoo03-a.akamaihd.net/c/c1584f35e457ddcee431e92ff87bba05_1_5_0_612_612_215_215_0006475337.jpg"
+                  />
+                }
+              >
+                <Meta title="Trân 26 tuổi" description="Phan Rang, Bát Tràng" />
+              </Card>
+            </div>
+            <div className={styles['col-3']}>
+              <Card
+                hoverable
+                style={{ width: '100%', borderRadius: '5px' }}
+                cover={
+                  <img
+                    alt="example"
+                    src="https://twoo03-a.akamaihd.net/c/c1584f35e457ddcee431e92ff87bba05_1_5_0_612_612_215_215_0006475337.jpg"
+                  />
+                }
+              >
+                <Meta title="Trân 26 tuổi" description="Phan Rang, Bát Tràng" />
+              </Card>
+            </div>
+            <div className={styles['col-3']}>
+              <Card
+                hoverable
+                style={{ width: '100%', borderRadius: '5px' }}
+                cover={
+                  <img
+                    alt="example"
+                    src="https://twoo03-a.akamaihd.net/c/c1584f35e457ddcee431e92ff87bba05_1_5_0_612_612_215_215_0006475337.jpg"
+                  />
+                }
+              >
+                <Meta title="Trân 26 tuổi" description="Phan Rang, Bát Tràng" />
+              </Card>
+            </div>
           </div>
         </div>
       </div>
