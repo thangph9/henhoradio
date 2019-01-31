@@ -1,7 +1,8 @@
+/* eslint-disable react/destructuring-assignment */
 import React, { PureComponent } from 'react';
 import { connect } from 'dva';
 // import { Redirect } from 'react-router-dom';
-import { Icon, message } from 'antd';
+import { Icon } from 'antd';
 // import {Link} from 'react-router-dom'
 import styles from './styles.less';
 import FormLogin from './FormLogin';
@@ -15,6 +16,8 @@ import FormRegister from './FormRegister';
 class Login extends PureComponent {
   state = {
     statusPage: false,
+    help: '',
+    validateStatus: '',
   };
 
   componentDidMount() {
@@ -33,17 +36,7 @@ class Login extends PureComponent {
 
   componentWillReceiveProps(nextProps) {
     const { authentication } = this.props;
-    if (authentication.login !== nextProps.authentication.login) {
-      if (
-        nextProps.authentication.login.status === 'error' &&
-        nextProps.authentication.login.timeline !== authentication.login.timeline
-      ) {
-        message.warning(nextProps.authentication.login.message);
-      }
-      if (nextProps.authentication.login.status === 'ok') {
-        nextProps.history.push({ pathname: '/home' });
-      }
-    }
+
     if (authentication.register !== nextProps.authentication.register) {
       if (nextProps.authentication.register.status === 'ok') {
         nextProps.history.push({ pathname: '/registerresult' });
@@ -70,7 +63,7 @@ class Login extends PureComponent {
   }
 
   render() {
-    /*  
+    /*
     if (localStorage['antd-pro-authority'] && localStorage.token) {
       return <Redirect to="/home" />;
     }
@@ -168,7 +161,11 @@ class Login extends PureComponent {
                   </span>
                 </div>
                 {statusPage === false ? (
-                  <FormLogin {...this.props} />
+                  <FormLogin
+                    {...this.props}
+                    help={this.state.help}
+                    validateStatus={this.state.validateStatus}
+                  />
                 ) : (
                   <FormRegister {...this.props} />
                 )}

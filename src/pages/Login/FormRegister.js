@@ -232,6 +232,16 @@ class FormRegister extends PureComponent {
     monthSelected: [],
   };
 
+  componentWillReceiveProps(nextProps) {
+    const { authentication } = this.props;
+
+    if (authentication.register !== nextProps.authentication.register) {
+      if (nextProps.authentication.register.status === 'ok') {
+        nextProps.history.push({ pathname: '/registerresult' });
+      }
+    }
+  }
+
   getPasswordStatus = () => {
     const { form } = this.props;
     const value = form.getFieldValue('password');

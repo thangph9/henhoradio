@@ -2,6 +2,7 @@ import React, { PureComponent } from 'react';
 import { connect } from 'dva';
 // import { Redirect } from 'react-router-dom';
 import { Form, Input, Button } from 'antd';
+import FormItem from 'antd/lib/form/FormItem';
 // import {Link} from 'react-router-dom'
 // import styles from './styles.less';
 
@@ -11,6 +12,29 @@ import { Form, Input, Button } from 'antd';
 }))
 @Form.create()
 class FormLogin extends PureComponent {
+  state = {
+    help: '',
+    validateStatus: '',
+  };
+
+  componentWillReceiveProps(nextProps) {
+    const { authentication } = this.props;
+    if (authentication.login !== nextProps.authentication.login) {
+      if (
+        nextProps.authentication.login.status === 'error' &&
+        nextProps.authentication.login.timeline !== authentication.login.timeline
+      ) {
+        this.setState({
+          help: nextProps.authentication.login.message,
+          validateStatus: 'error',
+        });
+      }
+      if (nextProps.authentication.login.status === 'ok') {
+        nextProps.history.push({ pathname: '/home' });
+      }
+    }
+  }
+
   handleSubmit = e => {
     e.preventDefault();
     const { form, dispatch } = this.props;
@@ -25,9 +49,18 @@ class FormLogin extends PureComponent {
     });
   };
 
+  handleChangePhone(value) {
+    console.log(value);
+    this.setState({
+      help: '',
+      validateStatus: '',
+    });
+  }
+
   render() {
     // eslint-disable-next-line react/destructuring-assignment
     const { getFieldDecorator } = this.props.form;
+    const { help, validateStatus } = this.state;
     return (
       <Form onSubmit={this.handleSubmit}>
         <Form.Item label="Số điện thoại" style={{ marginBottom: '0px' }}>
@@ -42,8 +75,9 @@ class FormLogin extends PureComponent {
                 message: 'Nhập sai định dạng hoặc chưa đủ chữ số！',
               },
             ],
-          })(<Input />)}
+          })(<Input onChange={e => this.handleChangePhone(e)} />)}
         </Form.Item>
+        <FormItem help={help} validateStatus={validateStatus} style={{ marginBottom: '0px' }} />
         <Form.Item label="Mật khẩu">
           {getFieldDecorator('password', {
             rules: [
