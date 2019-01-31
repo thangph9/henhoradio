@@ -76,7 +76,7 @@ class NewFeed extends PureComponent {
       <div className={styles['jsx-157584619'] + ' ' + styles['content']}>
         <div className={styles['jsx-3523037850'] + ' ' + styles['container']}>
           <div className={styles['jsx-3523037850'] + ' ' + styles['row']}>
-            <div className={styles['col-3']}>
+            <div className={styles['cart-item']}>
               <Card
                 hoverable
                 style={{ width: '100%', borderRadius: '5px' }}
@@ -90,7 +90,7 @@ class NewFeed extends PureComponent {
                 <Meta title="Trân 26 tuổi" description="Phan Rang, Bát Tràng" />
               </Card>
             </div>
-            <div className={styles['col-3']}>
+            <div className={styles['cart-item']}>
               <Card
                 hoverable
                 style={{ width: '100%', borderRadius: '5px' }}
@@ -104,7 +104,7 @@ class NewFeed extends PureComponent {
                 <Meta title="Trân 26 tuổi" description="Phan Rang, Bát Tràng" />
               </Card>
             </div>
-            <div className={styles['col-3']}>
+            <div className={styles['cart-item']}>
               <Card
                 hoverable
                 style={{ width: '100%', borderRadius: '5px' }}
@@ -118,7 +118,7 @@ class NewFeed extends PureComponent {
                 <Meta title="Trân 26 tuổi" description="Phan Rang, Bát Tràng" />
               </Card>
             </div>
-            <div className={styles['col-3']}>
+            <div className={styles['cart-item']}>
               <Card
                 hoverable
                 style={{ width: '100%', borderRadius: '5px' }}
@@ -132,7 +132,7 @@ class NewFeed extends PureComponent {
                 <Meta title="Trân 26 tuổi" description="Phan Rang, Bát Tràng" />
               </Card>
             </div>
-            <div className={styles['col-3']}>
+            <div className={styles['cart-item']}>
               <Card
                 hoverable
                 style={{ width: '100%', borderRadius: '5px' }}
@@ -146,7 +146,7 @@ class NewFeed extends PureComponent {
                 <Meta title="Trân 26 tuổi" description="Phan Rang, Bát Tràng" />
               </Card>
             </div>
-            <div className={styles['col-3']}>
+            <div className={styles['cart-item']}>
               <Card
                 hoverable
                 style={{ width: '100%', borderRadius: '5px' }}
@@ -160,7 +160,7 @@ class NewFeed extends PureComponent {
                 <Meta title="Trân 26 tuổi" description="Phan Rang, Bát Tràng" />
               </Card>
             </div>
-            <div className={styles['col-3']}>
+            <div className={styles['cart-item']}>
               <Card
                 hoverable
                 style={{ width: '100%', borderRadius: '5px' }}
@@ -174,7 +174,7 @@ class NewFeed extends PureComponent {
                 <Meta title="Trân 26 tuổi" description="Phan Rang, Bát Tràng" />
               </Card>
             </div>
-            <div className={styles['col-3']}>
+            <div className={styles['cart-item']}>
               <Card
                 hoverable
                 style={{ width: '100%', borderRadius: '5px' }}
@@ -188,7 +188,7 @@ class NewFeed extends PureComponent {
                 <Meta title="Trân 26 tuổi" description="Phan Rang, Bát Tràng" />
               </Card>
             </div>
-            <div className={styles['col-3']}>
+            <div className={styles['cart-item']}>
               <Card
                 hoverable
                 style={{ width: '100%', borderRadius: '5px' }}
