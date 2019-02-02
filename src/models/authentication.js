@@ -1,5 +1,5 @@
 /* eslint-disable eqeqeq */
-import { loginAccount, RegisterAccount } from '@/services/api';
+import { loginAccount, RegisterAccount, homeDemo } from '@/services/api';
 
 export default {
   namespace: 'authentication',
@@ -7,6 +7,7 @@ export default {
   state: {
     login: {},
     register: {},
+    homedemo: {},
   },
   effects: {
     *login({ payload }, { call, put }) {
@@ -25,6 +26,13 @@ export default {
           payload: response || {},
         });
       }
+    },
+    *homedemo({ payload }, { call, put }) {
+      const response = yield call(homeDemo, payload);
+      yield put({
+        type: 'home',
+        payload: response || {},
+      });
     },
     *register({ payload }, { call, put }) {
       const response = yield call(RegisterAccount, payload);
@@ -53,6 +61,12 @@ export default {
       return {
         ...state,
         register: action.payload,
+      };
+    },
+    home(state, action) {
+      return {
+        ...state,
+        homedemo: action.payload,
       };
     },
   },

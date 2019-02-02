@@ -66,11 +66,27 @@ const IconText = ({ type, text }) => (
     {text}
   </span>
 );
-@connect(({ list, user }) => ({
+@connect(({ list, user, authentication }) => ({
   list,
   user,
+  authentication,
 }))
 class NewFeed extends PureComponent {
+  state = {
+    loadingPage: true,
+  };
+  componentDidMount() {
+    this.props.dispatch({
+      type: 'authentication/homedemo',
+    });
+  }
+  componentWillReceiveProps(nextProps) {
+    if (this.props.authentication.homedemo !== nextProps.authentication.homedemo) {
+      this.setState({
+        loadingPage: false,
+      });
+    }
+  }
   render() {
     return (
       <div className={styles['jsx-157584619'] + ' ' + styles['content']}>
@@ -78,13 +94,29 @@ class NewFeed extends PureComponent {
           <div className={styles['jsx-3523037850'] + ' ' + styles['row']}>
             <div className={styles['cart-item']}>
               <Card
+                loading={this.state.loadingPage}
                 hoverable
                 style={{ width: '100%', borderRadius: '5px' }}
                 cover={
-                  <img
-                    alt="example"
-                    src="https://twoo03-a.akamaihd.net/c/c1584f35e457ddcee431e92ff87bba05_1_5_0_612_612_215_215_0006475337.jpg"
-                  />
+                  !this.state.loadingPage ? (
+                    <img
+                      alt="example"
+                      src="https://twoo03-a.akamaihd.net/c/c1584f35e457ddcee431e92ff87bba05_1_5_0_612_612_215_215_0006475337.jpg"
+                    />
+                  ) : (
+                    <Avatar
+                      shape="square"
+                      style={{
+                        margin: '0 auto',
+                        marginTop: '20px',
+                        backgroundSize: '600% 600%',
+                        background:
+                          'linear-gradient(90deg, rgba(207, 216, 220, 0.2), rgba(207, 216, 220, 0.4), rgba(207, 216, 220, 0.2))',
+                        animation: 'card-loading 1.4s ease infinite',
+                      }}
+                      size={120}
+                    />
+                  )
                 }
               >
                 <Meta title="Trân 26 tuổi" description="Phan Rang, Bát Tràng" />
@@ -92,13 +124,29 @@ class NewFeed extends PureComponent {
             </div>
             <div className={styles['cart-item']}>
               <Card
+                loading={this.state.loadingPage}
                 hoverable
                 style={{ width: '100%', borderRadius: '5px' }}
                 cover={
-                  <img
-                    alt="example"
-                    src="https://twoo03-a.akamaihd.net/c/c1584f35e457ddcee431e92ff87bba05_1_5_0_612_612_215_215_0006475337.jpg"
-                  />
+                  !this.state.loadingPage ? (
+                    <img
+                      alt="example"
+                      src="https://twoo03-a.akamaihd.net/c/c1584f35e457ddcee431e92ff87bba05_1_5_0_612_612_215_215_0006475337.jpg"
+                    />
+                  ) : (
+                    <Avatar
+                      shape="square"
+                      style={{
+                        margin: '0 auto',
+                        marginTop: '20px',
+                        backgroundSize: '600% 600%',
+                        background:
+                          'linear-gradient(90deg, rgba(207, 216, 220, 0.2), rgba(207, 216, 220, 0.4), rgba(207, 216, 220, 0.2))',
+                        animation: 'card-loading 1.4s ease infinite',
+                      }}
+                      size={120}
+                    />
+                  )
                 }
               >
                 <Meta title="Trân 26 tuổi" description="Phan Rang, Bát Tràng" />
@@ -106,13 +154,29 @@ class NewFeed extends PureComponent {
             </div>
             <div className={styles['cart-item']}>
               <Card
+                loading={this.state.loadingPage}
                 hoverable
                 style={{ width: '100%', borderRadius: '5px' }}
                 cover={
-                  <img
-                    alt="example"
-                    src="https://twoo03-a.akamaihd.net/c/c1584f35e457ddcee431e92ff87bba05_1_5_0_612_612_215_215_0006475337.jpg"
-                  />
+                  !this.state.loadingPage ? (
+                    <img
+                      alt="example"
+                      src="https://twoo03-a.akamaihd.net/c/c1584f35e457ddcee431e92ff87bba05_1_5_0_612_612_215_215_0006475337.jpg"
+                    />
+                  ) : (
+                    <Avatar
+                      shape="square"
+                      style={{
+                        margin: '0 auto',
+                        marginTop: '20px',
+                        backgroundSize: '600% 600%',
+                        background:
+                          'linear-gradient(90deg, rgba(207, 216, 220, 0.2), rgba(207, 216, 220, 0.4), rgba(207, 216, 220, 0.2))',
+                        animation: 'card-loading 1.4s ease infinite',
+                      }}
+                      size={120}
+                    />
+                  )
                 }
               >
                 <Meta title="Trân 26 tuổi" description="Phan Rang, Bát Tràng" />
@@ -120,13 +184,29 @@ class NewFeed extends PureComponent {
             </div>
             <div className={styles['cart-item']}>
               <Card
+                loading={this.state.loadingPage}
                 hoverable
                 style={{ width: '100%', borderRadius: '5px' }}
                 cover={
-                  <img
-                    alt="example"
-                    src="https://twoo03-a.akamaihd.net/c/c1584f35e457ddcee431e92ff87bba05_1_5_0_612_612_215_215_0006475337.jpg"
-                  />
+                  !this.state.loadingPage ? (
+                    <img
+                      alt="example"
+                      src="https://twoo03-a.akamaihd.net/c/c1584f35e457ddcee431e92ff87bba05_1_5_0_612_612_215_215_0006475337.jpg"
+                    />
+                  ) : (
+                    <Avatar
+                      shape="square"
+                      style={{
+                        margin: '0 auto',
+                        marginTop: '20px',
+                        backgroundSize: '600% 600%',
+                        background:
+                          'linear-gradient(90deg, rgba(207, 216, 220, 0.2), rgba(207, 216, 220, 0.4), rgba(207, 216, 220, 0.2))',
+                        animation: 'card-loading 1.4s ease infinite',
+                      }}
+                      size={120}
+                    />
+                  )
                 }
               >
                 <Meta title="Trân 26 tuổi" description="Phan Rang, Bát Tràng" />
@@ -134,13 +214,29 @@ class NewFeed extends PureComponent {
             </div>
             <div className={styles['cart-item']}>
               <Card
+                loading={this.state.loadingPage}
                 hoverable
                 style={{ width: '100%', borderRadius: '5px' }}
                 cover={
-                  <img
-                    alt="example"
-                    src="https://twoo03-a.akamaihd.net/c/c1584f35e457ddcee431e92ff87bba05_1_5_0_612_612_215_215_0006475337.jpg"
-                  />
+                  !this.state.loadingPage ? (
+                    <img
+                      alt="example"
+                      src="https://twoo03-a.akamaihd.net/c/c1584f35e457ddcee431e92ff87bba05_1_5_0_612_612_215_215_0006475337.jpg"
+                    />
+                  ) : (
+                    <Avatar
+                      shape="square"
+                      style={{
+                        margin: '0 auto',
+                        marginTop: '20px',
+                        backgroundSize: '600% 600%',
+                        background:
+                          'linear-gradient(90deg, rgba(207, 216, 220, 0.2), rgba(207, 216, 220, 0.4), rgba(207, 216, 220, 0.2))',
+                        animation: 'card-loading 1.4s ease infinite',
+                      }}
+                      size={120}
+                    />
+                  )
                 }
               >
                 <Meta title="Trân 26 tuổi" description="Phan Rang, Bát Tràng" />
@@ -148,13 +244,29 @@ class NewFeed extends PureComponent {
             </div>
             <div className={styles['cart-item']}>
               <Card
+                loading={this.state.loadingPage}
                 hoverable
                 style={{ width: '100%', borderRadius: '5px' }}
                 cover={
-                  <img
-                    alt="example"
-                    src="https://twoo03-a.akamaihd.net/c/c1584f35e457ddcee431e92ff87bba05_1_5_0_612_612_215_215_0006475337.jpg"
-                  />
+                  !this.state.loadingPage ? (
+                    <img
+                      alt="example"
+                      src="https://twoo03-a.akamaihd.net/c/c1584f35e457ddcee431e92ff87bba05_1_5_0_612_612_215_215_0006475337.jpg"
+                    />
+                  ) : (
+                    <Avatar
+                      shape="square"
+                      style={{
+                        margin: '0 auto',
+                        marginTop: '20px',
+                        backgroundSize: '600% 600%',
+                        background:
+                          'linear-gradient(90deg, rgba(207, 216, 220, 0.2), rgba(207, 216, 220, 0.4), rgba(207, 216, 220, 0.2))',
+                        animation: 'card-loading 1.4s ease infinite',
+                      }}
+                      size={120}
+                    />
+                  )
                 }
               >
                 <Meta title="Trân 26 tuổi" description="Phan Rang, Bát Tràng" />
@@ -162,13 +274,29 @@ class NewFeed extends PureComponent {
             </div>
             <div className={styles['cart-item']}>
               <Card
+                loading={this.state.loadingPage}
                 hoverable
                 style={{ width: '100%', borderRadius: '5px' }}
                 cover={
-                  <img
-                    alt="example"
-                    src="https://twoo03-a.akamaihd.net/c/c1584f35e457ddcee431e92ff87bba05_1_5_0_612_612_215_215_0006475337.jpg"
-                  />
+                  !this.state.loadingPage ? (
+                    <img
+                      alt="example"
+                      src="https://twoo03-a.akamaihd.net/c/c1584f35e457ddcee431e92ff87bba05_1_5_0_612_612_215_215_0006475337.jpg"
+                    />
+                  ) : (
+                    <Avatar
+                      shape="square"
+                      style={{
+                        margin: '0 auto',
+                        marginTop: '20px',
+                        backgroundSize: '600% 600%',
+                        background:
+                          'linear-gradient(90deg, rgba(207, 216, 220, 0.2), rgba(207, 216, 220, 0.4), rgba(207, 216, 220, 0.2))',
+                        animation: 'card-loading 1.4s ease infinite',
+                      }}
+                      size={120}
+                    />
+                  )
                 }
               >
                 <Meta title="Trân 26 tuổi" description="Phan Rang, Bát Tràng" />
@@ -176,13 +304,29 @@ class NewFeed extends PureComponent {
             </div>
             <div className={styles['cart-item']}>
               <Card
+                loading={this.state.loadingPage}
                 hoverable
                 style={{ width: '100%', borderRadius: '5px' }}
                 cover={
-                  <img
-                    alt="example"
-                    src="https://twoo03-a.akamaihd.net/c/c1584f35e457ddcee431e92ff87bba05_1_5_0_612_612_215_215_0006475337.jpg"
-                  />
+                  !this.state.loadingPage ? (
+                    <img
+                      alt="example"
+                      src="https://twoo03-a.akamaihd.net/c/c1584f35e457ddcee431e92ff87bba05_1_5_0_612_612_215_215_0006475337.jpg"
+                    />
+                  ) : (
+                    <Avatar
+                      shape="square"
+                      style={{
+                        margin: '0 auto',
+                        marginTop: '20px',
+                        backgroundSize: '600% 600%',
+                        background:
+                          'linear-gradient(90deg, rgba(207, 216, 220, 0.2), rgba(207, 216, 220, 0.4), rgba(207, 216, 220, 0.2))',
+                        animation: 'card-loading 1.4s ease infinite',
+                      }}
+                      size={120}
+                    />
+                  )
                 }
               >
                 <Meta title="Trân 26 tuổi" description="Phan Rang, Bát Tràng" />
@@ -190,13 +334,29 @@ class NewFeed extends PureComponent {
             </div>
             <div className={styles['cart-item']}>
               <Card
+                loading={this.state.loadingPage}
                 hoverable
                 style={{ width: '100%', borderRadius: '5px' }}
                 cover={
-                  <img
-                    alt="example"
-                    src="https://twoo03-a.akamaihd.net/c/c1584f35e457ddcee431e92ff87bba05_1_5_0_612_612_215_215_0006475337.jpg"
-                  />
+                  !this.state.loadingPage ? (
+                    <img
+                      alt="example"
+                      src="https://twoo03-a.akamaihd.net/c/c1584f35e457ddcee431e92ff87bba05_1_5_0_612_612_215_215_0006475337.jpg"
+                    />
+                  ) : (
+                    <Avatar
+                      shape="square"
+                      style={{
+                        margin: '0 auto',
+                        marginTop: '20px',
+                        backgroundSize: '600% 600%',
+                        background:
+                          'linear-gradient(90deg, rgba(207, 216, 220, 0.2), rgba(207, 216, 220, 0.4), rgba(207, 216, 220, 0.2))',
+                        animation: 'card-loading 1.4s ease infinite',
+                      }}
+                      size={120}
+                    />
+                  )
                 }
               >
                 <Meta title="Trân 26 tuổi" description="Phan Rang, Bát Tràng" />

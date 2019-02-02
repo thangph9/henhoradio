@@ -1,3 +1,4 @@
+/* eslint-disable no-shadow */
 /* eslint-disable no-plusplus */
 /* eslint-disable vars-on-top */
 /* eslint-disable consistent-return */
@@ -46,7 +47,7 @@ function register(req, res) {
       }
     );
   } catch (e) {
-    console.log(e);
+    throw e;
   }
   return res.json({ status: 'ok', token });
 }
@@ -79,7 +80,7 @@ function login(req, res) {
           }
         );
       } catch (e) {
-        console.log(e);
+        throw e;
       }
     }
   }
@@ -90,7 +91,13 @@ function login(req, res) {
     timeline: new Date().getTime(),
   });
 }
+function homeDemo(req, res) {
+  setTimeout(() => {
+    res.json({ status: 'ok' });
+  }, 3000);
+}
 export default {
-  'POST /api/authentication/register': register,
-  'POST /api/authentication/login': login,
+  // 'POST /api/authentication/register': register,
+  // 'POST /api/authentication/login': login,
+  // 'GET /api/authentication/homedemo': homeDemo,
 };
