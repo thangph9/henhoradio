@@ -1,3 +1,6 @@
+/* eslint-disable react/no-unused-state */
+/* eslint-disable class-methods-use-this */
+/* eslint-disable react/sort-comp */
 /* eslint-disable react/destructuring-assignment */
 import React, { PureComponent } from 'react';
 import { connect } from 'dva';
@@ -18,6 +21,7 @@ class Login extends PureComponent {
     statusPage: false,
     help: '',
     validateStatus: '',
+    sizeScreen: 0,
   };
 
   componentDidMount() {
@@ -32,6 +36,14 @@ class Login extends PureComponent {
         statusPage: true,
       });
     }
+    window.addEventListener('resize', this.resize.bind(this));
+    this.resize();
+  }
+
+  resize() {
+    this.setState({
+      sizeScreen: window.innerWidth,
+    });
   }
 
   componentWillReceiveProps(nextProps) {
@@ -68,204 +80,208 @@ class Login extends PureComponent {
       return <Redirect to="/home" />;
     }
     */
-    const { statusPage } = this.state;
+    const { statusPage, sizeScreen } = this.state;
 
     return (
       <div id="wrapper" style={{ position: 'relative' }} className={styles.homepageRegister}>
-        <div
-          className={styles['tw3-homepage--abstract'].concat(
-            ' ',
-            styles['tw3-homepage--abstract--mobile']
-          )}
-        >
+        {sizeScreen < 680 ? (
           <div
-            className={styles.homepageContainer__content__form.concat(
+            className={styles['tw3-homepage--abstract'].concat(
               ' ',
-              styles.registerContainer
+              styles['tw3-homepage--abstract--mobile']
             )}
           >
-            <div className={styles['tw3-pane'].concat(' ', styles['tw3-pane--left'])}>
-              <div className={styles['tw3-pane__content']}>
-                <div className={styles.logo}>
-                  <img
-                    alt="img"
-                    src="https://twoo-a.akamaihd.net/static/682503600911326952191/images/logos/logo-twoo-flat-white@2x.png"
-                    height={42}
-                  />
-                </div>
+            <div
+              className={styles.homepageContainer__content__form.concat(
+                ' ',
+                styles.registerContainer
+              )}
+            >
+              <div className={styles['tw3-pane'].concat(' ', styles['tw3-pane--left'])}>
+                <div className={styles['tw3-pane__content']}>
+                  <div className={styles.logo}>
+                    <img
+                      alt="img"
+                      src="https://twoo-a.akamaihd.net/static/682503600911326952191/images/logos/logo-twoo-flat-white@2x.png"
+                      height={42}
+                    />
+                  </div>
 
-                <h1
-                  style={{ color: '#fff' }}
-                  className={styles['h1--step1'].concat(' ', styles.fw500)}
-                >
-                  Chat với bạn <strong>mới</strong> khắp thế giới.
-                </h1>
-                <div
-                  style={{ background: 'none' }}
-                  className={styles['tw3-homepage--abstract--mobile__tabs'].concat(
-                    ' ',
-                    styles['tw3-tabsHolder']
+                  <h1
+                    style={{ color: '#fff' }}
+                    className={styles['h1--step1'].concat(' ', styles.fw500)}
+                  >
+                    Chat với bạn <strong>mới</strong> khắp thế giới.
+                  </h1>
+                  <div
+                    style={{ background: 'none' }}
+                    className={styles['tw3-homepage--abstract--mobile__tabs'].concat(
+                      ' ',
+                      styles['tw3-tabsHolder']
+                    )}
+                  >
+                    <span
+                      style={{ cursor: 'pointer' }}
+                      onClick={() => this.handleClickToggleStatus()}
+                      className={
+                        statusPage === true
+                          ? styles['tw3-tab'].concat(
+                              ' ',
+                              styles.jsHomepageSwitch,
+                              ' ',
+                              styles.selected
+                            )
+                          : styles['tw3-tab'].concat(' ', styles.jsHomepageSwitch)
+                      }
+                    >
+                      ĐĂNG KÝ
+                    </span>
+                    <span
+                      style={{ cursor: 'pointer' }}
+                      onClick={() => this.handleClickToggleStatus()}
+                      className={
+                        statusPage === false
+                          ? styles['tw3-tab'].concat(
+                              ' ',
+                              styles.jsHomepageSwitch,
+                              ' ',
+                              styles.selected
+                            )
+                          : styles['tw3-tab'].concat(' ', styles.jsHomepageSwitch)
+                      }
+                    >
+                      ĐĂNG NHẬP
+                    </span>
+                  </div>
+                </div>
+              </div>
+              <div className={styles['tw3-pane'].concat(' ', styles['tw3-pane--right'])}>
+                <div className={styles['tw3-pane__content']}>
+                  <div
+                    className={styles.divider.concat(
+                      ' ',
+                      styles.hor,
+                      ' ',
+                      styles.full,
+                      ' ',
+                      styles['mb--default']
+                    )}
+                  >
+                    <span>
+                      {statusPage === false
+                        ? 'Đăng nhập bằng số điện thoại'
+                        : 'Đăng ký tài khoản mới'}
+                    </span>
+                  </div>
+                  {statusPage === false ? (
+                    <FormLogin
+                      {...this.props}
+                      help={this.state.help}
+                      validateStatus={this.state.validateStatus}
+                    />
+                  ) : (
+                    <FormRegister {...this.props} />
                   )}
-                >
-                  <span
-                    style={{ cursor: 'pointer' }}
-                    onClick={() => this.handleClickToggleStatus()}
-                    className={
-                      statusPage === true
-                        ? styles['tw3-tab'].concat(
-                            ' ',
-                            styles.jsHomepageSwitch,
-                            ' ',
-                            styles.selected
-                          )
-                        : styles['tw3-tab'].concat(' ', styles.jsHomepageSwitch)
-                    }
-                  >
-                    ĐĂNG KÝ
-                  </span>
-                  <span
-                    style={{ cursor: 'pointer' }}
-                    onClick={() => this.handleClickToggleStatus()}
-                    className={
-                      statusPage === false
-                        ? styles['tw3-tab'].concat(
-                            ' ',
-                            styles.jsHomepageSwitch,
-                            ' ',
-                            styles.selected
-                          )
-                        : styles['tw3-tab'].concat(' ', styles.jsHomepageSwitch)
-                    }
-                  >
-                    ĐĂNG NHẬP
-                  </span>
                 </div>
               </div>
             </div>
-            <div className={styles['tw3-pane'].concat(' ', styles['tw3-pane--right'])}>
-              <div className={styles['tw3-pane__content']}>
-                <div
-                  className={styles.divider.concat(
-                    ' ',
-                    styles.hor,
-                    ' ',
-                    styles.full,
-                    ' ',
-                    styles['mb--default']
-                  )}
-                >
-                  <span>
-                    {statusPage === false
-                      ? 'Đăng nhập bằng số điện thoại'
-                      : 'Đăng ký tài khoản mới'}
-                  </span>
-                </div>
-                {statusPage === false ? (
-                  <FormLogin
-                    {...this.props}
-                    help={this.state.help}
-                    validateStatus={this.state.validateStatus}
-                  />
-                ) : (
-                  <FormRegister {...this.props} />
-                )}
-              </div>
-            </div>
           </div>
-        </div>
-        <div
-          className={styles['tw3-homepage--abstract'].concat(
-            ' ',
-            styles['tw3-homepage--abstract--desktop']
-          )}
-        >
-          <div className={styles.homepageLinks.concat(' ', styles['homepageLinks--top'])}>
-            <div className={styles['homepageLinks--top__left']}>
-              <Icon
-                style={{ fontSize: '30px', marginRight: '10px', color: '#fff' }}
-                type="facebook"
-                theme="filled"
-                className="icon-login-page"
-              />
-              <Icon
-                style={{ fontSize: '30px', marginRight: '10px', color: '#fff' }}
-                type="instagram"
-                theme="filled"
-                className="icon-login-page"
-              />
-            </div>
-            <div className={styles['homepageLinks--top__right']}>
-              <span
-                onClick={() => this.handleClickToggleStatus()}
-                className={styles['tw3-button'].concat(
-                  ' ',
-                  styles['tw3-button--orange'],
-                  ' ',
-                  styles['tw3-button--rounded'],
-                  ' ',
-                  styles.loginButton
-                )}
-                data-page="login"
-              >
-                {statusPage === false ? 'Đăng ký' : 'Đăng nhập'}
-              </span>
-            </div>
-          </div>
+        ) : (
           <div
-            className={styles.homepageContainer__content__form.concat(
+            className={styles['tw3-homepage--abstract'].concat(
               ' ',
-              styles.registerContainer
+              styles['tw3-homepage--abstract--desktop']
             )}
           >
-            <div className={styles['tw3-pane'].concat(' ', styles['tw3-pane--left'])}>
-              <div className={styles['tw3-pane__content']}>
-                <div className={styles.logo}>
-                  <img
-                    alt="img"
-                    src="https://twoo-a.akamaihd.net/static/682503600911326952191/images/logos/logo-twoo-flat-white@2x.png"
-                    height={42}
-                  />
-                </div>
-
-                <h1
-                  style={{ color: '#fff' }}
-                  className={styles['h1--step1'].concat(' ', styles.fw500)}
+            <div className={styles.homepageLinks.concat(' ', styles['homepageLinks--top'])}>
+              <div className={styles['homepageLinks--top__left']}>
+                <Icon
+                  style={{ fontSize: '30px', marginRight: '10px', color: '#fff' }}
+                  type="facebook"
+                  theme="filled"
+                  className="icon-login-page"
+                />
+                <Icon
+                  style={{ fontSize: '30px', marginRight: '10px', color: '#fff' }}
+                  type="instagram"
+                  theme="filled"
+                  className="icon-login-page"
+                />
+              </div>
+              <div className={styles['homepageLinks--top__right']}>
+                <span
+                  onClick={() => this.handleClickToggleStatus()}
+                  className={styles['tw3-button'].concat(
+                    ' ',
+                    styles['tw3-button--orange'],
+                    ' ',
+                    styles['tw3-button--rounded'],
+                    ' ',
+                    styles.loginButton
+                  )}
+                  data-page="login"
                 >
-                  Chat với bạn <strong>mới</strong> khắp thế giới.
-                </h1>
-                <p className={styles['mb--slack']}>
-                  Gặp hàng triệu người từ khắp nơi bất kể bạn ở đâu. Chat vui vẻ, kết bạn và tìm một
-                  nửa của mình. Bởi vì cuộc đời chính là những người bạn gặp gỡ.
-                </p>
+                  {statusPage === false ? 'Đăng ký' : 'Đăng nhập'}
+                </span>
               </div>
             </div>
-            <div className={styles['tw3-pane'].concat(' ', styles['tw3-pane--right'])}>
-              <div className={styles['tw3-pane__content']}>
-                <div
-                  className={styles.divider.concat(
-                    ' ',
-                    styles.hor,
-                    ' ',
-                    styles.full,
-                    ' ',
-                    styles['mb--default']
-                  )}
-                >
-                  <span>
-                    {statusPage === false
-                      ? 'Đăng nhập bằng số điện thoại'
-                      : 'Đăng ký tài khoản mới'}
-                  </span>
+            <div
+              className={styles.homepageContainer__content__form.concat(
+                ' ',
+                styles.registerContainer
+              )}
+            >
+              <div className={styles['tw3-pane'].concat(' ', styles['tw3-pane--left'])}>
+                <div className={styles['tw3-pane__content']}>
+                  <div className={styles.logo}>
+                    <img
+                      alt="img"
+                      src="https://twoo-a.akamaihd.net/static/682503600911326952191/images/logos/logo-twoo-flat-white@2x.png"
+                      height={42}
+                    />
+                  </div>
+
+                  <h1
+                    style={{ color: '#fff' }}
+                    className={styles['h1--step1'].concat(' ', styles.fw500)}
+                  >
+                    Chat với bạn <strong>mới</strong> khắp thế giới.
+                  </h1>
+                  <p className={styles['mb--slack']}>
+                    Gặp hàng triệu người từ khắp nơi bất kể bạn ở đâu. Chat vui vẻ, kết bạn và tìm
+                    một nửa của mình. Bởi vì cuộc đời chính là những người bạn gặp gỡ.
+                  </p>
                 </div>
-                {statusPage === false ? (
-                  <FormLogin {...this.props} />
-                ) : (
-                  <FormRegister {...this.props} />
-                )}
+              </div>
+              <div className={styles['tw3-pane'].concat(' ', styles['tw3-pane--right'])}>
+                <div className={styles['tw3-pane__content']}>
+                  <div
+                    className={styles.divider.concat(
+                      ' ',
+                      styles.hor,
+                      ' ',
+                      styles.full,
+                      ' ',
+                      styles['mb--default']
+                    )}
+                  >
+                    <span>
+                      {statusPage === false
+                        ? 'Đăng nhập bằng số điện thoại'
+                        : 'Đăng ký tài khoản mới'}
+                    </span>
+                  </div>
+                  {statusPage === false ? (
+                    <FormLogin {...this.props} />
+                  ) : (
+                    <FormRegister {...this.props} />
+                  )}
+                </div>
               </div>
             </div>
           </div>
-        </div>
+        )}
+
         <div
           style={{ background: '#fff', height: 0 }}
           className={styles.homepageLinks.concat(' ', styles['homepageLinks--bottom'])}

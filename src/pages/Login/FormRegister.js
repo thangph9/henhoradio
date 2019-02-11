@@ -1,6 +1,6 @@
 import React, { PureComponent } from 'react';
 import { connect } from 'dva';
-import { Form, Input, Button, Popover, Progress, Select } from 'antd';
+import { Form, Input, Button, Popover, Progress, Select, Icon } from 'antd';
 // import {Link} from 'react-router-dom'
 import styles from './styles.less';
 
@@ -17,8 +17,6 @@ const passwordProgressMap = {
   poor: 'exception',
 };
 const years = [
-  2004,
-  2003,
   2002,
   2001,
   2000,
@@ -77,22 +75,6 @@ const years = [
   1947,
   1946,
   1945,
-  1944,
-  1943,
-  1942,
-  1941,
-  1940,
-  1939,
-  1938,
-  1937,
-  1936,
-  1935,
-  1934,
-  1933,
-  1932,
-  1931,
-  1930,
-  1929,
 ];
 const months = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12];
 const dayInMonthFull = [
@@ -127,99 +109,6 @@ const dayInMonthFull = [
   29,
   30,
   31,
-];
-const dayInMonthShort = [
-  1,
-  2,
-  3,
-  4,
-  5,
-  6,
-  7,
-  8,
-  9,
-  10,
-  11,
-  12,
-  13,
-  14,
-  15,
-  16,
-  17,
-  18,
-  19,
-  20,
-  21,
-  22,
-  23,
-  24,
-  25,
-  26,
-  27,
-  28,
-  29,
-  30,
-];
-const dayInFebruaryNormal = [
-  1,
-  2,
-  3,
-  4,
-  5,
-  6,
-  7,
-  8,
-  9,
-  10,
-  11,
-  12,
-  13,
-  14,
-  15,
-  16,
-  17,
-  18,
-  19,
-  20,
-  21,
-  22,
-  23,
-  24,
-  25,
-  26,
-  27,
-  28,
-];
-const dayInFebruaryProfit = [
-  1,
-  2,
-  3,
-  4,
-  5,
-  6,
-  7,
-  8,
-  9,
-  10,
-  11,
-  12,
-  13,
-  14,
-  15,
-  16,
-  17,
-  18,
-  19,
-  20,
-  21,
-  22,
-  23,
-  24,
-  25,
-  26,
-  27,
-  28,
-  29,
 ];
 @connect(({ loading }) => ({
   submitting: loading.effects['form/submitRegularForm'],
@@ -327,6 +216,11 @@ class FormRegister extends PureComponent {
         callback();
       }
     }
+    setTimeout(() => {
+      this.setState({
+        visible: false,
+      });
+    }, 5000);
   };
 
   renderPasswordProgress = () => {
@@ -385,105 +279,11 @@ class FormRegister extends PureComponent {
   };
 
   handleChangeMonth = value => {
-    const { form } = this.props;
-    const year = form.getFieldValue('year');
-    if (year % 4 === 0 && value === 2) {
-      this.setState(
-        {
-          monthSelected: dayInFebruaryProfit,
-        },
-        () => {
-          const day = form.getFieldValue('day');
-          if (day > 29) {
-            form.setFieldsValue({
-              day: 1,
-            });
-          }
-        }
-      );
-      return;
-    }
-    if (value === 2) {
-      this.setState(
-        {
-          monthSelected: dayInFebruaryNormal,
-        },
-        () => {
-          const day = form.getFieldValue('day');
-          if (day > 28) {
-            form.setFieldsValue({
-              day: 1,
-            });
-          }
-        }
-      );
-      return;
-    }
-    if (
-      value === 1 ||
-      value === 3 ||
-      value === 5 ||
-      value === 7 ||
-      value === 8 ||
-      value === 10 ||
-      value === 12
-    ) {
-      this.setState({
-        monthSelected: dayInMonthFull,
-      });
-      return;
-    }
-    if (value === 4 || value === 6 || value === 9 || value === 11) {
-      this.setState(
-        {
-          monthSelected: dayInMonthShort,
-        },
-        () => {
-          const day = form.getFieldValue('day');
-          if (day > 30) {
-            form.setFieldsValue({
-              day: 1,
-            });
-          }
-        }
-      );
-    }
+    console.log(value);
   };
 
   handleChangeYear = value => {
-    const { form } = this.props;
-    const month = form.getFieldValue('month');
-    if (value % 4 === 0 && month === 2) {
-      this.setState(
-        {
-          monthSelected: dayInFebruaryProfit,
-        },
-        () => {
-          const day = form.getFieldValue('day');
-          if (day > 29) {
-            form.setFieldsValue({
-              day: 1,
-            });
-          }
-        }
-      );
-      return;
-    }
-    if (month === 2) {
-      this.setState(
-        {
-          monthSelected: dayInFebruaryNormal,
-        },
-        () => {
-          const day = form.getFieldValue('day');
-          if (day > 28) {
-            form.setFieldsValue({
-              day: 1,
-            });
-          }
-        }
-      );
-    }
+    console.log(value);
   };
 
   validRepassword() {
@@ -498,6 +298,12 @@ class FormRegister extends PureComponent {
         },
       });
     }
+  }
+
+  handleClosePass() {
+    this.setState({
+      visible: false,
+    });
   }
 
   render() {
@@ -557,8 +363,12 @@ class FormRegister extends PureComponent {
           {getFieldDecorator('day', {
             onChange: this.handleChangeDay,
           })(
-            <Select style={{}} placeholder="Ngày">
-              {monthSelected.length > 0 ? A : B}
+            <Select placeholder="Ngày">
+              {dayInMonthFull.map(v => (
+                <Option key={v} value={v}>
+                  {v}
+                </Option>
+              ))}
             </Select>
           )}
           {getFieldDecorator('month', {
@@ -629,6 +439,11 @@ class FormRegister extends PureComponent {
           <Popover
             content={
               <div style={{ padding: '4px 0' }}>
+                <Icon
+                  onClick={() => this.handleClosePass()}
+                  style={{ position: 'absolute', right: '10px', top: '10px', cursor: 'pointer' }}
+                  type="close"
+                />
                 {passwordStatusMap[this.getPasswordStatus()]}
                 {this.renderPasswordProgress()}
                 <div style={{ marginTop: 10 }}>Mât khẩu ít nhất 6 ký tự</div>
