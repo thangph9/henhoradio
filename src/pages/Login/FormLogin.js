@@ -1,3 +1,4 @@
+/* eslint-disable react/sort-comp */
 /* eslint-disable no-return-assign */
 /* eslint-disable react/no-unused-state */
 import React, { PureComponent } from 'react';
@@ -10,7 +11,7 @@ import FormItem from 'antd/lib/form/FormItem';
 // import styles from './styles.less';
 
 // eslint-disable-next-line no-unused-vars
-let recaptchaInstance;
+const recaptchaRef = React.createRef();
 @connect(({ loading, authentication }) => ({
   submitting: loading.effects['form/submitRegularForm'],
   authentication,
@@ -43,9 +44,9 @@ class FormLogin extends PureComponent {
 
   handleSubmit = e => {
     e.preventDefault();
+    recaptchaRef.current.execute();
     const { form, dispatch } = this.props;
     form.validateFields((err, values) => {
-      console.log(err, values);
       if (!err) {
         dispatch({
           type: 'authentication/login',
@@ -88,7 +89,9 @@ class FormLogin extends PureComponent {
             ],
           })(<Input onChange={e => this.handleChangePhone(e)} />)}
         </Form.Item>
-        <FormItem help={help} validateStatus={validateStatus} style={{ marginBottom: '0px' }} />
+        <FormItem help={help} validateStatus={validateStatus} style={{ marginBottom: '0px' }}>
+          {getFieldDecorator('hidden', {})(<Input type="hidden" />)}
+        </FormItem>
         <Form.Item label="Mật khẩu">
           {getFieldDecorator('password', {
             rules: [
@@ -101,9 +104,10 @@ class FormLogin extends PureComponent {
         </Form.Item>
         <FormItem>
           <ReCAPTCHA
-            ref={e => (recaptchaInstance = e)}
-            sitekey="6Ld1534UAAAAAPy1pvn0YcCH3WUiKqpbM1tHrmRO"
-            onChange={this.handleChangeCaptcha}
+            ref={recaptchaRef}
+            onChange={e => this.handleChangeCaptcha(e)}
+            sitekey="6LfUm5AUAAAAAB6eXtNTPWLUZT5hCbDabBBmLK23"
+            size="invisible"
           />
         </FormItem>
         <Form.Item>

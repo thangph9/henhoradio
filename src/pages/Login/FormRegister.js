@@ -1,9 +1,15 @@
+/* eslint-disable react/no-unused-state */
+/* eslint-disable no-return-assign */
+/* eslint-disable no-unused-vars */
 import React, { PureComponent } from 'react';
 import { connect } from 'dva';
 import { Form, Input, Button, Popover, Progress, Select, Icon } from 'antd';
 // import {Link} from 'react-router-dom'
+import ReCAPTCHA from 'react-google-recaptcha';
 import styles from './styles.less';
 
+let recaptchaInstance;
+const recaptchaRef = React.createRef();
 const { Option } = Select;
 
 const passwordStatusMap = {
@@ -119,6 +125,7 @@ class FormRegister extends PureComponent {
     visible: false,
     help: '',
     monthSelected: [],
+    value: '',
   };
 
   componentWillReceiveProps(nextProps) {
@@ -145,6 +152,7 @@ class FormRegister extends PureComponent {
 
   handleSubmit = e => {
     e.preventDefault();
+    recaptchaRef.current.execute();
     const { form, dispatch } = this.props;
     // const email = this.props.form.getFieldValue('email');
     // const filter = /^([a-zA-Z0-9_\.\-])+\@(([a-zA-Z0-9\-])+\.)+([a-zA-Z0-9]{2,4})+$/;
@@ -179,11 +187,14 @@ class FormRegister extends PureComponent {
         });
       }
       if (values.password === values.repassword) {
+        console.log(values);
         if (!err && day && month && year && gender) {
-          dispatch({
+          /*
+            dispatch({
             type: 'authentication/register',
             payload: values,
           });
+          */
         }
       }
     });
@@ -284,6 +295,11 @@ class FormRegister extends PureComponent {
 
   handleChangeYear = value => {
     console.log(value);
+  };
+
+  handleChangeCaptcha = value => {
+    console.log(value);
+    this.setState({ value });
   };
 
   validRepassword() {
@@ -478,7 +494,14 @@ class FormRegister extends PureComponent {
             />
           )}
         </Form.Item>
-
+        <Form.Item>
+          <ReCAPTCHA
+            ref={recaptchaRef}
+            onChange={e => this.handleChangeCaptcha(e)}
+            sitekey="6LfUm5AUAAAAAB6eXtNTPWLUZT5hCbDabBBmLK23"
+            size="invisible"
+          />
+        </Form.Item>
         <Form.Item>
           <Button
             size="large"
