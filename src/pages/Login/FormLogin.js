@@ -1,16 +1,11 @@
-/* eslint-disable no-return-assign */
-/* eslint-disable react/no-unused-state */
 import React, { PureComponent } from 'react';
 import { connect } from 'dva';
 // import { Redirect } from 'react-router-dom';
 import { Form, Input, Button } from 'antd';
-import ReCAPTCHA from 'react-google-recaptcha';
 import FormItem from 'antd/lib/form/FormItem';
 // import {Link} from 'react-router-dom'
 // import styles from './styles.less';
 
-// eslint-disable-next-line no-unused-vars
-let recaptchaInstance;
 @connect(({ loading, authentication }) => ({
   submitting: loading.effects['form/submitRegularForm'],
   authentication,
@@ -20,7 +15,6 @@ class FormLogin extends PureComponent {
   state = {
     help: '',
     validateStatus: '',
-    value: '',
   };
 
   componentWillReceiveProps(nextProps) {
@@ -53,11 +47,6 @@ class FormLogin extends PureComponent {
         });
       }
     });
-  };
-
-  handleChangeCaptcha = value => {
-    console.log(value);
-    this.setState({ value });
   };
 
   handleChangePhone(value) {
@@ -99,13 +88,6 @@ class FormLogin extends PureComponent {
             ],
           })(<Input type="password" />)}
         </Form.Item>
-        <FormItem>
-          <ReCAPTCHA
-            ref={e => (recaptchaInstance = e)}
-            sitekey="6Ld1534UAAAAAPy1pvn0YcCH3WUiKqpbM1tHrmRO"
-            onChange={this.handleChangeCaptcha}
-          />
-        </FormItem>
         <Form.Item>
           <Button
             size="large"
