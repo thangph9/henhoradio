@@ -117,8 +117,9 @@ const dayInMonthFull = [
   30,
   31,
 ];
-@connect(({ loading }) => ({
+@connect(({ loading, authentication }) => ({
   submitting: loading.effects['form/submitRegularForm'],
+  authentication,
 }))
 @Form.create()
 class FormRegister extends PureComponent {
