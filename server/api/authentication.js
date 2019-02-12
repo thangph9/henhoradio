@@ -36,13 +36,15 @@ function register(req, res) {
   let hash = '';
   const tasks = [
     function validParams(callback) {
-      PARAM_IS_VALID.phone = params.phone;
-      PARAM_IS_VALID.email = params.email;
-      PARAM_IS_VALID.otp = params.otp;
       PARAM_IS_VALID.fullname = params.fullname;
-      PARAM_IS_VALID.username = params.email;
+      PARAM_IS_VALID.gender = params.gender;
+      PARAM_IS_VALID.dob_day = params.dob_day;
+      PARAM_IS_VALID.dob_month = params.dob_month;
+      PARAM_IS_VALID.dob_year = params.dob_year;
+      PARAM_IS_VALID.dob_year = params.dob_year;
+      PARAM_IS_VALID.phone = params.phone;
       PARAM_IS_VALID.address = params.address;
-      PARAM_IS_VALID.password = params.password;
+      PARAM_IS_VALID.hhr_goal = params.hhr_goal;
       PARAM_IS_VALID.user_id = userId;
       PARAM_IS_VALID.enabled = true;
       PARAM_IS_VALID.createat = new Date().getTime();
@@ -98,10 +100,14 @@ function register(req, res) {
       const userObject = {
         user_id: PARAM_IS_VALID.user_id,
         address: PARAM_IS_VALID.address,
-        email: PARAM_IS_VALID.email,
+        dob_day: PARAM_IS_VALID.dob_day,
+        dob_month: PARAM_IS_VALID.dob_month,
+        dob_year: PARAM_IS_VALID.dob_year,
         createat: PARAM_IS_VALID.createat,
-        name: PARAM_IS_VALID.fullname,
+        gender: PARAM_IS_VALID.gender,
+        fullname: PARAM_IS_VALID.fullname,
         phone: PARAM_IS_VALID.phone,
+        hhr_goal: PARAM_IS_VALID.hhr_goal,
       };
       const loginObject = {
         phone: PARAM_IS_VALID.phone,
