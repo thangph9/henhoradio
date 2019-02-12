@@ -11,7 +11,7 @@ module.exports = {
     dob_year: 'int',
     email: 'text',
     fullname: 'text',
-    gender: 'varchar',
+    gender: 'text',
     height: 'text',
     hhr_goal: 'text',
     phone: 'text',

@@ -9,13 +9,10 @@ _roadhog-api-doc
 # production
 /dist
 /.vscode
-
-/server
 # misc
 .DS_Store
 npm-debug.log*
 yarn-error.log
-
 /coverage
 .idea
 yarn.lock

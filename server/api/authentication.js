@@ -29,26 +29,26 @@ function register(req, res) {
   const userId = Uuid.random();
   const saltRounds = 10;
   const queries = [];
-  const msg = '';
   const PARAM_IS_VALID = {};
-  let verificationUrl = '';
+  // let verificationUrl = '';
   let salt = '';
   let hash = '';
   const tasks = [
     function validParams(callback) {
-      PARAM_IS_VALID.fullname = params.fullname;
-      PARAM_IS_VALID.gender = params.gender;
-      PARAM_IS_VALID.dob_day = params.dob_day;
-      PARAM_IS_VALID.dob_month = params.dob_month;
-      PARAM_IS_VALID.dob_year = params.dob_year;
-      PARAM_IS_VALID.dob_year = params.dob_year;
-      PARAM_IS_VALID.phone = params.phone;
-      PARAM_IS_VALID.address = params.address;
-      PARAM_IS_VALID.hhr_goal = params.hhr_goal;
-      PARAM_IS_VALID.user_id = userId;
-      PARAM_IS_VALID.enabled = true;
-      PARAM_IS_VALID.createat = new Date().getTime();
-      callback(null, null);
+      try {
+        PARAM_IS_VALID.phone = params.phone;
+        PARAM_IS_VALID.gender = params.gender;
+        PARAM_IS_VALID.fullname = params.fullname;
+        PARAM_IS_VALID.address = params.address;
+        PARAM_IS_VALID.password = params.password;
+        PARAM_IS_VALID.user_id = userId;
+        PARAM_IS_VALID.dob_day = params.dob_day;
+        PARAM_IS_VALID.dob_month = params.dob_month;
+        PARAM_IS_VALID.dob_year = params.dob_year;
+        callback(null, null);
+      } catch (error) {
+        console.log(error);
+      }
     },
     function genSaltToken(callback) {
       bcrypt.genSalt(saltRounds, (err, rs) => {
@@ -57,23 +57,33 @@ function register(req, res) {
       });
     },
     function getHashToken(callback) {
-      bcrypt.hash(params.password, salt, (err, rs) => {
+      bcrypt.hash(PARAM_IS_VALID.password, salt, (err, rs) => {
         hash = rs;
         callback(err, null);
       });
     },
     function fetchPassword(callback) {
-      models.instance.login.find({ phone: PARAM_IS_VALID.phone }, (err, _user) => {
-        if (_user !== undefined && _user.length > 0) {
-          res.json({
-            status: 'error',
-            message: 'Tài khoản đã tồn tại!',
-          });
-        }
-        callback(err, null);
-      });
+      try {
+        models.instance.users.find(
+          { phone: PARAM_IS_VALID.phone },
+          { allow_filtering: true },
+          (err, _user) => {
+            if (_user !== undefined && _user.length > 0) {
+              res.json({
+                status: 'error',
+                message: 'Số điện thoại đã được đăng ký!',
+                timeline: new Date().getTime(),
+              });
+            }
+            callback(err, null);
+          }
+        );
+      } catch (error) {
+        console.log(error);
+      }
     },
-    function checkCaptcha(callback) {
+    /*
+      function checkCaptcha(callback) {
       if (!params.captcha) {
         return res.json({ responseCode: 1, responseDesc: 'Please select captcha' });
       }
@@ -84,6 +94,7 @@ function register(req, res) {
       );
       return callback(null, verificationUrl);
     },
+
     function verifyCaptcha(callback) {
       request(verificationUrl, (error, response, b) => {
         const body = JSON.parse(b);
@@ -96,46 +107,46 @@ function register(req, res) {
         callback(error, null);
       });
     },
+    */
     function saveUser(callback) {
-      const userObject = {
-        user_id: PARAM_IS_VALID.user_id,
-        address: PARAM_IS_VALID.address,
-        dob_day: PARAM_IS_VALID.dob_day,
-        dob_month: PARAM_IS_VALID.dob_month,
-        dob_year: PARAM_IS_VALID.dob_year,
-        createat: PARAM_IS_VALID.createat,
-        gender: PARAM_IS_VALID.gender,
-        fullname: PARAM_IS_VALID.fullname,
-        phone: PARAM_IS_VALID.phone,
-        hhr_goal: PARAM_IS_VALID.hhr_goal,
-      };
-      const loginObject = {
-        phone: PARAM_IS_VALID.phone,
-        enabled: PARAM_IS_VALID.enabled,
-        password: hash,
-        password_hash_algorithm: 'bcrypt',
-        password_salt: salt,
-        user_id: PARAM_IS_VALID.user_id,
-      };
-      /* eslint-disable new-cap */
-
-      if (msg.length === 0) {
+      try {
+        const userObject = {
+          user_id: PARAM_IS_VALID.user_id,
+          address: PARAM_IS_VALID.address,
+          gender: PARAM_IS_VALID.gender,
+          dob_day: PARAM_IS_VALID.dob_day,
+          dob_month: PARAM_IS_VALID.dob_month,
+          dob_year: PARAM_IS_VALID.dob_year,
+          fullname: PARAM_IS_VALID.fullname,
+          phone: PARAM_IS_VALID.phone,
+          createat: new Date().getTime(),
+        };
+        const loginObject = {
+          phone: PARAM_IS_VALID.phone,
+          password: hash,
+          password_hash_algorithm: 'bcrypt',
+          password_salt: salt,
+          user_id: PARAM_IS_VALID.user_id,
+        };
+        /* eslint-disable new-cap */
         const Users = () => {
           const object = userObject;
           const instance = new models.instance.users(object);
-          const save = instance.save({ if_exist: true, return_query: true });
+          const save = instance.save({ return_query: true });
           return save;
         };
         queries.push(Users());
         const Login = () => {
           const object = loginObject;
           const instance = new models.instance.login(object);
-          const save = instance.save({ if_exist: true, return_query: true });
+          const save = instance.save({ return_query: true });
           return save;
         };
         queries.push(Login());
+        callback(null, null);
+      } catch (error) {
+        console.log(error);
       }
-      callback(null, null);
     },
     function doSubmit(callback) {
       models.doBatch(queries, err => {
@@ -144,10 +155,14 @@ function register(req, res) {
     },
   ];
   async.series(tasks, err => {
-    if (err) return res.json({ status: 'error' });
+    if (err) {
+      console.log(err);
+      return res.json({ status: 'error', message: err, timeline: new Date().getTime() });
+    }
     return res.json({
       status: 'ok',
       message: 'Đăng ký thành công!',
+      timeline: new Date().getTime(),
     });
   });
 }
