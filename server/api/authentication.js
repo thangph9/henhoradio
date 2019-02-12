@@ -157,7 +157,6 @@ function login(req, res) {
   let user = {};
   let msg = '';
   let verificationUrl = '';
-  let userInfo = [];
   let hashPassword = '';
   let isLogin = false;
   let token = '';
@@ -167,18 +166,6 @@ function login(req, res) {
       PARAM_IS_VALID.password = params.password;
       PARAM_IS_VALID.captcha = params.captcha;
       callback(null, null);
-    },
-    function fetchUsers(callback) {
-      models.instance.account.find(
-        { phone: PARAM_IS_VALID.phone },
-        { allow_filtering: true },
-        (err, _user) => {
-          if (Array.isArray(_user)) {
-            userInfo = _user;
-          }
-          callback(err, null);
-        }
-      );
     },
     function fetchPassword(callback) {
       models.instance.login.find({ phone: PARAM_IS_VALID.phone }, (err, _user) => {
@@ -214,9 +201,9 @@ function login(req, res) {
           token = jwt.sign(
             {
               userid: user[0].user_id,
-              name: userInfo[0].name,
-              phone: userInfo[0].phone,
-              address: userInfo[0].address,
+              fullname: user[0].fullname,
+              phone: user[0].phone,
+              address: user[0].address,
             },
             jwtprivate,
             {
