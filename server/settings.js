@@ -5,7 +5,7 @@ const fullpath = path.join(__dirname, './models');
 models.setDirectory(fullpath).bind(
   {
     clientOptions: {
-      contactPoints: ['35.225.105.216'],
+      contactPoints: ['localhost'],
       protocalOptions: { port: 9042 },
       keyspace: 'hhr',
       queryOptions: { consistency: models.consistencies.one },
