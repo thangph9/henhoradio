@@ -11,11 +11,12 @@ module.exports = {
     dob_year: 'int',
     email: 'text',
     fullname: 'text',
-    gender: 'int',
+    gender: 'varchar',
     height: 'text',
     hhr_goal: 'text',
     phone: 'text',
     uniqueid: 'int',
+    createat: 'timestamp',
   },
   key: ['user_id'],
 };
