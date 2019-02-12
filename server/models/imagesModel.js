@@ -1,12 +1,13 @@
 module.exports = {
   fields: {
-    imageid: 'uuid',
+    image_id: 'uuid',
+    description: 'text',
+    face_active: 'boolean',
     image: 'blob',
     options: {
       type: 'map',
       typeDef: '<text,text>',
     },
-    createat: 'timestamp',
   },
-  key: ['imageid'],
+  key: ['image_id'],
 };

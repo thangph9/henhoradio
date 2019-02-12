@@ -1,18 +1,10 @@
 module.exports = {
   fields: {
-    user_id: 'uuid',
-    address: 'text',
-    email: 'text',
-    createat: 'timestamp',
-    last_login: 'timestamp',
-    name: 'text',
-    phone: 'text',
-    role: {
-      type: 'set',
-      typeDef: 'text',
-    },
-    updateat: 'timestamp',
-    username: 'text',
+    phone: 'text', // unicode
+    user_id: 'uuid', // 128bit
+    password: 'text',
+    password_hash_algorithm: 'text',
+    password_salt: 'text',
   },
-  key: ['user_id'],
+  key: ['phone', 'user_id'],
 };
