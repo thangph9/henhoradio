@@ -163,7 +163,6 @@ class FormRegister extends PureComponent {
 
   handleSubmit = e => {
     e.preventDefault();
-    recaptchaRef.current.execute();
     const { form, dispatch } = this.props;
     // const email = this.props.form.getFieldValue('email');
     // const filter = /^([a-zA-Z0-9_\.\-])+\@(([a-zA-Z0-9\-])+\.)+([a-zA-Z0-9]{2,4})+$/;
