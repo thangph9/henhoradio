@@ -1,0 +1,21 @@
+module.exports = {
+  fields: {
+    user_id: 'uuid',
+    address: 'text',
+    avatar: 'uuid',
+    country: 'text',
+    description: 'text',
+    distance: 'float',
+    dob_day: 'int',
+    dob_month: 'int',
+    dob_year: 'int',
+    email: 'text',
+    fullname: 'text',
+    gender: 'int',
+    height: 'text',
+    hhr_goal: 'text',
+    phone: 'text',
+    uniqueid: 'int',
+  },
+  key: ['user_id'],
+};

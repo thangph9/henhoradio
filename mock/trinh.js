@@ -1,24 +1,18 @@
-/* eslint-disable no-shadow */
-/* eslint-disable no-plusplus */
-/* eslint-disable vars-on-top */
-/* eslint-disable consistent-return */
-/* eslint-disable arrow-body-style */
 /* eslint-disable no-unused-vars */
-/* eslint-disable no-var */
-/* eslint-disable import/no-extraneous-dependencies */
+/* eslint-disable consistent-return */
+/* eslint-disable prefer-arrow-callback */
+/* eslint-disable func-names */
 const async = require('async');
 const fs = require('fs');
-const express = require('express');
 const driver = require('cassandra-driver');
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const request = require('request'); // eslint-disable-line
+const models = require('../settings');
 /* eslint-disable prefer-destructuring */
 const Uuid = driver.types.Uuid;
-const router = express.Router();
 // const jwtpublic = fs.readFileSync('./ssl/jwtpublic.pem', 'utf8');
 const jwtprivate = fs.readFileSync('./ssl/jwtprivate.pem', 'utf8');
-// const models = require('../settings');
 
 const MESSAGE = {
   USER_NOT_MATCH: 'Tài khoản hoặc mật khẩu không đúng',
@@ -34,70 +28,258 @@ const MESSAGE = {
 
 function register(req, res) {
   const params = req.body;
-  var token = '';
-  try {
-    token = jwt.sign(
-      {
-        username: params.phone,
-      },
-      jwtprivate,
-      {
-        expiresIn: '30d', // expires in 30 day
-        algorithm: 'RS256',
+  const userId = Uuid.random();
+  const saltRounds = 10;
+  const queries = [];
+  const msg = '';
+  const PARAM_IS_VALID = {};
+  // let verificationUrl = '';
+  let salt = '';
+  let hash = '';
+  const tasks = [
+    function validParams(callback) {
+      try {
+        PARAM_IS_VALID.phone = params.phone;
+        PARAM_IS_VALID.gender = params.gender;
+        PARAM_IS_VALID.fullname = params.fullname;
+        PARAM_IS_VALID.address = params.address;
+        PARAM_IS_VALID.password = params.password;
+        PARAM_IS_VALID.user_id = userId;
+        PARAM_IS_VALID.dob_day = params.dob_day;
+        PARAM_IS_VALID.dob_month = params.dob_month;
+        PARAM_IS_VALID.dob_year = params.dob_year;
+        callback(null, null);
+      } catch (error) {
+        console.log(error);
       }
-    );
-  } catch (e) {
-    throw e;
-  }
-  return res.json({ status: 'ok', token });
+    },
+    function genSaltToken(callback) {
+      bcrypt.genSalt(saltRounds, (err, rs) => {
+        salt = rs;
+        callback(err, null);
+      });
+    },
+    function getHashToken(callback) {
+      bcrypt.hash(PARAM_IS_VALID.password, salt, (err, rs) => {
+        hash = rs;
+        callback(err, null);
+      });
+    },
+    function fetchPassword(callback) {
+      try {
+        models.instance.users.find(
+          { phone: PARAM_IS_VALID.phone },
+          { allow_filtering: true },
+          (err, _user) => {
+            if (_user !== undefined && _user.length > 0) {
+              res.json({
+                status: 'error',
+                message: 'Số điện thoại đã được đăng ký!',
+                timeline: new Date().getTime(),
+              });
+            }
+            callback(err, null);
+          }
+        );
+      } catch (error) {
+        console.log(error);
+      }
+    },
+    /*
+      function checkCaptcha(callback) {
+      if (!params.captcha) {
+        return res.json({ responseCode: 1, responseDesc: 'Please select captcha' });
+      }
+      verificationUrl = 'https://www.google.com/recaptcha/api/siteverify?secret=6Ld1534UAAAAAFF8A3KCBEAfcfjS6COX9obBJrWV&response='.concat(
+        params.captcha,
+        '&remoteip=',
+        req.connection.remoteAddress
+      );
+      return callback(null, verificationUrl);
+    },
+
+    function verifyCaptcha(callback) {
+      request(verificationUrl, (error, response, b) => {
+        const body = JSON.parse(b);
+        if (body.success === false) {
+          res.json({
+            status: 'error',
+            message: 'Sai captcha',
+          });
+        }
+        callback(error, null);
+      });
+    },
+    */
+    function saveUser(callback) {
+      try {
+        const userObject = {
+          user_id: PARAM_IS_VALID.user_id,
+          address: PARAM_IS_VALID.address,
+          gender: PARAM_IS_VALID.gender,
+          dob_day: PARAM_IS_VALID.dob_day,
+          dob_month: PARAM_IS_VALID.dob_month,
+          dob_year: PARAM_IS_VALID.dob_year,
+          fullname: PARAM_IS_VALID.fullname,
+          phone: PARAM_IS_VALID.phone,
+        };
+        const loginObject = {
+          phone: PARAM_IS_VALID.phone,
+          password: hash,
+          password_hash_algorithm: 'bcrypt',
+          password_salt: salt,
+          user_id: PARAM_IS_VALID.user_id,
+        };
+        /* eslint-disable new-cap */
+        const Users = () => {
+          const object = userObject;
+          const instance = new models.instance.users(object);
+          const save = instance.save({ return_query: true });
+          return save;
+        };
+        queries.push(Users());
+        const Login = () => {
+          const object = loginObject;
+          const instance = new models.instance.login(object);
+          const save = instance.save({ return_query: true });
+          return save;
+        };
+        queries.push(Login());
+        callback(null, null);
+      } catch (error) {
+        console.log(error);
+      }
+    },
+    function doSubmit(callback) {
+      models.doBatch(queries, err => {
+        callback(err, null);
+      });
+    },
+  ];
+  async.series(tasks, err => {
+    if (err) {
+      console.log(err);
+      return res.json({ status: 'error', message: err, timeline: new Date().getTime() });
+    }
+    return res.json({
+      status: 'ok',
+      message: 'Đăng ký thành công!',
+      timeline: new Date().getTime(),
+    });
+  });
 }
 function login(req, res) {
   const params = req.body;
-  var result = false;
-  var token = '';
-  var arrDb = [
-    {
-      phone: '0123456789',
-      password: '0123456789',
+  const PARAM_IS_VALID = {};
+  let user = {};
+  let msg = '';
+  let verificationUrl = '';
+  let userInfo = [];
+  let hashPassword = '';
+  let isLogin = false;
+  let token = '';
+  const tasks = [
+    function validParams(callback) {
+      PARAM_IS_VALID.phone = params.username;
+      PARAM_IS_VALID.password = params.password;
+      PARAM_IS_VALID.captcha = params.captcha;
+      callback(null, null);
     },
-    {
-      phone: '9876543210',
-      password: '9876543210',
+    function fetchUsers(callback) {
+      models.instance.account.find(
+        { phone: PARAM_IS_VALID.phone },
+        { allow_filtering: true },
+        (err, _user) => {
+          if (Array.isArray(_user)) {
+            userInfo = _user;
+          }
+          callback(err, null);
+        }
+      );
+    },
+    function fetchPassword(callback) {
+      models.instance.login.find({ phone: PARAM_IS_VALID.phone }, (err, _user) => {
+        if (Array.isArray(_user)) {
+          if (_user[0].enabled) {
+            hashPassword = _user[0].password;
+          } else {
+            msg = MESSAGE.USER_HAD_BANNED;
+          }
+          user = _user;
+        } else {
+          msg = MESSAGE.USER_NOT_FOUND;
+        }
+        callback(err, null);
+      });
+    },
+    function validPassword(callback) {
+      if (hashPassword !== '') {
+        bcrypt.compare(PARAM_IS_VALID.password, hashPassword, (err, result) => {
+          // res == true
+          if (result) {
+            isLogin = result;
+          } else {
+            msg = MESSAGE.USER_NOT_MATCH;
+          }
+          callback(err, null);
+        });
+      } else callback(null, null);
+    },
+    function Login(callback) {
+      if (isLogin) {
+        try {
+          token = jwt.sign(
+            {
+              userid: user[0].user_id,
+              name: userInfo[0].name,
+              phone: userInfo[0].phone,
+              address: userInfo[0].address,
+            },
+            jwtprivate,
+            {
+              expiresIn: '30d', // expires in 30 day
+              algorithm: 'RS256',
+            }
+          );
+        } catch (e) {
+          // console.log(e);
+        }
+      }
+      callback(null, token);
+    },
+    function getCaptcha(callback) {
+      if (!params.captcha) {
+        return res.json({ responseCode: 1, responseDesc: 'Please select captcha' });
+      }
+      verificationUrl = 'https://www.google.com/recaptcha/api/siteverify?secret=6Ld1534UAAAAAFF8A3KCBEAfcfjS6COX9obBJrWV&response='.concat(
+        params.captcha,
+        '&remoteip=',
+        req.connection.remoteAddress
+      );
+      return callback(null, null);
     },
   ];
-  for (var i = 0; i < arrDb.length; i++) {
-    if (params.phone === arrDb[i].phone && params.password === arrDb[i].password) {
-      result = true;
-      try {
-        token = jwt.sign(
-          {
-            username: params.phone,
-          },
-          jwtprivate,
-          {
-            expiresIn: '30d', // expires in 30 day
-            algorithm: 'RS256',
-          }
-        );
-      } catch (e) {
-        throw e;
-      }
+  async.series(tasks, err => {
+    if (err) {
+      res.json({ status: 'error', message: msg });
+    } else {
+      request(verificationUrl, (error, response, b) => {
+        const body = JSON.parse(b);
+        if (msg !== '' || body.success === false) {
+          res.json({ status: 'error', message: msg, success: body.success });
+        } else {
+          res.json({
+            status: 'ok',
+            currentAuthority: { auth: isLogin, token: token }, // eslint-disable-line
+            phone: user[0].phone,
+            success: body.success,
+          });
+        }
+      });
     }
-  }
-  if (result === true) return res.json({ status: 'ok', token });
-  return res.json({
-    status: 'error',
-    message: 'Tài khoản hoặc mật khẩu không đúng',
-    timeline: new Date().getTime(),
   });
 }
-function homeDemo(req, res) {
-  setTimeout(() => {
-    res.json({ status: 'ok' });
-  }, 3000);
-}
 export default {
-  // 'POST /api/authentication/register': register,
-  // 'POST /api/authentication/login': login,
-  // 'GET /api/authentication/homedemo': homeDemo,
+  'POST /api/authentication/register': register,
+  'POST /api/authentication/login': login,
 };

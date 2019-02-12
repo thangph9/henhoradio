@@ -1,3 +1,4 @@
+/* eslint-disable camelcase */
 /* eslint-disable react/no-unused-state */
 /* eslint-disable no-return-assign */
 /* eslint-disable no-unused-vars */
@@ -133,7 +134,16 @@ class FormRegister extends PureComponent {
 
     if (authentication.register !== nextProps.authentication.register) {
       if (nextProps.authentication.register.status === 'ok') {
-        nextProps.history.push({ pathname: '/registerresult' });
+        // nextProps.history.push({ pathname: '/registerresult' });
+      }
+      if (
+        nextProps.authentication.register.status === 'error' &&
+        nextProps.authentication.register.timeline !== authentication.register.timeline
+      ) {
+        this.setState({
+          valiPhone: 'error',
+          helpPhone: nextProps.authentication.register.message,
+        });
       }
     }
   }
@@ -159,9 +169,9 @@ class FormRegister extends PureComponent {
     // if (!filter.test(email)) {
     // return;
     // }
-    const day = form.getFieldValue('day');
-    const month = form.getFieldValue('month');
-    const year = form.getFieldValue('year');
+    const dob_day = form.getFieldValue('dob_day');
+    const dob_month = form.getFieldValue('dob_month');
+    const dob_year = form.getFieldValue('dob_year');
     const gender = form.getFieldValue('gender');
     if (!gender) {
       form.setFields({
@@ -170,9 +180,9 @@ class FormRegister extends PureComponent {
         },
       });
     }
-    if (!day || !month || !year) {
+    if (!dob_day || !dob_month || !dob_year) {
       form.setFields({
-        day: {
+        dob_day: {
           errors: [new Error('Chọn đầy đủ ngày sinh!')],
         },
       });
@@ -187,14 +197,12 @@ class FormRegister extends PureComponent {
         });
       }
       if (values.password === values.repassword) {
-        console.log(values);
-        if (!err && day && month && year && gender) {
-          /*
-            dispatch({
+        if (!err && dob_day && dob_month && dob_year && gender) {
+          // console.log(values)
+          dispatch({
             type: 'authentication/register',
             payload: values,
           });
-          */
         }
       }
     });
@@ -266,7 +274,6 @@ class FormRegister extends PureComponent {
   };
 
   handleChangeGender = value => {
-    console.log(value);
     // eslint-disable-next-line react/destructuring-assignment
     this.props.form.setFields({
       gender: {
@@ -276,29 +283,21 @@ class FormRegister extends PureComponent {
   };
 
   handleChangeDay = value => {
-    console.log(value);
     // eslint-disable-next-line react/destructuring-assignment
     this.props.form.setFields({
-      day: {
+      dob_day: {
         errors: '',
       },
     });
   };
 
-  handleChangeIntent = value => {
-    console.log(value);
-  };
+  handleChangeIntent = value => {};
 
-  handleChangeMonth = value => {
-    console.log(value);
-  };
+  handleChangeMonth = value => {};
 
-  handleChangeYear = value => {
-    console.log(value);
-  };
+  handleChangeYear = value => {};
 
   handleChangeCaptcha = value => {
-    console.log(value);
     this.setState({ value });
   };
 
@@ -319,6 +318,15 @@ class FormRegister extends PureComponent {
   handleClosePass() {
     this.setState({
       visible: false,
+      helpPhone: '',
+      valiPhone: '',
+    });
+  }
+
+  handleChangePhone(e) {
+    this.setState({
+      helpPhone: '',
+      valiPhone: '',
     });
   }
 
@@ -326,7 +334,7 @@ class FormRegister extends PureComponent {
     const {
       form: { getFieldDecorator },
     } = this.props;
-    const { help, visible, monthSelected } = this.state;
+    const { help, visible, monthSelected, helpPhone, valiPhone } = this.state;
     const A = [];
     dayInMonthFull.map((v, i) => {
       A[i] = (
@@ -351,7 +359,7 @@ class FormRegister extends PureComponent {
           label="Tên"
           style={{ width: '45%', display: 'inline-block', marginBottom: '0px' }}
         >
-          {getFieldDecorator('name', {
+          {getFieldDecorator('fullname', {
             rules: [
               {
                 required: true,
@@ -370,13 +378,13 @@ class FormRegister extends PureComponent {
             onChange: this.handleChangeGender,
           })(
             <Select placeholder="Bạn là...">
-              <Option value="men">Nam</Option>
-              <Option value="woman">Nữ</Option>
+              <Option value={1}>Nam</Option>
+              <Option value={2}>Nữ</Option>
             </Select>
           )}
         </Form.Item>
         <Form.Item label="Ngày sinh" style={{ marginBottom: '0px' }}>
-          {getFieldDecorator('day', {
+          {getFieldDecorator('dob_day', {
             onChange: this.handleChangeDay,
           })(
             <Select placeholder="Ngày">
@@ -387,7 +395,7 @@ class FormRegister extends PureComponent {
               ))}
             </Select>
           )}
-          {getFieldDecorator('month', {
+          {getFieldDecorator('dob_month', {
             onChange: this.handleChangeMonth,
           })(
             <Select placeholder="Tháng">
@@ -398,7 +406,7 @@ class FormRegister extends PureComponent {
               ))}
             </Select>
           )}
-          {getFieldDecorator('year', {
+          {getFieldDecorator('dob_year', {
             onChange: this.handleChangeYear,
           })(
             <Select placeholder="Năm">
@@ -437,7 +445,12 @@ class FormRegister extends PureComponent {
             </Select>
           )}
         </Form.Item>
-        <Form.Item label="Số điện thoại" style={{ marginBottom: '0px' }}>
+        <Form.Item
+          help={helpPhone}
+          validateStatus={valiPhone}
+          label="Số điện thoại"
+          style={{ marginBottom: '0px' }}
+        >
           {getFieldDecorator('phone', {
             rules: [
               {
@@ -449,7 +462,12 @@ class FormRegister extends PureComponent {
                 message: 'Nhập sai định dạng hoặc chưa đủ chữ số！',
               },
             ],
-          })(<Input placeholder="Số điện thoại là tài khoản đăng nhập" />)}
+          })(
+            <Input
+              onChange={e => this.handleChangePhone(e)}
+              placeholder="Số điện thoại là tài khoản đăng nhập"
+            />
+          )}
         </Form.Item>
         <Form.Item help={help} label="Mật khẩu" style={{ marginBottom: '0px' }}>
           <Popover
