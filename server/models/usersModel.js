@@ -1,6 +1,9 @@
 module.exports = {
   fields: {
-    user_id: 'uuid',
+    user_id: {
+      type: 'uuid',
+      default: { $db_function: 'uuid()' },
+    },
     address: 'text',
     avatar: 'uuid',
     country: 'text',
