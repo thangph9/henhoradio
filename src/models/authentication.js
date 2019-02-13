@@ -1,4 +1,4 @@
-import { loginAccount, RegisterAccount, homeDemo } from '@/services/api';
+import { loginAccount, RegisterAccount, homeDemo, checkUser } from '@/services/api';
 
 export default {
   namespace: 'authentication',
@@ -7,6 +7,7 @@ export default {
     login: {},
     register: {},
     homedemo: {},
+    checkuser: {},
   },
   effects: {
     *login({ payload }, { call, put }) {
@@ -34,17 +35,17 @@ export default {
     },
     *register({ payload }, { call, put }) {
       const response = yield call(RegisterAccount, payload);
-      if (response.status === 'ok') {
-        yield put({
-          type: 'registerAuthentication',
-          payload: response || {},
-        });
-      } else {
-        yield put({
-          type: 'registerAuthentication',
-          payload: response || {},
-        });
-      }
+      yield put({
+        type: 'registerAuthentication',
+        payload: response || {},
+      });
+    },
+    *checkuser({ payload }, { call, put }) {
+      const response = yield call(checkUser, payload);
+      yield put({
+        type: 'checkUserAuthentication',
+        payload: response || {},
+      });
     },
   },
 
@@ -53,6 +54,12 @@ export default {
       return {
         ...state,
         login: action.payload,
+      };
+    },
+    checkUserAuthentication(state, action) {
+      return {
+        ...state,
+        checkuser: action.payload,
       };
     },
     registerAuthentication(state, action) {

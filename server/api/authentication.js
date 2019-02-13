@@ -49,7 +49,7 @@ function register(req, res) {
         PARAM_IS_VALID.dob_year = params.dob_year;
         callback(null, null);
       } catch (error) {
-        console.log(error);
+        res.send({ status: 'invalid' });
       }
     },
     function genSaltToken(callback) {
@@ -66,22 +66,19 @@ function register(req, res) {
     },
     function fetchPassword(callback) {
       try {
-        models.instance.users.find(
-          { phone: PARAM_IS_VALID.phone },
-          { allow_filtering: true },
-          function(err, _user) {
-            if (_user !== undefined && _user.length > 0) {
-              return res.json({
-                status: 'error',
-                message: 'Số điện thoại đã được đăng ký!',
-                timeline: new Date().getTime(),
-              });
-            }
-            callback(err, null);
+        models.instance.login.find({ phone: PARAM_IS_VALID.phone }, function(err, _phone) {
+          if (_phone !== undefined && _phone.length > 0) {
+            return res.json({
+              status: 'error',
+              message: 'Số điện thoại đã được đăng ký!',
+              timeline: new Date().getTime(),
+            });
           }
-        );
+          callback(err, null);
+        });
       } catch (error) {
         console.log(error);
+        res.send({ status: 'error' });
       }
     },
     /*
@@ -147,6 +144,7 @@ function register(req, res) {
         queries.push(Login());
       } catch (error) {
         console.log(error);
+        res.send({ status: 'error' });
       }
       callback(null, null);
     },
@@ -235,7 +233,7 @@ function login(req, res) {
         token = jwt.sign(
           {
             userid: userInfo.user_id,
-            name: userInfo.name,
+            fullname: userInfo.fullname,
             phone: userInfo.phone,
             address: userInfo.address,
           },
@@ -246,9 +244,10 @@ function login(req, res) {
           }
         );
       } catch (e) {
-        // console.log(e);
+        console.log(e);
+        res.send({ status: 'error' });
       }
-      callback(null, token);
+      callback(null, null);
     },
   ];
   async.series(tasks, err => {
@@ -263,6 +262,31 @@ function login(req, res) {
     }
   });
 }
+function checkUser(req, res) {
+  const params = req.body;
+  const PARAM_IS_VALID = {};
+  // let verificationUrl = '';
+  try {
+    PARAM_IS_VALID.phone = params.phone;
+    models.instance.login.find({ phone: PARAM_IS_VALID.phone }, function(err, _phone) {
+      if (_phone !== undefined && _phone.length > 0) {
+        return res.json({
+          status: 'error',
+          message: 'Số điện thoại đã được đăng ký!',
+          timeline: new Date().getTime(),
+        });
+      }
+      return res.json({
+        status: 'ok',
+        timeline: new Date().getTime(),
+      });
+    });
+  } catch (error) {
+    console.log(error);
+    res.send({ status: 'error' });
+  }
+}
 router.post('/register', register);
 router.post('/login', login);
+router.post('/checkuser', checkUser);
 module.exports = router;
