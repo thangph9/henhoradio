@@ -20,6 +20,15 @@ export default [
       { path: '/', redirect: '/home' },
       { path: '/home', component: './HomePage/NewFeed' },
       { path: '/profile', component: './HomePage/ProfileUser' },
+      {
+        component: '404',
+      },
+    ],
+  },
+  {
+    path: '/registerresult',
+    component: '../layouts/HomeLayout',
+    routes: [
       { path: '/registerresult', component: './ResgisterResult' },
       {
         component: '404',

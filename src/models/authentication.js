@@ -1,4 +1,3 @@
-/* eslint-disable eqeqeq */
 import { loginAccount, RegisterAccount, homeDemo } from '@/services/api';
 
 export default {
@@ -13,7 +12,6 @@ export default {
     *login({ payload }, { call, put }) {
       const response = yield call(loginAccount, payload);
       if (response.status === 'ok') {
-        // localStorage.token = JSON.stringify(response.currentAuthority.token);
         localStorage.token = JSON.stringify(response.token);
         localStorage['antd-pro-authority'] = 'member';
         yield put({
