@@ -378,8 +378,8 @@ class FormRegister extends PureComponent {
             onChange: this.handleChangeGender,
           })(
             <Select placeholder="Bạn là...">
-              <Option value={1}>Nam</Option>
-              <Option value={2}>Nữ</Option>
+              <Option value="male">Nam</Option>
+              <Option value="female">Nữ</Option>
             </Select>
           )}
         </Form.Item>
