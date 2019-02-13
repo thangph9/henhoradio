@@ -1,9 +1,13 @@
 module.exports = {
   fields: {
-    user_id: 'uuid',
+    user_id: {
+      type: 'uuid',
+      default: { $db_function: 'uuid()' },
+    },
     address: 'text',
     avatar: 'uuid',
     country: 'text',
+    createat: 'timestamp',
     description: 'text',
     distance: 'float',
     dob_day: 'int',
@@ -11,12 +15,11 @@ module.exports = {
     dob_year: 'int',
     email: 'text',
     fullname: 'text',
-    gender: 'varchar',
+    gender: 'int',
     height: 'text',
     hhr_goal: 'text',
     phone: 'text',
     uniqueid: 'int',
-    createat: 'timestamp',
   },
   key: ['user_id'],
 };
