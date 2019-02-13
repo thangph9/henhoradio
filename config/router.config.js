@@ -6,6 +6,16 @@ export default [
     routes: [{ path: '/login', component: './Login' }],
   },
   {
+    path: '/registerresult',
+    component: '../layouts/HomeLayout',
+    routes: [
+      { path: '/registerresult', component: './ResgisterResult' },
+      {
+        component: '404',
+      },
+    ],
+  },
+  {
     path: '/test',
     component: '../layouts/BlankLayout',
     routes: [{ path: '/test', component: './User/RegisterResult.js' }],
@@ -25,16 +35,7 @@ export default [
       },
     ],
   },
-  {
-    path: '/registerresult',
-    component: '../layouts/HomeLayout',
-    routes: [
-      { path: '/registerresult', component: './ResgisterResult' },
-      {
-        component: '404',
-      },
-    ],
-  },
+
   {
     component: '404',
   },
