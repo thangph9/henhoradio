@@ -143,10 +143,10 @@ function register(req, res) {
           return save;
         };
         queries.push(Login());
-        callback(null, null);
       } catch (error) {
         console.log(error);
       }
+      callback(null, null);
     },
     function doSubmit(callback) {
       models.doBatch(queries, err => {
