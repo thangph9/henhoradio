@@ -6,6 +6,10 @@ export default [
     routes: [{ path: '/login', component: './Login' }],
   },
   {
+    path: '/about',
+    routes: [{ path: '/about', component: './About' }],
+  },
+  {
     path: '/registerresult',
     component: '../layouts/HomeLayout',
     routes: [
