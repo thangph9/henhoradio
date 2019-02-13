@@ -135,7 +135,7 @@ class FormRegister extends PureComponent {
 
     if (authentication.register !== nextProps.authentication.register) {
       if (nextProps.authentication.register.status === 'ok') {
-        // nextProps.history.push({ pathname: '/registerresult' });
+        nextProps.history.push({ pathname: '/registerresult' });
       }
       if (
         nextProps.authentication.register.status === 'error' &&

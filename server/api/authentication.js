@@ -1,17 +1,19 @@
+/* eslint-disable consistent-return */
+/* eslint-disable func-names */
+/* eslint-disable prefer-arrow-callback */
 const async = require('async');
 const fs = require('fs');
 const express = require('express');
-const driver = require('cassandra-driver');
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const request = require('request'); // eslint-disable-line
 /* eslint-disable prefer-destructuring */
-const Uuid = driver.types.Uuid;
 const router = express.Router();
 // const jwtpublic = fs.readFileSync('./ssl/jwtpublic.pem', 'utf8');
 const jwtprivate = fs.readFileSync('./ssl/jwtprivate.pem', 'utf8');
 const models = require('../settings');
 
+const Uuid = models.datatypes.Uuid;
 const MESSAGE = {
   USER_NOT_MATCH: 'Tài khoản hoặc mật khẩu không đúng',
   USER_NOT_FOUND: 'Tài khoản này không tồn tại!',
@@ -67,9 +69,9 @@ function register(req, res) {
         models.instance.users.find(
           { phone: PARAM_IS_VALID.phone },
           { allow_filtering: true },
-          (err, _user) => {
+          function(err, _user) {
             if (_user !== undefined && _user.length > 0) {
-              res.json({
+              return res.json({
                 status: 'error',
                 message: 'Số điện thoại đã được đăng ký!',
                 timeline: new Date().getTime(),
@@ -169,97 +171,94 @@ function register(req, res) {
 function login(req, res) {
   const params = req.body;
   const PARAM_IS_VALID = {};
-  let user = {};
   let msg = '';
-  let verificationUrl = '';
+  let userInfo = [];
   let hashPassword = '';
-  let isLogin = false;
   let token = '';
   const tasks = [
     function validParams(callback) {
-      PARAM_IS_VALID.phone = params.username;
+      PARAM_IS_VALID.phone = params.phone;
       PARAM_IS_VALID.password = params.password;
       PARAM_IS_VALID.captcha = params.captcha;
       callback(null, null);
     },
-    function fetchPassword(callback) {
-      models.instance.login.find({ phone: PARAM_IS_VALID.phone }, (err, _user) => {
-        if (Array.isArray(_user)) {
-          if (_user[0].enabled) {
-            hashPassword = _user[0].password;
+    function fetchUsers(callback) {
+      models.instance.users.find(
+        { phone: PARAM_IS_VALID.phone },
+        { allow_filtering: true },
+        function(err, _user) {
+          if (_user && _user.length > 0) {
+            userInfo = _user[0];
           } else {
-            msg = MESSAGE.USER_HAD_BANNED;
+            return res.json({
+              status: 'error',
+              message: 'Tài khoản không tồn tại!',
+              timeline: new Date().getTime(),
+            });
           }
-          user = _user;
-        } else {
-          msg = MESSAGE.USER_NOT_FOUND;
+          callback(err, null);
         }
-        callback(err, null);
-      });
+      );
+    },
+    function fetchPassword(callback) {
+      models.instance.login.find(
+        { phone: PARAM_IS_VALID.phone },
+        { allow_filtering: true },
+        (err, _user) => {
+          if (Array.isArray(_user)) {
+            if (_user !== undefined && _user.length > 0) {
+              hashPassword = _user[0].password;
+            } else {
+              msg = MESSAGE.USER_NOT_FOUND;
+            }
+          }
+          callback(err, null);
+        }
+      );
     },
     function validPassword(callback) {
       if (hashPassword !== '') {
         bcrypt.compare(PARAM_IS_VALID.password, hashPassword, (err, result) => {
-          // res == true
-          if (result) {
-            isLogin = result;
-          } else {
-            msg = MESSAGE.USER_NOT_MATCH;
+          if (result === false) {
+            return res.json({
+              status: 'error',
+              message: 'Nhập sai mật khẩu',
+              timeline: new Date().getTime(),
+            });
           }
           callback(err, null);
         });
       } else callback(null, null);
     },
     function Login(callback) {
-      if (isLogin) {
-        try {
-          token = jwt.sign(
-            {
-              userid: user[0].user_id,
-              fullname: user[0].fullname,
-              phone: user[0].phone,
-              address: user[0].address,
-            },
-            jwtprivate,
-            {
-              expiresIn: '30d', // expires in 30 day
-              algorithm: 'RS256',
-            }
-          );
-        } catch (e) {
-          // console.log(e);
-        }
+      try {
+        token = jwt.sign(
+          {
+            userid: userInfo[0].user_id,
+            name: userInfo[0].name,
+            phone: userInfo[0].phone,
+            address: userInfo[0].address,
+          },
+          jwtprivate,
+          {
+            expiresIn: '30d', // expires in 30 day
+            algorithm: 'RS256',
+          }
+        );
+      } catch (e) {
+        // console.log(e);
       }
       callback(null, token);
-    },
-    function getCaptcha(callback) {
-      if (!params.captcha) {
-        return res.json({ responseCode: 1, responseDesc: 'Please select captcha' });
-      }
-      verificationUrl = 'https://www.google.com/recaptcha/api/siteverify?secret=6Ld1534UAAAAAFF8A3KCBEAfcfjS6COX9obBJrWV&response='.concat(
-        params.captcha,
-        '&remoteip=',
-        req.connection.remoteAddress
-      );
-      return callback(null, null);
     },
   ];
   async.series(tasks, err => {
     if (err) {
       res.json({ status: 'error', message: msg });
     } else {
-      request(verificationUrl, (error, response, b) => {
-        const body = JSON.parse(b);
-        if (msg !== '' || body.success === false) {
-          res.json({ status: 'error', message: msg, success: body.success });
-        } else {
-          res.json({
-            status: 'ok',
-            currentAuthority: { auth: isLogin, token: token }, // eslint-disable-line
-            phone: user[0].phone,
-            success: body.success,
-          });
-        }
+      res.json({
+        status: 'ok',
+        token,
+        timeline: new Date().getTime(),
       });
     }
   });
