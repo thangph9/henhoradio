@@ -234,10 +234,10 @@ function login(req, res) {
       try {
         token = jwt.sign(
           {
-            userid: userInfo[0].user_id,
-            name: userInfo[0].name,
-            phone: userInfo[0].phone,
-            address: userInfo[0].address,
+            userid: userInfo.user_id,
+            name: userInfo.name,
+            phone: userInfo.phone,
+            address: userInfo.address,
           },
           jwtprivate,
           {
