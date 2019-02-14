@@ -288,5 +288,5 @@ function checkUser(req, res) {
 }
 router.post('/register', register);
 router.post('/login', login);
-router.post('/checkuser/:phone', checkUser);
+router.get('/checkuser/:phone', checkUser);
 module.exports = router;
