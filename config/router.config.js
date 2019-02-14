@@ -20,8 +20,7 @@ export default [
     Routes: ['src/pages/Authorized'],
     authority: ['member'],
     routes: [
-      { path: '/home', redirect: '/dashboard' },
-      { path: '/dashboard', component: './HomePage/NewFeed' },
+      { path: '/home', component: './HomePage/NewFeed' },
       { path: '/profile', component: './HomePage/ProfileUser' },
       {
         component: '404',
