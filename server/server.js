@@ -22,7 +22,6 @@ app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 app.use(express.static(path.join(__dirname, '../dist')));
 // Use a custom path '/api'
-
 app.use((req, res, next) => {
   res.setHeader('Access-Control-Allow-Origin', 'http://localhost');
 
