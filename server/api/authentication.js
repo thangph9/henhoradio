@@ -263,7 +263,7 @@ function login(req, res) {
   });
 }
 function checkUser(req, res) {
-  const params = req.body;
+  const params = req.params;
   const PARAM_IS_VALID = {};
   // let verificationUrl = '';
   try {
@@ -286,8 +286,7 @@ function checkUser(req, res) {
     res.send({ status: 'error' });
   }
 }
-
 router.post('/register', register);
 router.post('/login', login);
-router.post('/checkuser', checkUser);
+router.post('/checkuser/:phone', checkUser);
 module.exports = router;
