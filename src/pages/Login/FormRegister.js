@@ -402,9 +402,12 @@ class FormRegister extends PureComponent {
     });
   }
 
-  handleBlurPass(e) {
+  handleBlurPhone(e) {
     const { value } = e.target;
     const { form, dispatch } = this.props;
+    const pathname = this.props.localtion;
+    console.log(pathname);
+
     if (!/^\d{10}$/.test(value)) {
       this.setState({
         helpPhone: 'Số điện thoại không hợp lệ',
@@ -416,9 +419,7 @@ class FormRegister extends PureComponent {
       if (!errors) {
         dispatch({
           type: 'authentication/checkuser',
-          payload: {
-            phone: value,
-          },
+          payload: value,
         });
       }
     });
@@ -622,7 +623,7 @@ class FormRegister extends PureComponent {
             <Input
               onChange={e => this.handleChangePhone(e)}
               placeholder="Số điện thoại là tài khoản đăng nhập"
-              onBlur={e => this.handleBlurPass(e)}
+              onBlur={e => this.handleBlurPhone(e)}
             />
           )}
         </Form.Item>
