@@ -138,6 +138,8 @@ class FormRegister extends PureComponent {
     helpAddress: '',
     valiAddress: '',
     checkCharPass: '',
+    helpRePass: '',
+    valiRePass: '',
     messageName: 'Nhập tên của bạn',
   };
 
@@ -196,6 +198,7 @@ class FormRegister extends PureComponent {
     const fullname = form.getFieldValue('fullname');
     const address = form.getFieldValue('address');
     const password = form.getFieldValue('password');
+    const repassword = form.getFieldValue('repassword');
     if (
       !fullname ||
       /^[a-zA-ZàáạảãâầấậẩẫăằắặẳẵèéẹẻẽêềếệểễìíịỉĩòóọỏõôồốộổỗơờớợởỡùúụủũưừứựửữỳýỵỷỹđÀÁẠẢÃÂẦẤẬẨẪĂẰẮẶẲẴÈÉẸẺẼÊỀẾỆỂỄÌÍỊỈĨÒÓỌỎÕÔỒỐỘỔỖƠỜỚỢỞỠÙÚỤỦŨƯỪỨỰỬỮỲÝỴỶỸĐ][a-zA-Z àáạảãâầấậẩẫăằắặẳẵèéẹẻẽêềếệểễìíịỉĩòóọỏõôồốộổỗơờớợởỡùúụủũưừứựửữỳýỵỷỹđÀÁẠẢÃÂẦẤẬẨẪĂẰẮẶẲẴÈÉẸẺẼÊỀẾỆỂỄÌÍỊỈĨÒÓỌỎÕÔỒỐỘỔỖƠỜỚỢỞỠÙÚỤỦŨƯỪỨỰỬỮỲÝỴỶỸĐ]{2,30}$/.test(
@@ -231,9 +234,20 @@ class FormRegister extends PureComponent {
         },
       });
     }
-    if (/^[a-zA-z0-9]{1,}$/.test(password) === false) {
+    if (!password) {
       this.setState({
-        help: 'Mật khẩu chứa ký tự đặc biệt',
+        help: 'Nhập mật khẩu！',
+        valiPass: 'error',
+      });
+    } else if (/^[a-zA-z0-9]{1,}$/.test(password) === false) {
+      this.setState({
+        help: 'Mật khẩu đang chứa ký tự đặc biệt',
+      });
+    }
+    if (!repassword) {
+      this.setState({
+        helpRePass: 'Nhập lại mật khẩu！',
+        valiRePass: 'error',
       });
     }
     if (!dob_day || !dob_month || !dob_year) {
@@ -245,11 +259,9 @@ class FormRegister extends PureComponent {
     }
     form.validateFields((err, values) => {
       if (values.password !== values.repassword) {
-        form.setFields({
-          repassword: {
-            value: values.repassword,
-            errors: [new Error('Nhập lại mật khẩu sai vui lòng kiểm tra lại!')],
-          },
+        this.setState({
+          valiRePass: 'error',
+          helpRePass: 'Nhập lại mật khẩu chưa đúng!',
         });
       }
       if (values.password === values.repassword) {
@@ -266,17 +278,6 @@ class FormRegister extends PureComponent {
 
   checkPassword = (rule, value, callback) => {
     const { visible, confirmDirty } = this.state;
-    if (/^[a-zA-z0-9]{1,}$/.test(value) === false) {
-      this.setState({
-        checkCharPass: 'Mật khẩu đang chứa ký tự đặc biệt',
-        valiPass: 'error',
-      });
-    } else {
-      this.setState({
-        checkCharPass: '',
-        valiPass: '',
-      });
-    }
     if (!value) {
       this.setState({
         help: 'Nhập mật khẩu！',
@@ -284,8 +285,16 @@ class FormRegister extends PureComponent {
         visible: !!value,
       });
       callback('error');
+    } else if (/^[a-zA-z0-9]{1,}$/.test(value) === false) {
+      this.setState({
+        checkCharPass: 'Mật khẩu đang chứa ký tự đặc biệt',
+        valiPass: 'error',
+        visible: true,
+      });
     } else {
       this.setState({
+        checkCharPass: '',
+        valiPass: '',
         help: '',
       });
       if (!visible) {
@@ -300,14 +309,12 @@ class FormRegister extends PureComponent {
         if (value && confirmDirty) {
           form.validateFields(['confirm'], { force: true });
         }
+        this.setState({
+          valiPass: 'success',
+        });
         callback();
       }
     }
-    setTimeout(() => {
-      this.setState({
-        visible: false,
-      });
-    }, 5000);
   };
 
   renderPasswordProgress = () => {
@@ -375,11 +382,9 @@ class FormRegister extends PureComponent {
     const password = form.getFieldValue('password');
     const repassword = form.getFieldValue('repassword');
     if (password !== repassword) {
-      form.setFields({
-        repassword: {
-          value: repassword,
-          errors: [new Error('Nhập lại mật khẩu sai vui lòng kiểm tra lại!')],
-        },
+      this.setState({
+        valiRePass: 'error',
+        helpRePass: 'Nhập lại mật khẩu chưa đúng!',
       });
     }
   }
@@ -422,17 +427,52 @@ class FormRegister extends PureComponent {
   }
 
   handleChangeName(e) {
+    const { value } = e.target;
     this.setState({
       valiName: '',
       helpName: '',
     });
+    if (
+      /^[a-zA-ZàáạảãâầấậẩẫăằắặẳẵèéẹẻẽêềếệểễìíịỉĩòóọỏõôồốộổỗơờớợởỡùúụủũưừứựửữỳýỵỷỹđÀÁẠẢÃÂẦẤẬẨẪĂẰẮẶẲẴÈÉẸẺẼÊỀẾỆỂỄÌÍỊỈĨÒÓỌỎÕÔỒỐỘỔỖƠỜỚỢỞỠÙÚỤỦŨƯỪỨỰỬỮỲÝỴỶỸĐ][a-zA-Z àáạảãâầấậẩẫăằắặẳẵèéẹẻẽêềếệểễìíịỉĩòóọỏõôồốộổỗơờớợởỡùúụủũưừứựửữỳýỵỷỹđÀÁẠẢÃÂẦẤẬẨẪĂẰẮẶẲẴÈÉẸẺẼÊỀẾỆỂỄÌÍỊỈĨÒÓỌỎÕÔỒỐỘỔỖƠỜỚỢỞỠÙÚỤỦŨƯỪỨỰỬỮỲÝỴỶỸĐ]{2,30}$/.test(
+        value
+      )
+    ) {
+      this.setState({
+        valiName: 'success',
+      });
+    }
   }
 
-  handleChangeAddress() {
+  handleChangeAddress(e) {
+    const { value } = e.target;
     this.setState({
       valiAddress: '',
       helpAddress: '',
     });
+    if (
+      /^[a-zA-ZàáạảãâầấậẩẫăằắặẳẵèéẹẻẽêềếệểễìíịỉĩòóọỏõôồốộổỗơờớợởỡùúụủũưừứựửữỳýỵỷỹđÀÁẠẢÃÂẦẤẬẨẪĂẰẮẶẲẴÈÉẸẺẼÊỀẾỆỂỄÌÍỊỈĨÒÓỌỎÕÔỒỐỘỔỖƠỜỚỢỞỠÙÚỤỦŨƯỪỨỰỬỮỲÝỴỶỸĐ][a-zA-Z àáạảãâầấậẩẫăằắặẳẵèéẹẻẽêềếệểễìíịỉĩòóọỏõôồốộổỗơờớợởỡùúụủũưừứựửữỳýỵỷỹđÀÁẠẢÃÂẦẤẬẨẪĂẰẮẶẲẴÈÉẸẺẼÊỀẾỆỂỄÌÍỊỈĨÒÓỌỎÕÔỒỐỘỔỖƠỜỚỢỞỠÙÚỤỦŨƯỪỨỰỬỮỲÝỴỶỸĐ]{2,50}$/.test(
+        value
+      )
+    ) {
+      this.setState({
+        valiAddress: 'success',
+      });
+    }
+  }
+
+  handleChangeRePass(e) {
+    this.setState({
+      valiRePass: '',
+      helpRePass: '',
+    });
+    const { value } = e.target;
+    const { form } = this.props;
+    const password = form.getFieldValue('password');
+    if (password === value) {
+      this.setState({
+        valiRePass: 'success',
+      });
+    }
   }
 
   render() {
@@ -530,6 +570,7 @@ class FormRegister extends PureComponent {
           label="Địa chỉ"
           help={this.state.helpAddress}
           validateStatus={this.state.valiAddress}
+          hasFeedback
           style={{ width: '45%', display: 'inline-block', marginBottom: '0px' }}
         >
           {getFieldDecorator('address', {
@@ -539,7 +580,7 @@ class FormRegister extends PureComponent {
                 pattern: /^[a-zA-ZàáạảãâầấậẩẫăằắặẳẵèéẹẻẽêềếệểễìíịỉĩòóọỏõôồốộổỗơờớợởỡùúụủũưừứựửữỳýỵỷỹđÀÁẠẢÃÂẦẤẬẨẪĂẰẮẶẲẴÈÉẸẺẼÊỀẾỆỂỄÌÍỊỈĨÒÓỌỎÕÔỒỐỘỔỖƠỜỚỢỞỠÙÚỤỦŨƯỪỨỰỬỮỲÝỴỶỸĐ][a-zA-Z -àáạảãâầấậẩẫăằắặẳẵèéẹẻẽêềếệểễìíịỉĩòóọỏõôồốộổỗơờớợởỡùúụủũưừứựửữỳýỵỷỹđÀÁẠẢÃÂẦẤẬẨẪĂẰẮẶẲẴÈÉẸẺẼÊỀẾỆỂỄÌÍỊỈĨÒÓỌỎÕÔỒỐỘỔỖƠỜỚỢỞỠÙÚỤỦŨƯỪỨỰỬỮỲÝỴỶỸĐ]{2,50}$/,
               },
             ],
-          })(<Input onChange={() => this.handleChangeAddress()} placeholder="Ví dụ Hà Nội" />)}
+          })(<Input onChange={e => this.handleChangeAddress(e)} placeholder="Ví dụ Hà Nội" />)}
         </Form.Item>
         <Form.Item
           label="Bạn ở đây để"
@@ -609,20 +650,31 @@ class FormRegister extends PureComponent {
                 },
               ],
             })(
-              <Input type="password" placeholder="Tối thiểu 6 ký tự (không ký tự đặc biệt... )" />
+              <Input
+                type="password"
+                autocomplete="password"
+                placeholder="Tối thiểu 6 ký tự (không ký tự đặc biệt... )"
+              />
             )}
           </Popover>
         </Form.Item>
-        <Form.Item label="Nhập lại">
+        <Form.Item
+          help={this.state.helpRePass}
+          validateStatus={this.state.valiRePass}
+          hasFeedback
+          label="Nhập lại"
+        >
           {getFieldDecorator('repassword', {
             rules: [
               {
                 required: true,
-                message: 'Nhập lại mật khẩu!',
+                message: 'Nhập lại mật khẩu',
               },
             ],
           })(
             <Input
+              autocomplete="repassword"
+              onChange={e => this.handleChangeRePass(e)}
               onBlur={e => this.validRepassword(e)}
               type="password"
               placeholder="Nhập lại mật khẩu"
