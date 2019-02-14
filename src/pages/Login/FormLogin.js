@@ -1,3 +1,4 @@
+/* eslint-disable react/destructuring-assignment */
 /* eslint-disable no-param-reassign */
 /* eslint-disable no-unused-vars */
 /* eslint-disable react/sort-comp */
@@ -46,15 +47,14 @@ class FormLogin extends PureComponent {
     this.setState({ value });
   };
 
-  handleSubmit = (e, callback) => {
+  handleSubmit = e => {
+    const { value } = this.state;
     e.preventDefault();
     recaptchaRef.current.execute();
-    callback();
   };
 
-  sendSubmit() {
+  sendSubmit(value) {
     const { form, dispatch } = this.props;
-    const { value } = this.state;
     form.validateFields((err, values) => {
       if (value && value.length > 0) {
         if (!err) {
@@ -68,6 +68,12 @@ class FormLogin extends PureComponent {
     });
   }
 
+  componentWillUpdate(nextProps, nextState) {
+    if (this.state.value !== nextState.value) {
+      this.sendSubmit(nextState.value);
+    }
+  }
+
   handleChangePhone(value) {
     this.setState({
       help: '',
@@ -79,8 +85,9 @@ class FormLogin extends PureComponent {
     // eslint-disable-next-line react/destructuring-assignment
     const { getFieldDecorator } = this.props.form;
     const { help, validateStatus, value } = this.state;
+    console.log(value);
     return (
-      <Form onSubmit={e => this.handleSubmit(e, this.sendSubmit())}>
+      <Form onSubmit={e => this.handleSubmit(e)}>
         <Form.Item label="Số điện thoại" style={{ marginBottom: '0px' }}>
           {getFieldDecorator('phone', {
             rules: [
