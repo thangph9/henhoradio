@@ -7,7 +7,7 @@ import { connect } from 'dva';
 import { Form, Input, Button } from 'antd';
 import ReCAPTCHA from 'react-google-recaptcha';
 import FormItem from 'antd/lib/form/FormItem';
-// import {Link} from 'react-router-dom'
+import { Link } from 'react-router-dom';
 // import styles from './styles.less';
 
 // eslint-disable-next-line no-unused-vars
@@ -126,7 +126,7 @@ class FormLogin extends PureComponent {
             Đăng nhập
           </Button>
         </Form.Item>
-        <a href="/forgot">Quên mật khẩu?</a>
+        <Link to="/javascript(void);">Quên mật khẩu?</Link>
       </Form>
     );
   }

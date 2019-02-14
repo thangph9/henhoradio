@@ -6,6 +6,11 @@ export default [
     routes: [{ path: '/login', component: './Login' }],
   },
   {
+    path: '/forgot',
+    component: '../layouts/ForgotPassLayout',
+    routes: [{ path: '/forgot', component: './ForgotPass' }],
+  },
+  {
     path: '/about',
     routes: [{ path: '/about', component: './About' }],
   },
