@@ -12,26 +12,19 @@ export default [
   },
   {
     path: '/',
+    component: './About',
+  },
+  {
+    path: '/home',
+    component: '../layouts/HomeLayout',
+    Routes: ['src/pages/Authorized'],
+    authority: ['member'],
     routes: [
+      { path: '/home', redirect: '/dashboard' },
+      { path: '/dashboard', component: './HomePage/NewFeed' },
+      { path: '/profile', component: './HomePage/ProfileUser' },
       {
-        path: '/',
-        Routes: ['src/pages/AuthorizedMain'],
-        authority: ['member'],
-        routers: [{ path: '/main', redirect: '/home' }],
-      },
-      {
-        path: '/home',
-        component: '../layouts/HomeLayout',
-        Routes: ['src/pages/Authorized'],
-        authority: ['member'],
-        routes: [
-          { path: '/home', redirect: '/dashboard' },
-          { path: '/dashboard', component: './HomePage/NewFeed' },
-          { path: '/profile', component: './HomePage/ProfileUser' },
-          {
-            component: '404',
-          },
-        ],
+        component: '404',
       },
     ],
   },
