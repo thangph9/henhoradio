@@ -8,7 +8,7 @@ import { connect } from 'dva';
 import { Form, Input, Button, Popover, Progress, Select, Icon } from 'antd';
 // import {Link} from 'react-router-dom'
 import ReCAPTCHA from 'react-google-recaptcha';
-import 'antd/dist/antd.css';
+import 'antd/dist/antd.less';
 import styles from './styles.less';
 
 let recaptchaInstance;
@@ -239,7 +239,7 @@ class FormRegister extends PureComponent {
         help: 'Nhập mật khẩu！',
         valiPass: 'error',
       });
-    } else if (/^[a-zA-z0-9]{1,}$/.test(password) === false) {
+    } else if (/^[a-zA-z0-9!@#$%^&*_\-=+|;:]{1,}$/.test(password) === false) {
       this.setState({
         help: 'Mật khẩu đang chứa ký tự đặc biệt',
       });
@@ -285,7 +285,7 @@ class FormRegister extends PureComponent {
         visible: !!value,
       });
       callback('error');
-    } else if (/^[a-zA-z0-9]{1,}$/.test(value) === false) {
+    } else if (/^[a-zA-z0-9!@#$%^&*_\-=+|;:]{1,}$/.test(value) === false) {
       this.setState({
         checkCharPass: 'Mật khẩu đang chứa ký tự đặc biệt',
         valiPass: 'error',
@@ -392,8 +392,6 @@ class FormRegister extends PureComponent {
   handleClosePass() {
     this.setState({
       visible: false,
-      helpPhone: '',
-      valiPhone: '',
     });
   }
 
@@ -440,6 +438,11 @@ class FormRegister extends PureComponent {
       this.setState({
         valiName: 'success',
       });
+    } else {
+      this.setState({
+        valiName: 'error',
+        helpName: 'Tên không hợp lệ',
+      });
     }
   }
 
@@ -456,6 +459,11 @@ class FormRegister extends PureComponent {
     ) {
       this.setState({
         valiAddress: 'success',
+      });
+    } else {
+      this.setState({
+        valiAddress: 'error',
+        helpAddress: 'Địa chỉ không hợp lệ',
       });
     }
   }
@@ -646,7 +654,7 @@ class FormRegister extends PureComponent {
               rules: [
                 {
                   validator: this.checkPassword,
-                  pattern: /^[a-zA-z0-9]{1,}$/,
+                  pattern: /^[a-zA-z0-9!@#$%^&*_\-=+|;:]{1,}$/,
                 },
               ],
             })(

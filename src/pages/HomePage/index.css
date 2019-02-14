@@ -1461,9 +1461,6 @@ img {
   vertical-align: middle;
   border-style: none;
 }
-svg {
-  fill: #4e595d;
-}
 svg:not(:root) {
   overflow: hidden;
 }
