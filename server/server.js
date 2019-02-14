@@ -1,3 +1,4 @@
+/* eslint-disable no-multi-assign */
 const express = require('express'); // eslint-disable-line
 // const https = require('https');
 // const http = require('http');
@@ -10,6 +11,9 @@ const images = require('./api/images');
 
 const app = express();
 /*
+const app = (module.exports = express());
+
+
 const privateKey = fs.readFileSync('./ssl_cert/hhr.key', 'utf8');
 const certificate = fs.readFileSync('./ssl_cert/hhr.crt', 'utf8');
 const credentials = { key: privateKey, cert: certificate };
@@ -54,11 +58,10 @@ if (!module.parent) {
 
   http
     .createServer((req, res) => {
-      res.writeHead(301, { Location: 'https://'.concat(req.headers.host, req.url) });
+      res.writeHead(301, { Location: `https://${req.headers.host}${req.url}` });
       res.end();
     })
-    .listen(80);
-  */
+   */
   app.listen(80, () => {
     console.log('server dev running port 8000');
   });

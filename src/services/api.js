@@ -128,6 +128,12 @@ export async function RegisterAccount(params) {
     body: params,
   });
 }
+export async function checkUser(params) {
+  return request('/api/authentication/checkuser', {
+    method: 'POST',
+    body: params,
+  });
+}
 export async function homeDemo() {
   return request('/api/authentication/homedemo');
 }

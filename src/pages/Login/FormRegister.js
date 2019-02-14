@@ -1,3 +1,5 @@
+/* eslint-disable react/destructuring-assignment */
+/* eslint-disable camelcase */
 /* eslint-disable react/no-unused-state */
 /* eslint-disable no-return-assign */
 /* eslint-disable no-unused-vars */
@@ -6,6 +8,7 @@ import { connect } from 'dva';
 import { Form, Input, Button, Popover, Progress, Select, Icon } from 'antd';
 // import {Link} from 'react-router-dom'
 import ReCAPTCHA from 'react-google-recaptcha';
+import 'antd/dist/antd.css';
 import styles from './styles.less';
 
 let recaptchaInstance;
@@ -116,8 +119,9 @@ const dayInMonthFull = [
   30,
   31,
 ];
-@connect(({ loading }) => ({
-  submitting: loading.effects['form/submitRegularForm'],
+@connect(({ loading, authentication }) => ({
+  validatting: loading.effects['authentication/checkuser'],
+  authentication,
 }))
 @Form.create()
 class FormRegister extends PureComponent {
@@ -126,6 +130,17 @@ class FormRegister extends PureComponent {
     help: '',
     monthSelected: [],
     value: '',
+    valiPass: '',
+    helpPhone: '',
+    valiPhone: '',
+    helpName: '',
+    valiName: '',
+    helpAddress: '',
+    valiAddress: '',
+    checkCharPass: '',
+    helpRePass: '',
+    valiRePass: '',
+    messageName: 'Nhập tên của bạn',
   };
 
   componentWillReceiveProps(nextProps) {
@@ -134,6 +149,28 @@ class FormRegister extends PureComponent {
     if (authentication.register !== nextProps.authentication.register) {
       if (nextProps.authentication.register.status === 'ok') {
         nextProps.history.push({ pathname: '/registerresult' });
+      }
+      if (
+        nextProps.authentication.register.status === 'error' &&
+        nextProps.authentication.register.timeline !== authentication.register.timeline
+      ) {
+        this.setState({
+          valiPhone: 'error',
+          helpPhone: nextProps.authentication.register.message,
+        });
+      }
+    }
+    if (this.props.authentication.checkuser !== nextProps.authentication.checkuser) {
+      if (nextProps.authentication.checkuser.status === 'ok') {
+        this.setState({
+          valiPhone: 'success',
+        });
+      }
+      if (nextProps.authentication.checkuser.status === 'error') {
+        this.setState({
+          valiPhone: 'error',
+          helpPhone: nextProps.authentication.checkuser.message,
+        });
       }
     }
   }
@@ -152,17 +189,44 @@ class FormRegister extends PureComponent {
 
   handleSubmit = e => {
     e.preventDefault();
-    recaptchaRef.current.execute();
     const { form, dispatch } = this.props;
-    // const email = this.props.form.getFieldValue('email');
-    // const filter = /^([a-zA-Z0-9_\.\-])+\@(([a-zA-Z0-9\-])+\.)+([a-zA-Z0-9]{2,4})+$/;
-    // if (!filter.test(email)) {
-    // return;
-    // }
-    const day = form.getFieldValue('day');
-    const month = form.getFieldValue('month');
-    const year = form.getFieldValue('year');
+    const dob_day = form.getFieldValue('dob_day');
+    const dob_month = form.getFieldValue('dob_month');
+    const dob_year = form.getFieldValue('dob_year');
     const gender = form.getFieldValue('gender');
+    const phone = form.getFieldValue('phone');
+    const fullname = form.getFieldValue('fullname');
+    const address = form.getFieldValue('address');
+    const password = form.getFieldValue('password');
+    const repassword = form.getFieldValue('repassword');
+    if (
+      !fullname ||
+      /^[a-zA-ZàáạảãâầấậẩẫăằắặẳẵèéẹẻẽêềếệểễìíịỉĩòóọỏõôồốộổỗơờớợởỡùúụủũưừứựửữỳýỵỷỹđÀÁẠẢÃÂẦẤẬẨẪĂẰẮẶẲẴÈÉẸẺẼÊỀẾỆỂỄÌÍỊỈĨÒÓỌỎÕÔỒỐỘỔỖƠỜỚỢỞỠÙÚỤỦŨƯỪỨỰỬỮỲÝỴỶỸĐ][a-zA-Z àáạảãâầấậẩẫăằắặẳẵèéẹẻẽêềếệểễìíịỉĩòóọỏõôồốộổỗơờớợởỡùúụủũưừứựửữỳýỵỷỹđÀÁẠẢÃÂẦẤẬẨẪĂẰẮẶẲẴÈÉẸẺẼÊỀẾỆỂỄÌÍỊỈĨÒÓỌỎÕÔỒỐỘỔỖƠỜỚỢỞỠÙÚỤỦŨƯỪỨỰỬỮỲÝỴỶỸĐ]{2,30}$/.test(
+        fullname
+      ) === false
+    ) {
+      this.setState({
+        helpName: 'Tên không hợp lệ',
+        valiName: 'error',
+      });
+    }
+    if (
+      !address ||
+      /^[a-zA-ZàáạảãâầấậẩẫăằắặẳẵèéẹẻẽêềếệểễìíịỉĩòóọỏõôồốộổỗơờớợởỡùúụủũưừứựửữỳýỵỷỹđÀÁẠẢÃÂẦẤẬẨẪĂẰẮẶẲẴÈÉẸẺẼÊỀẾỆỂỄÌÍỊỈĨÒÓỌỎÕÔỒỐỘỔỖƠỜỚỢỞỠÙÚỤỦŨƯỪỨỰỬỮỲÝỴỶỸĐ][a-zA-Z -àáạảãâầấậẩẫăằắặẳẵèéẹẻẽêềếệểễìíịỉĩòóọỏõôồốộổỗơờớợởỡùúụủũưừứựửữỳýỵỷỹđÀÁẠẢÃÂẦẤẬẨẪĂẰẮẶẲẴÈÉẸẺẼÊỀẾỆỂỄÌÍỊỈĨÒÓỌỎÕÔỒỐỘỔỖƠỜỚỢỞỠÙÚỤỦŨƯỪỨỰỬỮỲÝỴỶỸĐ]{2,50}$/.test(
+        address
+      ) === false
+    ) {
+      this.setState({
+        helpAddress: 'Địa chỉ không hợp lệ',
+        valiAddress: 'error',
+      });
+    }
+    if (!phone || /^\d{10}$/.test(phone) === false) {
+      this.setState({
+        helpPhone: 'Số điện thoại không hợp lệ',
+        valiPhone: 'error',
+      });
+    }
     if (!gender) {
       form.setFields({
         gender: {
@@ -170,31 +234,43 @@ class FormRegister extends PureComponent {
         },
       });
     }
-    if (!day || !month || !year) {
+    if (!password) {
+      this.setState({
+        help: 'Nhập mật khẩu！',
+        valiPass: 'error',
+      });
+    } else if (/^[a-zA-z0-9]{1,}$/.test(password) === false) {
+      this.setState({
+        help: 'Mật khẩu đang chứa ký tự đặc biệt',
+      });
+    }
+    if (!repassword) {
+      this.setState({
+        helpRePass: 'Nhập lại mật khẩu！',
+        valiRePass: 'error',
+      });
+    }
+    if (!dob_day || !dob_month || !dob_year) {
       form.setFields({
-        day: {
+        dob_day: {
           errors: [new Error('Chọn đầy đủ ngày sinh!')],
         },
       });
     }
     form.validateFields((err, values) => {
       if (values.password !== values.repassword) {
-        form.setFields({
-          repassword: {
-            value: values.repassword,
-            errors: [new Error('Nhập lại mật khẩu sai vui lòng kiểm tra lại!')],
-          },
+        this.setState({
+          valiRePass: 'error',
+          helpRePass: 'Nhập lại mật khẩu chưa đúng!',
         });
       }
       if (values.password === values.repassword) {
-        console.log(values);
-        if (!err && day && month && year && gender) {
-          /*
-            dispatch({
+        if (!err && dob_day && dob_month && dob_year && gender) {
+          // console.log(values)
+          dispatch({
             type: 'authentication/register',
             payload: values,
           });
-          */
         }
       }
     });
@@ -205,11 +281,20 @@ class FormRegister extends PureComponent {
     if (!value) {
       this.setState({
         help: 'Nhập mật khẩu！',
+        valiPass: 'error',
         visible: !!value,
       });
       callback('error');
+    } else if (/^[a-zA-z0-9]{1,}$/.test(value) === false) {
+      this.setState({
+        checkCharPass: 'Mật khẩu đang chứa ký tự đặc biệt',
+        valiPass: 'error',
+        visible: true,
+      });
     } else {
       this.setState({
+        checkCharPass: '',
+        valiPass: '',
         help: '',
       });
       if (!visible) {
@@ -224,14 +309,12 @@ class FormRegister extends PureComponent {
         if (value && confirmDirty) {
           form.validateFields(['confirm'], { force: true });
         }
+        this.setState({
+          valiPass: 'success',
+        });
         callback();
       }
     }
-    setTimeout(() => {
-      this.setState({
-        visible: false,
-      });
-    }, 5000);
   };
 
   renderPasswordProgress = () => {
@@ -240,6 +323,7 @@ class FormRegister extends PureComponent {
     const passwordStatus = this.getPasswordStatus();
     return value && value.length ? (
       <div className={styles[`progress-${passwordStatus}`]}>
+        <span style={{ color: 'red' }}>{this.state.checkCharPass}</span>
         <Progress
           status={passwordProgressMap[passwordStatus]}
           className={styles.progress}
@@ -266,7 +350,6 @@ class FormRegister extends PureComponent {
   };
 
   handleChangeGender = value => {
-    console.log(value);
     // eslint-disable-next-line react/destructuring-assignment
     this.props.form.setFields({
       gender: {
@@ -276,29 +359,21 @@ class FormRegister extends PureComponent {
   };
 
   handleChangeDay = value => {
-    console.log(value);
     // eslint-disable-next-line react/destructuring-assignment
     this.props.form.setFields({
-      day: {
+      dob_day: {
         errors: '',
       },
     });
   };
 
-  handleChangeIntent = value => {
-    console.log(value);
-  };
+  handleChangeIntent = value => {};
 
-  handleChangeMonth = value => {
-    console.log(value);
-  };
+  handleChangeMonth = value => {};
 
-  handleChangeYear = value => {
-    console.log(value);
-  };
+  handleChangeYear = value => {};
 
   handleChangeCaptcha = value => {
-    console.log(value);
     this.setState({ value });
   };
 
@@ -307,11 +382,9 @@ class FormRegister extends PureComponent {
     const password = form.getFieldValue('password');
     const repassword = form.getFieldValue('repassword');
     if (password !== repassword) {
-      form.setFields({
-        repassword: {
-          value: repassword,
-          errors: [new Error('Nhập lại mật khẩu sai vui lòng kiểm tra lại!')],
-        },
+      this.setState({
+        valiRePass: 'error',
+        helpRePass: 'Nhập lại mật khẩu chưa đúng!',
       });
     }
   }
@@ -319,14 +392,94 @@ class FormRegister extends PureComponent {
   handleClosePass() {
     this.setState({
       visible: false,
+      helpPhone: '',
+      valiPhone: '',
     });
+  }
+
+  handleChangePhone(e) {
+    this.setState({
+      helpPhone: '',
+      valiPhone: '',
+    });
+  }
+
+  handleBlurPass(e) {
+    const { value } = e.target;
+    const { form, dispatch } = this.props;
+    if (!/^\d{10}$/.test(value)) {
+      this.setState({
+        helpPhone: 'Số điện thoại không hợp lệ',
+        valiPhone: 'error',
+      });
+    }
+    form.validateFields(['phone'], (errors, values) => {
+      console.log(errors);
+      if (!errors) {
+        dispatch({
+          type: 'authentication/checkuser',
+          payload: {
+            phone: value,
+          },
+        });
+      }
+    });
+  }
+
+  handleChangeName(e) {
+    const { value } = e.target;
+    this.setState({
+      valiName: '',
+      helpName: '',
+    });
+    if (
+      /^[a-zA-ZàáạảãâầấậẩẫăằắặẳẵèéẹẻẽêềếệểễìíịỉĩòóọỏõôồốộổỗơờớợởỡùúụủũưừứựửữỳýỵỷỹđÀÁẠẢÃÂẦẤẬẨẪĂẰẮẶẲẴÈÉẸẺẼÊỀẾỆỂỄÌÍỊỈĨÒÓỌỎÕÔỒỐỘỔỖƠỜỚỢỞỠÙÚỤỦŨƯỪỨỰỬỮỲÝỴỶỸĐ][a-zA-Z àáạảãâầấậẩẫăằắặẳẵèéẹẻẽêềếệểễìíịỉĩòóọỏõôồốộổỗơờớợởỡùúụủũưừứựửữỳýỵỷỹđÀÁẠẢÃÂẦẤẬẨẪĂẰẮẶẲẴÈÉẸẺẼÊỀẾỆỂỄÌÍỊỈĨÒÓỌỎÕÔỒỐỘỔỖƠỜỚỢỞỠÙÚỤỦŨƯỪỨỰỬỮỲÝỴỶỸĐ]{2,30}$/.test(
+        value
+      )
+    ) {
+      this.setState({
+        valiName: 'success',
+      });
+    }
+  }
+
+  handleChangeAddress(e) {
+    const { value } = e.target;
+    this.setState({
+      valiAddress: '',
+      helpAddress: '',
+    });
+    if (
+      /^[a-zA-ZàáạảãâầấậẩẫăằắặẳẵèéẹẻẽêềếệểễìíịỉĩòóọỏõôồốộổỗơờớợởỡùúụủũưừứựửữỳýỵỷỹđÀÁẠẢÃÂẦẤẬẨẪĂẰẮẶẲẴÈÉẸẺẼÊỀẾỆỂỄÌÍỊỈĨÒÓỌỎÕÔỒỐỘỔỖƠỜỚỢỞỠÙÚỤỦŨƯỪỨỰỬỮỲÝỴỶỸĐ][a-zA-Z àáạảãâầấậẩẫăằắặẳẵèéẹẻẽêềếệểễìíịỉĩòóọỏõôồốộổỗơờớợởỡùúụủũưừứựửữỳýỵỷỹđÀÁẠẢÃÂẦẤẬẨẪĂẰẮẶẲẴÈÉẸẺẼÊỀẾỆỂỄÌÍỊỈĨÒÓỌỎÕÔỒỐỘỔỖƠỜỚỢỞỠÙÚỤỦŨƯỪỨỰỬỮỲÝỴỶỸĐ]{2,50}$/.test(
+        value
+      )
+    ) {
+      this.setState({
+        valiAddress: 'success',
+      });
+    }
+  }
+
+  handleChangeRePass(e) {
+    this.setState({
+      valiRePass: '',
+      helpRePass: '',
+    });
+    const { value } = e.target;
+    const { form } = this.props;
+    const password = form.getFieldValue('password');
+    if (password === value) {
+      this.setState({
+        valiRePass: 'success',
+      });
+    }
   }
 
   render() {
     const {
       form: { getFieldDecorator },
     } = this.props;
-    const { help, visible, monthSelected } = this.state;
+    const { help, visible, monthSelected, helpPhone, valiPhone } = this.state;
     const A = [];
     dayInMonthFull.map((v, i) => {
       A[i] = (
@@ -349,16 +502,19 @@ class FormRegister extends PureComponent {
       <Form onSubmit={this.handleSubmit}>
         <Form.Item
           label="Tên"
+          hasFeedback
+          help={this.state.helpName}
+          validateStatus={this.state.valiName}
           style={{ width: '45%', display: 'inline-block', marginBottom: '0px' }}
         >
-          {getFieldDecorator('name', {
+          {getFieldDecorator('fullname', {
             rules: [
               {
                 required: true,
-                message: 'Nhập tên bạn',
+                pattern: /^[a-zA-ZàáạảãâầấậẩẫăằắặẳẵèéẹẻẽêềếệểễìíịỉĩòóọỏõôồốộổỗơờớợởỡùúụủũưừứựửữỳýỵỷỹđÀÁẠẢÃÂẦẤẬẨẪĂẰẮẶẲẴÈÉẸẺẼÊỀẾỆỂỄÌÍỊỈĨÒÓỌỎÕÔỒỐỘỔỖƠỜỚỢỞỠÙÚỤỦŨƯỪỨỰỬỮỲÝỴỶỸĐ][a-zA-Z àáạảãâầấậẩẫăằắặẳẵèéẹẻẽêềếệểễìíịỉĩòóọỏõôồốộổỗơờớợởỡùúụủũưừứựửữỳýỵỷỹđÀÁẠẢÃÂẦẤẬẨẪĂẰẮẶẲẴÈÉẸẺẼÊỀẾỆỂỄÌÍỊỈĨÒÓỌỎÕÔỒỐỘỔỖƠỜỚỢỞỠÙÚỤỦŨƯỪỨỰỬỮỲÝỴỶỸĐ]{2,30}$/,
               },
             ],
-          })(<Input placeholder="Ví dụ bạn là Trí" />)}
+          })(<Input onChange={e => this.handleChangeName(e)} placeholder="Ví dụ bạn là Trí" />)}
         </Form.Item>
         <Form.Item
           label="Giới tính"
@@ -370,13 +526,13 @@ class FormRegister extends PureComponent {
             onChange: this.handleChangeGender,
           })(
             <Select placeholder="Bạn là...">
-              <Option value="men">Nam</Option>
-              <Option value="woman">Nữ</Option>
+              <Option value="male">Nam</Option>
+              <Option value="female">Nữ</Option>
             </Select>
           )}
         </Form.Item>
         <Form.Item label="Ngày sinh" style={{ marginBottom: '0px' }}>
-          {getFieldDecorator('day', {
+          {getFieldDecorator('dob_day', {
             onChange: this.handleChangeDay,
           })(
             <Select placeholder="Ngày">
@@ -387,7 +543,7 @@ class FormRegister extends PureComponent {
               ))}
             </Select>
           )}
-          {getFieldDecorator('month', {
+          {getFieldDecorator('dob_month', {
             onChange: this.handleChangeMonth,
           })(
             <Select placeholder="Tháng">
@@ -398,7 +554,7 @@ class FormRegister extends PureComponent {
               ))}
             </Select>
           )}
-          {getFieldDecorator('year', {
+          {getFieldDecorator('dob_year', {
             onChange: this.handleChangeYear,
           })(
             <Select placeholder="Năm">
@@ -412,16 +568,19 @@ class FormRegister extends PureComponent {
         </Form.Item>
         <Form.Item
           label="Địa chỉ"
+          help={this.state.helpAddress}
+          validateStatus={this.state.valiAddress}
+          hasFeedback
           style={{ width: '45%', display: 'inline-block', marginBottom: '0px' }}
         >
           {getFieldDecorator('address', {
             rules: [
               {
                 required: true,
-                message: 'Yêu cầu nhập địa chỉ',
+                pattern: /^[a-zA-ZàáạảãâầấậẩẫăằắặẳẵèéẹẻẽêềếệểễìíịỉĩòóọỏõôồốộổỗơờớợởỡùúụủũưừứựửữỳýỵỷỹđÀÁẠẢÃÂẦẤẬẨẪĂẰẮẶẲẴÈÉẸẺẼÊỀẾỆỂỄÌÍỊỈĨÒÓỌỎÕÔỒỐỘỔỖƠỜỚỢỞỠÙÚỤỦŨƯỪỨỰỬỮỲÝỴỶỸĐ][a-zA-Z -àáạảãâầấậẩẫăằắặẳẵèéẹẻẽêềếệểễìíịỉĩòóọỏõôồốộổỗơờớợởỡùúụủũưừứựửữỳýỵỷỹđÀÁẠẢÃÂẦẤẬẨẪĂẰẮẶẲẴÈÉẸẺẼÊỀẾỆỂỄÌÍỊỈĨÒÓỌỎÕÔỒỐỘỔỖƠỜỚỢỞỠÙÚỤỦŨƯỪỨỰỬỮỲÝỴỶỸĐ]{2,50}$/,
               },
             ],
-          })(<Input placeholder="Ví dụ Hà Nội" />)}
+          })(<Input onChange={e => this.handleChangeAddress(e)} placeholder="Ví dụ Hà Nội" />)}
         </Form.Item>
         <Form.Item
           label="Bạn ở đây để"
@@ -437,21 +596,35 @@ class FormRegister extends PureComponent {
             </Select>
           )}
         </Form.Item>
-        <Form.Item label="Số điện thoại" style={{ marginBottom: '0px' }}>
+        <Form.Item
+          help={helpPhone}
+          validateStatus={this.props.validatting ? 'validating' : valiPhone}
+          label="Số điện thoại"
+          hasFeedback
+          style={{ marginBottom: '0px' }}
+        >
           {getFieldDecorator('phone', {
             rules: [
               {
                 required: true,
-                message: 'Yêu cầu nhập số điện thoại',
-              },
-              {
-                pattern: /\d{9}$/,
-                message: 'Nhập sai định dạng hoặc chưa đủ chữ số！',
+                pattern: /^\d{10}$/,
               },
             ],
-          })(<Input placeholder="Số điện thoại là tài khoản đăng nhập" />)}
+          })(
+            <Input
+              onChange={e => this.handleChangePhone(e)}
+              placeholder="Số điện thoại là tài khoản đăng nhập"
+              onBlur={e => this.handleBlurPass(e)}
+            />
+          )}
         </Form.Item>
-        <Form.Item help={help} label="Mật khẩu" style={{ marginBottom: '0px' }}>
+        <Form.Item
+          help={help}
+          validateStatus={this.state.valiPass}
+          hasFeedback
+          label="Mật khẩu"
+          style={{ marginBottom: '0px' }}
+        >
           <Popover
             content={
               <div style={{ padding: '4px 0' }}>
@@ -473,21 +646,35 @@ class FormRegister extends PureComponent {
               rules: [
                 {
                   validator: this.checkPassword,
+                  pattern: /^[a-zA-z0-9]{1,}$/,
                 },
               ],
-            })(<Input type="password" placeholder="Tối thiểu 6 ký tự" />)}
+            })(
+              <Input
+                type="password"
+                autocomplete="password"
+                placeholder="Tối thiểu 6 ký tự (không ký tự đặc biệt... )"
+              />
+            )}
           </Popover>
         </Form.Item>
-        <Form.Item label="Nhập lại">
+        <Form.Item
+          help={this.state.helpRePass}
+          validateStatus={this.state.valiRePass}
+          hasFeedback
+          label="Nhập lại"
+        >
           {getFieldDecorator('repassword', {
             rules: [
               {
                 required: true,
-                message: 'Nhập lại mật khẩu!',
+                message: 'Nhập lại mật khẩu',
               },
             ],
           })(
             <Input
+              autocomplete="repassword"
+              onChange={e => this.handleChangeRePass(e)}
               onBlur={e => this.validRepassword(e)}
               type="password"
               placeholder="Nhập lại mật khẩu"

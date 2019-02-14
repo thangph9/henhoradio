@@ -6,6 +6,20 @@ export default [
     routes: [{ path: '/login', component: './Login' }],
   },
   {
+    path: '/about',
+    routes: [{ path: '/about', component: './About' }],
+  },
+  {
+    path: '/registerresult',
+    component: '../layouts/HomeLayout',
+    routes: [
+      { path: '/registerresult', component: './ResgisterResult' },
+      {
+        component: '404',
+      },
+    ],
+  },
+  {
     path: '/test',
     component: '../layouts/BlankLayout',
     routes: [{ path: '/test', component: './User/RegisterResult.js' }],
@@ -20,12 +34,12 @@ export default [
       { path: '/', redirect: '/home' },
       { path: '/home', component: './HomePage/NewFeed' },
       { path: '/profile', component: './HomePage/ProfileUser' },
-      { path: '/registerresult', component: './ResgisterResult' },
       {
         component: '404',
       },
     ],
   },
+
   {
     component: '404',
   },

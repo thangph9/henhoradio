@@ -46,16 +46,6 @@ class Login extends PureComponent {
     });
   }
 
-  componentWillReceiveProps(nextProps) {
-    const { authentication } = this.props;
-
-    if (authentication.register !== nextProps.authentication.register) {
-      if (nextProps.authentication.register.status === 'ok') {
-        nextProps.history.push({ pathname: '/registerresult' });
-      }
-    }
-  }
-
   handleClickToggleStatus() {
     const { statusPage } = this.state;
     const {
@@ -75,11 +65,6 @@ class Login extends PureComponent {
   }
 
   render() {
-    /*
-    if (localStorage['antd-pro-authority'] && localStorage.token) {
-      return <Redirect to="/home" />;
-    }
-    */
     const { statusPage, sizeScreen } = this.state;
 
     return (
