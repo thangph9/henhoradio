@@ -15,7 +15,7 @@ export default [
     routes: [{ path: '/about', component: './About' }],
   },
   {
-    path: '/registerresult',
+    path: '/register-result',
     component: '../layouts/HomeLayout',
     routes: [
       { path: '/registerresult', component: './ResgisterResult' },
