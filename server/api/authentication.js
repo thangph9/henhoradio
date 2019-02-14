@@ -286,6 +286,7 @@ function checkUser(req, res) {
     res.send({ status: 'error' });
   }
 }
+
 router.post('/register', register);
 router.post('/login', login);
 router.post('/checkuser', checkUser);
