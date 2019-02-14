@@ -11,14 +11,35 @@ export default [
     routes: [{ path: '/forgot', component: './ForgotPass' }],
   },
   {
-    path: '/about',
-    routes: [{ path: '/about', component: './About' }],
+    path: '/',
+    routes: [
+      {
+        path: '/',
+        Routes: ['src/pages/AuthorizedMain'],
+        authority: ['member'],
+        routers: [{ path: '/main', redirect: '/home' }],
+      },
+      {
+        path: '/home',
+        component: '../layouts/HomeLayout',
+        Routes: ['src/pages/Authorized'],
+        authority: ['member'],
+        routes: [
+          { path: '/home', redirect: '/dashboard' },
+          { path: '/dashboard', component: './HomePage/NewFeed' },
+          { path: '/profile', component: './HomePage/ProfileUser' },
+          {
+            component: '404',
+          },
+        ],
+      },
+    ],
   },
   {
     path: '/register-result',
     component: '../layouts/HomeLayout',
     routes: [
-      { path: '/registerresult', component: './ResgisterResult' },
+      { path: '/register-result', component: './ResgisterResult' },
       {
         component: '404',
       },
@@ -30,20 +51,6 @@ export default [
     routes: [{ path: '/test', component: './User/RegisterResult.js' }],
   },
   // front-end
-  {
-    path: '/',
-    component: '../layouts/HomeLayout',
-    Routes: ['src/pages/Authorized'],
-    authority: ['member'],
-    routes: [
-      { path: '/', redirect: '/home' },
-      { path: '/home', component: './HomePage/NewFeed' },
-      { path: '/profile', component: './HomePage/ProfileUser' },
-      {
-        component: '404',
-      },
-    ],
-  },
 
   {
     component: '404',
