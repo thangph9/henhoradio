@@ -12,8 +12,6 @@ const images = require('./api/images');
 const app = express();
 /*
 const app = (module.exports = express());
-
-
 const privateKey = fs.readFileSync('./ssl_cert/hhr.key', 'utf8');
 const certificate = fs.readFileSync('./ssl_cert/hhr.crt', 'utf8');
 const credentials = { key: privateKey, cert: certificate };
