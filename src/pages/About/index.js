@@ -38,18 +38,12 @@ class About extends PureComponent {
     let result = {};
     switch (value % constNumber) {
       case 0:
-        result = {
-          background: '#f0a1c1',
-          opaciti: 1,
-        };
+        result = '#f0a1c1';
 
         break;
 
       case 1:
-        result = {
-          background: '#21c3fd',
-          opaciti: 1,
-        };
+        result = '#21c3fd';
     }
     return result;
   }
@@ -60,17 +54,17 @@ class About extends PureComponent {
 
   render() {
     const { constNumber, number } = this.state;
+    const backgroundColor = this.background(number);
     return (
       <div style={{ paddingBottom: '30px' }}>
-        <div
-          className={styles['splashdtf-content']}
-          style={{ background: this.background(number).background }}
-        >
+        <div className={styles['splashdtf-content']} style={{ background: backgroundColor }}>
           <div className={`${styles.container} ${styles['header-item']}`}>
             <div className={styles['splashdtf-logo']} />
             <div className={styles['splashdtf-header-signin']}>
               <span className={styles['splashdtf-header-signin-text']}>Have an account?</span>
-              <Button type="default">Đăng nhập</Button>
+              <Button style={{ border: '1px solid', background: 'none' }} type="default">
+                Đăng nhập
+              </Button>
             </div>
           </div>
           <div>
