@@ -1,0 +1,402 @@
+@color_1: #fff;
+@color_2: #9dbaf2;
+@color_3: #000;
+@color_4: #2a2f35;
+@color_5: #1e1e1e;
+@color_6: #4c7bd9;
+@color_7: #4fc5d0;
+@color_8: #fb674e;
+@color_9: #1fc174;
+@color_10: #3260c7;
+@font_family_1: GT America, Helvetica Neue, Helvetica, Arial, sans-serif;
+@font_family_2: ok-icon;
+@background_color_1: #21c3fd;
+@background_color_2: #f0a1c1;
+@background_color_3: #c6a9db;
+@background_color_4: #24d7f2;
+@background_color_5: #ffc5e1;
+@background_color_6: #21bd66;
+
+.splashdtf-content {
+  transition: background 0.3s linear 0.3s;
+  z-index: 1;
+  position: relative;
+  color: #000;
+}
+.container {
+  width: 100%;
+  margin-right: auto;
+  margin-left: auto;
+}
+.header-item {
+  display: flex;
+  z-index: 2;
+  align-items: center;
+  justify-content: space-between;
+  padding-top: 30px;
+}
+.splashdtf-header {
+  width: 1180px;
+  margin-left: auto;
+  margin-right: auto;
+  padding-left: 65px;
+  padding-right: 65px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.splashdtf-logo {
+  display: inline-block;
+  width: 90px;
+  height: 30px;
+  background-size: 90px auto;
+  background-repeat: no-repeat;
+  background-image: url('https://cdn.okccdn.com/media/img/dtf/logo.png');
+}
+.splashdtf-header-signin-text {
+  margin-right: 17px;
+  font-size: 14px;
+  line-height: 36px;
+}
+.splashdtf-top {
+  width: 1180px;
+  margin-left: auto;
+  margin-right: auto;
+  padding-left: 65px;
+  padding-right: 65px;
+  z-index: 2;
+  padding-bottom: 40px;
+  position: relative;
+}
+.splashdtf-top-text {
+  position: relative;
+}
+.splashdtf-top-text-heading {
+  height: 108px;
+  text-indent: -9999px;
+  background-size: 524px auto;
+  background-repeat: no-repeat;
+  background-position: 0;
+  background-image: url('https://cdn.okccdn.com/media/img/dtf/title.png');
+}
+.splashdtf-top-text-manifesto {
+  padding-top: 4px;
+  font-size: 20px;
+  line-height: 30px;
+  p {
+    margin-top: 20px;
+  }
+}
+.splashdtf-hero {
+  z-index: -1;
+  position: absolute;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  right: 0;
+}
+.splashdtf-hero-image {
+  opacity: 0;
+  transition: opacity 0.3s linear;
+  position: absolute;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  right: 0;
+}
+.splashdtf-hero-image-hands {
+  background-position: calc(50% + 300px) calc(100% + 10px);
+  background-repeat: no-repeat;
+  background-image: url('https://cdn.okccdn.com/media/img/dtf/photos/hands.jpg');
+}
+.static {
+  position: static !important;
+}
+.splashdtf-hero-image-facepaint {
+  background-position: calc(50% + 300px) calc(100% + 10px);
+  background-repeat: no-repeat;
+  background-image: url('https://cdn.okccdn.com/media/img/dtf/photos/facepaint.jpg');
+}
+.active {
+  opacity: 1;
+  transition: opacity 0.3s linear 0.6s;
+}
+.splashdtf-signupcontainer {
+  width: 1180px;
+  margin-left: auto;
+  margin-right: auto;
+  padding-left: 65px;
+  padding-right: 65px;
+  z-index: 2;
+}
+.splashdtf-signup-button {
+  border: 0;
+  padding: 0;
+  box-sizing: border-box;
+  display: inline-block;
+  margin-bottom: 22px;
+  width: 284px;
+  height: 62px;
+  background: rgba(0, 0, 0, 0.5);
+  border-radius: 3px;
+  font-size: 16px;
+  line-height: 62px;
+  text-align: center;
+  font-weight: 700;
+  letter-spacing: 1.1px;
+  text-transform: uppercase;
+  cursor: pointer;
+  color: @color_1;
+  &:hover {
+    color: @color_1;
+  }
+}
+.mobile-content {
+  display: none;
+  color: #fff;
+  margin-top: 20px;
+}
+.mobile-title {
+  margin-top: 30px;
+  display: none;
+  color: #fff;
+}
+.mobile-logo {
+  display: none;
+  padding-bottom: 15px;
+}
+.splashdtf-signup-button-logo {
+  display: inline-block;
+  vertical-align: top;
+  margin-left: 5px;
+  width: 46px;
+  height: 62px;
+  background-repeat: no-repeat;
+  background-position: 50%;
+  background-image: url('https://cdn.okccdn.com/media/img/dtf/join_button_logo.png');
+}
+.splashdtf-tos {
+  width: 1180px;
+  margin-left: auto;
+  margin-right: auto;
+  padding-left: 65px;
+  padding-right: 65px;
+  z-index: 2;
+}
+.terms-of-service {
+  display: block;
+  font-size: 16px;
+  line-height: 24px;
+}
+.terms-of-service-link {
+  text-decoration: underline;
+  color: @color_5;
+  &:hover {
+    color: @color_4;
+  }
+}
+.splashdtf-mobile {
+  width: 1180px;
+  margin-left: auto;
+  margin-right: auto;
+  padding-left: 65px;
+  padding-right: 65px;
+  z-index: 2;
+  height: 43px;
+  margin-top: 38px;
+}
+.mobile-item {
+  text-align: center;
+}
+.mobile-footer {
+  display: none;
+  color: #fff;
+  text-align: center;
+}
+.splashdtf-mobile-text {
+  display: inline-block;
+  margin-right: 25px;
+  font-weight: 700;
+  font-size: 16px;
+  line-height: 43px;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+.splashdtf-mobile-buttons {
+  display: inline-block;
+  text-indent: -9999px;
+  margin-right: 20px;
+  width: 64px;
+  height: 43px;
+  line-height: 43px;
+}
+.splashdtf-mobile-buttons--googleplay {
+  background-repeat: no-repeat;
+  background-position: 0 0;
+  background-image: url('https://cdn.okccdn.com/media/img/dtf/apps_googleplay2.png');
+}
+.splashdtf-mobile-buttons--appstore {
+  background-repeat: no-repeat;
+  background-position: 0 0;
+  background-image: url('https://cdn.okccdn.com/media/img/dtf/apps_apple.png');
+}
+.splashdtf-footer {
+  flex-basis: 110px;
+  padding-top: 10px;
+  background: #fff;
+}
+.splashdtf-footer-links {
+  width: 1180px;
+  margin-left: auto;
+  margin-right: auto;
+  padding-left: 65px;
+  padding-right: 65px;
+  z-index: 2;
+  display: flex;
+  justify-content: space-between;
+  font-size: 13px;
+  line-height: 20px;
+}
+.splashdtf-footer-nav {
+  display: flex;
+  text-align: left;
+  flex-wrap: wrap;
+}
+.splashdtf-footer-nav-item {
+  text-transform: uppercase;
+  font-weight: 500;
+  white-space: nowrap;
+  &:not(:last-child) {
+    padding-right: 15px;
+  }
+}
+.splashdtf-footer-nav-item-link {
+  color: @color_3;
+  &:hover {
+    color: @color_4;
+  }
+}
+.splashdtf-footer-social {
+  width: 1180px;
+  margin-left: auto;
+  margin-right: auto;
+  padding-left: 65px;
+  padding-right: 65px;
+  z-index: 2;
+  text-align: center;
+  padding-top: 20px;
+}
+@media (min-width: 992px) {
+  .container {
+    max-width: 960px;
+    padding-left: 65px;
+    padding-right: 65px;
+  }
+  .header-item {
+    padding-bottom: 0.00000001px;
+  }
+  .terms-of-service {
+    width: 380px;
+  }
+  .conent-item {
+    .splashdtf-top-text-heading {
+      background-size: 400px auto;
+    }
+    padding-bottom: 15px;
+  }
+  .splashdtf-hero-image-hands {
+    background-size: 550px auto;
+  }
+  .splashdtf-hero-image-facepaint {
+    background-size: 550px auto;
+  }
+  .splashdtf-top-text-manifesto {
+    width: 380px;
+  }
+  .splashdtf-content {
+    min-height: 750px;
+  }
+}
+@media (min-width: 1200px) {
+  .container {
+    max-width: 1180px;
+    padding-left: 65px;
+    padding-right: 65px;
+  }
+  .header-item {
+    padding-bottom: 30px;
+  }
+  .conent-item {
+    .splashdtf-top-text-heading {
+      background-size: 524px auto;
+    }
+    padding-bottom: 0.000000001px;
+  }
+  .splashdtf-hero-image-hands {
+    background-size: 666px auto;
+  }
+  .splashdtf-hero-image-facepaint {
+    background-size: 666px auto;
+  }
+  .splashdtf-top-text-manifesto {
+    width: 460px;
+  }
+  .terms-of-service {
+    width: 450px;
+  }
+  .splashdtf-content {
+    min-height: 766px;
+  }
+}
+@media (max-width: 991px) {
+  .container {
+    padding-left: 10px;
+    padding-right: 10px;
+  }
+  .conent-item {
+    .splashdtf-top-text-heading {
+      display: none;
+    }
+    padding-bottom: 0.000000001px;
+  }
+  .splashdtf-hero-image-hands {
+    display: none;
+  }
+  .splashdtf-hero-image-facepaint {
+    display: none;
+  }
+  .splashdtf-top-text-manifesto {
+    display: none;
+  }
+  .terms-of-service {
+    display: none;
+  }
+  .splashdtf-content {
+    min-height: auto;
+    padding-bottom: 20px;
+  }
+  .splashdtf-footer {
+    display: none;
+  }
+  .splashdtf-header-signin-text {
+    display: none;
+  }
+  .mobile-content {
+    display: block;
+  }
+  .mobile-title {
+    display: block;
+  }
+  .get-app {
+    display: none;
+  }
+  .mobile-footer {
+    display: block;
+  }
+  .mobile-logo {
+    display: block;
+  }
+  .splashdtf-signup-button {
+    display: none;
+  }
+}
