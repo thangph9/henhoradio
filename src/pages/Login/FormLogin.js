@@ -45,6 +45,7 @@ class FormLogin extends PureComponent {
 
   handleSubmit = e => {
     e.preventDefault();
+    const { value } = this.state;
     recaptchaRef.current.execute();
     const { form, dispatch } = this.props;
     form.validateFields((err, values) => {
