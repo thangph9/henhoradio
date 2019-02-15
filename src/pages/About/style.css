@@ -3,6 +3,7 @@
   z-index: 1;
   position: relative;
   color: #000;
+  height: 100%;
 }
 .container {
   width: 100%;

@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 /* eslint-disable react/sort-comp */
 /* eslint-disable no-return-assign */
 /* eslint-disable react/no-unused-state */
@@ -57,12 +58,10 @@ class FormLogin extends PureComponent {
   };
 
   handleChangeCaptcha = value => {
-    console.log(value);
     this.setState({ value });
   };
 
   handleChangePhone(value) {
-    console.log(value);
     this.setState({
       help: '',
       validateStatus: '',
