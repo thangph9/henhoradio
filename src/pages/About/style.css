@@ -87,7 +87,7 @@
   right: 0;
 }
 .splashdtf-hero-image-hands {
-  background-position: calc(350%) calc(110%);
+  background-position: calc(425%) calc(110%);
   background-repeat: no-repeat;
   background-image: url('https://cdn.okccdn.com/media/img/dtf/photos/hands.jpg');
 }
@@ -287,7 +287,7 @@
     background-size: 400px auto;
   }
   .splashdtf-hero-image-hands {
-    background-size: 550px auto;
+    background-size: 666px auto;
   }
   .splashdtf-hero-image-facepaint {
     background-size: 550px auto;
@@ -315,7 +315,7 @@
     background-size: 524px auto;
   }
   .splashdtf-hero-image-hands {
-    background-size: 666px auto;
+    background-size: 865px auto;
   }
   .splashdtf-hero-image-facepaint {
     background-size: 666px auto;

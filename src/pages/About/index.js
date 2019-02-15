@@ -56,7 +56,7 @@ class About extends PureComponent {
     const { constNumber, number } = this.state;
     const backgroundColor = this.background(number);
     return (
-      <div style={{ paddingBottom: '30px', height: '100%' }}>
+      <div style={{ height: '100%' }}>
         <div className={styles['splashdtf-content']} style={{ background: backgroundColor }}>
           <div className={`${styles.container} ${styles['header-item']}`}>
             <div className={styles['splashdtf-logo']} />
