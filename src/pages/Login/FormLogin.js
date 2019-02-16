@@ -106,12 +106,14 @@ class FormLogin extends PureComponent {
             ],
           })(<Input autocomplete="password" type="password" />)}
         </Form.Item>
-        <ReCAPTCHA
-          ref={recaptchaRef}
-          onChange={e => this.handleChangeCaptcha(e)}
-          sitekey="6LfUm5AUAAAAAB6eXtNTPWLUZT5hCbDabBBmLK23"
-          size="invisible"
-        />
+        <Form.Item>
+          <ReCAPTCHA
+            ref={recaptchaRef}
+            onChange={e => this.handleChangeCaptcha(e)}
+            sitekey="6LfUm5AUAAAAAB6eXtNTPWLUZT5hCbDabBBmLK23"
+            size="invisible"
+          />
+        </Form.Item>
         <Form.Item>
           <Button
             size="large"
