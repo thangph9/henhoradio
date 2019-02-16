@@ -38,6 +38,9 @@ class FormLogin extends PureComponent {
           validateStatus: 'error',
         });
       }
+      if (this.props.authentication.login.status === 'ok') {
+        nextProps.history.push({ pathname: '/registerresult' });
+      }
     }
   }
 
@@ -85,9 +88,6 @@ class FormLogin extends PureComponent {
     const { getFieldDecorator } = this.props.form;
     const { authentication } = this.props;
     const { help, validateStatus, value } = this.state;
-    if (authentication.login.status === 'ok') {
-      return <Redirect to="/home" />;
-    }
     return (
       <Form onSubmit={e => this.handleSubmit(e)}>
         <Form.Item label="Số điện thoại" style={{ marginBottom: '0px' }}>
