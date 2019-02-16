@@ -131,18 +131,20 @@ class About extends PureComponent {
             </Link>
           </div>
           <div className={`${styles.container} ${styles['mobile-logo']}`}>
-            <Button
-              block
-              size="large"
-              style={{
-                background: 'linear-gradient(-75deg,#f7b733,#fc4a1a)',
-                border: 'none',
-                borderColor: 'linear-gradient(-75deg,#f7b733,#fc4a1a)',
-                color: '#fff',
-              }}
-            >
-              Tham gia hẹn hò
-            </Button>
+            <Link to="/login?ref=1">
+              <Button
+                block
+                size="large"
+                style={{
+                  background: 'linear-gradient(-75deg,#f7b733,#fc4a1a)',
+                  border: 'none',
+                  borderColor: 'linear-gradient(-75deg,#f7b733,#fc4a1a)',
+                  color: '#fff',
+                }}
+              >
+                Tham gia hẹn hò
+              </Button>
+            </Link>
           </div>
           <div className={styles.container}>
             <span className={styles['terms-of-service']}>

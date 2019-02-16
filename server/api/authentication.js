@@ -173,12 +173,41 @@ function login(req, res) {
   let userInfo = [];
   let hashPassword = '';
   let token = '';
+  let verificationUrl = '';
   const tasks = [
     function validParams(callback) {
       PARAM_IS_VALID.phone = params.phone;
       PARAM_IS_VALID.password = params.password;
       PARAM_IS_VALID.captcha = params.captcha;
       callback(null, null);
+    },
+    function checkCaptcha(callback) {
+      if (!params.captcha) {
+        return res.json({
+          status: 'error',
+          message: 'Chưa nhập captcha',
+          timeline: new Date().getTime(),
+        });
+      }
+      verificationUrl = 'https://www.google.com/recaptcha/api/siteverify?secret=6LfUm5AUAAAAAC8xSPAt0pRUzUd4ZaK-1rZs-Aqm&response='.concat(
+        params.captcha,
+        '&remoteip=',
+        req.connection.remoteAddress
+      );
+      return callback(null, verificationUrl);
+    },
+    function verifyCaptcha(callback) {
+      request(verificationUrl, (error, response, b) => {
+        const body = JSON.parse(b);
+        if (body.success === false) {
+          return res.json({
+            status: 'error',
+            message: 'Sai captcha',
+            timeline: new Date.getTime(),
+          });
+        }
+        callback(error, null);
+      });
     },
     function fetchUsers(callback) {
       models.instance.users.find(
