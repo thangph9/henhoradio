@@ -190,6 +190,8 @@ class FormRegister extends PureComponent {
   handleSubmit = e => {
     e.preventDefault();
     const { form, dispatch } = this.props;
+    const { value } = this.state;
+    recaptchaRef.current.execute();
     const dob_day = form.getFieldValue('dob_day');
     const dob_month = form.getFieldValue('dob_month');
     const dob_year = form.getFieldValue('dob_year');
@@ -265,12 +267,13 @@ class FormRegister extends PureComponent {
         });
       }
       if (values.password === values.repassword) {
-        if (!err && dob_day && dob_month && dob_year && gender) {
-          // console.log(values)
-          dispatch({
-            type: 'authentication/register',
-            payload: values,
-          });
+        if (value && value.length > 0) {
+          if (!err && dob_day && dob_month && dob_year && gender) {
+            dispatch({
+              type: 'authentication/register',
+              payload: values,
+            });
+          }
         }
       }
     });
@@ -687,14 +690,12 @@ class FormRegister extends PureComponent {
             />
           )}
         </Form.Item>
-        <Form.Item>
-          <ReCAPTCHA
-            ref={recaptchaRef}
-            onChange={e => this.handleChangeCaptcha(e)}
-            sitekey="6LfUm5AUAAAAAB6eXtNTPWLUZT5hCbDabBBmLK23"
-            size="invisible"
-          />
-        </Form.Item>
+        <ReCAPTCHA
+          ref={recaptchaRef}
+          onChange={e => this.handleChangeCaptcha(e)}
+          sitekey="6LfUm5AUAAAAAB6eXtNTPWLUZT5hCbDabBBmLK23"
+          size="invisible"
+        />
         <Form.Item>
           <Button
             size="large"

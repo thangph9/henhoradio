@@ -10,8 +10,6 @@ import { Form, Input, Button } from 'antd';
 import { Link } from 'react-router-dom';
 import ReCAPTCHA from 'react-google-recaptcha';
 // import styles from './styles.less';
-let recaptchaInstance;
-
 const recaptchaRef = React.createRef();
 // eslint-disable-next-line no-unused-vars
 @connect(({ loading, authentication }) => ({
@@ -77,7 +75,6 @@ class FormLogin extends PureComponent {
     // eslint-disable-next-line react/destructuring-assignment
     const { getFieldDecorator } = this.props.form;
     const { help, validateStatus, value } = this.state;
-    console.log(value);
     return (
       <Form onSubmit={e => this.handleSubmit(e)}>
         <Form.Item label="Số điện thoại" style={{ marginBottom: '0px' }}>
