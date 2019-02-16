@@ -113,7 +113,7 @@ class FormLogin extends PureComponent {
           <Recaptcha
             ref={ref => (this.recaptcha = ref)}
             sitekey="6LfUm5AUAAAAAB6eXtNTPWLUZT5hCbDabBBmLK23"
-            onResolved={() => this.onResolved()}
+            onResolved={this.onResolved}
           />
         </FormItem>
         <Form.Item>
