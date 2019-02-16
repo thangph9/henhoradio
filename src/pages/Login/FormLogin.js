@@ -51,9 +51,8 @@ class FormLogin extends PureComponent {
   handleSubmit = e => {
     e.preventDefault();
     const { value } = this.state;
-    recaptchaRef.current.execute();
     const { form, dispatch } = this.props;
-
+    recaptchaRef.current.execute();
     form.validateFields((err, values) => {
       if (value && value.length > 0) {
         if (!err) {
@@ -65,7 +64,6 @@ class FormLogin extends PureComponent {
         }
       }
     });
-    recaptchaRef.current.reset();
   };
 
   handleChangePhone(value) {
