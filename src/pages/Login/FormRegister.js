@@ -406,8 +406,6 @@ class FormRegister extends PureComponent {
     const { value } = e.target;
     const { form, dispatch } = this.props;
     const pathname = this.props.localtion;
-    console.log(pathname);
-
     if (!/^\d{10}$/.test(value)) {
       this.setState({
         helpPhone: 'Số điện thoại không hợp lệ',
@@ -415,7 +413,6 @@ class FormRegister extends PureComponent {
       });
     }
     form.validateFields(['phone'], (errors, values) => {
-      console.log(errors);
       if (!errors) {
         dispatch({
           type: 'authentication/checkuser',

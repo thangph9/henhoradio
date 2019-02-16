@@ -6,7 +6,7 @@ import React, { PureComponent } from 'react';
 import { connect } from 'dva';
 // import { Redirect } from 'react-router-dom';
 import { Form, Input, Button } from 'antd';
-import ReCAPTCHA from 'react-google-recaptcha';
+import Recaptcha from 'react-google-invisible-recaptcha';
 import FormItem from 'antd/lib/form/FormItem';
 import { Link } from 'react-router-dom';
 // import styles from './styles.less';
@@ -46,14 +46,16 @@ class FormLogin extends PureComponent {
   handleSubmit = e => {
     e.preventDefault();
     const { value } = this.state;
-    recaptchaRef.current.execute();
     const { form, dispatch } = this.props;
     form.validateFields((err, values) => {
       if (!err) {
+        this.recaptcha.execute();
         dispatch({
           type: 'authentication/login',
           payload: values,
         });
+      } else {
+        this.recaptcha.reset();
       }
     });
   };
@@ -69,12 +71,17 @@ class FormLogin extends PureComponent {
     });
   }
 
+  onResolved() {
+    console.log(`Recaptcha resolved with response: ${this.recaptcha.getResponse()}`);
+  }
+
   render() {
     // eslint-disable-next-line react/destructuring-assignment
     const { getFieldDecorator } = this.props.form;
     const { help, validateStatus } = this.state;
+    console.log(this.recaptcha);
     return (
-      <Form onSubmit={this.handleSubmit}>
+      <Form onSubmit={() => this.handleSubmit()}>
         <Form.Item label="Số điện thoại" style={{ marginBottom: '0px' }}>
           {getFieldDecorator('phone', {
             rules: [
@@ -100,14 +107,13 @@ class FormLogin extends PureComponent {
                 message: 'Vui lòng nhập mật khẩu!',
               },
             ],
-          })(<Input type="password" />)}
+          })(<Input autocomplete="password" type="password" />)}
         </Form.Item>
         <FormItem>
-          <ReCAPTCHA
-            ref={recaptchaRef}
-            onChange={e => this.handleChangeCaptcha(e)}
+          <Recaptcha
+            ref={ref => this.recaptcha(ref)}
             sitekey="6LfUm5AUAAAAAB6eXtNTPWLUZT5hCbDabBBmLK23"
-            size="invisible"
+            onResolved={() => this.onResolved()}
           />
         </FormItem>
         <Form.Item>
