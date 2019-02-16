@@ -8,7 +8,7 @@ import React, { PureComponent } from 'react';
 import { connect } from 'dva';
 // import { Redirect } from 'react-router-dom';
 import { Form, Input, Button } from 'antd';
-import { Link } from 'react-router-dom';
+import { Link, Redirect } from 'react-router-dom';
 import ReCAPTCHA from 'react-google-recaptcha';
 // import styles from './styles.less';
 const recaptchaRef = React.createRef();
@@ -23,6 +23,7 @@ class FormLogin extends PureComponent {
     help: '',
     validateStatus: '',
     value: '',
+    timeline: 0,
   };
 
   componentWillReceiveProps(nextProps) {
@@ -37,9 +38,6 @@ class FormLogin extends PureComponent {
           validateStatus: 'error',
         });
       }
-      if (nextProps.authentication.login.status === 'ok') {
-        nextProps.history.push({ pathname: '/home' });
-      }
     }
   }
 
@@ -49,6 +47,7 @@ class FormLogin extends PureComponent {
 
   handleSubmit = e => {
     const { value } = this.state;
+    const { form, dispatch } = this.props;
     e.preventDefault();
     recaptchaRef.current.execute();
   };
@@ -83,9 +82,11 @@ class FormLogin extends PureComponent {
 
   render() {
     // eslint-disable-next-line react/destructuring-assignment
-    const { getFieldDecorator } = this.props.form;
+    const { getFieldDecorator, authentication } = this.props.form;
     const { help, validateStatus, value } = this.state;
-    console.log(value);
+    if (authentication.login.status === 'ok') {
+      return <Redirect to="/home" />;
+    }
     return (
       <Form onSubmit={e => this.handleSubmit(e)}>
         <Form.Item label="Số điện thoại" style={{ marginBottom: '0px' }}>
