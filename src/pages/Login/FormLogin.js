@@ -47,20 +47,17 @@ class FormLogin extends PureComponent {
 
   handleSubmit = e => {
     e.preventDefault();
-    const recaptchaValue = recaptchaRef.current.getValue();
-    console.log(recaptchaValue);
     const { value } = this.state;
     const { form, dispatch } = this.props;
-    if (recaptchaValue && recaptchaValue.length > 0) {
-      form.validateFields((err, values) => {
-        if (!err && value.length > 0) {
-          dispatch({
-            type: 'authentication/login',
-            payload: values,
-          });
-        }
-      });
-    }
+
+    form.validateFields((err, values) => {
+      if (!err) {
+        dispatch({
+          type: 'authentication/login',
+          payload: values,
+        });
+      }
+    });
   };
 
   handleChangeCaptcha = value => {
