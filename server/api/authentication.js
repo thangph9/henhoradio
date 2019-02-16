@@ -65,7 +65,7 @@ function register(req, res) {
         '&remoteip=',
         req.connection.remoteAddress
       );
-      return callback(null, verificationUrl);
+      callback(null, verificationUrl);
     },
     function verifyCaptcha(callback) {
       request(verificationUrl, (error, response, b) => {
@@ -196,7 +196,7 @@ function login(req, res) {
         '&remoteip=',
         req.connection.remoteAddress
       );
-      return callback(null, verificationUrl);
+      callback(null, verificationUrl);
     },
     function verifyCaptcha(callback) {
       request(verificationUrl, (error, response, b) => {
