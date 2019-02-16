@@ -52,7 +52,6 @@ class FormLogin extends PureComponent {
     const { value } = this.state;
     const { form, dispatch } = this.props;
     if (recaptchaValue && recaptchaValue.length > 0) {
-      recaptchaRef.current.execute();
       form.validateFields((err, values) => {
         if (!err && value.length > 0) {
           dispatch({
