@@ -284,7 +284,7 @@ class FormRegister extends PureComponent {
     const { data, value } = this.state;
     const { dispatch } = this.props;
     let dataCaptcha = data;
-    if (value !== nextState.value && value.length > 0) {
+    if (value !== nextState.value && nextState.value.length > 0) {
       dataCaptcha.captcha = nextState.value;
       dispatch({
         type: 'authentication/register',
