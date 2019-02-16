@@ -80,7 +80,7 @@ class FormLogin extends PureComponent {
     const { getFieldDecorator } = this.props.form;
     const { help, validateStatus, value } = this.state;
     return (
-      <Form onSubmit={e => this.handleSubmit(e, this.sendSubmit())}>
+      <Form onSubmit={e => this.handleSubmit(e, this.sendSubmit.bind(this))}>
         <Form.Item label="Số điện thoại" style={{ marginBottom: '0px' }}>
           {getFieldDecorator('phone', {
             rules: [
