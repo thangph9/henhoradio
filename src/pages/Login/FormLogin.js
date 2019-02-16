@@ -12,7 +12,7 @@ import { Link } from 'react-router-dom';
 // import styles from './styles.less';
 
 // eslint-disable-next-line no-unused-vars
-const recaptchaRef = React.createRef();
+let recaptchaInstance;
 @connect(({ loading, authentication }) => ({
   submitting: loading.effects['form/submitRegularForm'],
   authentication,
@@ -43,22 +43,25 @@ class FormLogin extends PureComponent {
     }
   }
 
+  resetRecaptcha = () => {
+    recaptchaInstance.reset();
+  };
+
   handleSubmit = e => {
     e.preventDefault();
     const { value } = this.state;
     const { form, dispatch } = this.props;
-
-    form.validateFields((err, values) => {
-      if (!err && value.length > 0) {
-        recaptchaRef.current.execute();
-        dispatch({
-          type: 'authentication/login',
-          payload: values,
-        });
-      } else {
-        recaptchaRef.current.reset();
-      }
-    });
+    if (value.length > 0) {
+      form.validateFields((err, values) => {
+        if (!err && value.length > 0) {
+          dispatch({
+            type: 'authentication/login',
+            payload: values,
+          });
+        }
+      });
+    }
+    this.resetRecaptcha();
   };
 
   handleChangeCaptcha = value => {
@@ -108,7 +111,7 @@ class FormLogin extends PureComponent {
         </Form.Item>
         <Form.Item>
           <ReCAPTCHA
-            ref={recaptchaRef}
+            ref={e => (recaptchaInstance = e)}
             onChange={e => this.handleChangeCaptcha(e)}
             sitekey="6LfUm5AUAAAAAB6eXtNTPWLUZT5hCbDabBBmLK23"
             size="invisible"
