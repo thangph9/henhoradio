@@ -47,14 +47,14 @@ class FormLogin extends PureComponent {
   };
 
   handleSubmit = (e, callback) => {
+    const { value } = this.state;
     e.preventDefault();
     recaptchaRef.current.execute();
-    callback();
+    callback(value);
   };
 
-  sendSubmit() {
+  sendSubmit(value) {
     const { form, dispatch } = this.props;
-    const { value } = this.state;
     form.validateFields((err, values) => {
       if (value && value.length > 0) {
         if (!err) {
@@ -79,6 +79,7 @@ class FormLogin extends PureComponent {
     // eslint-disable-next-line react/destructuring-assignment
     const { getFieldDecorator } = this.props.form;
     const { help, validateStatus, value } = this.state;
+    console.log(value);
     return (
       <Form onSubmit={e => this.handleSubmit(e, this.sendSubmit.bind(this))}>
         <Form.Item label="Số điện thoại" style={{ marginBottom: '0px' }}>
