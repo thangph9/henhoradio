@@ -40,9 +40,9 @@ class FormLogin extends PureComponent {
       }
       if (nextProps.authentication.login.status === 'ok') {
         setTimeout(() => {
-          nextProps.history.push({ pathname: '/home' });
+          // nextProps.history.push({ pathname: '/home' });
         }, 100);
-        console.log('chay vao status ok');
+        // console.log('chay vao status ok');
         this.setState({
           redierect: false,
         });

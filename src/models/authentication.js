@@ -1,5 +1,6 @@
 import { loginAccount, RegisterAccount, homeDemo, checkUser } from '@/services/api';
 import { setAuthority } from '@/utils/authority';
+import Redirect from 'umi/redirect';
 
 export default {
   namespace: 'authentication',
@@ -27,6 +28,7 @@ export default {
           payload: response || {},
         });
       }
+      return <Redirect to="/home" />; // eslint-disable-line
     },
     *homedemo({ payload }, { call, put }) {
       const response = yield call(homeDemo, payload);
