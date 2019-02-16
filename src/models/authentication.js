@@ -1,6 +1,6 @@
 import { loginAccount, RegisterAccount, homeDemo, checkUser } from '@/services/api';
 import { setAuthority } from '@/utils/authority';
-import Redirect from 'umi/redirect';
+import { reloadAuthorized } from '@/utils/Authorized';
 
 export default {
   namespace: 'authentication',
@@ -16,8 +16,8 @@ export default {
       const response = yield call(loginAccount, payload);
       if (response.status === 'ok') {
         localStorage.token = JSON.stringify(response.token);
-        setAuthority('member');
-
+        setAuthority(['member']);
+        reloadAuthorized();
         yield put({
           type: 'loginAuthentication',
           payload: response || {},
@@ -28,7 +28,6 @@ export default {
           payload: response || {},
         });
       }
-      return <Redirect to="/home" />; // eslint-disable-line
     },
     *homedemo({ payload }, { call, put }) {
       const response = yield call(homeDemo, payload);
@@ -55,6 +54,8 @@ export default {
 
   reducers: {
     loginAuthentication(state, action) {
+      // return <Redirect to="/home" />; // eslint-disable-line
+
       return {
         ...state,
         login: action.payload,

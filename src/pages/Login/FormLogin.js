@@ -10,6 +10,7 @@ import { connect } from 'dva';
 import { Form, Input, Button } from 'antd';
 import { Link, Redirect } from 'react-router-dom';
 import ReCAPTCHA from 'react-google-recaptcha';
+import { getAuthority } from '@/utils/authority';
 // import styles from './styles.less';
 const recaptchaRef = React.createRef();
 // eslint-disable-next-line no-unused-vars
@@ -39,14 +40,7 @@ class FormLogin extends PureComponent {
         });
       }
       if (nextProps.authentication.login.status === 'ok') {
-        setTimeout(() => {
-          // nextProps.history.push({ pathname: '/home' });
-        }, 100);
-        // console.log('chay vao status ok');
-        this.setState({
-          redierect: false,
-        });
-        // nextProps.history.push({ pathname: '/home' });
+        nextProps.history.push({ pathname: '/home' });
       }
     }
   }
@@ -89,13 +83,8 @@ class FormLogin extends PureComponent {
   }
 
   render() {
-    // eslint-disable-next-line react/destructuring-assignment
     const { getFieldDecorator } = this.props.form;
-    const { authentication } = this.props;
-    const { help, validateStatus, value, redierect } = this.state;
-    if (redierect) {
-      return <Redirect to="/" />;
-    }
+    const { help, validateStatus } = this.state;
     return (
       <Form onSubmit={e => this.handleSubmit(e)}>
         <Form.Item label="Số điện thoại" style={{ marginBottom: '0px' }}>
