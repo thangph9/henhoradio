@@ -37,7 +37,7 @@ class FormLogin extends PureComponent {
         });
       }
       if (nextProps.authentication.login.status === 'ok') {
-        this.history.push({ pathname: '/home' });
+        nextProps.history.push({ pathname: '/home' });
       }
     }
   }
