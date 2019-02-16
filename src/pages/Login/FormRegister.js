@@ -195,7 +195,6 @@ class FormRegister extends PureComponent {
     e.preventDefault();
     const { form, dispatch } = this.props;
     const { value } = this.state;
-    recaptchaRef.current.execute();
     const dob_day = form.getFieldValue('dob_day');
     const dob_month = form.getFieldValue('dob_month');
     const dob_year = form.getFieldValue('dob_year');
@@ -272,8 +271,8 @@ class FormRegister extends PureComponent {
       }
       if (values.password === values.repassword) {
         if (!err && dob_day && dob_month && dob_year && gender) {
+          recaptchaRef.current.execute();
           this.setState({
-            canSubmit: true,
             data: values,
           });
         }
@@ -285,7 +284,7 @@ class FormRegister extends PureComponent {
     const { canSubmit, data } = this.state;
     const { dispatch } = this.props;
     let dataCaptcha = data;
-    if (this.state.value !== nextState.value && canSubmit) {
+    if (this.state.value !== nextState.value) {
       dataCaptcha.captcha = nextState.value;
       dispatch({
         type: 'authentication/register',

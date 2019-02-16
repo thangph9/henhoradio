@@ -1,3 +1,4 @@
+/* eslint-disable prefer-const */
 /* eslint-disable react/destructuring-assignment */
 /* eslint-disable no-param-reassign */
 /* eslint-disable no-unused-vars */
@@ -53,27 +54,27 @@ class FormLogin extends PureComponent {
 
   handleSubmit = e => {
     e.preventDefault();
-    recaptchaRef.current.execute();
-  };
-
-  sendSubmit(value) {
     const { form, dispatch } = this.props;
     form.validateFields((err, values) => {
-      if (value && value.length > 0) {
-        if (!err) {
-          values.captcha = value;
-          dispatch({
-            type: 'authentication/login',
-            payload: values,
-          });
-        }
+      if (!err) {
+        recaptchaRef.current.execute();
+        this.setState({
+          data: values,
+        });
       }
     });
-  }
+  };
 
   componentWillUpdate(nextProps, nextState) {
-    if (this.state.value !== nextState.value) {
-      this.sendSubmit(nextState.value);
+    const { dispatch } = this.props;
+    const { data, value, canSubmit } = this.state;
+    let dataCaptcha = data;
+    if (value !== nextState.value) {
+      dataCaptcha.captcha = nextState.value;
+      dispatch({
+        type: 'authentication/login',
+        payload: dataCaptcha,
+      });
     }
   }
 
