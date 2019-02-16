@@ -1,3 +1,4 @@
+/* eslint-disable no-param-reassign */
 /* eslint-disable no-unused-vars */
 /* eslint-disable react/sort-comp */
 /* eslint-disable no-return-assign */
@@ -52,15 +53,18 @@ class FormLogin extends PureComponent {
     const { value } = this.state;
     recaptchaRef.current.execute();
     const { form, dispatch } = this.props;
-    const recaptchaValue = recaptchaRef.current.getValue();
-    form.validateFields((err, values) => {
-      if (!err && recaptchaValue.length > 0) {
-        dispatch({
-          type: 'authentication/login',
-          payload: values,
-        });
-      }
-    });
+    if (value && value.length > 0) {
+      form.validateFields((err, values) => {
+        if (!err) {
+          values.captcha = value;
+          dispatch({
+            type: 'authentication/login',
+            payload: values,
+          });
+        }
+      });
+    }
+    recaptchaRef.current.reset();
   };
 
   handleChangePhone(value) {
