@@ -6,13 +6,10 @@ import React, { PureComponent } from 'react';
 import { connect } from 'dva';
 // import { Redirect } from 'react-router-dom';
 import { Form, Input, Button } from 'antd';
-import ReCAPTCHA from 'react-google-recaptcha';
-import FormItem from 'antd/lib/form/FormItem';
 import { Link } from 'react-router-dom';
 // import styles from './styles.less';
 
 // eslint-disable-next-line no-unused-vars
-const recaptchaRef = React.createRef();
 @connect(({ loading, authentication }) => ({
   submitting: loading.effects['form/submitRegularForm'],
   authentication,
@@ -43,8 +40,6 @@ class FormLogin extends PureComponent {
     }
   }
 
-  resetRecaptcha = () => {};
-
   handleSubmit = e => {
     e.preventDefault();
     const { value } = this.state;
@@ -58,10 +53,6 @@ class FormLogin extends PureComponent {
         });
       }
     });
-  };
-
-  handleChangeCaptcha = value => {
-    this.setState({ value });
   };
 
   handleChangePhone(value) {
@@ -92,9 +83,9 @@ class FormLogin extends PureComponent {
             ],
           })(<Input onChange={e => this.handleChangePhone(e)} />)}
         </Form.Item>
-        <FormItem help={help} validateStatus={validateStatus} style={{ marginBottom: '0px' }}>
+        <Form.Item help={help} validateStatus={validateStatus} style={{ marginBottom: '0px' }}>
           {getFieldDecorator('hidden', {})(<Input type="hidden" />)}
-        </FormItem>
+        </Form.Item>
         <Form.Item label="Mật khẩu">
           {getFieldDecorator('password', {
             rules: [
@@ -104,14 +95,6 @@ class FormLogin extends PureComponent {
               },
             ],
           })(<Input autocomplete="password" type="password" />)}
-        </Form.Item>
-        <Form.Item>
-          <ReCAPTCHA
-            ref={recaptchaRef}
-            onChange={e => this.handleChangeCaptcha(e)}
-            sitekey="6LfUm5AUAAAAAB6eXtNTPWLUZT5hCbDabBBmLK23"
-            size="invisible"
-          />
         </Form.Item>
         <Form.Item>
           <Button
