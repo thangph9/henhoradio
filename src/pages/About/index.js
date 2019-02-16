@@ -5,6 +5,7 @@
 /* eslint-disable no-unused-vars */
 import React, { PureComponent } from 'react';
 import { Button, Icon } from 'antd';
+import { Link } from 'react-router-dom';
 import styles from './style.less';
 
 // eslint-disable-next-line react/prefer-stateless-function
@@ -62,9 +63,11 @@ class About extends PureComponent {
             <div className={styles['splashdtf-logo']} />
             <div className={styles['splashdtf-header-signin']}>
               <span className={styles['splashdtf-header-signin-text']}>Have an account?</span>
-              <Button style={{ border: '1px solid', background: 'none' }} type="default">
-                Đăng nhập
-              </Button>
+              <Link to="/login?ref=0">
+                <Button style={{ border: '1px solid', background: 'none' }} type="default">
+                  Đăng nhập
+                </Button>
+              </Link>
             </div>
           </div>
           <div>
@@ -122,10 +125,10 @@ class About extends PureComponent {
             </div>
           </div>
           <div className={styles.container}>
-            <a className={styles['splashdtf-signup-button']} type="button" href="/signup">
+            <Link className={styles['splashdtf-signup-button']} type="button" to="/login?ref=1">
               <span>Tham gia</span>
               <span className={styles['splashdtf-signup-button-logo']} />
-            </a>
+            </Link>
           </div>
           <div className={`${styles.container} ${styles['mobile-logo']}`}>
             <Button

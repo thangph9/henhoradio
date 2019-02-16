@@ -126,7 +126,7 @@ class FormLogin extends PureComponent {
             Đăng nhập
           </Button>
         </Form.Item>
-        <Link to="/javascript(void);">Quên mật khẩu?</Link>
+        <Link to="/forgot">Quên mật khẩu?</Link>
       </Form>
     );
   }
