@@ -62,7 +62,6 @@ class FormLogin extends PureComponent {
         }
       });
     }
-    recaptchaRef.current.reset();
   };
 
   handleChangeCaptcha = value => {
