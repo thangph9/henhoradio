@@ -70,6 +70,7 @@ class FormLogin extends PureComponent {
     const { data, value, canSubmit } = this.state;
     let dataCaptcha = data;
     if (value !== nextState.value) {
+      console.log(nextState.value);
       dataCaptcha.captcha = nextState.value;
       dispatch({
         type: 'authentication/login',
