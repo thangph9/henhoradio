@@ -6,7 +6,7 @@ import React, { PureComponent } from 'react';
 import { connect } from 'dva';
 // import { Redirect } from 'react-router-dom';
 import { Form, Input, Button } from 'antd';
-import Recaptcha from 'react-google-invisible-recaptcha';
+import ReCAPTCHA from 'react-google-recaptcha';
 import FormItem from 'antd/lib/form/FormItem';
 import { Link } from 'react-router-dom';
 // import styles from './styles.less';
@@ -47,15 +47,16 @@ class FormLogin extends PureComponent {
     e.preventDefault();
     const { value } = this.state;
     const { form, dispatch } = this.props;
+
     form.validateFields((err, values) => {
-      if (!err) {
-        this.recaptcha.execute();
+      if (!err && value.length > 0) {
+        recaptchaRef.current.execute();
         dispatch({
           type: 'authentication/login',
           payload: values,
         });
       } else {
-        this.recaptcha.reset();
+        recaptchaRef.current.reset();
       }
     });
   };
@@ -71,15 +72,11 @@ class FormLogin extends PureComponent {
     });
   }
 
-  onResolved() {
-    console.log(`Recaptcha resolved with response: ${this.recaptcha.getResponse()}`);
-  }
-
   render() {
     // eslint-disable-next-line react/destructuring-assignment
     const { getFieldDecorator } = this.props.form;
-    const { help, validateStatus } = this.state;
-    console.log(this.recaptcha);
+    const { help, validateStatus, value } = this.state;
+    console.log(value);
     return (
       <Form onSubmit={() => this.handleSubmit()}>
         <Form.Item label="Số điện thoại" style={{ marginBottom: '0px' }}>
@@ -109,13 +106,12 @@ class FormLogin extends PureComponent {
             ],
           })(<Input autocomplete="password" type="password" />)}
         </Form.Item>
-        <FormItem>
-          <Recaptcha
-            ref={ref => (this.recaptcha = ref)}
-            sitekey="6LfUm5AUAAAAAB6eXtNTPWLUZT5hCbDabBBmLK23"
-            onResolved={this.onResolved}
-          />
-        </FormItem>
+        <ReCAPTCHA
+          ref={recaptchaRef}
+          onChange={e => this.handleChangeCaptcha(e)}
+          sitekey="6LfUm5AUAAAAAB6eXtNTPWLUZT5hCbDabBBmLK23"
+          size="invisible"
+        />
         <Form.Item>
           <Button
             size="large"
