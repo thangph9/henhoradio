@@ -53,8 +53,9 @@ class FormLogin extends PureComponent {
     const { value } = this.state;
     recaptchaRef.current.execute();
     const { form, dispatch } = this.props;
-    if (value && value.length > 0) {
-      form.validateFields((err, values) => {
+
+    form.validateFields((err, values) => {
+      if (value && value.length > 0) {
         if (!err) {
           values.captcha = value;
           dispatch({
@@ -62,8 +63,8 @@ class FormLogin extends PureComponent {
             payload: values,
           });
         }
-      });
-    }
+      }
+    });
     recaptchaRef.current.reset();
   };
 
