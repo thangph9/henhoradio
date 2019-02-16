@@ -7,8 +7,11 @@ import { connect } from 'dva';
 // import { Redirect } from 'react-router-dom';
 import { Form, Input, Button } from 'antd';
 import { Link } from 'react-router-dom';
+import ReCAPTCHA from 'react-google-recaptcha';
 // import styles from './styles.less';
+let recaptchaInstance;
 
+const recaptchaRef = React.createRef();
 // eslint-disable-next-line no-unused-vars
 @connect(({ loading, authentication }) => ({
   submitting: loading.effects['form/submitRegularForm'],
@@ -40,13 +43,18 @@ class FormLogin extends PureComponent {
     }
   }
 
+  handleChangeCaptcha = value => {
+    this.setState({ value });
+  };
+
   handleSubmit = e => {
     e.preventDefault();
     const { value } = this.state;
     const { form, dispatch } = this.props;
-
+    const recaptchaValue = recaptchaRef.current.getValue();
+    console.log(recaptchaValue);
     form.validateFields((err, values) => {
-      if (!err) {
+      if (!err && recaptchaValue.length > 0) {
         dispatch({
           type: 'authentication/login',
           payload: values,
@@ -68,7 +76,7 @@ class FormLogin extends PureComponent {
     const { help, validateStatus, value } = this.state;
     console.log(value);
     return (
-      <Form onSubmit={() => this.handleSubmit()}>
+      <Form onSubmit={e => this.handleSubmit(e)}>
         <Form.Item label="Số điện thoại" style={{ marginBottom: '0px' }}>
           {getFieldDecorator('phone', {
             rules: [
@@ -95,6 +103,14 @@ class FormLogin extends PureComponent {
               },
             ],
           })(<Input autocomplete="password" type="password" />)}
+        </Form.Item>
+        <Form.Item>
+          <ReCAPTCHA
+            ref={recaptchaRef}
+            onChange={e => this.handleChangeCaptcha(e)}
+            sitekey="6LfUm5AUAAAAAB6eXtNTPWLUZT5hCbDabBBmLK23"
+            size="invisible"
+          />
         </Form.Item>
         <Form.Item>
           <Button
