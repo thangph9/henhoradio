@@ -32,7 +32,7 @@ function register(req, res) {
   const saltRounds = 10;
   const queries = [];
   const PARAM_IS_VALID = {};
-  // let verificationUrl = '';
+  let verificationUrl = '';
   let salt = '';
   let hash = '';
   const tasks = [
@@ -51,6 +51,34 @@ function register(req, res) {
       } catch (error) {
         res.send({ status: 'invalid' });
       }
+    },
+    function checkCaptcha(callback) {
+      if (!params.captcha) {
+        return res.json({
+          status: 'error',
+          message: 'Chưa nhập captcha',
+          timeline: new Date().getTime(),
+        });
+      }
+      verificationUrl = 'https://www.google.com/recaptcha/api/siteverify?secret=6LfUm5AUAAAAAC8xSPAt0pRUzUd4ZaK-1rZs-Aqm&response='.concat(
+        params.captcha,
+        '&remoteip=',
+        req.connection.remoteAddress
+      );
+      return callback(null, verificationUrl);
+    },
+    function verifyCaptcha(callback) {
+      request(verificationUrl, (error, response, b) => {
+        const body = JSON.parse(b);
+        if (body.success === false) {
+          return res.json({
+            status: 'error',
+            message: 'Sai captcha',
+            timeline: new Date().getTime(),
+          });
+        }
+        callback(error, null);
+      });
     },
     function genSaltToken(callback) {
       bcrypt.genSalt(saltRounds, (err, rs) => {
@@ -81,32 +109,6 @@ function register(req, res) {
         res.send({ status: 'error' });
       }
     },
-    /*
-      function checkCaptcha(callback) {
-      if (!params.captcha) {
-        return res.json({ responseCode: 1, responseDesc: 'Please select captcha' });
-      }
-      verificationUrl = 'https://www.google.com/recaptcha/api/siteverify?secret=6Ld1534UAAAAAFF8A3KCBEAfcfjS6COX9obBJrWV&response='.concat(
-        params.captcha,
-        '&remoteip=',
-        req.connection.remoteAddress
-      );
-      return callback(null, verificationUrl);
-    },
-
-    function verifyCaptcha(callback) {
-      request(verificationUrl, (error, response, b) => {
-        const body = JSON.parse(b);
-        if (body.success === false) {
-          res.json({
-            status: 'error',
-            message: 'Sai captcha',
-          });
-        }
-        callback(error, null);
-      });
-    },
-    */
     function saveUser(callback) {
       try {
         const userObject = {
@@ -203,7 +205,7 @@ function login(req, res) {
           return res.json({
             status: 'error',
             message: 'Sai captcha',
-            timeline: new Date.getTime(),
+            timeline: new Date().getTime(),
           });
         }
         callback(error, null);

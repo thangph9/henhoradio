@@ -1,3 +1,5 @@
+/* eslint-disable prefer-const */
+/* eslint-disable react/sort-comp */
 /* eslint-disable react/destructuring-assignment */
 /* eslint-disable camelcase */
 /* eslint-disable react/no-unused-state */
@@ -157,7 +159,9 @@ class FormRegister extends PureComponent {
         this.setState({
           valiPhone: 'error',
           helpPhone: nextProps.authentication.register.message,
+          value: '',
         });
+        recaptchaRef.current.reset();
       }
     }
     if (this.props.authentication.checkuser !== nextProps.authentication.checkuser) {
@@ -267,17 +271,28 @@ class FormRegister extends PureComponent {
         });
       }
       if (values.password === values.repassword) {
-        if (value && value.length > 0) {
-          if (!err && dob_day && dob_month && dob_year && gender) {
-            dispatch({
-              type: 'authentication/register',
-              payload: values,
-            });
-          }
+        if (!err && dob_day && dob_month && dob_year && gender) {
+          this.setState({
+            canSubmit: true,
+            data: values,
+          });
         }
       }
     });
   };
+
+  componentWillUpdate(nextProps, nextState) {
+    const { canSubmit, data } = this.state;
+    const { dispatch } = this.props;
+    let dataCaptcha = data;
+    if (this.state.value !== nextState.value && canSubmit) {
+      dataCaptcha.captcha = nextState.value;
+      dispatch({
+        type: 'authentication/register',
+        payload: dataCaptcha,
+      });
+    }
+  }
 
   checkPassword = (rule, value, callback) => {
     const { visible, confirmDirty } = this.state;
