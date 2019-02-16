@@ -82,7 +82,8 @@ class FormLogin extends PureComponent {
 
   render() {
     // eslint-disable-next-line react/destructuring-assignment
-    const { getFieldDecorator, authentication } = this.props.form;
+    const { getFieldDecorator } = this.props.form;
+    const { authentication } = this.props;
     const { help, validateStatus, value } = this.state;
     if (authentication.login.status === 'ok') {
       return <Redirect to="/home" />;
