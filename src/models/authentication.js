@@ -1,4 +1,5 @@
 import { loginAccount, RegisterAccount, homeDemo, checkUser } from '@/services/api';
+import { setAuthority } from '@/utils/authority';
 
 export default {
   namespace: 'authentication',
@@ -14,7 +15,8 @@ export default {
       const response = yield call(loginAccount, payload);
       if (response.status === 'ok') {
         localStorage.token = JSON.stringify(response.token);
-        localStorage['antd-pro-authority'] = 'member';
+        setAuthority('member');
+
         yield put({
           type: 'loginAuthentication',
           payload: response || {},
