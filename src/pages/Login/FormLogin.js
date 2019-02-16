@@ -50,10 +50,9 @@ class FormLogin extends PureComponent {
   handleSubmit = e => {
     e.preventDefault();
     const { value } = this.state;
-    this.recaptcha.execute();
+    recaptchaRef.current.execute();
     const { form, dispatch } = this.props;
     const recaptchaValue = recaptchaRef.current.getValue();
-    console.log(recaptchaValue);
     form.validateFields((err, values) => {
       if (!err && recaptchaValue.length > 0) {
         dispatch({
