@@ -37,7 +37,7 @@ class FormLogin extends PureComponent {
         });
       }
       if (nextProps.authentication.login.status === 'ok') {
-        nextProps.history.push({ pathname: '/home' });
+        this.history.push({ pathname: '/home' });
       }
     }
   }
@@ -46,11 +46,15 @@ class FormLogin extends PureComponent {
     this.setState({ value });
   };
 
-  handleSubmit = e => {
+  handleSubmit = (e, callback) => {
     e.preventDefault();
-    const { value } = this.state;
-    const { form, dispatch } = this.props;
     recaptchaRef.current.execute();
+    callback();
+  };
+
+  sendSubmit() {
+    const { form, dispatch } = this.props;
+    const { value } = this.state;
     form.validateFields((err, values) => {
       if (value && value.length > 0) {
         if (!err) {
@@ -62,7 +66,7 @@ class FormLogin extends PureComponent {
         }
       }
     });
-  };
+  }
 
   handleChangePhone(value) {
     this.setState({
@@ -76,7 +80,7 @@ class FormLogin extends PureComponent {
     const { getFieldDecorator } = this.props.form;
     const { help, validateStatus, value } = this.state;
     return (
-      <Form onSubmit={e => this.handleSubmit(e)}>
+      <Form onSubmit={e => this.handleSubmit(e, this.sendSubmit())}>
         <Form.Item label="Số điện thoại" style={{ marginBottom: '0px' }}>
           {getFieldDecorator('phone', {
             rules: [
