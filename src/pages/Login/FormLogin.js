@@ -91,7 +91,7 @@ class FormLogin extends PureComponent {
     const { authentication } = this.props;
     const { help, validateStatus, value, redierect } = this.state;
     if (redierect) {
-      return <Redirect to="home" />;
+      return <Redirect to="/" />;
     }
     return (
       <Form onSubmit={e => this.handleSubmit(e)}>
