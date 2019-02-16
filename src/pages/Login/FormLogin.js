@@ -38,8 +38,12 @@ class FormLogin extends PureComponent {
           validateStatus: 'error',
         });
       }
-      if (this.props.authentication.login.status === 'ok') {
-        nextProps.history.push({ pathname: '/home' });
+      if (nextProps.authentication.login.status === 'ok') {
+        console.log('chay vao status ok');
+        this.setState({
+          redierect: true,
+        });
+        // nextProps.history.push({ pathname: '/home' });
       }
     }
   }
@@ -49,8 +53,6 @@ class FormLogin extends PureComponent {
   };
 
   handleSubmit = e => {
-    const { value } = this.state;
-    const { form, dispatch } = this.props;
     e.preventDefault();
     recaptchaRef.current.execute();
   };
@@ -87,7 +89,10 @@ class FormLogin extends PureComponent {
     // eslint-disable-next-line react/destructuring-assignment
     const { getFieldDecorator } = this.props.form;
     const { authentication } = this.props;
-    const { help, validateStatus, value } = this.state;
+    const { help, validateStatus, value, redierect } = this.state;
+    if (redierect) {
+      return <Redirect to="home" />;
+    }
     return (
       <Form onSubmit={e => this.handleSubmit(e)}>
         <Form.Item label="Số điện thoại" style={{ marginBottom: '0px' }}>
