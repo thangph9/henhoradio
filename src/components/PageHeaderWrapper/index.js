@@ -8,13 +8,12 @@ import styles from './index.less';
 import MenuContext from '@/layouts/MenuContext';
 
 const PageHeaderWrapper = ({ children, contentWidth, wrapperClassName, top, ...restProps }) => (
-  <div style={{ margin: '-24px -24px 0' }} className={wrapperClassName}>
+  <div className={wrapperClassName} style={{ border: '1px soild' }}>
     {top}
     <MenuContext.Consumer>
       {value => (
         <PageHeader
           wide={contentWidth === 'Fixed'}
-          home={<FormattedMessage id="menu.home" defaultMessage="Home" />}
           {...value}
           key="pageheader"
           {...restProps}

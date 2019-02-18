@@ -108,7 +108,7 @@ export default class BreadcrumbView extends PureComponent {
           {
             [linkElement === 'a' ? 'href' : 'to']: '/',
           },
-          home || 'Home'
+          home || ''
         )}
       </Breadcrumb.Item>
     );

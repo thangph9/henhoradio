@@ -2,13 +2,18 @@ export default [
   // user
   {
     path: '/login',
-    component: '../layouts/BlankLayout',
+    component: '../layouts/EmptyLayout',
     routes: [{ path: '/login', component: './Login' }],
   },
   {
     path: '/forgot',
     component: '../layouts/ForgotPassLayout',
     routes: [{ path: '/forgot', component: './ForgotPass' }],
+  },
+  {
+    path: '/search-list',
+    component: '../layouts/EmptyLayout',
+    routes: [{ path: '/search-list', component: './SearchList' }],
   },
   {
     path: '/',
@@ -20,8 +25,9 @@ export default [
     Routes: ['src/pages/Authorized'],
     authority: ['member'],
     routes: [
-      { path: '/home', component: './HomePage/NewFeed' },
-      { path: '/profile', component: './HomePage/ProfileUser' },
+      { path: '/home', redirect: './newfeed' },
+      { path: '/home/newfeed', component: './HomePage/NewFeed' },
+      { path: '/home/profile', component: './ProfileDetail' },
       {
         component: '404',
       },
@@ -39,7 +45,7 @@ export default [
   },
   {
     path: '/test',
-    component: '../layouts/BlankLayout',
+    component: '../layouts/EmptyLayout',
     routes: [{ path: '/test', component: './User/RegisterResult.js' }],
   },
   // front-end

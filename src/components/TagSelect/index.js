@@ -100,7 +100,7 @@ class TagSelect extends Component {
       <div className={cls} style={style}>
         {hideCheckAll ? null : (
           <CheckableTag checked={checkedAll} key="tag-select-__all__" onChange={this.onSelectAll}>
-            全部
+            Chọn tất cả
           </CheckableTag>
         )}
         {value &&
