@@ -156,6 +156,6 @@ const getProfileAdvancedData = {
   advancedOperation3,
 };
 
-router.post('/advanced', getProfileAdvancedData);
-router.post('/basic', getProfileBasicData);
+router.get('/advanced', getProfileAdvancedData);
+router.get('/basic', getProfileBasicData);
 module.exports = router;
