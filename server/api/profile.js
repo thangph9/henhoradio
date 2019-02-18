@@ -155,8 +155,8 @@ const getProfileAdvancedData = {
   advancedOperation2,
   advancedOperation3,
 };
-function testadvan() {
-  return getProfileAdvancedData;
+function testadvan(req, res) {
+  return res.json(getProfileAdvancedData);
 }
 
 router.get('/advanced', testadvan);
