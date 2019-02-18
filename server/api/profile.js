@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 const express = require('express');
 
 const router = express.Router();
@@ -149,13 +150,14 @@ const getProfileBasicData = {
   basicGoods,
   basicProgress,
 };
-
 const getProfileAdvancedData = {
   advancedOperation1,
   advancedOperation2,
   advancedOperation3,
 };
+function testadvan() {
+  return getProfileAdvancedData;
+}
 
-router.get('/advanced', getProfileAdvancedData);
-router.get('/basic', getProfileBasicData);
+router.get('/advanced', testadvan);
 module.exports = router;
