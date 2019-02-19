@@ -103,7 +103,7 @@ class FilterCardList extends PureComponent {
     );
 
     return (
-      <div className={styles.filterCardList}>
+      <div style={{ marginTop: '20px' }} className={`${styles.filterCardList} ${styles.container}`}>
         <div style={{ textAlign: 'center' }}>
           <Input.Search
             placeholder="Tìm kiếm người bạn"
@@ -147,7 +147,7 @@ class FilterCardList extends PureComponent {
                   </FormItem>
                 </Col>
                 <Col lg={8} md={10} sm={10} xs={24}>
-                  <FormItem {...formItemLayout} label="Theo nhà đài">
+                  <FormItem {...formItemLayout} label="Theo nhà đài ">
                     {getFieldDecorator('rate', {})(
                       <Select placeholder="不限" style={{ maxWidth: 200, width: '100%' }}>
                         <Option value="good">优秀</Option>
