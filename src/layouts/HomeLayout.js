@@ -91,8 +91,9 @@ const query = {
     minWidth: 1600,
   },
 };
-@connect(({ list }) => ({
+@connect(({ list, myprops }) => ({
   list,
+  myprops,
 }))
 class HomeLayout extends React.PureComponent {
   constructor(props) {
@@ -241,6 +242,15 @@ class HomeLayout extends React.PureComponent {
     return <SettingDrawer />;
   }
 
+  handleClickMenuHeader() {
+    if (this.props.myprops.menu_header === true) {
+      this.props.dispatch({
+        type: 'myprops/menu_header',
+        payload: false,
+      });
+    }
+  }
+
   render() {
     const {
       // eslint-disable-next-line no-unused-vars
@@ -275,7 +285,11 @@ class HomeLayout extends React.PureComponent {
           <ContainerQuery query={query}>
             {params => (
               <Context.Provider value={this.getContext()}>
-                <div id="screen" className={classNames(params)}>
+                <div
+                  id="screen"
+                  onClick={() => this.handleClickMenuHeader()}
+                  className={classNames(params)}
+                >
                   {layout}
                 </div>
               </Context.Provider>

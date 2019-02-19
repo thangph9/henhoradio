@@ -848,3 +848,68 @@
 .ic-ic-bag:before {
   content: '\E906';
 }
+.toggle-menu {
+  position: absolute;
+  overflow: auto;
+  max-height: 280px;
+  top: 55px;
+  right: 0.0000000001px;
+  border-radius: 5px;
+  font-size: 14px;
+  box-shadow: rgba(78, 89, 93, 0.15) 0px 8px 11px 0px;
+  z-index: 10;
+  background: #fff;
+  -webkit-box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+  -moz-box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+  -webkit-transition: all 0.5s cubic-bezier(0.7, 0, 0.3, 1);
+  transition: all 0.5s cubic-bezier(0.7, 0, 0.3, 1);
+  min-width: 230px;
+}
+.li-link {
+  text-align: left;
+  display: block;
+  font-weight: 600;
+  color: #6d7c85;
+  cursor: pointer;
+}
+.li-link:hover {
+  text-decoration: none;
+  color: #6d7c85;
+  font-weight: 600;
+  background: #f3ffc9;
+}
+.row {
+  display: flex;
+  flex-wrap: wrap;
+  padding: 10px;
+  border-bottom: 1px solid #f3f3f3;
+}
+.row-child {
+  display: flex;
+  flex-wrap: wrap;
+  margin-left: -5px;
+  margin-right: -5px;
+}
+.col-9 {
+  flex: 0 0 75%;
+  max-width: 75%;
+  width: 75%;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+.col-2 {
+  flex: 0 0 16.6666666666%;
+  max-width: 16.6666666666%;
+  padding-left: 5px;
+}
+.col-10 {
+  flex: 0 0 83.3333333333%;
+  max-width: 83.3333333333%;
+  padding-right: 5px;
+}
+.col-3 {
+  flex: 0 0 25%;
+  max-width: 25%;
+  padding-left: 5px;
+  padding-right: 5px;
+}

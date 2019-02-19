@@ -38,6 +38,31 @@ class GlobalHeader extends PureComponent {
       openHelp: !this.state.openHelp,
     });
   }
+  toggleMenu() {
+    this.setState(
+      {
+        open: !this.state.open,
+      },
+      () => {
+        this.props.dispatch({
+          type: 'myprops/menu_header',
+          payload: this.state.open,
+        });
+      }
+    );
+  }
+  componentWillReceiveProps(nextProps) {
+    if (nextProps.myprops.menu_header !== this.props.myprops.menu_header) {
+      this.setState({
+        open: nextProps.myprops.menu_header,
+      });
+    }
+  }
+  handleClickLogout() {
+    localStorage.removeItem('antd-pro-authority');
+    localStorage.removeItem('token');
+    this.props.history.push({ pathname: '/' });
+  }
   render() {
     return (
       <div className={`${styles.header__header___1t3MH}`}>
@@ -166,114 +191,6 @@ class GlobalHeader extends PureComponent {
                   styles['header__navbar-right___2_zf5']
                 }`}
               >
-                {this.state.open ? (
-                  <li className={`${styles['header__nav-item___MQLXP']}`}>
-                    <div className={`${styles['auth-buttons__auth___33bfZ']}`}>
-                      {localStorage.account && (
-                        <span
-                          style={{ cursor: 'pointer' }}
-                          onClick={() => this.handleOpenAccount('open')}
-                          className={`${styles['auth-buttons__nav-link___1DCMU']} ${styles[
-                            'auth-buttons__btn-sign-in___1nV-O'
-                          ] +
-                            ' ' +
-                            styles['language-dropdown__dropdown-toggle___3DM4H']}`}
-                        >
-                          <Icon style={{ display: 'block', fontSize: '20px' }} type="user" />
-                          Tài khoản
-                        </span>
-                      )}
-                    </div>
-                    <div
-                      style={{
-                        position: 'absolute',
-                        top: '30px',
-                        left: '0px',
-                        boxShadow: 'rgba(78, 89, 93, 0.15) 0px 8px 11px 0px',
-                        zIndex: 10,
-                        background: 'rgb(255, 255, 255)',
-                        padding: '9px 0px',
-                      }}
-                      className="jsx-1151532622 jsx-1655770887 content"
-                    >
-                      <div style={{ minWidth: '159px' }}>
-                        <Link
-                          to={`/account/accountinformation`}
-                          onClick={() => this.handleOpenAccount('open')}
-                          className={
-                            styles['jsx-2989784357'] +
-                            ' ' +
-                            styles['dropdown-item'] +
-                            ' ' +
-                            styles['item-login']
-                          }
-                        >
-                          Thông tin tài khoản
-                        </Link>
-                        <Link
-                          to={`/account/dealinday`}
-                          onClick={() => this.handleOpenAccount('open')}
-                          className={
-                            styles['jsx-2989784357'] +
-                            ' ' +
-                            styles['dropdown-item'] +
-                            ' ' +
-                            styles['item-login']
-                          }
-                        >
-                          Deal sốc trong ngày
-                        </Link>
-                        <Link
-                          to={`/account/helpbuy`}
-                          onClick={() => this.handleOpenAccount('open')}
-                          className={
-                            styles['jsx-2989784357'] +
-                            ' ' +
-                            styles['dropdown-item'] +
-                            ' ' +
-                            styles['item-login']
-                          }
-                          href="/vn/account/addresses"
-                        >
-                          Mua hộ
-                        </Link>
-
-                        <hr />
-                        <div>
-                          <div
-                            onClick={() => this.handleClickOut()}
-                            className={
-                              styles['jsx-2989784357'] +
-                              ' ' +
-                              styles['dropdown-item'] +
-                              ' ' +
-                              styles['item-login']
-                            }
-                          >
-                            Thoát
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                  </li>
-                ) : (
-                  <li className={`${styles['header__nav-item___MQLXP']}`}>
-                    <div className={`${styles['auth-buttons__auth___33bfZ']}`}>
-                      {localStorage.account && (
-                        <span
-                          style={{ cursor: 'pointer', paddingTop: '10px' }}
-                          onClick={() => this.handleOpenAccount('open')}
-                          className={`${styles['auth-buttons__nav-link___1DCMU']} ${
-                            styles['auth-buttons__btn-sign-in___1nV-O']
-                          }`}
-                          href="/auth/signin?redirect=/"
-                        >
-                          <Icon style={{ display: 'block', fontSize: '28px' }} type="user" />
-                        </span>
-                      )}
-                    </div>
-                  </li>
-                )}
                 <li
                   style={{ marginLeft: '10px' }}
                   className={`${styles['header__nav-item___MQLXP']}`}
@@ -281,7 +198,6 @@ class GlobalHeader extends PureComponent {
                   <div className={`${styles['auth-buttons__auth___33bfZ']}`}>
                     <span
                       style={{ cursor: 'pointer', paddingTop: '10px' }}
-                      onClick={() => this.handleOpenAccount('open')}
                       className={`${styles['auth-buttons__nav-link___1DCMU']} ${
                         styles['auth-buttons__btn-sign-in___1nV-O']
                       }`}
@@ -310,7 +226,6 @@ class GlobalHeader extends PureComponent {
                   <div className={`${styles['auth-buttons__auth___33bfZ']}`}>
                     <span
                       style={{ cursor: 'pointer', paddingTop: '10px' }}
-                      onClick={() => this.handleOpenAccount('open')}
                       className={`${styles['auth-buttons__nav-link___1DCMU']} ${
                         styles['auth-buttons__btn-sign-in___1nV-O']
                       }`}
@@ -337,7 +252,6 @@ class GlobalHeader extends PureComponent {
                   <div className={`${styles['auth-buttons__auth___33bfZ']}`}>
                     <span
                       style={{ cursor: 'pointer', paddingTop: '13px' }}
-                      onClick={() => this.handleOpenAccount('open')}
                       className={`${styles['auth-buttons__nav-link___1DCMU']} ${
                         styles['auth-buttons__btn-sign-in___1nV-O']
                       }`}
@@ -354,7 +268,6 @@ class GlobalHeader extends PureComponent {
                   <div className={`${styles['auth-buttons__auth___33bfZ']}`}>
                     <span
                       style={{ cursor: 'pointer', paddingTop: '13px' }}
-                      onClick={() => this.handleOpenAccount('open')}
                       className={`${styles['auth-buttons__nav-link___1DCMU']} ${
                         styles['auth-buttons__btn-sign-in___1nV-O']
                       }`}
@@ -371,15 +284,106 @@ class GlobalHeader extends PureComponent {
                   <div className={`${styles['auth-buttons__auth___33bfZ']}`}>
                     <span
                       style={{ cursor: 'pointer', paddingTop: '14px' }}
-                      onClick={() => this.handleOpenAccount('open')}
                       className={`${styles['auth-buttons__nav-link___1DCMU']} ${
                         styles['auth-buttons__btn-sign-in___1nV-O']
                       }`}
                       href="/auth/signin?redirect=/"
                     >
-                      <Icon type="ellipsis" style={{ display: 'block', fontSize: '25px' }} />
+                      <Icon
+                        onClick={() => this.toggleMenu()}
+                        type="ellipsis"
+                        style={{ display: 'block', fontSize: '25px' }}
+                      />
                     </span>
                   </div>
+                  {this.props.myprops.menu_header ? (
+                    <div className={styles['toggle-menu']}>
+                      <Link className={styles['li-link']} to={`/account/accountinformation`}>
+                        <div className={styles['row']}>
+                          <div className={styles['col-9']}>
+                            <div className={styles['row-child']}>
+                              <div className={styles['col-2']}>
+                                <Icon type="check-circle" />
+                              </div>
+                              <div className={styles['col-10']}>Nguời bạn thích</div>
+                            </div>
+                          </div>
+                          <div className={styles['col-3']} />
+                        </div>
+                      </Link>
+                      <Link className={styles['li-link']} to={`/account/accountinformation`}>
+                        <div className={styles['row']}>
+                          <div className={styles['col-9']}>
+                            <div className={styles['row-child']}>
+                              <div className={styles['col-2']}>
+                                <Icon type="heart" />
+                              </div>
+                              <div className={styles['col-10']}>Người phù hợp</div>
+                            </div>
+                          </div>
+                          <div className={styles['col-3']} />
+                        </div>
+                      </Link>
+                      <Link className={styles['li-link']} to={`/account/accountinformation`}>
+                        <div className={styles['row']}>
+                          <div className={styles['col-9']}>
+                            <div className={styles['row-child']}>
+                              <div className={styles['col-2']}>
+                                <Icon type="thunderbolt" />
+                              </div>
+                              <div className={styles['col-10']}>Tín dụng</div>
+                            </div>
+                          </div>
+                          <div className={styles['col-3']} />
+                        </div>
+                      </Link>
+                      <Link className={styles['li-link']} to={`/account/accountinformation`}>
+                        <div className={styles['row']}>
+                          <div className={styles['col-9']}>
+                            <div className={styles['row-child']}>
+                              <div className={styles['col-2']}>
+                                <Icon type="smile" />
+                              </div>
+                              <div className={styles['col-10']}>Gây chú ý</div>
+                            </div>
+                          </div>
+                          <div className={styles['col-3']} />
+                        </div>
+                      </Link>
+                      <Link className={styles['li-link']} to={`/account/accountinformation`}>
+                        <div className={styles['row']}>
+                          <div className={styles['col-9']}>
+                            <div className={styles['row-child']}>
+                              <div className={styles['col-2']}>
+                                <Icon type="plus" />
+                              </div>
+                              <div className={styles['col-10']}>Mua gói cao cấp</div>
+                            </div>
+                          </div>
+                          <div className={styles['col-3']} />
+                        </div>
+                      </Link>
+                      <span
+                        className={styles['li-link']}
+                        onClick={() => this.handleClickLogout()}
+                        to={`/account/accountinformation`}
+                      >
+                        <div className={styles['row']}>
+                          <div className={styles['col-9']}>
+                            <div className={styles['row-child']}>
+                              <div className={styles['col-2']}>
+                                <Icon type="poweroff" />
+                              </div>
+                              <div className={styles['col-10']}>Đăng xuất</div>
+                            </div>
+                          </div>
+                          <div className={styles['col-3']} />
+                        </div>
+                      </span>
+                    </div>
+                  ) : (
+                    ''
+                  )}
                 </li>
               </ul>
             </div>
