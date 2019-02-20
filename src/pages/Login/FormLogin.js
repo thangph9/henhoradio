@@ -43,7 +43,7 @@ class FormLogin extends PureComponent {
         recaptchaRef.current.reset();
       }
       if (nextProps.authentication.login.status === 'ok') {
-        nextProps.history.push({ pathname: '/' });
+        nextProps.history.push({ pathname: '/home' });
       }
     }
   }

@@ -1,3 +1,4 @@
+/* eslint-disable class-methods-use-this */
 import React, { PureComponent } from 'react';
 import numeral from 'numeral';
 import { connect } from 'dva';
@@ -5,6 +6,7 @@ import {
   Row,
   Col,
   Form,
+  DatePicker,
   Card,
   Select,
   Icon,
@@ -54,6 +56,10 @@ class FilterCardList extends PureComponent {
     });
   }
 
+  onChange(value) {
+    console.log(value);
+  }
+
   render() {
     const {
       list: { list },
@@ -101,7 +107,15 @@ class FilterCardList extends PureComponent {
         </Menu.Item>
       </Menu>
     );
-
+    const paginationProps = {
+      pageSize: 4,
+      defaultCurrent: 1,
+      total: list.length,
+    };
+    const timeCreate = new Date(new Date().getTime());
+    const stringTime = `${`0${timeCreate.getDate()}`.slice(-2)}-${`0${timeCreate.getMonth() +
+      1}`.slice(-2)}-${timeCreate.getFullYear()}`;
+    console.log(stringTime);
     return (
       <div style={{ marginTop: '20px' }} className={`${styles.filterCardList} ${styles.container}`}>
         <div style={{ textAlign: 'center' }}>
@@ -139,19 +153,21 @@ class FilterCardList extends PureComponent {
               <Row gutter={16}>
                 <Col lg={8} md={10} sm={10} xs={24}>
                   <FormItem {...formItemLayout} label="Theo ngày">
-                    {getFieldDecorator('author', {})(
-                      <Select placeholder="不限" style={{ maxWidth: 200, width: '100%' }}>
-                        <Option value="lisa">王昭君</Option>
-                      </Select>
+                    {getFieldDecorator('date', {})(
+                      <DatePicker
+                        format="DD-MM-YYYY"
+                        onChange={e => this.onChange(e)}
+                        placeholder={stringTime}
+                      />
                     )}
                   </FormItem>
                 </Col>
                 <Col lg={8} md={10} sm={10} xs={24}>
                   <FormItem {...formItemLayout} label="Theo nhà đài ">
                     {getFieldDecorator('rate', {})(
-                      <Select placeholder="不限" style={{ maxWidth: 200, width: '100%' }}>
-                        <Option value="good">优秀</Option>
-                        <Option value="normal">普通</Option>
+                      <Select placeholder="Lựa chọn" style={{ maxWidth: 200, width: '100%' }}>
+                        <Option value="hn">Hà Nội</Option>
+                        <Option value="hcm">Hồ Chí Minh</Option>
                       </Select>
                     )}
                   </FormItem>
@@ -166,6 +182,7 @@ class FilterCardList extends PureComponent {
           grid={{ gutter: 24, xl: 4, lg: 3, md: 3, sm: 2, xs: 1 }}
           loading={loading}
           dataSource={list}
+          pagination={paginationProps}
           renderItem={item => (
             <List.Item key={item.id}>
               <Card

@@ -292,7 +292,11 @@ class GlobalHeader extends PureComponent {
                       <Icon
                         onClick={() => this.toggleMenu()}
                         type="ellipsis"
-                        style={{ display: 'block', fontSize: '25px' }}
+                        style={
+                          this.props.myprops.menu_header
+                            ? { display: 'block', fontSize: '25px', color: '#FFA229' }
+                            : { display: 'block', fontSize: '25px' }
+                        }
                       />
                     </span>
                   </div>

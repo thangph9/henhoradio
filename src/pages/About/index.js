@@ -5,7 +5,7 @@
 /* eslint-disable no-unused-vars */
 import React, { PureComponent } from 'react';
 import { Button, Icon } from 'antd';
-import { Link } from 'react-router-dom';
+import { Link, Redirect } from 'react-router-dom';
 import styles from './style.less';
 
 // eslint-disable-next-line react/prefer-stateless-function
@@ -56,6 +56,9 @@ class About extends PureComponent {
   render() {
     const { constNumber, number } = this.state;
     const backgroundColor = this.background(number);
+    if (localStorage.getItem('antd-pro-authority') && localStorage.getItem('token')) {
+      return <Redirect to="/home" />;
+    }
     return (
       <div style={{ height: '100%' }}>
         <div className={styles['splashdtf-content']} style={{ background: backgroundColor }}>
