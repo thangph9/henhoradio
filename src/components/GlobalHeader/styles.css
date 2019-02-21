@@ -319,9 +319,6 @@
   position: relative;
   font-weight: 400;
 }
-.header__nav-item___MQLXP:not(:first-child) {
-  margin-left: 30px;
-}
 .header__nav-item___MQLXP .header__nav-link___3W4sc {
   display: inline-block;
   font-size: 12px;
@@ -513,15 +510,13 @@
   padding-left: 0;
   width: 100%;
   white-space: nowrap;
-  overflow-x: scroll;
   -webkit-overflow-scrolling: touch;
-  display: table;
 }
 .header__mobile-nav-cat___1wJ9O .header__nav-item___MQLXP {
   display: inline-block;
   font-size: 14.5px;
-  margin-left: 0;
   position: relative;
+  width: 20%;
 }
 .header__mobile-nav-cat___1wJ9O .header__nav-item___MQLXP .header__nav-link___3W4sc {
   color: inherit;
@@ -530,7 +525,7 @@
   font-weight: 400;
   transition: all 0.35s cubic-bezier(0.23, 1, 0.32, 1);
   width: 100%;
-  padding: 14px;
+  padding: 18px;
 }
 .header__mobile-nav-cat___1wJ9O .header__nav-item___MQLXP .header__nav-link___3W4sc:active {
   background-color: rgba(22, 172, 207, 0.25);
@@ -552,6 +547,13 @@
   }
 }
 @media (max-width: 767px) {
+  .screen-header {
+    display: none;
+  }
+  .item-align {
+    display: flex;
+    align-items: center;
+  }
   .header__my-navbar___2Cghd {
     padding: 9px 5px;
   }
@@ -692,8 +694,8 @@
   }
 }
 @media (max-width: 991px) {
-  .hidden-md-down {
-    display: none !important;
+  .hiden-md {
+    display: none;
   }
 }
 @media (min-width: 576px) {
@@ -729,6 +731,9 @@
   }
 }
 @media (min-width: 768px) {
+  .hidden-lg-up {
+    display: none !important;
+  }
   .header__navbar-toggleable-sm___pR4tF {
     flex-direction: row;
     flex-wrap: nowrap;
@@ -784,9 +789,6 @@
     padding-left: 12px;
     width: 960px;
     max-width: 100%;
-  }
-  .hidden-lg-up {
-    display: none !important;
   }
 }
 @media (max-width: 991px) and (min-width: 768px) {
@@ -881,6 +883,7 @@
 .row {
   display: flex;
   flex-wrap: wrap;
+  align-items: center;
   padding: 10px;
   border-bottom: 1px solid #f3f3f3;
 }
@@ -902,9 +905,19 @@
   max-width: 16.6666666666%;
   padding-left: 5px;
 }
+.w-12 {
+  flex: 0 0 12%;
+  max-width: 12%;
+  padding-left: 5px;
+}
 .col-10 {
   flex: 0 0 83.3333333333%;
   max-width: 83.3333333333%;
+  padding-right: 5px;
+}
+.w-88 {
+  flex: 0 0 88%;
+  max-width: 88%;
   padding-right: 5px;
 }
 .col-3 {
@@ -912,4 +925,9 @@
   max-width: 25%;
   padding-left: 5px;
   padding-right: 5px;
+}
+.ul-menu-mobile {
+  margin: 0.0000000000001px;
+  padding: 0.0000000000001px;
+  height: auto;
 }

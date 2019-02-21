@@ -58,6 +58,12 @@ class GlobalHeader extends PureComponent {
       });
     }
   }
+  toggleMenuMobile() {
+    this.props.dispatch({
+      type: 'myprops/menu_header_mobile',
+      payload: !this.props.myprops.menu_header_mobile,
+    });
+  }
   handleClickLogout() {
     localStorage.removeItem('antd-pro-authority');
     localStorage.removeItem('token');
@@ -70,7 +76,7 @@ class GlobalHeader extends PureComponent {
           style={{ height: 70 }}
           className={`${styles['header__my-navbar___2Cghd']} ${
             styles['header__navbar-toggleable-sm___pR4tF']
-          } ${styles['header__nav-header___3lWCb']}`}
+          } ${styles['header__nav-header___3lWCb']} ${styles['screen-header']}`}
         >
           <div
             className={`${styles['container__container___1fvX0']} ${
@@ -84,7 +90,7 @@ class GlobalHeader extends PureComponent {
                 <Icon style={{ display: 'block', fontSize: '20px' }} type="user" />
               </button>
             </div>
-            <Link to={`/home`} className={`${styles['header__navbar-brand___SzzgD']}`}>
+            <Link to={`/home`} className={`${styles['header__navbar-brand___SzzgD']} `}>
               <img
                 style={{ position: 'relative', width: '82px', height: '23px' }}
                 src="https://twoo-a.akamaihd.net/static/7156520574362430695506/images/logos/logo-twoo-flat@2x.png"
@@ -155,7 +161,7 @@ class GlobalHeader extends PureComponent {
                       style={{ display: 'block', fontSize: '20px', marginBottom: '2px' }}
                       type="heart"
                     />
-                    Người bạn thích
+                    Người thích bạn
                   </Link>
                 </li>
                 <li className={`${styles['header__nav-item___MQLXP']}`}>
@@ -200,7 +206,7 @@ class GlobalHeader extends PureComponent {
                       style={{ cursor: 'pointer', paddingTop: '10px' }}
                       className={`${styles['auth-buttons__nav-link___1DCMU']} ${
                         styles['auth-buttons__btn-sign-in___1nV-O']
-                      }`}
+                      } ${styles['hiden-md']}`}
                       href="/auth/signin?redirect=/"
                     >
                       <Button
@@ -225,10 +231,10 @@ class GlobalHeader extends PureComponent {
                 >
                   <div className={`${styles['auth-buttons__auth___33bfZ']}`}>
                     <span
-                      style={{ cursor: 'pointer', paddingTop: '10px' }}
+                      style={{ cursor: 'pointer', paddingTop: '10px', marginRight: '20px' }}
                       className={`${styles['auth-buttons__nav-link___1DCMU']} ${
                         styles['auth-buttons__btn-sign-in___1nV-O']
-                      }`}
+                      } ${styles['hiden-md']} color-thunder`}
                       href="/auth/signin?redirect=/"
                     >
                       <Button
@@ -250,15 +256,15 @@ class GlobalHeader extends PureComponent {
                 </li>
                 <li className={`${styles['header__nav-item___MQLXP']}`}>
                   <div className={`${styles['auth-buttons__auth___33bfZ']}`}>
-                    <span
+                    <Link
                       style={{ cursor: 'pointer', paddingTop: '13px' }}
                       className={`${styles['auth-buttons__nav-link___1DCMU']} ${
                         styles['auth-buttons__btn-sign-in___1nV-O']
                       }`}
-                      href="/auth/signin?redirect=/"
+                      to="/home/profile"
                     >
                       <Avatar style={{ backgroundColor: '#f9f9f9' }} size={30} icon="user" />
-                    </span>
+                    </Link>
                   </div>
                 </li>
                 <li
@@ -393,37 +399,55 @@ class GlobalHeader extends PureComponent {
             </div>
           </div>
         </nav>
+
         <nav
+          style={{ height: '52px' }}
           className={`${styles['hidden-lg-up']} ${
             styles['header__mobile-nav-cat-container___2JTtk']
           } ${styles['cate-show']}`}
           id={`${styles['cate-mobile-root']}`}
         >
           <div
+            style={{ height: '100%' }}
             className={`${styles['container__container___1fvX0']} ${
               styles['header__padding-remove___uM9bo']
             }`}
           >
-            <ul className={`${styles['header__mobile-nav-cat___1wJ9O']}`}>
+            <ul
+              style={{ height: '100%' }}
+              className={`${styles['header__mobile-nav-cat___1wJ9O']} ${styles['item-align']}`}
+            >
               <li className={`${styles['header__nav-item___MQLXP']}`}>
-                <Link to={`/amazon`} className={`${styles['header__nav-link___3W4sc']}`}>
-                  Khám phá
-                </Link>
+                <Icon
+                  style={{ display: 'block', fontSize: '27px', marginBottom: '2px' }}
+                  type="like"
+                />
               </li>
               <li className={`${styles['header__nav-item___MQLXP']}`}>
-                <Link to={`/ebay`} className={`${styles['header__nav-link___3W4sc']}`}>
-                  Tìm kiếm
-                </Link>
+                <Icon
+                  style={{ display: 'block', fontSize: '27px', marginBottom: '2px' }}
+                  type="search"
+                />
               </li>
               <li className={`${styles['header__nav-item___MQLXP']}`}>
-                <Link to={`/adidas`} className={`${styles['header__nav-link___3W4sc']}`}>
-                  Chat
-                </Link>
+                <Icon
+                  style={{ display: 'block', fontSize: '27px', marginBottom: '2px' }}
+                  type="message"
+                />
               </li>
               <li className={`${styles['header__nav-item___MQLXP']}`}>
-                <Link to={`/nike`} className={`${styles['header__nav-link___3W4sc']}`}>
-                  Bạn Bè
-                </Link>
+                <Icon style={{ display: 'block', fontSize: '27px' }} type="bell" />
+              </li>
+              <li className={`${styles['header__nav-item___MQLXP']}`}>
+                <Icon
+                  onClick={() => this.toggleMenuMobile()}
+                  type="ellipsis"
+                  style={
+                    this.props.myprops.menu_header_mobile
+                      ? { display: 'block', fontSize: '25px', color: '#FFA229' }
+                      : { display: 'block', fontSize: '25px' }
+                  }
+                />
               </li>
             </ul>
           </div>
@@ -434,3 +458,90 @@ class GlobalHeader extends PureComponent {
   }
 }
 export default GlobalHeader;
+
+export function renderMenu() {
+  return (
+    <ul className={styles['ul-menu-mobile']}>
+      <li className={styles['li-link']}>
+        <a className={styles['row']} style={{ width: '100%', padding: '19px' }}>
+          <div className={styles['w-12']}>
+            <Icon style={{ fontSize: '25px' }} type="user" />
+          </div>
+          <div className={styles['w-88']}>Sơ yếu</div>
+        </a>
+      </li>
+      <li className={styles['li-link']}>
+        <a className={styles['row']} style={{ width: '100%', padding: '19px' }}>
+          <div className={styles['w-12']}>
+            <Icon style={{ fontSize: '25px' }} type="heart" />
+          </div>
+          <div className={styles['w-88']}>Người thích bạn</div>
+        </a>
+      </li>
+      <li className={styles['li-link']}>
+        <a className={styles['row']} style={{ width: '100%', padding: '19px' }}>
+          <div className={styles['w-12']}>
+            <Icon style={{ fontSize: '25px' }} type="eye" />
+          </div>
+          <div className={styles['w-88']}>Khách thăm</div>
+        </a>
+      </li>
+      <li className={styles['li-link']}>
+        <a className={styles['row']} style={{ width: '100%', padding: '19px' }}>
+          <div className={styles['w-12']}>
+            <Icon style={{ fontSize: '25px' }} type="team" />
+          </div>
+          <div className={styles['w-88']}>Bạn bè</div>
+        </a>
+      </li>
+      <li className={styles['li-link']}>
+        <a className={styles['row']} style={{ width: '100%', padding: '19px' }}>
+          <div className={styles['w-12']}>
+            <Icon style={{ fontSize: '25px' }} type="check-circle" />
+          </div>
+          <div className={styles['w-88']}>Người bạn thích</div>
+        </a>
+      </li>
+      <li className={styles['li-link']}>
+        <a className={styles['row']} style={{ width: '100%', padding: '19px' }}>
+          <div className={styles['w-12']}>
+            <Icon style={{ fontSize: '25px' }} type="heart" />
+          </div>
+          <div className={styles['w-88']}>Người phù hợp với bạn</div>
+        </a>
+      </li>
+      <li className={styles['li-link']}>
+        <a className={styles['row']} style={{ width: '100%', padding: '19px' }}>
+          <div className={styles['w-12']}>
+            <Icon style={{ fontSize: '25px' }} type="smile" />
+          </div>
+          <div className={styles['w-88']}>Gây Chú ý</div>
+        </a>
+      </li>
+      <li className={styles['li-link']}>
+        <a className={styles['row']} style={{ width: '100%', padding: '19px' }}>
+          <div className={styles['w-12']}>
+            <Icon style={{ fontSize: '25px' }} type="thunderbolt" />
+          </div>
+          <div className={styles['w-88']}>Tín dụng</div>
+        </a>
+      </li>
+      <li className={styles['li-link']}>
+        <a className={styles['row']} style={{ width: '100%', padding: '19px' }}>
+          <div className={styles['w-12']}>
+            <Icon style={{ fontSize: '25px' }} type="plus" />
+          </div>
+          <div className={styles['w-88']}>Mua gói cao cấp</div>
+        </a>
+      </li>
+      <li onClick={() => this.handleClickLogout()} className={styles['li-link']}>
+        <a className={styles['row']} style={{ width: '100%', padding: '19px' }}>
+          <div className={styles['w-12']}>
+            <Icon style={{ fontSize: '25px' }} type="poweroff" />
+          </div>
+          <div className={styles['w-88']}>Đăng xuất</div>
+        </a>
+      </li>
+    </ul>
+  );
+}

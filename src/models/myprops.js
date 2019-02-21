@@ -3,6 +3,7 @@ export default {
 
   state: {
     menu_header: false,
+    menu_header_mobile: false,
   },
 
   effects: {},
@@ -12,6 +13,12 @@ export default {
       return {
         ...state,
         menu_header: action.payload,
+      };
+    },
+    menu_header_mobile(state, action) {
+      return {
+        ...state,
+        menu_header_mobile: action.payload,
       };
     },
   },
