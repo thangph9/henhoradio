@@ -45,7 +45,7 @@ import { Link, Redirect } from 'react-router-dom';
 import moment from 'moment';
 import { formatMessage, FormattedMessage } from 'umi/locale';
 import { Skeleton, Switch, List, Avatar, Icon, Card } from 'antd';
-import { renderMenu } from '@/components/GlobalHeader';
+import { MenuMobile } from '@/components/GlobalHeader';
 import styles from '../index.less';
 
 const listData = [];
@@ -373,7 +373,7 @@ class NewFeed extends PureComponent {
         </div>
       );
     }
-    return renderMenu();
+    return <MenuMobile {...this.props} />;
   }
 }
 

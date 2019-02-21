@@ -1,3 +1,7 @@
+/* eslint-disable react/no-access-state-in-setstate */
+/* eslint-disable react/destructuring-assignment */
+/* eslint-disable react/no-unused-state */
+/* eslint-disable jsx-a11y/media-has-caption */
 /* eslint-disable class-methods-use-this */
 import React, { PureComponent } from 'react';
 import numeral from 'numeral';
@@ -46,6 +50,11 @@ const FormItem = Form.Item;
   },
 })
 class FilterCardList extends PureComponent {
+  state = {
+    globalPlay: undefined,
+    audio: undefined,
+  };
+
   componentDidMount() {
     const { dispatch } = this.props;
     dispatch({
@@ -60,14 +69,59 @@ class FilterCardList extends PureComponent {
     console.log(value);
   }
 
+  handleClickAudio(value) {
+    const audio = document.getElementById(value);
+    if (this.state.audio && this.state.globalPlay !== value) {
+      this.state.audio.pause();
+    } else if (this.state.globalPlay) {
+      this.setState(
+        {
+          globalPlay: undefined,
+        },
+        () => {
+          audio.pause();
+        }
+      );
+      return;
+    }
+    audio.play();
+    this.setState(
+      {
+        [`status-${value}`]: value,
+        audio,
+        [`duration-${value}`]: audio.duration,
+        [`playing-${value}`]: value,
+        globalPlay: value,
+      },
+      () => {
+        const settime = setInterval(() => {
+          this.setState({
+            [`timming-${value}`]: audio.currentTime,
+          });
+          if (audio.currentTime === audio.duration) {
+            this.setState({
+              [`status-${value}`]: undefined,
+              audio: undefined,
+              [`duration-${value}`]: undefined,
+              [`playing-${value}`]: undefined,
+              [`timming-${value}`]: undefined,
+              globalPlay: undefined,
+            });
+            clearInterval(settime);
+          }
+        }, 100);
+      }
+    );
+  }
+
   render() {
     const {
       list: { list },
       loading,
       form,
     } = this.props;
+    console.log(this.state);
     const { getFieldDecorator } = form;
-
     const CardInfo = ({ activeUser, newUser }) => (
       <div className={styles.cardInfo}>
         <div>
@@ -87,7 +141,6 @@ class FilterCardList extends PureComponent {
         sm: { span: 16 },
       },
     };
-
     const itemMenu = (
       <Menu>
         <Menu.Item>
@@ -115,7 +168,6 @@ class FilterCardList extends PureComponent {
     const timeCreate = new Date(new Date().getTime());
     const stringTime = `${`0${timeCreate.getDate()}`.slice(-2)}-${`0${timeCreate.getMonth() +
       1}`.slice(-2)}-${timeCreate.getFullYear()}`;
-    console.log(stringTime);
     return (
       <div style={{ marginTop: '20px' }} className={`${styles.filterCardList} ${styles.container}`}>
         <div style={{ textAlign: 'center' }}>
@@ -186,14 +238,24 @@ class FilterCardList extends PureComponent {
           renderItem={item => (
             <List.Item key={item.id}>
               <Card
+                className={styles.abc}
                 hoverable
                 bodyStyle={{ paddingBottom: 20 }}
                 actions={[
                   <Tooltip title="下载">
                     <Icon type="download" />
                   </Tooltip>,
-                  <Tooltip title="编辑">
-                    <Icon type="edit" />
+                  <Tooltip
+                    onClick={() => this.handleClickAudio(`audio-${item.id}`)}
+                    title={this.state.globalPlay === `audio-${item.id}` ? 'Pause' : 'Play'}
+                  >
+                    <Icon
+                      type={
+                        this.state.globalPlay === `audio-${item.id}`
+                          ? 'pause-circle'
+                          : 'play-circle'
+                      }
+                    />
                   </Tooltip>,
                   <Tooltip title="分享">
                     <Icon type="share-alt" />
@@ -209,6 +271,21 @@ class FilterCardList extends PureComponent {
                     activeUser={formatWan(item.activeUser)}
                     newUser={numeral(item.newUser).format('0,0')}
                   />
+                  <div
+                    style={
+                      this.state[`playing-audio-${item.id}`] === `audio-${item.id}`
+                        ? {
+                            width: `${(this.state[`timming-audio-${item.id}`] * 100) /
+                              this.state[`duration-audio-${item.id}`]}%`,
+                          }
+                        : {}
+                    }
+                    className={styles['border-audio']}
+                  />
+
+                  <audio style={{ display: 'none' }} id={`audio-${item.id}`} controls>
+                    <source src={item.audio} type="audio/mp3" />
+                  </audio>
                 </div>
               </Card>
             </List.Item>

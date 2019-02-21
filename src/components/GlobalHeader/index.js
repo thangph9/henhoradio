@@ -459,89 +459,96 @@ class GlobalHeader extends PureComponent {
 }
 export default GlobalHeader;
 
-export function renderMenu() {
-  return (
-    <ul className={styles['ul-menu-mobile']}>
-      <li className={styles['li-link']}>
-        <a className={styles['row']} style={{ width: '100%', padding: '19px' }}>
-          <div className={styles['w-12']}>
-            <Icon style={{ fontSize: '25px' }} type="user" />
-          </div>
-          <div className={styles['w-88']}>Sơ yếu</div>
-        </a>
-      </li>
-      <li className={styles['li-link']}>
-        <a className={styles['row']} style={{ width: '100%', padding: '19px' }}>
-          <div className={styles['w-12']}>
-            <Icon style={{ fontSize: '25px' }} type="heart" />
-          </div>
-          <div className={styles['w-88']}>Người thích bạn</div>
-        </a>
-      </li>
-      <li className={styles['li-link']}>
-        <a className={styles['row']} style={{ width: '100%', padding: '19px' }}>
-          <div className={styles['w-12']}>
-            <Icon style={{ fontSize: '25px' }} type="eye" />
-          </div>
-          <div className={styles['w-88']}>Khách thăm</div>
-        </a>
-      </li>
-      <li className={styles['li-link']}>
-        <a className={styles['row']} style={{ width: '100%', padding: '19px' }}>
-          <div className={styles['w-12']}>
-            <Icon style={{ fontSize: '25px' }} type="team" />
-          </div>
-          <div className={styles['w-88']}>Bạn bè</div>
-        </a>
-      </li>
-      <li className={styles['li-link']}>
-        <a className={styles['row']} style={{ width: '100%', padding: '19px' }}>
-          <div className={styles['w-12']}>
-            <Icon style={{ fontSize: '25px' }} type="check-circle" />
-          </div>
-          <div className={styles['w-88']}>Người bạn thích</div>
-        </a>
-      </li>
-      <li className={styles['li-link']}>
-        <a className={styles['row']} style={{ width: '100%', padding: '19px' }}>
-          <div className={styles['w-12']}>
-            <Icon style={{ fontSize: '25px' }} type="heart" />
-          </div>
-          <div className={styles['w-88']}>Người phù hợp với bạn</div>
-        </a>
-      </li>
-      <li className={styles['li-link']}>
-        <a className={styles['row']} style={{ width: '100%', padding: '19px' }}>
-          <div className={styles['w-12']}>
-            <Icon style={{ fontSize: '25px' }} type="smile" />
-          </div>
-          <div className={styles['w-88']}>Gây Chú ý</div>
-        </a>
-      </li>
-      <li className={styles['li-link']}>
-        <a className={styles['row']} style={{ width: '100%', padding: '19px' }}>
-          <div className={styles['w-12']}>
-            <Icon style={{ fontSize: '25px' }} type="thunderbolt" />
-          </div>
-          <div className={styles['w-88']}>Tín dụng</div>
-        </a>
-      </li>
-      <li className={styles['li-link']}>
-        <a className={styles['row']} style={{ width: '100%', padding: '19px' }}>
-          <div className={styles['w-12']}>
-            <Icon style={{ fontSize: '25px' }} type="plus" />
-          </div>
-          <div className={styles['w-88']}>Mua gói cao cấp</div>
-        </a>
-      </li>
-      <li onClick={() => this.handleClickLogout()} className={styles['li-link']}>
-        <a className={styles['row']} style={{ width: '100%', padding: '19px' }}>
-          <div className={styles['w-12']}>
-            <Icon style={{ fontSize: '25px' }} type="poweroff" />
-          </div>
-          <div className={styles['w-88']}>Đăng xuất</div>
-        </a>
-      </li>
-    </ul>
-  );
+export class MenuMobile extends PureComponent {
+  handleClickLogout() {
+    localStorage.removeItem('antd-pro-authority');
+    localStorage.removeItem('token');
+    this.props.history.push({ pathname: '/' });
+  }
+  render() {
+    return (
+      <ul className={styles['ul-menu-mobile']}>
+        <li className={styles['li-link']}>
+          <a className={styles['row']} style={{ width: '100%', padding: '19px' }}>
+            <div className={styles['w-12']}>
+              <Icon style={{ fontSize: '25px' }} type="user" />
+            </div>
+            <div className={styles['w-88']}>Sơ yếu</div>
+          </a>
+        </li>
+        <li className={styles['li-link']}>
+          <a className={styles['row']} style={{ width: '100%', padding: '19px' }}>
+            <div className={styles['w-12']}>
+              <Icon style={{ fontSize: '25px' }} type="heart" />
+            </div>
+            <div className={styles['w-88']}>Người thích bạn</div>
+          </a>
+        </li>
+        <li className={styles['li-link']}>
+          <a className={styles['row']} style={{ width: '100%', padding: '19px' }}>
+            <div className={styles['w-12']}>
+              <Icon style={{ fontSize: '25px' }} type="eye" />
+            </div>
+            <div className={styles['w-88']}>Khách thăm</div>
+          </a>
+        </li>
+        <li className={styles['li-link']}>
+          <a className={styles['row']} style={{ width: '100%', padding: '19px' }}>
+            <div className={styles['w-12']}>
+              <Icon style={{ fontSize: '25px' }} type="team" />
+            </div>
+            <div className={styles['w-88']}>Bạn bè</div>
+          </a>
+        </li>
+        <li className={styles['li-link']}>
+          <a className={styles['row']} style={{ width: '100%', padding: '19px' }}>
+            <div className={styles['w-12']}>
+              <Icon style={{ fontSize: '25px' }} type="check-circle" />
+            </div>
+            <div className={styles['w-88']}>Người bạn thích</div>
+          </a>
+        </li>
+        <li className={styles['li-link']}>
+          <a className={styles['row']} style={{ width: '100%', padding: '19px' }}>
+            <div className={styles['w-12']}>
+              <Icon style={{ fontSize: '25px' }} type="heart" />
+            </div>
+            <div className={styles['w-88']}>Người phù hợp với bạn</div>
+          </a>
+        </li>
+        <li className={styles['li-link']}>
+          <a className={styles['row']} style={{ width: '100%', padding: '19px' }}>
+            <div className={styles['w-12']}>
+              <Icon style={{ fontSize: '25px' }} type="smile" />
+            </div>
+            <div className={styles['w-88']}>Gây Chú ý</div>
+          </a>
+        </li>
+        <li className={styles['li-link']}>
+          <a className={styles['row']} style={{ width: '100%', padding: '19px' }}>
+            <div className={styles['w-12']}>
+              <Icon style={{ fontSize: '25px' }} type="thunderbolt" />
+            </div>
+            <div className={styles['w-88']}>Tín dụng</div>
+          </a>
+        </li>
+        <li className={styles['li-link']}>
+          <a className={styles['row']} style={{ width: '100%', padding: '19px' }}>
+            <div className={styles['w-12']}>
+              <Icon style={{ fontSize: '25px' }} type="plus" />
+            </div>
+            <div className={styles['w-88']}>Mua gói cao cấp</div>
+          </a>
+        </li>
+        <li onClick={() => this.handleClickLogout()} className={styles['li-link']}>
+          <a className={styles['row']} style={{ width: '100%', padding: '19px' }}>
+            <div className={styles['w-12']}>
+              <Icon style={{ fontSize: '25px' }} type="poweroff" />
+            </div>
+            <div className={styles['w-88']}>Đăng xuất</div>
+          </a>
+        </li>
+      </ul>
+    );
+  }
 }

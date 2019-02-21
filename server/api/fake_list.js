@@ -51,6 +51,17 @@ const desc = [
   '那时候我只会想自己想要什么，从不想自己拥有什么',
 ];
 
+const audios = [
+  'https://gamepedia.cursecdn.com/dota2_gamepedia/d/d7/Anti_kill_12.mp3',
+  'https://gamepedia.cursecdn.com/dota2_gamepedia/b/b9/Anti_ability_manavoid_04.mp3',
+  'https://gamepedia.cursecdn.com/dota2_gamepedia/a/a3/Face_kill_07.mp3',
+  'https://gamepedia.cursecdn.com/dota2_gamepedia/7/79/Face_kill_12.mp3',
+  'https://gamepedia.cursecdn.com/dota2_gamepedia/5/53/Timb_inthebag_01.mp3',
+  'https://gamepedia.cursecdn.com/dota2_gamepedia/2/27/Timb_death_20.mp3',
+  'https://gamepedia.cursecdn.com/dota2_gamepedia/5/59/Tide_rival_02.mp3',
+  'https://gamepedia.cursecdn.com/dota2_gamepedia/9/96/Tide_spawn_03.mp3',
+];
+
 const user = [
   '付小小',
   '曲丽丽',
@@ -72,6 +83,7 @@ function fakeList(count) {
       owner: user[i % 10],
       title: titles[i % 8],
       avatar: avatars[i % 8],
+      audio: audios[i % 8],
       cover: parseInt(i / 4, 10) % 2 === 0 ? covers[i % 4] : covers[3 - (i % 4)],
       status: ['active', 'exception', 'normal'][i % 3],
       percent: Math.ceil(Math.random() * 50) + 50,
