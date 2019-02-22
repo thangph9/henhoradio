@@ -43,7 +43,6 @@
 }
 .container {
   margin-top: 20px;
-  width: 100%;
   margin-right: auto;
   margin-left: auto;
   padding-left: 15px;
@@ -68,6 +67,10 @@
   .container {
     max-width: 1140px;
   }
+  .search {
+    width: 50%;
+    margin: 0 auto;
+  }
 }
 .abc {
   &:hover {
@@ -75,7 +78,19 @@
       height: 5px;
       border-radius: 5px;
     }
+    .border-tua {
+      height: 5px;
+    }
   }
+}
+.border-tua {
+  width: 100%;
+  z-index: 1000;
+  display: block;
+  height: 5px;
+  position: absolute;
+  bottom: 48px;
+  left: 0.0000000000000001px;
 }
 .border-audio {
   display: block;

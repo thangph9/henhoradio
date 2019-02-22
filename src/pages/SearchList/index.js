@@ -45,6 +45,7 @@ const FormItem = Form.Item;
       type: 'list/fetch',
       payload: {
         count: 8,
+        widthResult: 0,
       },
     });
   },
@@ -60,7 +61,7 @@ class FilterCardList extends PureComponent {
     dispatch({
       type: 'list/fetch',
       payload: {
-        count: 8,
+        count: 12,
       },
     });
   }
@@ -69,8 +70,17 @@ class FilterCardList extends PureComponent {
     console.log(value);
   }
 
+  handleClickSlideBarAudio(e, v) {
+    const tua = document.getElementById(v);
+    if (this.state.audio) {
+      this.state.audio.currentTime =
+        (e.nativeEvent.offsetX / tua.offsetWidth) * this.state.audio.duration;
+    }
+  }
+
   handleClickAudio(value) {
     const audio = document.getElementById(value);
+
     if (this.state.audio && this.state.globalPlay !== value) {
       this.state.audio.pause();
     } else if (this.state.globalPlay) {
@@ -87,7 +97,6 @@ class FilterCardList extends PureComponent {
     audio.play();
     this.setState(
       {
-        [`status-${value}`]: value,
         audio,
         [`duration-${value}`]: audio.duration,
         [`playing-${value}`]: value,
@@ -100,7 +109,6 @@ class FilterCardList extends PureComponent {
           });
           if (audio.currentTime === audio.duration) {
             this.setState({
-              [`status-${value}`]: undefined,
               audio: undefined,
               [`duration-${value}`]: undefined,
               [`playing-${value}`]: undefined,
@@ -120,7 +128,6 @@ class FilterCardList extends PureComponent {
       loading,
       form,
     } = this.props;
-    console.log(this.state);
     const { getFieldDecorator } = form;
     const CardInfo = ({ activeUser, newUser }) => (
       <div className={styles.cardInfo}>
@@ -162,7 +169,7 @@ class FilterCardList extends PureComponent {
     );
     const paginationProps = {
       pageSize: 4,
-      defaultCurrent: 1,
+      hideOnSinglePage: true,
       total: list.length,
     };
     const timeCreate = new Date(new Date().getTime());
@@ -170,13 +177,12 @@ class FilterCardList extends PureComponent {
       1}`.slice(-2)}-${timeCreate.getFullYear()}`;
     return (
       <div style={{ marginTop: '20px' }} className={`${styles.filterCardList} ${styles.container}`}>
-        <div style={{ textAlign: 'center' }}>
+        <div className={styles.search} style={{ textAlign: 'center' }}>
           <Input.Search
             placeholder="Tìm kiếm người bạn"
             enterButton="Tìm"
             size="large"
             onSearch={this.handleFormSubmit}
-            style={{ width: 522 }}
           />
         </div>
         <Card bordered={false}>
@@ -246,12 +252,12 @@ class FilterCardList extends PureComponent {
                     <Icon type="download" />
                   </Tooltip>,
                   <Tooltip
-                    onClick={() => this.handleClickAudio(`audio-${item.id}`)}
-                    title={this.state.globalPlay === `audio-${item.id}` ? 'Pause' : 'Play'}
+                    onClick={() => this.handleClickAudio(`audio-${item.audio}`)}
+                    title={this.state.globalPlay === `audio-${item.audio}` ? 'Pause' : 'Play'}
                   >
                     <Icon
                       type={
-                        this.state.globalPlay === `audio-${item.id}`
+                        this.state.globalPlay === `audio-${item.audio}`
                           ? 'pause-circle'
                           : 'play-circle'
                       }
@@ -267,25 +273,32 @@ class FilterCardList extends PureComponent {
               >
                 <Card.Meta avatar={<Avatar size="small" src={item.avatar} />} title={item.title} />
                 <div className={styles.cardItemContent}>
+                  <audio
+                    style={{ display: 'none' }}
+                    id={`audio-${item.audio}`}
+                    controls
+                    src={item.audio}
+                  />
                   <CardInfo
                     activeUser={formatWan(item.activeUser)}
                     newUser={numeral(item.newUser).format('0,0')}
                   />
                   <div
+                    id={`tua-${item.audio}`}
+                    className={styles['border-tua']}
+                    onClick={e => this.handleClickSlideBarAudio(e, `tua-${item.audio}`)}
+                  />
+                  <div
                     style={
-                      this.state[`playing-audio-${item.id}`] === `audio-${item.id}`
+                      this.state[`playing-audio-${item.audio}`] === `audio-${item.audio}`
                         ? {
-                            width: `${(this.state[`timming-audio-${item.id}`] * 100) /
-                              this.state[`duration-audio-${item.id}`]}%`,
+                            width: `${(this.state[`timming-audio-${item.audio}`] * 100) /
+                              this.state[`duration-audio-${item.audio}`]}%`,
                           }
                         : {}
                     }
                     className={styles['border-audio']}
                   />
-
-                  <audio style={{ display: 'none' }} id={`audio-${item.id}`} controls>
-                    <source src={item.audio} type="audio/mp3" />
-                  </audio>
                 </div>
               </Card>
             </List.Item>

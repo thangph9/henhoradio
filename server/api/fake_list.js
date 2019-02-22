@@ -56,7 +56,7 @@ const audios = [
   'https://gamepedia.cursecdn.com/dota2_gamepedia/b/b9/Anti_ability_manavoid_04.mp3',
   'https://gamepedia.cursecdn.com/dota2_gamepedia/a/a3/Face_kill_07.mp3',
   'https://gamepedia.cursecdn.com/dota2_gamepedia/7/79/Face_kill_12.mp3',
-  'https://gamepedia.cursecdn.com/dota2_gamepedia/5/53/Timb_inthebag_01.mp3',
+  'https://gamepedia.cursecdn.com/dota2_gamepedia/e/e0/Drag_inthebag_01.mp3',
   'https://gamepedia.cursecdn.com/dota2_gamepedia/2/27/Timb_death_20.mp3',
   'https://gamepedia.cursecdn.com/dota2_gamepedia/5/59/Tide_rival_02.mp3',
   'https://gamepedia.cursecdn.com/dota2_gamepedia/9/96/Tide_spawn_03.mp3',
