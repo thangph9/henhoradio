@@ -54,6 +54,7 @@ class FilterCardList extends PureComponent {
   state = {
     globalPlay: undefined,
     audio: undefined,
+    idNow: '',
   };
 
   componentDidMount() {
@@ -70,17 +71,21 @@ class FilterCardList extends PureComponent {
     console.log(value);
   }
 
-  handleClickSlideBarAudio(e, v) {
+  handleClickSlideBarAudio(e, v, v2) {
     const tua = document.getElementById(v);
-    if (this.state.audio) {
-      this.state.audio.currentTime =
-        (e.nativeEvent.offsetX / tua.offsetWidth) * this.state.audio.duration;
+    console.log(this.state.globalPlay);
+    console.log(v2);
+    if (this.state.globalPlay && this.state.globalPlay === v2) {
+      if (this.state.audio) {
+        this.state.audio.currentTime =
+          (e.nativeEvent.offsetX / tua.offsetWidth) * this.state.audio.duration;
+      }
     }
   }
 
   handleClickAudio(value) {
     const audio = document.getElementById(value);
-
+    console.log(value);
     if (this.state.audio && this.state.globalPlay !== value) {
       this.state.audio.pause();
     } else if (this.state.globalPlay) {
@@ -286,7 +291,9 @@ class FilterCardList extends PureComponent {
                   <div
                     id={`tua-${item.audio}`}
                     className={styles['border-tua']}
-                    onClick={e => this.handleClickSlideBarAudio(e, `tua-${item.audio}`)}
+                    onClick={e =>
+                      this.handleClickSlideBarAudio(e, `tua-${item.audio}`, `audio-${item.audio}`)
+                    }
                   />
                   <div
                     style={
