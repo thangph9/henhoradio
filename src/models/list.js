@@ -1,10 +1,17 @@
-import { queryFakeList, removeFakeList, addFakeList, updateFakeList } from '@/services/api';
+import {
+  queryFakeList,
+  removeFakeList,
+  addFakeList,
+  updateFakeList,
+  trackList,
+} from '@/services/api';
 
 export default {
   namespace: 'list',
 
   state: {
     list: [],
+    tracklist: {},
   },
 
   effects: {
@@ -35,6 +42,13 @@ export default {
         payload: response,
       });
     },
+    *tracklist({ payload }, { call, put }) {
+      const response = yield call(trackList, payload);
+      yield put({
+        type: 'trackList',
+        payload: response || {},
+      });
+    },
   },
 
   reducers: {
@@ -48,6 +62,12 @@ export default {
       return {
         ...state,
         list: state.list.concat(action.payload),
+      };
+    },
+    trackList(state, action) {
+      return {
+        ...state,
+        tracklist: action.payload,
       };
     },
   },

@@ -79,17 +79,43 @@
       border-radius: 5px;
     }
     .border-tua {
-      height: 5px;
+      height: 12px;
+    }
+    .dot-tua {
+      width: 12px;
+      border-radius: 12px;
+      background: red;
+      height: 12px;
     }
   }
 }
 .border-tua {
   width: 100%;
-  z-index: 1000;
+  z-index: 1001;
   display: block;
-  height: 5px;
+  height: 50px;
   position: absolute;
   bottom: 48px;
+  left: 0.0000000000000001px;
+}
+.dot-tua {
+  position: absolute;
+  margin-top: 3px;
+  margin-left: -2%;
+  z-index: 999;
+  bottom: 44px;
+  left: 0.0000000000000001px;
+}
+
+.time-audio {
+  width: 100%;
+  z-index: 1000;
+  display: flex;
+  position: absolute;
+  bottom: 58px;
+  justify-content: space-between;
+  padding-left: 10px;
+  padding-right: 10px;
   left: 0.0000000000000001px;
 }
 .border-audio {
@@ -102,4 +128,10 @@
   &:hover {
     height: 5px;
   }
+}
+.time-in-audio {
+  padding-left: 10px;
+  padding-right: 10px;
+  border: 1px solid #38e4ff;
+  border-radius: 15px;
 }

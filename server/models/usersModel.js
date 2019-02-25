@@ -1,9 +1,6 @@
 module.exports = {
   fields: {
-    user_id: {
-      type: 'uuid',
-      default: { $db_function: 'uuid()' },
-    },
+    user_id: 'uuid',
     address: 'text',
     avatar: 'uuid',
     country: 'text',
@@ -14,11 +11,19 @@ module.exports = {
     dob_year: 'int',
     email: 'text',
     fullname: 'text',
-    gender: 'text',
+    gender: 'varchar',
     height: 'text',
     hhr_goal: 'text',
     phone: 'text',
     uniqueid: 'int',
+    video: {
+      type: 'map',
+      typeDef: '<text,uuid>',
+    },
+    audio: {
+      type: 'map',
+      typeDef: '<text,uuid>',
+    },
     createat: 'timestamp',
   },
   key: ['user_id'],

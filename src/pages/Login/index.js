@@ -46,6 +46,10 @@ class Login extends PureComponent {
     });
   }
 
+  componentWillUnmount() {
+    window.removeEventListener('resize', this.resize);
+  }
+
   handleClickToggleStatus() {
     const { statusPage } = this.state;
     const {

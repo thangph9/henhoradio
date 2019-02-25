@@ -69,7 +69,12 @@ export async function queryAdvancedProfile() {
 export async function queryFakeList(params) {
   return request(`/api/fake_list?${stringify(params)}`);
 }
-
+export async function trackList(params) {
+  return request('/api/tracklist', {
+    method: 'POST',
+    body: params,
+  });
+}
 export async function removeFakeList(params) {
   const { count = 5, ...restParams } = params;
   return request(`/api/fake_list?count=${count}`, {
