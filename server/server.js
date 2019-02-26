@@ -8,6 +8,7 @@ const fs = require('fs');
 
 const api = require('./api');
 const images = require('./api/images');
+const upload = require('./api/upload');
 
 const app = express();
 
@@ -40,6 +41,7 @@ app.use((req, res, next) => {
 });
 app.use('/api', api);
 app.use(images);
+app.use(upload);
 app.get('/*', (req, res) => {
   res.sendFile(path.join(__dirname, '../dist', 'index.html'));
 });
@@ -49,7 +51,6 @@ if (!module.parent) {
   server.listen(443, () => {
     console.log('server running at https://123order.vn/');
   });
-
   http
     .createServer((req, res) => {
       res.writeHead(301, { Location: 'https://'.concat(req.headers.host, req.url) });
@@ -57,8 +58,8 @@ if (!module.parent) {
     })
     .listen(80);
   /*
-  app.listen(80, () => {
-    console.log('server dev running port 8000');
-  });
-  */
+    app.listen(8001, () => {
+  console.log('server dev running port 8001');
+});
+*/
 }
