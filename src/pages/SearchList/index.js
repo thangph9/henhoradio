@@ -444,7 +444,7 @@ class FilterCardList extends PureComponent {
                     style={{ display: 'none' }}
                     id={`audio-${item.audio}`}
                     onLoadedMetadata={e => this.loadMetaData(e)}
-                    src={`/upload/audio/${item.audio}`}
+                    src={`http://35.192.153.201:8080/upload/audio/local/${item.audio}`}
                   />
                   {/*
                     <div
