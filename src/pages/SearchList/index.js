@@ -203,7 +203,6 @@ class FilterCardList extends PureComponent {
 
   componentWillUpdate(nextProps, nextState) {
     if (this.state.arrFilter !== nextState.arrFilter) {
-      console.log(nextState.arrFilter);
       if (nextState.arrFilter) {
         let dataArr = this.state.dataList;
         for (let i = 0; i < nextState.arrFilter.length; i++) {
@@ -255,9 +254,7 @@ class FilterCardList extends PureComponent {
 
   handleChangeRadio(e) {
     let arrFilter = this.state.arrFilter;
-    console.log(e);
     if (e === 'ALL') {
-      console.log('vao day');
       arrFilter[1] = '';
     } else arrFilter[1] = e;
     this.setState(
@@ -376,9 +373,8 @@ class FilterCardList extends PureComponent {
           renderItem={item => (
             <List.Item key={item.id}>
               <Card
-                onMouseMove={e =>
-                  this.handleMouseMove(e, `tua-${item.audio}`, `audio-${item.audio}`)
-                }
+                // onMouseMove={e => this.handleMouseMove(e, `tua-${item.audio}`, `audio-${item.audio}`)}
+
                 className={styles.abc}
                 hoverable
                 bodyStyle={{ paddingBottom: 20 }}
@@ -412,50 +408,36 @@ class FilterCardList extends PureComponent {
                     <div>
                       <p>MC: {item.mc}</p>
                     </div>
-                    <div>
-                      <p>Nội dung chính: {item.description}</p>
-                    </div>
                   </div>
+                  {/*
+                  <div
+                    id={`time-${item.audio}`}
+                    className={styles['time-audio']}
+                  >
 
-                  <div id={`time-${item.audio}`} className={styles['time-audio']}>
-                    <div className={styles['time-in-audio']}>
-                      {this.state[`timming-audio-${item.audio}`]
-                        ? Math.trunc(this.state[`timming-audio-${item.audio}`])
-                        : 0}
-                    </div>
-                    <div className={styles['time-in-audio']}>
-                      {this.state[`audio-${item.audio}`] ? (
-                        Math.trunc(this.state[`audio-${item.audio}`])
-                      ) : (
-                        <Icon style={{ color: '#38E4FF' }} type="loading" />
-                      )}
-                    </div>
+                    <div className={styles['time-in-audio']}>{this.state[`timming-audio-${item.audio}`] ? Math.trunc(this.state[`timming-audio-${item.audio}`]) : 0}</div>
+                    <div className={styles['time-in-audio']}>{(this.state[`audio-${item.audio}`]) ? Math.trunc(this.state[`audio-${item.audio}`]) : <Icon style={{ color: '#38E4FF' }} type="loading" />}</div>
                   </div>
-                  {this.state[`dot-audio-${item.audio}`] && (
+                  {(this.state[`dot-audio-${item.audio}`]) && (
                     <div
+
                       className={styles['dot-tua']}
                       style={{
                         marginLeft: `${(this.state[`timming-audio-${item.audio}`] * 100) /
-                          this.state[`duration-audio-${item.audio}`] -
-                          2}%`,
+                          this.state[`duration-audio-${item.audio}`] - 2}%`
                       }}
                     />
                   )}
-
                   <div
                     id={`tua-${item.audio}`}
                     className={styles['border-tua']}
                     onClick={e =>
                       this.handleClickSlideBarAudio(e, `tua-${item.audio}`, `audio-${item.audio}`)
                     }
-                    onMouseUp={e =>
-                      this.handleMouseUp(e, `tua-${item.audio}`, `audio-${item.audio}`)
-                    }
-                    onMouseDown={e =>
-                      this.handleMouseDown(e, `tua-${item.audio}`, `audio-${item.audio}`)
-                    }
+                    onMouseUp={e => this.handleMouseUp(e, `tua-${item.audio}`, `audio-${item.audio}`)}
+                    onMouseDown={e => this.handleMouseDown(e, `tua-${item.audio}`, `audio-${item.audio}`)}
                   />
-
+                  */}
                   <audio
                     preload="auto"
                     type="audio/mpeg"
@@ -464,17 +446,19 @@ class FilterCardList extends PureComponent {
                     onLoadedMetadata={e => this.loadMetaData(e)}
                     src={`/upload/audio/${item.audio}`}
                   />
-                  <div
+                  {/*
+                    <div
                     style={
                       this.state[`playing-audio-${item.audio}`] === `audio-${item.audio}`
                         ? {
-                            width: `${(this.state[`timming-audio-${item.audio}`] * 100) /
-                              this.state[`duration-audio-${item.audio}`]}%`,
-                          }
+                          width: `${(this.state[`timming-audio-${item.audio}`] * 100) /
+                            this.state[`duration-audio-${item.audio}`]}%`,
+                        }
                         : {}
                     }
                     className={styles['border-audio']}
                   />
+                  */}
                 </div>
               </Card>
             </List.Item>
