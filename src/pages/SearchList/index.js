@@ -373,8 +373,9 @@ class FilterCardList extends PureComponent {
           renderItem={item => (
             <List.Item key={item.id}>
               <Card
-                // onMouseMove={e => this.handleMouseMove(e, `tua-${item.audio}`, `audio-${item.audio}`)}
-
+                onMouseMove={e =>
+                  this.handleMouseMove(e, `tua-${item.audio}`, `audio-${item.audio}`)
+                }
                 className={styles.abc}
                 hoverable
                 bodyStyle={{ paddingBottom: 20 }}
@@ -409,22 +410,27 @@ class FilterCardList extends PureComponent {
                       <p>MC: {item.mc}</p>
                     </div>
                   </div>
-                  {/*
-                  <div
-                    id={`time-${item.audio}`}
-                    className={styles['time-audio']}
-                  >
-
-                    <div className={styles['time-in-audio']}>{this.state[`timming-audio-${item.audio}`] ? Math.trunc(this.state[`timming-audio-${item.audio}`]) : 0}</div>
-                    <div className={styles['time-in-audio']}>{(this.state[`audio-${item.audio}`]) ? Math.trunc(this.state[`audio-${item.audio}`]) : <Icon style={{ color: '#38E4FF' }} type="loading" />}</div>
+                  <div id={`time-${item.audio}`} className={styles['time-audio']}>
+                    <div className={styles['time-in-audio']}>
+                      {this.state[`timming-audio-${item.audio}`]
+                        ? Math.trunc(this.state[`timming-audio-${item.audio}`])
+                        : 0}
+                    </div>
+                    <div className={styles['time-in-audio']}>
+                      {this.state[`audio-${item.audio}`] ? (
+                        Math.trunc(this.state[`audio-${item.audio}`])
+                      ) : (
+                        <Icon style={{ color: '#38E4FF' }} type="loading" />
+                      )}
+                    </div>
                   </div>
-                  {(this.state[`dot-audio-${item.audio}`]) && (
+                  {this.state[`dot-audio-${item.audio}`] && (
                     <div
-
                       className={styles['dot-tua']}
                       style={{
                         marginLeft: `${(this.state[`timming-audio-${item.audio}`] * 100) /
-                          this.state[`duration-audio-${item.audio}`] - 2}%`
+                          this.state[`duration-audio-${item.audio}`] -
+                          2}%`,
                       }}
                     />
                   )}
@@ -434,10 +440,13 @@ class FilterCardList extends PureComponent {
                     onClick={e =>
                       this.handleClickSlideBarAudio(e, `tua-${item.audio}`, `audio-${item.audio}`)
                     }
-                    onMouseUp={e => this.handleMouseUp(e, `tua-${item.audio}`, `audio-${item.audio}`)}
-                    onMouseDown={e => this.handleMouseDown(e, `tua-${item.audio}`, `audio-${item.audio}`)}
+                    onMouseUp={e =>
+                      this.handleMouseUp(e, `tua-${item.audio}`, `audio-${item.audio}`)
+                    }
+                    onMouseDown={e =>
+                      this.handleMouseDown(e, `tua-${item.audio}`, `audio-${item.audio}`)
+                    }
                   />
-                  */}
                   <audio
                     preload="auto"
                     type="audio/mpeg"
@@ -446,19 +455,17 @@ class FilterCardList extends PureComponent {
                     onLoadedMetadata={e => this.loadMetaData(e)}
                     src={`http://35.192.153.201:8080/upload/audio/local/${item.audio}`}
                   />
-                  {/*
-                    <div
+                  <div
                     style={
                       this.state[`playing-audio-${item.audio}`] === `audio-${item.audio}`
                         ? {
-                          width: `${(this.state[`timming-audio-${item.audio}`] * 100) /
-                            this.state[`duration-audio-${item.audio}`]}%`,
-                        }
+                            width: `${(this.state[`timming-audio-${item.audio}`] * 100) /
+                              this.state[`duration-audio-${item.audio}`]}%`,
+                          }
                         : {}
                     }
                     className={styles['border-audio']}
                   />
-                  */}
                 </div>
               </Card>
             </List.Item>
