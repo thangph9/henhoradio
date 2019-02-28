@@ -31,7 +31,7 @@ function getTrackList(req, res) {
         try {
           result.forEach(element => {
             let obj = element;
-            getDuration(`../../cms_hhr/public/files/${element.audio}.MP3`, function(duration) {
+            getDuration(`./../cms_hhr/public/files/${element.audio}.MP3`, function(duration) {
               obj.duration = duration;
               dataTemp.push(obj);
             });
