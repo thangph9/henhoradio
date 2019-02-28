@@ -1,3 +1,4 @@
+/* eslint-disable no-useless-escape */
 /* eslint-disable use-isnan */
 /* eslint-disable no-continue */
 /* eslint-disable no-loop-func */
@@ -24,6 +25,7 @@
 import React, { PureComponent } from 'react';
 import numeral from 'numeral';
 import { connect } from 'dva';
+import moment from 'moment';
 import {
   Row,
   Col,
@@ -38,6 +40,7 @@ import {
   Dropdown,
   Menu,
   Input,
+  Skeleton,
 } from 'antd';
 import TagSelect from '@/components/TagSelect';
 import StandardFormRow from '@/components/StandardFormRow';
@@ -49,9 +52,11 @@ import styles from './index.less';
 const { Option } = Select;
 const FormItem = Form.Item;
 const dateFormat = 'DD/MM/YYYY';
+const preload = [{ id: 1 }, { id: 2 }, { id: 3 }, { id: 4 }];
 @connect(({ list, loading }) => ({
   list,
   loading: loading.models.list,
+  loadingPage: loading.effects['list/tracklist'],
 }))
 @Form.create()
 class FilterCardList extends PureComponent {
@@ -73,6 +78,16 @@ class FilterCardList extends PureComponent {
         count: 8,
       },
     });
+    let arrFilter = this.state.arrFilter;
+    if (this.props.location.query.radio) {
+      if (this.props.location.query.radio === 'ALL') {
+        arrFilter[1] = '';
+      } else arrFilter[1] = this.props.location.query.radio;
+    }
+    if (this.props.location.query.date)
+      arrFilter[0] = this.props.location.query.date.replace(/\_/g, '/');
+    if (this.props.location.search === '')
+      this.props.history.push({ pathname: 'search-list', search: '?page=1&radio=ALL' });
   }
 
   componentWillUnmount() {}
@@ -156,6 +171,18 @@ class FilterCardList extends PureComponent {
     }
   }
 
+  handleChangePagination(v1, v2) {
+    let radio = this.props.location.query.radio;
+    let date = this.props.location.query.date;
+    if (date) {
+      this.props.history.push({
+        pathname: `search-list`,
+        search: `?page=${v1}&radio=${radio}&date=${date}`,
+      });
+    } else
+      this.props.history.push({ pathname: `search-list`, search: `?page=${v1}&radio=${radio}` });
+  }
+
   handleClickAudio(value) {
     const audio = document.getElementById(value);
 
@@ -230,15 +257,37 @@ class FilterCardList extends PureComponent {
   componentWillReceiveProps(nextProps) {
     if (this.props.list.tracklist !== nextProps.list.tracklist) {
       if (nextProps.list.tracklist.status === 'ok') {
-        this.setState({
-          loaded: true,
-          dataList: nextProps.list.tracklist.data,
-        });
+        this.setState(
+          {
+            loaded: true,
+            dataList: nextProps.list.tracklist.data,
+          },
+          () => {
+            if (this.state.arrFilter) {
+              let dataArr = this.state.dataList;
+              for (let i = 0; i < this.state.arrFilter.length; i++) {
+                if (this.state.arrFilter[i] === '') continue;
+                dataArr = dataArr.filter((value, index) => {
+                  if (i === 0) {
+                    const timeCreate = new Date(value.date);
+                    const stringTime = `${`${timeCreate.getDate()}`}/${`${timeCreate.getMonth() +
+                      1}`}/${timeCreate.getFullYear()}`;
+                    return stringTime === this.state.arrFilter[0];
+                  }
+                  return value.local === this.state.arrFilter[1];
+                });
+              }
+              this.setState({
+                dataFilter: dataArr,
+              });
+            }
+          }
+        );
       }
     }
   }
 
-  onChange(value1, value2) {
+  onChangeDate(value1, value2) {
     let arrFilter = this.state.arrFilter;
     arrFilter[0] = value2;
     this.setState(
@@ -251,6 +300,14 @@ class FilterCardList extends PureComponent {
         });
       }
     );
+    let radio = this.props.location.query.radio;
+    if (value2 === '') {
+      this.props.history.push({ pathname: 'search-list', search: `?page=1&radio=${radio}` });
+    } else
+      this.props.history.push({
+        pathname: 'search-list',
+        search: `?page=1&radio=${radio}&date=${value2.replace(/\//g, '_')}`,
+      });
   }
 
   handleChangeRadio(e) {
@@ -268,6 +325,14 @@ class FilterCardList extends PureComponent {
         });
       }
     );
+    let radio = this.props.location.query.radio;
+    let date = this.props.location.query.date;
+    if (date) {
+      this.props.history.push({
+        pathname: 'search-list',
+        search: `?page=1&radio=${e}&date=${date}`,
+      });
+    } else this.props.history.push({ pathname: 'search-list', search: `?page=1&radio=${e}` });
   }
 
   render() {
@@ -276,7 +341,7 @@ class FilterCardList extends PureComponent {
       loading,
       form,
     } = this.props;
-    // console.log(this.state.number)
+    console.log(this.state.arrFilter);
     const { getFieldDecorator } = form;
     const { dataFilter, dataFilterDay, dataFilterRadio, dataList } = this.state;
     const CardInfo = ({ activeUser, newUser }) => (
@@ -316,10 +381,12 @@ class FilterCardList extends PureComponent {
         </Menu.Item>
       </Menu>
     );
-    const paginationProps = {
+    let paginationProps = {
       pageSize: 4,
       hideOnSinglePage: true,
-      total: this.state.dataList.length,
+      total: dataFilter ? dataFilter.length : dataList.length,
+      current: Number(this.props.location.query.page),
+      onChange: (v1, v2) => this.handleChangePagination(v1, v2),
     };
     const timeCreate = new Date(new Date().getTime());
     const stringTime = `${`${timeCreate.getDate()}`}/${`${timeCreate.getMonth() +
@@ -339,10 +406,20 @@ class FilterCardList extends PureComponent {
             <Row>
               <Col lg={12} md={12} sm={12} xs={12}>
                 <FormItem style={{ display: 'block' }} label="Theo ngày">
-                  {getFieldDecorator('date', {})(
+                  {this.props.location.query.date ? (
+                    <DatePicker
+                      defaultValue={moment(
+                        this.props.location.query.date.replace(/\_/g, '/'),
+                        dateFormat
+                      )}
+                      format="D/M/YYYY"
+                      onChange={(e, v) => this.onChangeDate(e, v)}
+                      placeholder="Lựa chọn"
+                    />
+                  ) : (
                     <DatePicker
                       format="D/M/YYYY"
-                      onChange={(e, v) => this.onChange(e, v)}
+                      onChange={(e, v) => this.onChangeDate(e, v)}
                       placeholder="Lựa chọn"
                     />
                   )}
@@ -351,7 +428,9 @@ class FilterCardList extends PureComponent {
               <Col lg={12} md={12} sm={12} xs={12}>
                 <FormItem style={{ display: 'block' }} label="Theo nhà đài">
                   <Select
-                    defaultValue="ALL"
+                    defaultValue={
+                      this.props.location.query.radio ? `${this.props.location.query.radio}` : 'ALL'
+                    }
                     onChange={e => this.handleChangeRadio(e)}
                     placeholder="Lựa chọn"
                   >
@@ -364,113 +443,149 @@ class FilterCardList extends PureComponent {
             </Row>
           </Form>
         </Card>
-        <List
-          rowKey="id"
-          style={{ marginTop: 24 }}
-          grid={{ gutter: 24, xl: 4, lg: 3, md: 3, sm: 2, xs: 1 }}
-          loading={loading}
-          dataSource={dataFilter ? dataFilter : dataList}
-          pagination={paginationProps}
-          renderItem={item => (
-            <List.Item key={item.id}>
-              <Card
-                onMouseMove={e =>
-                  this.handleMouseMove(e, `tua-${item.audio}`, `audio-${item.audio}`, item.duration)
-                }
-                className={styles.abc}
-                hoverable
-                bodyStyle={{ paddingBottom: 20 }}
-                actions={[
-                  <Tooltip title="下载">
-                    <Icon type="download" />
-                  </Tooltip>,
-                  <Tooltip
-                    onClick={() => this.handleClickAudio(`audio-${item.audio}`, item.duration)}
-                    title={this.state.globalPlay === `audio-${item.audio}` ? 'Pause' : 'Play'}
-                  >
-                    <Icon
-                      type={
-                        this.state.globalPlay === `audio-${item.audio}`
-                          ? 'pause-circle'
-                          : 'play-circle'
+        {!this.props.loadingPage ? (
+          <List
+            rowKey="id"
+            style={{ marginTop: 24 }}
+            grid={{ gutter: 24, xl: 4, lg: 3, md: 3, sm: 2, xs: 1 }}
+            // loading={this.props.loadingPage}
+            dataSource={dataFilter ? dataFilter : dataList}
+            pagination={paginationProps}
+            renderItem={item => (
+              <List.Item key={item.id}>
+                <Card
+                  onMouseMove={e =>
+                    this.handleMouseMove(
+                      e,
+                      `tua-${item.audio}`,
+                      `audio-${item.audio}`,
+                      item.duration
+                    )
+                  }
+                  className={styles.abc}
+                  hoverable
+                  bodyStyle={{ paddingBottom: 30 }}
+                  actions={[
+                    <Tooltip title="下载">
+                      <Icon type="download" />
+                    </Tooltip>,
+                    <Tooltip
+                      onClick={() => this.handleClickAudio(`audio-${item.audio}`, item.duration)}
+                      title={this.state.globalPlay === `audio-${item.audio}` ? 'Pause' : 'Play'}
+                    >
+                      <Icon
+                        type={
+                          this.state.globalPlay === `audio-${item.audio}`
+                            ? 'pause-circle'
+                            : 'play-circle'
+                        }
+                      />
+                    </Tooltip>,
+                    <Tooltip title="分享">
+                      <Icon type="share-alt" />
+                    </Tooltip>,
+                    <Dropdown overlay={itemMenu}>
+                      <Icon type="ellipsis" />
+                    </Dropdown>,
+                  ]}
+                >
+                  <Card.Meta
+                    avatar={<Avatar size="small" src={item.avatar} />}
+                    title={item.title}
+                  />
+                  <div className={styles.cardItemContent}>
+                    <div style={{ paddingBottom: '10px' }}>
+                      <p>MC: {item.mc}</p>
+                      <span style={{ display: 'block' }}>
+                        Đài phát: {item.local === 'HN' ? 'Hà Nội' : 'Hồ Chí Minh'}
+                      </span>
+                      <span>Ngày phát: {moment(item.date).format('DD/MM/YYYY')}</span>
+                    </div>
+                    <div id={`time-${item.audio}`} className={styles['time-audio']}>
+                      <div className={styles['time-in-audio']}>
+                        {this.state[`timming-audio-${item.audio}`]
+                          ? Math.trunc(this.state[`timming-audio-${item.audio}`])
+                          : 0}
+                      </div>
+                      <div className={styles['time-in-audio']}>{Math.trunc(item.duration)}</div>
+                    </div>
+                    {this.state[`dot-audio-${item.audio}`] && (
+                      <div
+                        className={styles['dot-tua']}
+                        style={{
+                          marginLeft: `${(this.state[`timming-audio-${item.audio}`] * 100) /
+                            item.duration -
+                            2}%`,
+                        }}
+                      />
+                    )}
+                    <div
+                      id={`tua-${item.audio}`}
+                      className={styles['border-tua']}
+                      onClick={e =>
+                        this.handleClickSlideBarAudio(
+                          e,
+                          `tua-${item.audio}`,
+                          `audio-${item.audio}`,
+                          item.duration
+                        )
+                      }
+                      onMouseUp={e =>
+                        this.handleMouseUp(e, `tua-${item.audio}`, `audio-${item.audio}`)
+                      }
+                      onMouseDown={e =>
+                        this.handleMouseDown(e, `tua-${item.audio}`, `audio-${item.audio}`)
                       }
                     />
-                  </Tooltip>,
-                  <Tooltip title="分享">
-                    <Icon type="share-alt" />
-                  </Tooltip>,
-                  <Dropdown overlay={itemMenu}>
-                    <Icon type="ellipsis" />
-                  </Dropdown>,
-                ]}
-              >
-                <Card.Meta avatar={<Avatar size="small" src={item.avatar} />} title={item.title} />
-
-                <div className={styles.cardItemContent}>
-                  <div>
-                    <div>
-                      <p>MC: {item.mc}</p>
-                    </div>
-                  </div>
-                  <div id={`time-${item.audio}`} className={styles['time-audio']}>
-                    <div className={styles['time-in-audio']}>
-                      {this.state[`timming-audio-${item.audio}`]
-                        ? Math.trunc(this.state[`timming-audio-${item.audio}`])
-                        : 0}
-                    </div>
-                    <div className={styles['time-in-audio']}>{Math.trunc(item.duration)}</div>
-                  </div>
-                  {this.state[`dot-audio-${item.audio}`] && (
-                    <div
-                      className={styles['dot-tua']}
-                      style={{
-                        marginLeft: `${(this.state[`timming-audio-${item.audio}`] * 100) /
-                          item.duration -
-                          2}%`,
-                      }}
+                    <audio
+                      preload="auto"
+                      type="audio/mpeg"
+                      style={{ display: 'none' }}
+                      id={`audio-${item.audio}`}
+                      src={`http://35.192.153.201:8080/upload/audio/local/${item.audio}`}
                     />
-                  )}
-                  <div
-                    id={`tua-${item.audio}`}
-                    className={styles['border-tua']}
-                    onClick={e =>
-                      this.handleClickSlideBarAudio(
-                        e,
-                        `tua-${item.audio}`,
-                        `audio-${item.audio}`,
-                        item.duration
-                      )
-                    }
-                    onMouseUp={e =>
-                      this.handleMouseUp(e, `tua-${item.audio}`, `audio-${item.audio}`)
-                    }
-                    onMouseDown={e =>
-                      this.handleMouseDown(e, `tua-${item.audio}`, `audio-${item.audio}`)
-                    }
-                  />
-                  <audio
-                    preload="auto"
-                    type="audio/mpeg"
-                    style={{ display: 'none' }}
-                    id={`audio-${item.audio}`}
-                    src={`http://35.192.153.201:8080/upload/audio/local/${item.audio}`}
-                  />
-                  <div
-                    style={
-                      this.state[`playing-audio-${item.audio}`] === `audio-${item.audio}`
-                        ? {
-                            width: `${(this.state[`timming-audio-${item.audio}`] * 100) /
-                              item.duration}%`,
-                          }
-                        : {}
-                    }
-                    className={styles['border-audio']}
-                  />
+                    <div
+                      style={
+                        this.state[`playing-audio-${item.audio}`] === `audio-${item.audio}`
+                          ? {
+                              width: `${(this.state[`timming-audio-${item.audio}`] * 100) /
+                                item.duration}%`,
+                            }
+                          : {}
+                      }
+                      className={styles['border-audio']}
+                    />
+                  </div>
+                </Card>
+              </List.Item>
+            )}
+          />
+        ) : (
+          <div className={styles.container}>
+            <div className={styles.row}>
+              <div className={styles['card-loading']}>
+                <div className={styles['card-border']}>
+                  <Skeleton paragraph={{ rows: 4 }} />
                 </div>
-              </Card>
-            </List.Item>
-          )}
-        />
+              </div>
+              <div className={styles['card-loading']}>
+                <div className={styles['card-border']}>
+                  <Skeleton paragraph={{ rows: 4 }} />
+                </div>
+              </div>
+              <div className={styles['card-loading']}>
+                <div className={styles['card-border']}>
+                  <Skeleton paragraph={{ rows: 4 }} />
+                </div>
+              </div>
+              <div className={styles['card-loading']}>
+                <div className={styles['card-border']}>
+                  <Skeleton paragraph={{ rows: 4 }} />
+                </div>
+              </div>
+            </div>
+          </div>
+        )}
       </div>
     );
   }
