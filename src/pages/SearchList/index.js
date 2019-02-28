@@ -1,3 +1,4 @@
+/* eslint-disable use-isnan */
 /* eslint-disable no-continue */
 /* eslint-disable no-loop-func */
 /* eslint-disable no-unneeded-ternary */
@@ -61,6 +62,7 @@ class FilterCardList extends PureComponent {
     loaded: false,
     dataList: [],
     arrFilter: ['', ''],
+    number: 0,
   };
 
   componentDidMount() {
@@ -73,7 +75,9 @@ class FilterCardList extends PureComponent {
     });
   }
 
-  handleClickSlideBarAudio(e, v, v2) {
+  componentWillUnmount() {}
+
+  handleClickSlideBarAudio(e, v, v2, v3) {
     const tua = document.getElementById(v);
     const audio = document.getElementById(v2);
     const offset = e.nativeEvent.offsetX;
@@ -90,7 +94,7 @@ class FilterCardList extends PureComponent {
         },
         () => {
           this.state.audio.play();
-          this.state.audio.currentTime = (offset / tua.offsetWidth) * this.state.audio.duration;
+          this.state.audio.currentTime = (offset / tua.offsetWidth) * v3;
           const settime = setInterval(() => {
             if (!this.state.width) {
               this.setState({
@@ -115,7 +119,7 @@ class FilterCardList extends PureComponent {
     }
     if (this.state.globalPlay && this.state.globalPlay === v2) {
       if (this.state.audio) {
-        this.state.audio.currentTime = (offset / tua.offsetWidth) * this.state.audio.duration;
+        this.state.audio.currentTime = (offset / tua.offsetWidth) * v3;
       }
     }
   }
@@ -131,13 +135,13 @@ class FilterCardList extends PureComponent {
     }
   }
 
-  handleMouseMove(e, v, v2) {
+  handleMouseMove(e, v, v2, v3) {
     if (this.state.audio && this.state.width) {
       const tua = document.getElementById(v);
       const audio = document.getElementById(v2);
       const offset = e.nativeEvent.offsetX;
       this.setState({
-        [`timming-${v2}`]: (offset / tua.offsetWidth) * audio.duration,
+        [`timming-${v2}`]: (offset / tua.offsetWidth) * v3,
       });
     }
   }
@@ -173,7 +177,6 @@ class FilterCardList extends PureComponent {
       {
         audio,
         [`dot-${value}`]: true,
-        [`duration-${value}`]: audio.duration,
         [`playing-${value}`]: value,
         globalPlay: value,
       },
@@ -235,8 +238,6 @@ class FilterCardList extends PureComponent {
     }
   }
 
-  loadMetaData(e) {}
-
   onChange(value1, value2) {
     let arrFilter = this.state.arrFilter;
     arrFilter[0] = value2;
@@ -275,7 +276,7 @@ class FilterCardList extends PureComponent {
       loading,
       form,
     } = this.props;
-
+    // console.log(this.state.number)
     const { getFieldDecorator } = form;
     const { dataFilter, dataFilterDay, dataFilterRadio, dataList } = this.state;
     const CardInfo = ({ activeUser, newUser }) => (
@@ -374,7 +375,7 @@ class FilterCardList extends PureComponent {
             <List.Item key={item.id}>
               <Card
                 onMouseMove={e =>
-                  this.handleMouseMove(e, `tua-${item.audio}`, `audio-${item.audio}`)
+                  this.handleMouseMove(e, `tua-${item.audio}`, `audio-${item.audio}`, item.duration)
                 }
                 className={styles.abc}
                 hoverable
@@ -384,7 +385,7 @@ class FilterCardList extends PureComponent {
                     <Icon type="download" />
                   </Tooltip>,
                   <Tooltip
-                    onClick={() => this.handleClickAudio(`audio-${item.audio}`)}
+                    onClick={() => this.handleClickAudio(`audio-${item.audio}`, item.duration)}
                     title={this.state.globalPlay === `audio-${item.audio}` ? 'Pause' : 'Play'}
                   >
                     <Icon
@@ -404,6 +405,7 @@ class FilterCardList extends PureComponent {
                 ]}
               >
                 <Card.Meta avatar={<Avatar size="small" src={item.avatar} />} title={item.title} />
+
                 <div className={styles.cardItemContent}>
                   <div>
                     <div>
@@ -416,20 +418,14 @@ class FilterCardList extends PureComponent {
                         ? Math.trunc(this.state[`timming-audio-${item.audio}`])
                         : 0}
                     </div>
-                    <div className={styles['time-in-audio']}>
-                      {this.state[`audio-${item.audio}`] ? (
-                        Math.trunc(this.state[`audio-${item.audio}`])
-                      ) : (
-                        <Icon style={{ color: '#38E4FF' }} type="loading" />
-                      )}
-                    </div>
+                    <div className={styles['time-in-audio']}>{Math.trunc(item.duration)}</div>
                   </div>
                   {this.state[`dot-audio-${item.audio}`] && (
                     <div
                       className={styles['dot-tua']}
                       style={{
                         marginLeft: `${(this.state[`timming-audio-${item.audio}`] * 100) /
-                          this.state[`duration-audio-${item.audio}`] -
+                          item.duration -
                           2}%`,
                       }}
                     />
@@ -438,7 +434,12 @@ class FilterCardList extends PureComponent {
                     id={`tua-${item.audio}`}
                     className={styles['border-tua']}
                     onClick={e =>
-                      this.handleClickSlideBarAudio(e, `tua-${item.audio}`, `audio-${item.audio}`)
+                      this.handleClickSlideBarAudio(
+                        e,
+                        `tua-${item.audio}`,
+                        `audio-${item.audio}`,
+                        item.duration
+                      )
                     }
                     onMouseUp={e =>
                       this.handleMouseUp(e, `tua-${item.audio}`, `audio-${item.audio}`)
@@ -452,7 +453,6 @@ class FilterCardList extends PureComponent {
                     type="audio/mpeg"
                     style={{ display: 'none' }}
                     id={`audio-${item.audio}`}
-                    onLoadedMetadata={e => this.loadMetaData(e)}
                     src={`http://35.192.153.201:8080/upload/audio/local/${item.audio}`}
                   />
                   <div
@@ -460,7 +460,7 @@ class FilterCardList extends PureComponent {
                       this.state[`playing-audio-${item.audio}`] === `audio-${item.audio}`
                         ? {
                             width: `${(this.state[`timming-audio-${item.audio}`] * 100) /
-                              this.state[`duration-audio-${item.audio}`]}%`,
+                              item.duration}%`,
                           }
                         : {}
                     }
