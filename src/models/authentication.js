@@ -1,4 +1,10 @@
-import { loginAccount, RegisterAccount, homeDemo, checkUser } from '@/services/api';
+import {
+  loginAccount,
+  RegisterAccount,
+  homeDemo,
+  checkUser,
+  questionRegister,
+} from '@/services/api';
 import { setAuthority } from '@/utils/authority';
 import { reloadAuthorized } from '@/utils/Authorized';
 
@@ -10,6 +16,7 @@ export default {
     register: {},
     homedemo: {},
     checkuser: {},
+    questionregister: {},
   },
   effects: {
     *login({ payload }, { call, put }) {
@@ -50,6 +57,13 @@ export default {
         payload: response || {},
       });
     },
+    *questionregister({ payload }, { call, put }) {
+      const response = yield call(questionRegister, payload);
+      yield put({
+        type: 'questionRegister',
+        payload: response || {},
+      });
+    },
   },
 
   reducers: {
@@ -77,6 +91,12 @@ export default {
       return {
         ...state,
         homedemo: action.payload,
+      };
+    },
+    questionRegister(state, action) {
+      return {
+        ...state,
+        questionregister: action.payload,
       };
     },
   },

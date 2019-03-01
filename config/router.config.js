@@ -11,6 +11,10 @@ export default [
     routes: [{ path: '/forgot', component: './ForgotPass' }],
   },
   {
+    path: '/question',
+    component: './Question',
+  },
+  {
     path: '/search-list',
     component: '../layouts/EmptyLayout',
     routes: [{ path: '/search-list', component: './SearchList' }],
@@ -33,16 +37,7 @@ export default [
       },
     ],
   },
-  {
-    path: '/register-result',
-    component: '../layouts/HomeLayout',
-    routes: [
-      { path: '/register-result', component: './ResgisterResult' },
-      {
-        component: '404',
-      },
-    ],
-  },
+
   {
     path: '/test',
     component: '../layouts/EmptyLayout',

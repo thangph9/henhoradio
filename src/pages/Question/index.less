@@ -1,0 +1,130 @@
+.container {
+  margin-top: 20px;
+  margin-right: auto;
+  margin-left: auto;
+  padding-left: 15px;
+  padding-right: 15px;
+}
+.main {
+  margin: 0 auto;
+  clear: both;
+}
+.center-item {
+  display: flex;
+  justify-content: center;
+}
+.number-of-question {
+  padding-bottom: 50px;
+  padding-top: 30px;
+}
+.current-question {
+  font-size: 25px;
+  padding-left: 20px;
+  padding-right: 20px;
+  margin-bottom: 40px;
+}
+.avatar {
+  margin-right: 12px;
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+}
+.your-name {
+  padding-right: 10px;
+  font-size: 20px;
+  font-weight: 500;
+}
+.current-answer {
+  background: #4c7bd9;
+  border-radius: 5px;
+  position: relative;
+  margin-top: 18px;
+  &:before {
+    content: '';
+    background: #4c7bd9;
+    display: block;
+    position: absolute;
+    width: 12px;
+    height: 12px;
+    right: 25px;
+    top: 1px;
+    -webkit-transform: translateY(-50%) rotate(-135deg);
+    transform: translateY(-50%) rotate(-135deg);
+    -webkit-transform-origin: center;
+    transform-origin: center;
+  }
+}
+.list-answer {
+  padding: 20px;
+  border-bottom: 1px solid;
+  border-color: rgba(157, 186, 242, 0.5);
+  margin-right: 0.0000000000000001px !important;
+}
+.radio {
+  color: rgb(255, 255, 255);
+  font-size: 19px;
+  display: flex;
+  align-items: center;
+}
+.check {
+  color: rgb(255, 255, 255);
+  font-size: 19px;
+  display: flex;
+  align-items: center;
+}
+.next-check {
+  display: flex;
+  margin-top: 20px;
+  justify-content: flex-end;
+  cursor: pointer;
+  width: 30%;
+  float: right;
+}
+.prev-check {
+  display: flex;
+  margin-top: 20px;
+  justify-content: flex-start;
+  cursor: pointer;
+  width: 30%;
+  float: left;
+}
+.button-submit {
+  display: flex;
+  margin-top: 20px;
+  cursor: pointer;
+  width: 40%;
+  float: left;
+  justify-content: center;
+}
+@media (min-width: 576px) {
+  .container {
+    max-width: 540px;
+  }
+  .main {
+    width: 100%;
+  }
+}
+@media (min-width: 768px) {
+  .container {
+    max-width: 720px;
+  }
+  .main {
+    width: 80%;
+  }
+}
+@media (min-width: 992) {
+  .container {
+    max-width: 960px;
+  }
+  .main {
+    width: 55%;
+  }
+}
+@media (min-width: 1200px) {
+  .container {
+    max-width: 1140px;
+  }
+  .main {
+    width: 45%;
+  }
+}
