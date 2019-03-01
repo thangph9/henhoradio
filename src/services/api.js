@@ -133,6 +133,12 @@ export async function RegisterAccount(params) {
     body: params,
   });
 }
+export async function questionRegister(params) {
+  return request('/api/authentication/question', {
+    method: 'POST',
+    body: params,
+  });
+}
 export async function checkUser(params) {
   console.log(params);
   return request(`/api/authentication/checkuser/${params}`, {});
