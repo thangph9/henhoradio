@@ -317,100 +317,35 @@ function checkUser(req, res) {
     res.send({ status: 'error' });
   }
 }
-const dataQuestion = [
-  {
-    questionid: 'q1',
-    questiontitle: 'About how long do you want your next relationship to last?',
-    type: 'radio',
-    answer: [
-      {
-        answerid: 'q1a1',
-        answertitle: 'One night',
-      },
-      {
-        answerid: 'q1a2',
-        answertitle: 'A few months to a year',
-      },
-      {
-        answerid: 'q1a3',
-        answertitle: 'Several years',
-      },
-      {
-        answerid: 'q1a4',
-        answertitle: 'The rest of my life',
-      },
-    ],
-  },
-  {
-    questionid: 'q2',
-    questiontitle: 'Which word describes you better?',
-    type: 'radio',
-    answer: [
-      {
-        answerid: 'q2a1',
-        answertitle: 'Carefree',
-      },
-      {
-        answerid: 'q2a2',
-        answertitle: 'Intense',
-      },
-    ],
-  },
-  {
-    questionid: 'q3',
-    questiontitle: 'How important is religion/God in your life?',
-    type: 'radio',
-    answer: [
-      {
-        answerid: 'q3a1',
-        answertitle: 'Extremely important',
-      },
-      {
-        answerid: 'q3a2',
-        answertitle: 'Somewhat important',
-      },
-      {
-        answerid: 'q3a3',
-        answertitle: 'Not very important',
-      },
-      {
-        answerid: 'q3a4',
-        answertitle: 'Not important at all',
-      },
-    ],
-  },
-  {
-    questionid: 'q4',
-    questiontitle: 'Which best describes your political beliefs?',
-    type: 'check',
-    answer: [
-      {
-        answerid: 'q4a1',
-        answertitle: 'Liberal / Left-wing',
-      },
-      {
-        answerid: 'q4a2',
-        answertitle: 'Centrist',
-      },
-      {
-        answerid: 'q4a3',
-        answertitle: 'Conservative / Right-wing',
-      },
-      {
-        answerid: 'q4a4',
-        answertitle: 'Other',
-      },
-    ],
-  },
-  {
-    questionid: 'q5q5',
-    questiontitle: 'What food do you like?',
-    type: 'text',
-    answer: [],
-  },
-];
 function question(req, res) {
-  res.json({ status: 'ok', data: dataQuestion });
+  let result = [];
+
+  const tasks = [
+    function findQues(callback) {
+      try {
+        models.instance.question.find({}, function(err, ques) {
+          if (ques && ques.length > 0) {
+            result = ques;
+          }
+          callback(err, null);
+        });
+      } catch (error) {
+        console.log(error);
+        callback(null, null);
+        return res.send({ status: 'error' });
+      }
+    },
+  ];
+  async.series(tasks, err => {
+    if (err) {
+      console.log(err);
+      return res.json({ status: 'error' });
+    }
+    return res.json({
+      status: 'ok',
+      data: result,
+    });
+  });
 }
 router.post('/register', register);
 router.post('/login', login);
