@@ -52,7 +52,7 @@ class Question extends PureComponent {
   onChangeRadio(e, q) {
     let obj = {
       question: q,
-      answer: e.target.value,
+      answer: [e.target.value],
       type: '2',
     };
     let arr = this.state.arrAnswer;
@@ -79,7 +79,7 @@ class Question extends PureComponent {
     if (t === '1') {
       let obj = {
         question: q,
-        answer: this.state.valueInput,
+        answer: [this.state.valueInput],
         type: '1',
       };
       arr[arr.length] = obj;
@@ -122,15 +122,13 @@ class Question extends PureComponent {
   }
 
   handleClickSubmit() {
-    message.info('Đã gửi!');
-    /*
-     this.props.dispatch({
-      type:'authentication/sendanswer',
-      payload:{
-        answer:this.state.arrAnswer
-      }
-    })
-   */
+    // message.info('Đã gửi!');
+    this.props.dispatch({
+      type: 'authentication/sendanswer',
+      payload: {
+        answer: this.state.arrAnswer,
+      },
+    });
   }
 
   handleChangeInput(e, q) {

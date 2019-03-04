@@ -4,6 +4,7 @@ import {
   homeDemo,
   checkUser,
   questionRegister,
+  sendAnswer,
 } from '@/services/api';
 import { setAuthority } from '@/utils/authority';
 import { reloadAuthorized } from '@/utils/Authorized';
@@ -17,12 +18,13 @@ export default {
     homedemo: {},
     checkuser: {},
     questionregister: {},
+    sendanswer: {},
   },
   effects: {
     *login({ payload }, { call, put }) {
       const response = yield call(loginAccount, payload);
       if (response.status === 'ok') {
-        localStorage.token = JSON.stringify(response.token);
+        if (!localStorage.token) localStorage.token = JSON.stringify(response.token);
         setAuthority(['member']);
         reloadAuthorized();
         yield put({
@@ -45,6 +47,7 @@ export default {
     },
     *register({ payload }, { call, put }) {
       const response = yield call(RegisterAccount, payload);
+      localStorage.token = JSON.stringify(response.token);
       yield put({
         type: 'registerAuthentication',
         payload: response || {},
@@ -61,6 +64,13 @@ export default {
       const response = yield call(questionRegister, payload);
       yield put({
         type: 'questionRegister',
+        payload: response || {},
+      });
+    },
+    *sendanswer({ payload }, { call, put }) {
+      const response = yield call(sendAnswer, payload);
+      yield put({
+        type: 'sendAnswer',
         payload: response || {},
       });
     },
@@ -97,6 +107,12 @@ export default {
       return {
         ...state,
         questionregister: action.payload,
+      };
+    },
+    sendAnswer(state, action) {
+      return {
+        ...state,
+        sendanswer: action.payload,
       };
     },
   },

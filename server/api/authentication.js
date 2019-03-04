@@ -1,6 +1,11 @@
+/* eslint-disable camelcase */
+/* eslint-disable prefer-const */
+/* eslint-disable no-unused-vars */
 /* eslint-disable consistent-return */
 /* eslint-disable func-names */
 /* eslint-disable prefer-arrow-callback */
+import { uuidFromString } from 'express-cassandra';
+
 const async = require('async');
 const fs = require('fs');
 const express = require('express');
@@ -9,7 +14,7 @@ const jwt = require('jsonwebtoken');
 const request = require('request'); // eslint-disable-line
 /* eslint-disable prefer-destructuring */
 const router = express.Router();
-// const jwtpublic = fs.readFileSync('./ssl/jwtpublic.pem', 'utf8');
+const jwtpublic = fs.readFileSync('./ssl/jwtpublic.pem', 'utf8');
 const jwtprivate = fs.readFileSync('./ssl/jwtprivate.pem', 'utf8');
 const models = require('../settings');
 
@@ -31,6 +36,7 @@ function register(req, res) {
   const userId = Uuid.random();
   const saltRounds = 10;
   const queries = [];
+  let token = '';
   const PARAM_IS_VALID = {};
   let verificationUrl = '';
   let salt = '';
@@ -150,6 +156,28 @@ function register(req, res) {
       }
       callback(null, null);
     },
+    function Login(callback) {
+      try {
+        token = jwt.sign(
+          {
+            userid: PARAM_IS_VALID.user_id,
+            fullname: PARAM_IS_VALID.fullname,
+            phone: PARAM_IS_VALID.phone,
+            address: PARAM_IS_VALID.address,
+          },
+          jwtprivate,
+          {
+            expiresIn: '30d', // expires in 30 day
+            algorithm: 'RS256',
+          }
+        );
+      } catch (e) {
+        console.log(e);
+        callback(null, null);
+        res.send({ status: 'error' });
+      }
+      callback(null, null);
+    },
     function doSubmit(callback) {
       models.doBatch(queries, err => {
         callback(err, null);
@@ -163,7 +191,7 @@ function register(req, res) {
     }
     return res.json({
       status: 'ok',
-      message: 'Đăng ký thành công!',
+      token,
       timeline: new Date().getTime(),
     });
   });
@@ -347,8 +375,94 @@ function question(req, res) {
     });
   });
 }
+function sendAnswer(req, res) {
+  const params = req.body;
+  const token = req.headers['x-access-token'];
+  let queries = [];
+  let PARAM_IS_VALID = {};
+  const verifyOptions = {
+    expiresIn: '30d',
+    algorithm: ['RS256'],
+  };
+  let legit = {};
+  const tasks = [
+    function validParams(callback) {
+      PARAM_IS_VALID.answer = params.answer;
+      callback(null, null);
+    },
+    function checkUserId(callback) {
+      try {
+        legit = jwt.verify(token, jwtpublic, verifyOptions);
+        callback(null, null);
+      } catch (e) {
+        callback(e, null);
+        return res.send({
+          status: 'error',
+          message: 'Sai ma token',
+        });
+      }
+    },
+    function saveAnswer(callback) {
+      try {
+        PARAM_IS_VALID.answer.forEach(element => {
+          const answerObject = {
+            user_id: uuidFromString(legit.userid),
+            question_id: uuidFromString(element.question),
+            answer: element.answer,
+          };
+          // eslint-disable-next-line no-shadow
+          const question = () => {
+            const object = answerObject;
+            const instance = new models.instance.profile(object);
+            const save = instance.save({ return_query: true });
+            return save;
+          };
+          queries.push(question());
+        });
+      } catch (error) {
+        console.log(error);
+        res.send({ status: 'error' });
+      }
+      callback(null, null);
+    },
+    function saveProfile(callback) {
+      try {
+        PARAM_IS_VALID.answer.forEach(element => {
+          const profileObject = {
+            user_id: uuidFromString(legit.userid),
+            question_id: uuidFromString(element.question),
+          };
+          const profile_by_question = () => {
+            const object = profileObject;
+            const instance = new models.instance.profile_by_question(object);
+            const save = instance.save({ return_query: true });
+            return save;
+          };
+          queries.push(profile_by_question());
+        });
+      } catch (error) {
+        console.log(error);
+        callback(null, null);
+        res.send({ status: 'error' });
+      }
+      callback(null, null);
+    },
+    function doSubmit(callback) {
+      models.doBatch(queries, err => {
+        callback(err, null);
+      });
+    },
+  ];
+  async.series(tasks, err => {});
+  return res.json({
+    status: 'ok',
+    user_id: legit.userid,
+    answer: params.answer,
+  });
+}
 router.post('/register', register);
 router.post('/login', login);
+router.post('/sendanswer', sendAnswer);
 router.post('/question', question);
 router.get('/checkuser/:phone', checkUser);
 module.exports = router;

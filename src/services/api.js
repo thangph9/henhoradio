@@ -140,8 +140,14 @@ export async function questionRegister(params) {
   });
 }
 export async function checkUser(params) {
-  console.log(params);
   return request(`/api/authentication/checkuser/${params}`, {});
+}
+export async function sendAnswer(params) {
+  return request('/api/authentication/sendanswer', {
+    method: 'POST',
+    body: params,
+    headers: { 'X-Access-Token': JSON.parse(localStorage.getItem('token')) },
+  });
 }
 export async function homeDemo() {
   return request('/api/authentication/homedemo');

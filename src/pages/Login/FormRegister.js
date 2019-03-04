@@ -150,7 +150,7 @@ class FormRegister extends PureComponent {
 
     if (authentication.register !== nextProps.authentication.register) {
       if (nextProps.authentication.register.status === 'ok') {
-        nextProps.history.push({ pathname: '/register-result' });
+        nextProps.history.push({ pathname: '/question' });
       }
       if (
         nextProps.authentication.register.status === 'error' &&
@@ -272,6 +272,12 @@ class FormRegister extends PureComponent {
       if (values.password === values.repassword) {
         if (!err && dob_day && dob_month && dob_year && gender) {
           recaptchaRef.current.execute();
+          /*
+         dispatch({
+          type: 'authentication/register',
+          payload: values,
+        });
+        */
           this.setState({
             data: values,
           });
@@ -675,7 +681,7 @@ class FormRegister extends PureComponent {
             })(
               <Input
                 type="password"
-                autocomplete="password"
+                autoComplete="password"
                 placeholder="Tối thiểu 6 ký tự (không ký tự đặc biệt... )"
               />
             )}
@@ -696,7 +702,7 @@ class FormRegister extends PureComponent {
             ],
           })(
             <Input
-              autocomplete="repassword"
+              autoComplete="repassword"
               onChange={e => this.handleChangeRePass(e)}
               onBlur={e => this.validRepassword(e)}
               type="password"
