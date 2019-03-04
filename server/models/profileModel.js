@@ -7,5 +7,5 @@ module.exports = {
       typeDef: '<text>',
     },
   },
-  key: ['user_id'],
+  key: ['user_id', 'question_id'],
 };
