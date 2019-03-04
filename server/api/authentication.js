@@ -4,8 +4,6 @@
 /* eslint-disable consistent-return */
 /* eslint-disable func-names */
 /* eslint-disable prefer-arrow-callback */
-import { uuidFromString } from 'express-cassandra';
-
 const async = require('async');
 const fs = require('fs');
 const express = require('express');
@@ -406,8 +404,8 @@ function sendAnswer(req, res) {
       try {
         PARAM_IS_VALID.answer.forEach(element => {
           const answerObject = {
-            user_id: uuidFromString(legit.userid),
-            question_id: uuidFromString(element.question),
+            user_id: models.uuidFromString(legit.userid),
+            question_id: models.uuidFromString(element.question),
             answer: element.answer,
           };
           // eslint-disable-next-line no-shadow
@@ -429,8 +427,8 @@ function sendAnswer(req, res) {
       try {
         PARAM_IS_VALID.answer.forEach(element => {
           const profileObject = {
-            user_id: uuidFromString(legit.userid),
-            question_id: uuidFromString(element.question),
+            user_id: models.uuidFromString(legit.userid),
+            question_id: models.uuidFromString(element.question),
           };
           const profile_by_question = () => {
             const object = profileObject;
