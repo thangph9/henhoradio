@@ -109,7 +109,6 @@ function register(req, res) {
           callback(err, null);
         });
       } catch (error) {
-        console.log(error);
         res.send({ status: 'error' });
       }
     },
@@ -149,7 +148,6 @@ function register(req, res) {
         };
         queries.push(Login());
       } catch (error) {
-        console.log(error);
         res.send({ status: 'error' });
       }
       callback(null, null);
@@ -170,7 +168,6 @@ function register(req, res) {
           }
         );
       } catch (e) {
-        console.log(e);
         callback(null, null);
         res.send({ status: 'error' });
       }
@@ -184,7 +181,6 @@ function register(req, res) {
   ];
   async.series(tasks, err => {
     if (err) {
-      console.log(err);
       return res.json({ status: 'error', message: err, timeline: new Date().getTime() });
     }
     return res.json({
@@ -301,7 +297,6 @@ function login(req, res) {
           }
         );
       } catch (e) {
-        console.log(e);
         res.send({ status: 'error' });
       }
       callback(null, null);
@@ -339,7 +334,6 @@ function checkUser(req, res) {
       });
     });
   } catch (error) {
-    console.log(error);
     res.send({ status: 'error' });
   }
 }
@@ -356,7 +350,6 @@ function question(req, res) {
           callback(err, null);
         });
       } catch (error) {
-        console.log(error);
         callback(null, null);
         return res.send({ status: 'error' });
       }
@@ -364,7 +357,6 @@ function question(req, res) {
   ];
   async.series(tasks, err => {
     if (err) {
-      console.log(err);
       return res.json({ status: 'error' });
     }
     return res.json({
@@ -418,7 +410,6 @@ function sendAnswer(req, res) {
           queries.push(question());
         });
       } catch (error) {
-        console.log(error);
         res.send({ status: 'error' });
       }
       callback(null, null);
@@ -439,7 +430,6 @@ function sendAnswer(req, res) {
           queries.push(profile_by_question());
         });
       } catch (error) {
-        console.log(error);
         callback(null, null);
         res.send({ status: 'error' });
       }
@@ -458,9 +448,104 @@ function sendAnswer(req, res) {
     answer: params.answer,
   });
 }
+function getUser(req, res) {
+  let result = {};
+  let legit = {};
+  const token = req.headers['x-access-token'];
+  // eslint-disable-next-line no-shadow
+  let question = [];
+  let title = [];
+  let message = '';
+  const verifyOptions = {
+    expiresIn: '30d',
+    algorithm: ['RS256'],
+  };
+  async.series(
+    [
+      callback => {
+        try {
+          legit = jwt.verify(token, jwtpublic, verifyOptions);
+          callback(null, null);
+        } catch (e) {
+          callback(e, null);
+          return res.send({
+            status: 'error',
+            message: 'Sai ma token',
+          });
+        }
+      },
+      callback => {
+        try {
+          models.instance.users.find({ user_id: models.uuidFromString(legit.userid) }, function(
+            err,
+            user
+          ) {
+            if (user && user.length > 0) {
+              result = user[0];
+            } else {
+              return res.json({
+                status: 'error',
+                message: 'Không tìm thấy tài khoản này',
+              });
+            }
+            callback(err, null);
+          });
+        } catch (error) {
+          res.send({ status: 'error' });
+        }
+      },
+      callback => {
+        try {
+          models.instance.profile.find(
+            { user_id: models.uuidFromString(legit.userid) },
+            { select: ['question_id', 'answer'] },
+            function(err, results) {
+              if (results && results.length > 0) {
+                let arr = [];
+                results.forEach(element => {
+                  arr.push(element);
+                });
+                question = arr;
+              } else {
+                message = 'Chưa trả lời câu hỏi';
+              }
+              callback(err, null);
+            }
+          );
+        } catch (error) {
+          callback(error, null);
+        }
+      },
+      callback => {
+        try {
+          models.instance.question.find({}, { select: ['title', 'question_id'] }, function(
+            err,
+            results
+          ) {
+            if (results && results.length > 0) {
+              let arr = [];
+              results.forEach(element => {
+                arr.push(element);
+              });
+              title = arr;
+            }
+            callback(err, null);
+          });
+        } catch (error) {
+          callback(error);
+        }
+      },
+    ],
+    err => {
+      if (err) return res.json({ status: 'error' });
+      return res.json({ status: 'ok', data: result, question, message, title });
+    }
+  );
+}
 router.post('/register', register);
 router.post('/login', login);
 router.post('/sendanswer', sendAnswer);
+router.post('/getuser', getUser);
 router.post('/question', question);
 router.get('/checkuser/:phone', checkUser);
 module.exports = router;

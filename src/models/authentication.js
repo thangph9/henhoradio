@@ -5,6 +5,7 @@ import {
   checkUser,
   questionRegister,
   sendAnswer,
+  getUser,
 } from '@/services/api';
 import { setAuthority } from '@/utils/authority';
 import { reloadAuthorized } from '@/utils/Authorized';
@@ -19,6 +20,7 @@ export default {
     checkuser: {},
     questionregister: {},
     sendanswer: {},
+    getuser: {},
   },
   effects: {
     *login({ payload }, { call, put }) {
@@ -74,6 +76,13 @@ export default {
         payload: response || {},
       });
     },
+    *getuser({ payload }, { call, put }) {
+      const response = yield call(getUser, payload);
+      yield put({
+        type: 'getUser',
+        payload: response || {},
+      });
+    },
   },
 
   reducers: {
@@ -113,6 +122,12 @@ export default {
       return {
         ...state,
         sendanswer: action.payload,
+      };
+    },
+    getUser(state, action) {
+      return {
+        ...state,
+        getuser: action.payload,
       };
     },
   },
