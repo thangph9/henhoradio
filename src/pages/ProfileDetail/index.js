@@ -188,7 +188,7 @@ class AdvancedProfile extends Component {
                       <TextArea
                         style={{ fontSize: '18px', color: 'black', fontWeight: 600 }}
                         rows={8}
-                        value="Beautiful"
+                        defaultValue="Beautiful"
                       />
                     </div>
                   </div>
@@ -245,7 +245,7 @@ class AdvancedProfile extends Component {
                       <TextArea
                         style={{ fontSize: '18px', color: 'black', fontWeight: 600 }}
                         rows={8}
-                        value="Beautiful"
+                        defaultValue="Beautiful"
                       />
                     </div>
                   </div>
@@ -302,7 +302,7 @@ class AdvancedProfile extends Component {
                       <TextArea
                         style={{ fontSize: '18px', color: 'black', fontWeight: 600 }}
                         rows={8}
-                        value="Beautiful"
+                        defaultValue="Beautiful"
                       />
                     </div>
                   </div>
@@ -359,7 +359,7 @@ class AdvancedProfile extends Component {
                       <TextArea
                         style={{ fontSize: '18px', color: 'black', fontWeight: 600 }}
                         rows={8}
-                        value="Beautiful"
+                        defaultValue="Beautiful"
                       />
                     </div>
                   </div>
@@ -416,7 +416,7 @@ class AdvancedProfile extends Component {
                       <TextArea
                         style={{ fontSize: '18px', color: 'black', fontWeight: 600 }}
                         rows={8}
-                        value="Beautiful"
+                        defaultValue="Beautiful"
                       />
                     </div>
                   </div>
