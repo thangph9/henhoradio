@@ -9,7 +9,7 @@ import Debounce from 'lodash-decorators/debounce';
 import Bind from 'lodash-decorators/bind';
 import moment from 'moment';
 import { connect } from 'dva';
-import { Table, Icon, Input, Button } from 'antd';
+import { Table, Icon, Input, Button, Skeleton } from 'antd';
 import styles from './index.less';
 
 const { TextArea } = Input;
@@ -25,7 +25,6 @@ class AdvancedProfile extends Component {
     this.state = {
       operationkey: 'tab1',
       stepDirection: 'horizontal',
-      dataUser: {},
       editing: false,
       list: [],
       'item-editing': 0,
@@ -151,26 +150,32 @@ class AdvancedProfile extends Component {
       <div className={styles['profile']}>
         <div className={styles.container}>
           {this.state.editing && <div className={styles['editing']} />}
-          <div className={styles['profile-user']}>
-            <div className={styles['detail-profile']}>
-              <div className={styles['profile-user-left']}>
-                <div className={styles['profile-item']}>Tên tài khoản:{dataUser.phone}</div>
-                <div className={styles['profile-item']}>Tên đầy đủ: {dataUser.fullname}</div>
-                <div className={styles['profile-item']}>
-                  Giới tính :{dataUser.gender === 'male' ? 'Nam' : 'Nữ'}
+          {dataUser ? (
+            <div className={styles['profile-user']}>
+              <div className={styles['detail-profile']}>
+                <div className={styles['profile-user-left']}>
+                  <div className={styles['profile-item']}>Tên tài khoản:{dataUser.phone}</div>
+                  <div className={styles['profile-item']}>Tên đầy đủ: {dataUser.fullname}</div>
+                  <div className={styles['profile-item']}>
+                    Giới tính :{dataUser.gender === 'male' ? 'Nam' : 'Nữ'}
+                  </div>
                 </div>
-              </div>
-              <div className={styles['profile-user-right']}>
-                <div className={styles['profile-item']}>
-                  Ngày sinh: {`${dataUser.dob_day}/${dataUser.dob_month}/${dataUser.dob_year}`}
+                <div className={styles['profile-user-right']}>
+                  <div className={styles['profile-item']}>
+                    Ngày sinh: {`${dataUser.dob_day}/${dataUser.dob_month}/${dataUser.dob_year}`}
+                  </div>
+                  <div className={styles['profile-item']}>
+                    Ngày tham gia: {moment(dataUser.createat).format('DD/MM/YYYY')}
+                  </div>
+                  <div className={styles['profile-item']}>Địa chỉ: {dataUser.address}</div>
                 </div>
-                <div className={styles['profile-item']}>
-                  Ngày tham gia: {moment(dataUser.createat).format('DD/MM/YYYY')}
-                </div>
-                <div className={styles['profile-item']}>Địa chỉ: {dataUser.address}</div>
               </div>
             </div>
-          </div>
+          ) : (
+            <div className={styles['detail-profile']}>
+              <Skeleton rows={3} />
+            </div>
+          )}
           <div className={styles['edit-form']}>
             <div className={`${styles['edit-form-left']} text-form`}>
               {this.state['item-editing'] === 1 ? (
