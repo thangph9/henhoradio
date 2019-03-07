@@ -125,10 +125,12 @@ class AdvancedProfile extends Component {
     if (this.state.listQuestion === v) {
       this.setState({
         listQuestion: undefined,
+        editing: false,
       });
     } else {
       this.setState({
         listQuestion: v,
+        editing: true,
       });
     }
   }
@@ -138,6 +140,7 @@ class AdvancedProfile extends Component {
     this.setState({
       [`question-number-${element}`]: value,
       listQuestion: undefined,
+      editing: false,
     });
   }
 
@@ -257,7 +260,10 @@ class AdvancedProfile extends Component {
                           </div>
                         </div>
                       ) : (
-                        <div className={styles['form-edit-item']}>
+                        <div
+                          className={styles['form-edit-item']}
+                          style={listQuestion === element + 1 ? { zIndex: 3 } : {}}
+                        >
                           <div
                             onClick={() => this.handleClickListQuestion(element + 1)}
                             className={styles['question-item']}

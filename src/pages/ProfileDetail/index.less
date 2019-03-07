@@ -132,9 +132,7 @@
 .list-question-hidden {
   width: 100%;
   position: absolute;
-  z-index: 2;
-  max-height: 245px;
-  overflow-y: scroll;
+  z-index: 3;
   border-radius: 5px;
   &::-webkit-scrollbar {
     width: 0 !important;
@@ -148,6 +146,9 @@
   font-size: 18px;
   font-weight: 600;
   cursor: pointer;
+  &:hover {
+    background: #f3f5f9;
+  }
 }
 .answer-title {
   font-size: 18px;
