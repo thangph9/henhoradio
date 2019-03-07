@@ -1,3 +1,5 @@
+/* eslint-disable react/no-array-index-key */
+/* eslint-disable arrow-body-style */
 /* eslint-disable dot-notation */
 /* eslint-disable no-undef */
 /* eslint-disable no-plusplus */
@@ -5,15 +7,12 @@
 /* eslint-disable react/destructuring-assignment */
 /* eslint-disable react/sort-comp */
 import React, { Component } from 'react';
-import Debounce from 'lodash-decorators/debounce';
-import Bind from 'lodash-decorators/bind';
 import moment from 'moment';
 import { connect } from 'dva';
 import { Table, Icon, Input, Button, Skeleton } from 'antd';
 import styles from './index.less';
 
 const { TextArea } = Input;
-const getWindowWidth = () => window.innerWidth || document.documentElement.clientWidth;
 @connect(({ profile, loading, authentication }) => ({
   profile,
   loading: loading.effects['profile/fetchAdvanced'],
@@ -24,10 +23,11 @@ class AdvancedProfile extends Component {
     super(props);
     this.state = {
       operationkey: 'tab1',
-      stepDirection: 'horizontal',
       editing: false,
       list: [],
-      'item-editing': 0,
+      'item-editing': undefined,
+      groupQuestion: [],
+      listQuestion: undefined,
     };
     this.columns = [
       {
@@ -59,34 +59,13 @@ class AdvancedProfile extends Component {
     dispatch({
       type: 'authentication/getuser',
     });
-    this.setStepDirection();
-    window.addEventListener('resize', this.setStepDirection, { passive: true });
   }
 
-  componentWillUnmount() {
-    window.removeEventListener('resize', this.setStepDirection);
-    this.setStepDirection.cancel();
-  }
+  componentWillUnmount() {}
 
   onOperationTabChange = key => {
     this.setState({ operationkey: key });
   };
-
-  @Bind()
-  @Debounce(200)
-  setStepDirection() {
-    const { stepDirection } = this.state;
-    const w = getWindowWidth();
-    if (stepDirection !== 'vertical' && w <= 576) {
-      this.setState({
-        stepDirection: 'vertical',
-      });
-    } else if (stepDirection !== 'horizontal' && w > 576) {
-      this.setState({
-        stepDirection: 'horizontal',
-      });
-    }
-  }
 
   componentWillReceiveProps(nextProps) {
     if (this.props.authentication.getuser !== nextProps.authentication.getuser) {
@@ -99,6 +78,13 @@ class AdvancedProfile extends Component {
           },
           () => {
             const { title, question } = this.state;
+            const arrGroup = [];
+            question.forEach(element => {
+              arrGroup.push(element.groupid);
+            });
+            this.setState({
+              groupQuestion: Array.from(new Set(arrGroup)).sort(),
+            });
             const arr = [];
             for (let i = 0; i < title.length; i++) {
               for (let j = 0; j < question.length; j++) {
@@ -107,7 +93,7 @@ class AdvancedProfile extends Component {
                   obj.question_id = question[j].question_id;
                   obj.title = title[i].title;
                   obj.answer = question[j].answer;
-
+                  obj.groupid = question[j].groupid;
                   arr.push(obj);
                 }
               }
@@ -130,13 +116,33 @@ class AdvancedProfile extends Component {
 
   handleTestButton() {
     this.setState({
-      'item-editing': 0,
+      'item-editing': undefined,
       editing: false,
     });
   }
 
+  handleClickListQuestion(v) {
+    if (this.state.listQuestion === v) {
+      this.setState({
+        listQuestion: undefined,
+      });
+    } else {
+      this.setState({
+        listQuestion: v,
+      });
+    }
+  }
+
+  handleClickQuestionItem(element, value) {
+    console.log(element, value);
+    this.setState({
+      [`question-number-${element}`]: value,
+      listQuestion: undefined,
+    });
+  }
+
   render() {
-    const { dataUser, list } = this.state;
+    const { dataUser, list, groupQuestion, listQuestion } = this.state;
     const dataTable = [];
     list.forEach((v, i) => {
       const productTable = {};
@@ -172,377 +178,275 @@ class AdvancedProfile extends Component {
               </div>
             </div>
           ) : (
-            <div className={styles['detail-profile']}>
-              <Skeleton rows={3} />
+            <div style={{ paddingTop: '40px' }}>
+              <div style={{ background: '#fff', padding: '15px', borderRadius: '5px' }}>
+                <Skeleton rows={3} />
+              </div>
             </div>
           )}
           <div className={styles['edit-form']}>
             <div className={`${styles['edit-form-left']} text-form`}>
-              {this.state['item-editing'] === 1 ? (
-                <div>
-                  <div className={`${styles['form-edit-item']} ${styles['essay-editing']}`}>
-                    <div className={styles['question-item']}>
-                      <div className={styles['theme-question']}>About me</div>
-                      <span className={styles['question-title']}>
-                        Favorite thing about the place I live
-                      </span>
+              {dataUser ? (
+                groupQuestion.map(element => {
+                  return (
+                    <div key={element}>
+                      {this.state['item-editing'] && this.state['item-editing'] === element + 1 ? (
+                        <div>
+                          <div className={`${styles['form-edit-item']} ${styles['essay-editing']}`}>
+                            <div className={styles['question-item']}>
+                              <div className={styles['theme-question']}>
+                                <span>Nhóm câu hỏi số {element}</span>
+                              </div>
+                              <span className={styles['question-title']}>
+                                {list.filter(e => {
+                                  return e.groupid === element;
+                                }).length > 0 &&
+                                  list.filter(e => {
+                                    return e.groupid === element;
+                                  })[
+                                    this.state[`question-number-${element}`] !== undefined
+                                      ? this.state[`question-number-${element}`]
+                                      : 0
+                                  ].title}
+                              </span>
+                            </div>
+                            <div
+                              className={`${styles['answer-item']} answer-item ${
+                                styles['active-editing']
+                              }`}
+                            >
+                              <TextArea
+                                style={{ fontSize: '18px', color: 'black', fontWeight: 600 }}
+                                rows={8}
+                                defaultValue={
+                                  list.filter(e => {
+                                    return e.groupid === element;
+                                  }).length > 0 &&
+                                  list
+                                    .filter(e => {
+                                      return e.groupid === element;
+                                    })
+                                    [
+                                      this.state[`question-number-${element}`] !== undefined
+                                        ? this.state[`question-number-${element}`]
+                                        : 0
+                                    ].answer.toString()
+                                }
+                              />
+                            </div>
+                          </div>
+                          <div className={styles['button-editing']}>
+                            <Button
+                              onClick={() => this.handleTestButton()}
+                              style={{ marginRight: '5px' }}
+                              shape="round"
+                              size="large"
+                            >
+                              CANCER
+                            </Button>
+                            <Button
+                              onClick={() => this.handleTestButton()}
+                              style={{ marginRight: '5px' }}
+                              type="primary"
+                              shape="round"
+                              icon="check"
+                              size="large"
+                            >
+                              SAVE
+                            </Button>
+                          </div>
+                        </div>
+                      ) : (
+                        <div className={styles['form-edit-item']}>
+                          <div
+                            onClick={() => this.handleClickListQuestion(element + 1)}
+                            className={styles['question-item']}
+                          >
+                            <div className={styles['theme-question']}>
+                              <span>Nhóm câu hỏi số {element}</span>
+                              {listQuestion && listQuestion === element + 1 ? (
+                                <Icon type="caret-up" />
+                              ) : (
+                                <Icon type="caret-down" />
+                              )}
+                            </div>
+                            <span className={styles['question-title']}>
+                              {list.filter(e => {
+                                return e.groupid === element;
+                              }).length > 0 &&
+                                list.filter(e => {
+                                  return e.groupid === element;
+                                })[
+                                  this.state[`question-number-${element}`] !== undefined
+                                    ? this.state[`question-number-${element}`]
+                                    : 0
+                                ].title}
+                            </span>
+                          </div>
+                          {listQuestion && listQuestion === element + 1 && (
+                            <div className={styles['list-question-hidden']}>
+                              {list
+                                .filter(e => {
+                                  return e.groupid === element;
+                                })
+                                .map((v, i) => {
+                                  return (
+                                    <div
+                                      onClick={() => this.handleClickQuestionItem(element, i)}
+                                      key={i}
+                                      className={styles['item-question']}
+                                    >
+                                      {v.title}
+                                    </div>
+                                  );
+                                })}
+                            </div>
+                          )}
+                          <div className={`${styles['answer-item']} answer-item`}>
+                            <span className={styles['answer-title']}>
+                              {list.filter(e => {
+                                return e.groupid === element;
+                              }).length > 0 &&
+                                list
+                                  .filter(e => {
+                                    return e.groupid === element;
+                                  })
+                                  [
+                                    this.state[`question-number-${element}`] !== undefined
+                                      ? this.state[`question-number-${element}`]
+                                      : 0
+                                  ].answer.toString()}
+                            </span>
+                            <Icon style={{ fontSize: '20px', color: '#0500BE' }} type="edit" />
+                            <span
+                              onClick={() => this.handleClickEdit(element + 1)}
+                              className={styles['edit-button']}
+                            >
+                              Edit
+                            </span>
+                          </div>
+                        </div>
+                      )}
                     </div>
-                    <div
-                      className={`${styles['answer-item']} answer-item ${styles['active-editing']}`}
-                    >
-                      <TextArea
-                        style={{ fontSize: '18px', color: 'black', fontWeight: 600 }}
-                        rows={8}
-                        defaultValue="Beautiful"
-                      />
-                    </div>
-                  </div>
-                  <div className={styles['button-editing']}>
-                    <Button
-                      onClick={() => this.handleTestButton()}
-                      style={{ marginRight: '5px' }}
-                      shape="round"
-                      size="large"
-                    >
-                      CANCER
-                    </Button>
-                    <Button
-                      onClick={() => this.handleTestButton()}
-                      style={{ marginRight: '5px' }}
-                      type="primary"
-                      shape="round"
-                      icon="check"
-                      size="large"
-                    >
-                      SAVE
-                    </Button>
-                  </div>
-                </div>
+                  );
+                })
               ) : (
-                <div className={styles['form-edit-item']}>
-                  <div className={styles['question-item']}>
-                    <div className={styles['theme-question']}>About me</div>
-                    <span className={styles['question-title']}>
-                      Favorite thing about the place I live
-                    </span>
-                  </div>
-                  <div className={`${styles['answer-item']} answer-item`}>
-                    <span className={styles['answer-title']}>Beautiful</span>
-                    <Icon style={{ fontSize: '20px', color: '#0500BE' }} type="edit" />
-                    <span onClick={() => this.handleClickEdit(1)} className={styles['edit-button']}>
-                      Edit
-                    </span>
-                  </div>
-                </div>
-              )}
-              {this.state['item-editing'] === 2 ? (
                 <div>
-                  <div className={`${styles['form-edit-item']} ${styles['essay-editing']}`}>
-                    <div className={styles['question-item']}>
-                      <div className={styles['theme-question']}>About me</div>
-                      <span className={styles['question-title']}>
-                        Favorite thing about the place I live
-                      </span>
-                    </div>
-                    <div
-                      className={`${styles['answer-item']} answer-item ${styles['active-editing']}`}
-                    >
-                      <TextArea
-                        style={{ fontSize: '18px', color: 'black', fontWeight: 600 }}
-                        rows={8}
-                        defaultValue="Beautiful"
-                      />
-                    </div>
+                  <div className={styles['form-edit-item']}>
+                    <Skeleton rows={3} />
                   </div>
-                  <div className={styles['button-editing']}>
-                    <Button
-                      onClick={() => this.handleTestButton()}
-                      style={{ marginRight: '5px' }}
-                      shape="round"
-                      size="large"
-                    >
-                      CANCER
-                    </Button>
-                    <Button
-                      onClick={() => this.handleTestButton()}
-                      style={{ marginRight: '5px' }}
-                      type="primary"
-                      shape="round"
-                      icon="check"
-                      size="large"
-                    >
-                      SAVE
-                    </Button>
+                  <div className={styles['form-edit-item']}>
+                    <Skeleton rows={3} />
                   </div>
-                </div>
-              ) : (
-                <div className={styles['form-edit-item']}>
-                  <div className={styles['question-item']}>
-                    <div className={styles['theme-question']}>About me</div>
-                    <span className={styles['question-title']}>
-                      Favorite thing about the place I live
-                    </span>
+                  <div className={styles['form-edit-item']}>
+                    <Skeleton rows={3} />
                   </div>
-                  <div className={`${styles['answer-item']} answer-item`}>
-                    <span className={styles['answer-title']}>Beautiful</span>
-                    <Icon style={{ fontSize: '20px', color: '#0500BE' }} type="edit" />
-                    <span onClick={() => this.handleClickEdit(2)} className={styles['edit-button']}>
-                      Edit
-                    </span>
-                  </div>
-                </div>
-              )}
-              {this.state['item-editing'] === 3 ? (
-                <div>
-                  <div className={`${styles['form-edit-item']} ${styles['essay-editing']}`}>
-                    <div className={styles['question-item']}>
-                      <div className={styles['theme-question']}>About me</div>
-                      <span className={styles['question-title']}>
-                        Favorite thing about the place I live
-                      </span>
-                    </div>
-                    <div
-                      className={`${styles['answer-item']} answer-item ${styles['active-editing']}`}
-                    >
-                      <TextArea
-                        style={{ fontSize: '18px', color: 'black', fontWeight: 600 }}
-                        rows={8}
-                        defaultValue="Beautiful"
-                      />
-                    </div>
-                  </div>
-                  <div className={styles['button-editing']}>
-                    <Button
-                      onClick={() => this.handleTestButton()}
-                      style={{ marginRight: '5px' }}
-                      shape="round"
-                      size="large"
-                    >
-                      CANCER
-                    </Button>
-                    <Button
-                      onClick={() => this.handleTestButton()}
-                      style={{ marginRight: '5px' }}
-                      type="primary"
-                      shape="round"
-                      icon="check"
-                      size="large"
-                    >
-                      SAVE
-                    </Button>
-                  </div>
-                </div>
-              ) : (
-                <div className={styles['form-edit-item']}>
-                  <div className={styles['question-item']}>
-                    <div className={styles['theme-question']}>About me</div>
-                    <span className={styles['question-title']}>
-                      Favorite thing about the place I live
-                    </span>
-                  </div>
-                  <div className={`${styles['answer-item']} answer-item`}>
-                    <span className={styles['answer-title']}>Beautiful</span>
-                    <Icon style={{ fontSize: '20px', color: '#0500BE' }} type="edit" />
-                    <span onClick={() => this.handleClickEdit(3)} className={styles['edit-button']}>
-                      Edit
-                    </span>
-                  </div>
-                </div>
-              )}
-              {this.state['item-editing'] === 4 ? (
-                <div>
-                  <div className={`${styles['form-edit-item']} ${styles['essay-editing']}`}>
-                    <div className={styles['question-item']}>
-                      <div className={styles['theme-question']}>About me</div>
-                      <span className={styles['question-title']}>
-                        Favorite thing about the place I live
-                      </span>
-                    </div>
-                    <div
-                      className={`${styles['answer-item']} answer-item ${styles['active-editing']}`}
-                    >
-                      <TextArea
-                        style={{ fontSize: '18px', color: 'black', fontWeight: 600 }}
-                        rows={8}
-                        defaultValue="Beautiful"
-                      />
-                    </div>
-                  </div>
-                  <div className={styles['button-editing']}>
-                    <Button
-                      onClick={() => this.handleTestButton()}
-                      style={{ marginRight: '5px' }}
-                      shape="round"
-                      size="large"
-                    >
-                      CANCER
-                    </Button>
-                    <Button
-                      onClick={() => this.handleTestButton()}
-                      style={{ marginRight: '5px' }}
-                      type="primary"
-                      shape="round"
-                      icon="check"
-                      size="large"
-                    >
-                      SAVE
-                    </Button>
-                  </div>
-                </div>
-              ) : (
-                <div className={styles['form-edit-item']}>
-                  <div className={styles['question-item']}>
-                    <div className={styles['theme-question']}>About me</div>
-                    <span className={styles['question-title']}>
-                      Favorite thing about the place I live
-                    </span>
-                  </div>
-                  <div className={`${styles['answer-item']} answer-item`}>
-                    <span className={styles['answer-title']}>Beautiful</span>
-                    <Icon style={{ fontSize: '20px', color: '#0500BE' }} type="edit" />
-                    <span onClick={() => this.handleClickEdit(4)} className={styles['edit-button']}>
-                      Edit
-                    </span>
-                  </div>
-                </div>
-              )}
-              {this.state['item-editing'] === 5 ? (
-                <div>
-                  <div className={`${styles['form-edit-item']} ${styles['essay-editing']}`}>
-                    <div className={styles['question-item']}>
-                      <div className={styles['theme-question']}>About me</div>
-                      <span className={styles['question-title']}>
-                        Favorite thing about the place I live
-                      </span>
-                    </div>
-                    <div
-                      className={`${styles['answer-item']} answer-item ${styles['active-editing']}`}
-                    >
-                      <TextArea
-                        style={{ fontSize: '18px', color: 'black', fontWeight: 600 }}
-                        rows={8}
-                        defaultValue="Beautiful"
-                      />
-                    </div>
-                  </div>
-                  <div className={styles['button-editing']}>
-                    <Button
-                      onClick={() => this.handleTestButton()}
-                      style={{ marginRight: '5px' }}
-                      shape="round"
-                      size="large"
-                    >
-                      CANCER
-                    </Button>
-                    <Button
-                      onClick={() => this.handleTestButton()}
-                      style={{ marginRight: '5px' }}
-                      type="primary"
-                      shape="round"
-                      icon="check"
-                      size="large"
-                    >
-                      SAVE
-                    </Button>
-                  </div>
-                </div>
-              ) : (
-                <div className={styles['form-edit-item']}>
-                  <div className={styles['question-item']}>
-                    <div className={styles['theme-question']}>About me</div>
-                    <span className={styles['question-title']}>
-                      Favorite thing about the place I live
-                    </span>
-                  </div>
-                  <div className={`${styles['answer-item']} answer-item`}>
-                    <span className={styles['answer-title']}>Beautiful</span>
-                    <Icon style={{ fontSize: '20px', color: '#0500BE' }} type="edit" />
-                    <span onClick={() => this.handleClickEdit(5)} className={styles['edit-button']}>
-                      Edit
-                    </span>
+                  <div className={styles['form-edit-item']}>
+                    <Skeleton rows={3} />
                   </div>
                 </div>
               )}
             </div>
             <div style={{ flexBasis: '5%' }} />
-            <div className={styles['edit-form-right']}>
-              <div className={styles['right-item']}>
-                <div className={styles['left-icon']}>
-                  <Icon style={{ fontSize: '25px', cursor: 'pointer' }} type="profile" />
+            {dataUser ? (
+              <div className={styles['edit-form-right']}>
+                <div className={styles['right-item']}>
+                  <div className={styles['left-icon']}>
+                    <Icon style={{ fontSize: '25px', cursor: 'pointer' }} type="profile" />
+                  </div>
+                  <div className={styles['right-body']}>
+                    <div className={styles['right-title']}>Straight, Man,Single</div>
+                    <div className={styles['right-content']}>
+                      <span className={styles['item-span']}>Add</span>
+                      <span className={styles['item-span']}>,</span>
+                      <span className={styles['item-span']}>Relation type</span>
+                      <span className={styles['item-span']}>,</span>
+                      <span className={styles['item-span']}>Height</span>
+                      <span className={styles['item-span']}>,</span>
+                      <span className={styles['item-span']}>
+                        Body type{' '}
+                        <Icon style={{ color: '#0500BE', marginLeft: '5px' }} type="edit" />
+                      </span>
+                    </div>
+                  </div>
                 </div>
-                <div className={styles['right-body']}>
-                  <div className={styles['right-title']}>Straight, Man,Single</div>
-                  <div className={styles['right-content']}>
-                    <span className={styles['item-span']}>Add</span>
-                    <span className={styles['item-span']}>,</span>
-                    <span className={styles['item-span']}>Relation type</span>
-                    <span className={styles['item-span']}>,</span>
-                    <span className={styles['item-span']}>Height</span>
-                    <span className={styles['item-span']}>,</span>
-                    <span className={styles['item-span']}>
-                      Body type <Icon style={{ color: '#0500BE', marginLeft: '5px' }} type="edit" />
-                    </span>
+                <div className={styles['right-item']}>
+                  <div className={styles['left-icon']}>
+                    <Icon style={{ fontSize: '25px', cursor: 'pointer' }} type="profile" />
+                  </div>
+                  <div className={styles['right-body']}>
+                    <div className={styles['right-title']}>Straight, Man,Single</div>
+                    <div className={styles['right-content']}>
+                      <span className={styles['item-span']}>Add</span>
+                      <span className={styles['item-span']}>,</span>
+                      <span className={styles['item-span']}>Relation type</span>
+                      <span className={styles['item-span']}>,</span>
+                      <span className={styles['item-span']}>Height</span>
+                      <span className={styles['item-span']}>,</span>
+                      <span className={styles['item-span']}>
+                        Body type{' '}
+                        <Icon style={{ color: '#0500BE', marginLeft: '5px' }} type="edit" />
+                      </span>
+                    </div>
+                  </div>
+                </div>
+                <div className={styles['right-item']}>
+                  <div className={styles['left-icon']}>
+                    <Icon style={{ fontSize: '25px', cursor: 'pointer' }} type="profile" />
+                  </div>
+                  <div className={styles['right-body']}>
+                    <div className={styles['right-title']}>Straight, Man,Single</div>
+                    <div className={styles['right-content']}>
+                      <span className={styles['item-span']}>Add</span>
+                      <span className={styles['item-span']}>,</span>
+                      <span className={styles['item-span']}>Relation type</span>
+                      <span className={styles['item-span']}>,</span>
+                      <span className={styles['item-span']}>Height</span>
+                      <span className={styles['item-span']}>,</span>
+                      <span className={styles['item-span']}>
+                        Body type{' '}
+                        <Icon style={{ color: '#0500BE', marginLeft: '5px' }} type="edit" />
+                      </span>
+                    </div>
+                  </div>
+                </div>
+                <div className={styles['right-item']}>
+                  <div className={styles['left-icon']}>
+                    <Icon style={{ fontSize: '25px', cursor: 'pointer' }} type="profile" />
+                  </div>
+                  <div className={styles['right-body']}>
+                    <div className={styles['right-title']}>Straight, Man,Single</div>
+                    <div className={styles['right-content']}>
+                      <span className={styles['item-span']}>Add</span>
+                      <span className={styles['item-span']}>,</span>
+                      <span className={styles['item-span']}>Relation type</span>
+                      <span className={styles['item-span']}>,</span>
+                      <span className={styles['item-span']}>Height</span>
+                      <span className={styles['item-span']}>,</span>
+                      <span className={styles['item-span']}>
+                        Body type{' '}
+                        <Icon style={{ color: '#0500BE', marginLeft: '5px' }} type="edit" />
+                      </span>
+                    </div>
                   </div>
                 </div>
               </div>
-              <div className={styles['right-item']}>
-                <div className={styles['left-icon']}>
-                  <Icon style={{ fontSize: '25px', cursor: 'pointer' }} type="profile" />
+            ) : (
+              <div style={{ flexBasis: '40%' }} className="skeleton">
+                <div>
+                  <Skeleton rows={3} />
                 </div>
-                <div className={styles['right-body']}>
-                  <div className={styles['right-title']}>Straight, Man,Single</div>
-                  <div className={styles['right-content']}>
-                    <span className={styles['item-span']}>Add</span>
-                    <span className={styles['item-span']}>,</span>
-                    <span className={styles['item-span']}>Relation type</span>
-                    <span className={styles['item-span']}>,</span>
-                    <span className={styles['item-span']}>Height</span>
-                    <span className={styles['item-span']}>,</span>
-                    <span className={styles['item-span']}>
-                      Body type <Icon style={{ color: '#0500BE', marginLeft: '5px' }} type="edit" />
-                    </span>
-                  </div>
+                <div>
+                  <Skeleton rows={3} />
+                </div>
+                <div>
+                  <Skeleton rows={3} />
+                </div>
+                <div>
+                  <Skeleton rows={3} />
                 </div>
               </div>
-              <div className={styles['right-item']}>
-                <div className={styles['left-icon']}>
-                  <Icon style={{ fontSize: '25px', cursor: 'pointer' }} type="profile" />
-                </div>
-                <div className={styles['right-body']}>
-                  <div className={styles['right-title']}>Straight, Man,Single</div>
-                  <div className={styles['right-content']}>
-                    <span className={styles['item-span']}>Add</span>
-                    <span className={styles['item-span']}>,</span>
-                    <span className={styles['item-span']}>Relation type</span>
-                    <span className={styles['item-span']}>,</span>
-                    <span className={styles['item-span']}>Height</span>
-                    <span className={styles['item-span']}>,</span>
-                    <span className={styles['item-span']}>
-                      Body type <Icon style={{ color: '#0500BE', marginLeft: '5px' }} type="edit" />
-                    </span>
-                  </div>
-                </div>
-              </div>
-              <div className={styles['right-item']}>
-                <div className={styles['left-icon']}>
-                  <Icon style={{ fontSize: '25px', cursor: 'pointer' }} type="profile" />
-                </div>
-                <div className={styles['right-body']}>
-                  <div className={styles['right-title']}>Straight, Man,Single</div>
-                  <div className={styles['right-content']}>
-                    <span className={styles['item-span']}>Add</span>
-                    <span className={styles['item-span']}>,</span>
-                    <span className={styles['item-span']}>Relation type</span>
-                    <span className={styles['item-span']}>,</span>
-                    <span className={styles['item-span']}>Height</span>
-                    <span className={styles['item-span']}>,</span>
-                    <span className={styles['item-span']}>
-                      Body type <Icon style={{ color: '#0500BE', marginLeft: '5px' }} type="edit" />
-                    </span>
-                  </div>
-                </div>
-              </div>
-            </div>
+            )}
           </div>
           <Table
             style={{ marginTop: '30px' }}

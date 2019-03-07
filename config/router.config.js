@@ -32,6 +32,7 @@ export default [
       { path: '/home', redirect: './newfeed' },
       { path: '/home/newfeed', component: './HomePage/NewFeed' },
       { path: '/home/profile', component: './ProfileDetail' },
+      { path: '/home/otherprofile', component: './ProfileDatailWithOther' },
       {
         component: '404',
       },
