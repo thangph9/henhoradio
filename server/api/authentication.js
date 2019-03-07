@@ -1,3 +1,4 @@
+/* eslint-disable no-shadow */
 /* eslint-disable camelcase */
 /* eslint-disable prefer-const */
 /* eslint-disable no-unused-vars */
@@ -452,7 +453,6 @@ function getUser(req, res) {
   let result = {};
   let legit = {};
   const token = req.headers['x-access-token'];
-  // eslint-disable-next-line no-shadow
   let question = [];
   let title = [];
   let message = '';
@@ -491,6 +491,7 @@ function getUser(req, res) {
             callback(err, null);
           });
         } catch (error) {
+          console.log(error);
           res.send({ status: 'error' });
         }
       },
@@ -503,7 +504,10 @@ function getUser(req, res) {
               if (results && results.length > 0) {
                 let arr = [];
                 results.forEach(element => {
-                  arr.push(element);
+                  let a = JSON.stringify(element);
+                  let obj = JSON.parse(a);
+                  obj.groupid = Math.floor(Math.random() * 4);
+                  arr.push(obj);
                 });
                 question = arr;
               } else {
