@@ -197,16 +197,29 @@
   display: flex;
   justify-content: flex-end;
 }
-@media screen and (max-width: @screen-sm) {
-  .stepDescription {
-    left: 8px;
+@media (min-width: 576px) {
+  .container {
+    max-width: 540px;
   }
 }
+@media (min-width: 768px) {
+  .container {
+    max-width: 720px;
+  }
+}
+
 @media (min-width: 992px) {
   .container {
     max-width: 960px;
   }
 }
+
+@media (max-width: 767px) {
+  .edit-form {
+    flex-direction: column;
+  }
+}
+
 @media (max-width: 575px) {
   .profile-user-left {
     padding-left: 5px;
@@ -214,7 +227,11 @@
   .profile-user-right {
     padding-left: 5px;
   }
+  .detail-profile {
+    flex-direction: column;
+  }
 }
+
 @keyframes editItem {
   from {
     max-height: 0.0000000001px;
