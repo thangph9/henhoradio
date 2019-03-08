@@ -1,3 +1,7 @@
+/* eslint-disable class-methods-use-this */
+/* eslint-disable react/jsx-closing-tag-location */
+/* eslint-disable react/jsx-indent-props */
+/* eslint-disable react/jsx-indent */
 /* eslint-disable react/no-array-index-key */
 /* eslint-disable arrow-body-style */
 /* eslint-disable dot-notation */
@@ -22,9 +26,10 @@ class AdvancedProfile extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      operationkey: 'tab1',
       editing: false,
       list: [],
+      question: [],
+      title: [],
       'item-editing': undefined,
       groupQuestion: [],
       listQuestion: undefined,
@@ -61,12 +66,6 @@ class AdvancedProfile extends Component {
     });
   }
 
-  componentWillUnmount() {}
-
-  onOperationTabChange = key => {
-    this.setState({ operationkey: key });
-  };
-
   componentWillReceiveProps(nextProps) {
     if (this.props.authentication.getuser !== nextProps.authentication.getuser) {
       if (nextProps.authentication.getuser.status === 'ok') {
@@ -75,15 +74,16 @@ class AdvancedProfile extends Component {
             dataUser: nextProps.authentication.getuser.data,
             question: nextProps.authentication.getuser.question,
             title: nextProps.authentication.getuser.title,
+            group: nextProps.authentication.getuser.group,
           },
           () => {
             const { title, question } = this.state;
             const arrGroup = [];
-            question.forEach(element => {
-              arrGroup.push(element.groupid);
+            title.forEach(element => {
+              arrGroup.push(element.group_id);
             });
             this.setState({
-              groupQuestion: Array.from(new Set(arrGroup)).sort(),
+              groupQuestion: Array.from(new Set(arrGroup)),
             });
             const arr = [];
             for (let i = 0; i < title.length; i++) {
@@ -93,7 +93,7 @@ class AdvancedProfile extends Component {
                   obj.question_id = question[j].question_id;
                   obj.title = title[i].title;
                   obj.answer = question[j].answer;
-                  obj.groupid = question[j].groupid;
+                  obj.groupid = title[i].group_id;
                   arr.push(obj);
                 }
               }
@@ -136,12 +136,43 @@ class AdvancedProfile extends Component {
   }
 
   handleClickQuestionItem(element, value) {
-    console.log(element, value);
     this.setState({
       [`question-number-${element}`]: value,
       listQuestion: undefined,
       editing: false,
     });
+  }
+
+  getTitleGroup(value) {
+    const { group } = this.state;
+    return group.find(e => {
+      return e.group_id === value;
+    }).title;
+  }
+
+  checkQuestionAnswered(value) {
+    const { list } = this.state;
+    const question = list.find(element => {
+      return element.question_id === value;
+    });
+    if (question) return true;
+    return false;
+  }
+
+  getTitleQuestion(value) {
+    const { title } = this.state;
+    return title.find(element => {
+      return element.question_id === value;
+    }).title;
+  }
+
+  getAnswerQuestion(value) {
+    const { list } = this.state;
+    const answer = list.find(element => {
+      return element.question_id === value;
+    });
+    if (answer) return answer.answer.toString();
+    return '';
   }
 
   render() {
@@ -193,24 +224,24 @@ class AdvancedProfile extends Component {
                 groupQuestion.map(element => {
                   return (
                     <div key={element}>
-                      {this.state['item-editing'] && this.state['item-editing'] === element + 1 ? (
+                      {this.state['item-editing'] && this.state['item-editing'] === element ? (
                         <div>
                           <div className={`${styles['form-edit-item']} ${styles['essay-editing']}`}>
                             <div className={styles['question-item']}>
                               <div className={styles['theme-question']}>
-                                <span>Nhóm câu hỏi số {element}</span>
+                                <span> {this.getTitleGroup(element)}</span>
                               </div>
                               <span className={styles['question-title']}>
-                                {list.filter(e => {
-                                  return e.groupid === element;
+                                {this.state.title.filter(e => {
+                                  return e.group_id === element;
                                 }).length > 0 &&
-                                  list.filter(e => {
-                                    return e.groupid === element;
-                                  })[
-                                    this.state[`question-number-${element}`] !== undefined
-                                      ? this.state[`question-number-${element}`]
-                                      : 0
-                                  ].title}
+                                  this.getTitleQuestion(
+                                    !this.state[`question-number-${element}`]
+                                      ? this.state.title.filter(e => {
+                                          return e.group_id === element;
+                                        })[0].question_id
+                                      : this.state[`question-number-${element}`]
+                                  )}
                               </span>
                             </div>
                             <div
@@ -222,18 +253,16 @@ class AdvancedProfile extends Component {
                                 style={{ fontSize: '18px', color: 'black', fontWeight: 600 }}
                                 rows={8}
                                 defaultValue={
-                                  list.filter(e => {
-                                    return e.groupid === element;
+                                  this.state.title.filter(e => {
+                                    return e.group_id === element;
                                   }).length > 0 &&
-                                  list
-                                    .filter(e => {
-                                      return e.groupid === element;
-                                    })
-                                    [
-                                      this.state[`question-number-${element}`] !== undefined
-                                        ? this.state[`question-number-${element}`]
-                                        : 0
-                                    ].answer.toString()
+                                  this.getAnswerQuestion(
+                                    !this.state[`question-number-${element}`]
+                                      ? this.state.title.filter(e => {
+                                          return e.group_id === element;
+                                        })[0].question_id
+                                      : this.state[`question-number-${element}`]
+                                  )
                                 }
                               />
                             </div>
@@ -262,75 +291,84 @@ class AdvancedProfile extends Component {
                       ) : (
                         <div
                           className={styles['form-edit-item']}
-                          style={listQuestion === element + 1 ? { zIndex: 3 } : {}}
+                          style={listQuestion === element ? { zIndex: 3 } : {}}
                         >
                           <div
-                            onClick={() => this.handleClickListQuestion(element + 1)}
+                            onClick={() => this.handleClickListQuestion(element)}
                             className={styles['question-item']}
                           >
                             <div className={styles['theme-question']}>
-                              <span>Nhóm câu hỏi số {element}</span>
-                              {listQuestion && listQuestion === element + 1 ? (
+                              <span> {this.getTitleGroup(element)}</span>
+                              {listQuestion && listQuestion === element ? (
                                 <Icon type="caret-up" />
                               ) : (
                                 <Icon type="caret-down" />
                               )}
                             </div>
                             <span className={styles['question-title']}>
-                              {list.filter(e => {
-                                return e.groupid === element;
+                              {this.state.title.filter(e => {
+                                return e.group_id === element;
                               }).length > 0 &&
-                                list.filter(e => {
-                                  return e.groupid === element;
-                                })[
-                                  this.state[`question-number-${element}`] !== undefined
-                                    ? this.state[`question-number-${element}`]
-                                    : 0
-                                ].title}
+                                this.getTitleQuestion(
+                                  !this.state[`question-number-${element}`]
+                                    ? this.state.title.filter(e => {
+                                        return e.group_id === element;
+                                      })[0].question_id
+                                    : this.state[`question-number-${element}`]
+                                )}
                             </span>
                           </div>
-                          {listQuestion && listQuestion === element + 1 && (
+                          {listQuestion && listQuestion === element && (
                             <div className={styles['list-question-hidden']}>
-                              {list
+                              {this.state.title
                                 .filter(e => {
-                                  return e.groupid === element;
+                                  return e.group_id === element;
                                 })
                                 .map((v, i) => {
                                   return (
                                     <div
-                                      onClick={() => this.handleClickQuestionItem(element, i)}
+                                      onClick={() =>
+                                        this.handleClickQuestionItem(element, v.question_id)
+                                      }
                                       key={i}
                                       className={styles['item-question']}
                                     >
-                                      {v.title}
+                                      <span>{v.title}</span>
+                                      {!this.checkQuestionAnswered(v.question_id) && (
+                                        <span className={styles['chua-hoan-thien']}>
+                                          Chưa hoàn thiện
+                                        </span>
+                                      )}
                                     </div>
                                   );
                                 })}
                             </div>
                           )}
-                          <div className={`${styles['answer-item']} answer-item`}>
-                            <span className={styles['answer-title']}>
-                              {list.filter(e => {
-                                return e.groupid === element;
-                              }).length > 0 &&
-                                list
-                                  .filter(e => {
-                                    return e.groupid === element;
-                                  })
-                                  [
-                                    this.state[`question-number-${element}`] !== undefined
-                                      ? this.state[`question-number-${element}`]
-                                      : 0
-                                  ].answer.toString()}
-                            </span>
-                            <Icon style={{ fontSize: '20px', color: '#0500BE' }} type="edit" />
-                            <span
-                              onClick={() => this.handleClickEdit(element + 1)}
-                              className={styles['edit-button']}
-                            >
-                              Edit
-                            </span>
-                          </div>
+                          {listQuestion && listQuestion === element ? (
+                            ''
+                          ) : (
+                            <div className={`${styles['answer-item']} answer-item`}>
+                              <span className={styles['answer-title']}>
+                                {this.state.title.filter(e => {
+                                  return e.group_id === element;
+                                }).length > 0 &&
+                                  this.getAnswerQuestion(
+                                    !this.state[`question-number-${element}`]
+                                      ? this.state.title.filter(e => {
+                                          return e.group_id === element;
+                                        })[0].question_id
+                                      : this.state[`question-number-${element}`]
+                                  )}
+                              </span>
+                              <Icon style={{ fontSize: '20px', color: '#0500BE' }} type="edit" />
+                              <span
+                                onClick={() => this.handleClickEdit(element)}
+                                className={styles['edit-button']}
+                              >
+                                Edit
+                              </span>
+                            </div>
+                          )}
                         </div>
                       )}
                     </div>
@@ -454,12 +492,24 @@ class AdvancedProfile extends Component {
               </div>
             )}
           </div>
-          <Table
-            style={{ marginTop: '30px' }}
-            columns={this.columns}
-            dataSource={dataTable}
-            bordered
-          />
+          {dataUser ? (
+            <div>
+              {this.state.question.length === 0 ? (
+                ''
+              ) : (
+                <Table
+                  style={{ marginTop: '30px' }}
+                  columns={this.columns}
+                  dataSource={dataTable}
+                  bordered
+                />
+              )}
+            </div>
+          ) : (
+            <div style={{ background: '#fff', borderRadius: '5px', marginTop: '20px' }}>
+              <Skeleton rows={6} />
+            </div>
+          )}
         </div>
       </div>
     );

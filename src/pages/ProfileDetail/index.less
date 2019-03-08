@@ -131,7 +131,7 @@
 }
 .list-question-hidden {
   width: 100%;
-  position: absolute;
+  margin-bottom: 50px;
   z-index: 3;
   border-radius: 5px;
   &::-webkit-scrollbar {
@@ -140,6 +140,9 @@
 }
 .item-question {
   background: #fff;
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
   padding: 27px 20px;
   border-bottom: 1px solid #f3f5f9;
   color: black;
@@ -149,6 +152,14 @@
   &:hover {
     background: #f3f5f9;
   }
+}
+.chua-hoan-thien {
+  font-size: 10px;
+  padding: 2px 8px;
+  border: 1px solid #ff9061;
+  border-radius: 15px;
+  background: #ff9061;
+  color: #fff;
 }
 .answer-title {
   font-size: 18px;

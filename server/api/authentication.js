@@ -455,6 +455,7 @@ function getUser(req, res) {
   const token = req.headers['x-access-token'];
   let question = [];
   let title = [];
+  let group = [];
   let message = '';
   const verifyOptions = {
     expiresIn: '30d',
@@ -506,7 +507,7 @@ function getUser(req, res) {
                 results.forEach(element => {
                   let a = JSON.stringify(element);
                   let obj = JSON.parse(a);
-                  obj.groupid = Math.floor(Math.random() * 4);
+
                   arr.push(obj);
                 });
                 question = arr;
@@ -522,16 +523,33 @@ function getUser(req, res) {
       },
       callback => {
         try {
-          models.instance.question.find({}, { select: ['title', 'question_id'] }, function(
-            err,
-            results
-          ) {
+          models.instance.question.find(
+            {},
+            { select: ['title', 'question_id', 'group_id'] },
+            function(err, results) {
+              if (results && results.length > 0) {
+                let arr = [];
+                results.forEach(element => {
+                  arr.push(element);
+                });
+                title = arr;
+              }
+              callback(err, null);
+            }
+          );
+        } catch (error) {
+          callback(error);
+        }
+      },
+      callback => {
+        try {
+          models.instance.group.find({}, function(err, results) {
             if (results && results.length > 0) {
               let arr = [];
               results.forEach(element => {
                 arr.push(element);
               });
-              title = arr;
+              group = arr;
             }
             callback(err, null);
           });
@@ -542,10 +560,11 @@ function getUser(req, res) {
     ],
     err => {
       if (err) return res.json({ status: 'error' });
-      return res.json({ status: 'ok', data: result, question, message, title });
+      return res.json({ status: 'ok', data: result, question, message, title, group });
     }
   );
 }
+
 router.post('/register', register);
 router.post('/login', login);
 router.post('/sendanswer', sendAnswer);
