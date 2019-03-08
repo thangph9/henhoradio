@@ -6,6 +6,7 @@ import {
   questionRegister,
   sendAnswer,
   getUser,
+  updateProfileQuestion,
 } from '@/services/api';
 import { setAuthority } from '@/utils/authority';
 import { reloadAuthorized } from '@/utils/Authorized';
@@ -21,6 +22,7 @@ export default {
     questionregister: {},
     sendanswer: {},
     getuser: {},
+    updateprofilequestion: {},
   },
   effects: {
     *login({ payload }, { call, put }) {
@@ -83,6 +85,13 @@ export default {
         payload: response || {},
       });
     },
+    *updateprofilequestion({ payload }, { call, put }) {
+      const response = yield call(updateProfileQuestion, payload);
+      yield put({
+        type: 'updateProfileQuestion',
+        payload: response || {},
+      });
+    },
   },
 
   reducers: {
@@ -128,6 +137,12 @@ export default {
       return {
         ...state,
         getuser: action.payload,
+      };
+    },
+    updateProfileQuestion(state, action) {
+      return {
+        ...state,
+        updateprofilequestion: action.payload,
       };
     },
   },

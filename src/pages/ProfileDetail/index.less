@@ -59,6 +59,7 @@
   width: 100%;
   margin-right: auto;
   margin-left: auto;
+  padding-bottom: 200px;
 }
 .profile-user {
   padding-top: 40px;
@@ -169,10 +170,24 @@
 }
 .active-editing {
   padding-left: 20px;
+  display: flex;
+  justify-content: center;
   animation: editItem 0.4s ease-out 1;
   -moz-animation: editItem 0.4s ease-out 1;
   -webkit-animation: editItem 0.4s ease-out 1;
   -o-animation: editItem 0.4s ease-out 1;
+}
+.radio-question {
+  padding: 20px;
+  &:first-child {
+    border-bottom: 0.5px solid;
+    border-color: rgba(157, 186, 242, 0.5);
+  }
+}
+.radio-group {
+  flex-grow: 1;
+  margin: -20px;
+  background: #4c7bd9;
 }
 .edit-button {
   cursor: pointer;

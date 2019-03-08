@@ -523,20 +523,16 @@ function getUser(req, res) {
       },
       callback => {
         try {
-          models.instance.question.find(
-            {},
-            { select: ['title', 'question_id', 'group_id'] },
-            function(err, results) {
-              if (results && results.length > 0) {
-                let arr = [];
-                results.forEach(element => {
-                  arr.push(element);
-                });
-                title = arr;
-              }
-              callback(err, null);
+          models.instance.question.find({}, function(err, results) {
+            if (results && results.length > 0) {
+              let arr = [];
+              results.forEach(element => {
+                arr.push(element);
+              });
+              title = arr;
             }
-          );
+            callback(err, null);
+          });
         } catch (error) {
           callback(error);
         }
@@ -564,11 +560,66 @@ function getUser(req, res) {
     }
   );
 }
-
+function updateProfileQuestion(req, res) {
+  let legit = {};
+  const token = req.headers['x-access-token'];
+  let PARAM_IS_VALID = {};
+  const verifyOptions = {
+    expiresIn: '30d',
+    algorithm: ['RS256'],
+  };
+  async.series(
+    [
+      callback => {
+        PARAM_IS_VALID.question_id = req.body.question_id;
+        PARAM_IS_VALID.answer = req.body.answer;
+        callback(null, null);
+      },
+      callback => {
+        try {
+          legit = jwt.verify(token, jwtpublic, verifyOptions);
+          callback(null, null);
+        } catch (e) {
+          callback(e, null);
+          return res.send({
+            status: 'error',
+            message: 'Sai ma token',
+          });
+        }
+      },
+      callback => {
+        let update_object = {
+          answer: PARAM_IS_VALID.answer,
+        };
+        let object = update_object;
+        models.instance.profile.update(
+          {
+            user_id: models.uuidFromString(legit.userid),
+            question_id: models.uuidFromString(PARAM_IS_VALID.question_id),
+          },
+          object,
+          { if_exist: true },
+          function(err) {
+            if (err) {
+              console.log(err);
+              callback(err, null);
+            }
+            callback(null, null);
+          }
+        );
+      },
+    ],
+    err => {
+      if (err) return res.json({ status: 'error' });
+      return res.json({ status: 'ok', timeline: new Date().getTime() });
+    }
+  );
+}
 router.post('/register', register);
 router.post('/login', login);
 router.post('/sendanswer', sendAnswer);
 router.post('/getuser', getUser);
 router.post('/question', question);
+router.post('/updateprofilequestion', updateProfileQuestion);
 router.get('/checkuser/:phone', checkUser);
 module.exports = router;
