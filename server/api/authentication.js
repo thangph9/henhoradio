@@ -1,3 +1,4 @@
+/* eslint-disable no-undef-init */
 /* eslint-disable no-shadow */
 /* eslint-disable camelcase */
 /* eslint-disable prefer-const */
@@ -615,11 +616,181 @@ function updateProfileQuestion(req, res) {
     }
   );
 }
+function getAllUsers(req, res) {
+  let result = {};
+  let legit = {};
+  const token = req.headers['x-access-token'];
+  const verifyOptions = {
+    expiresIn: '30d',
+    algorithm: ['RS256'],
+  };
+  async.series(
+    [
+      callback => {
+        try {
+          legit = jwt.verify(token, jwtpublic, verifyOptions);
+          callback(null, null);
+        } catch (e) {
+          return res.json({
+            status: 'error',
+            message: 'Sai ma token',
+          });
+        }
+      },
+      callback => {
+        try {
+          models.instance.users.find({}, function(err, user) {
+            if (user && user.length > 0) {
+              let a = JSON.stringify(user);
+              let b = JSON.parse(a);
+              let arr = [];
+              b.forEach(element => {
+                let obj = {};
+                obj.user_id = element.user_id;
+                obj.fullname = element.fullname;
+                obj.gender = element.gender;
+                obj.age = new Date().getFullYear() - element.dob_year;
+                obj.address = element.address;
+                obj.avatar = element.avatar;
+                arr.push(obj);
+              });
+              arr = arr.filter(element => element.user_id !== legit.userid);
+              result = arr;
+            } else {
+              return res.json({
+                status: 'error',
+                message: 'Không tìm thấy tài khoản này',
+              });
+            }
+            callback(err, null);
+          });
+        } catch (error) {
+          console.log(error);
+          res.send({ status: 'error' });
+        }
+      },
+    ],
+    err => {
+      if (err) return res.json({ status: 'error' });
+      return res.json({ status: 'ok', data: result });
+    }
+  );
+}
+function getUserById(req, res) {
+  let result = {};
+  let legit = {};
+  let question = [];
+  let title = [];
+  let group = [];
+  let message = '';
+  let userid = undefined;
+  let params = req.body;
+  async.series(
+    [
+      function(callback) {
+        try {
+          let id = params.id;
+          let uuid = `${id.substring(0, 8)}-${id.substring(8, 12)}-${id.substring(
+            12,
+            16
+          )}-${id.substring(16, 20)}-${id.substring(20, 32)}`;
+          userid = models.uuidFromString(uuid);
+        } catch (e) {
+          return res.json({ status: 'error1' });
+        }
+        callback(null, null);
+      },
+      callback => {
+        try {
+          models.instance.users.find({ user_id: userid }, {}, function(err, user) {
+            if (user && user.length > 0) {
+              result = user[0];
+            } else {
+              return res.json({
+                status: 'error',
+                message: 'Không tìm thấy tài khoản này',
+              });
+            }
+            callback(err, null);
+          });
+        } catch (error) {
+          console.log(error);
+          res.send({ status: 'error' });
+        }
+      },
+      callback => {
+        try {
+          models.instance.profile.find(
+            { user_id: userid },
+            { select: ['question_id', 'answer'] },
+            function(err, results) {
+              if (results && results.length > 0) {
+                let arr = [];
+                results.forEach(element => {
+                  let a = JSON.stringify(element);
+                  let obj = JSON.parse(a);
+                  arr.push(obj);
+                });
+                question = arr;
+              } else {
+                message = 'Chưa trả lời câu hỏi';
+              }
+              callback(err, null);
+            }
+          );
+        } catch (error) {
+          callback(error, null);
+        }
+      },
+      callback => {
+        try {
+          models.instance.question.find({}, function(err, results) {
+            if (results && results.length > 0) {
+              let arr = [];
+              results.forEach(element => {
+                arr.push(element);
+              });
+              title = arr;
+            }
+            callback(err, null);
+          });
+        } catch (error) {
+          callback(error);
+        }
+      },
+      callback => {
+        try {
+          models.instance.group.find({}, function(err, results) {
+            if (results && results.length > 0) {
+              let arr = [];
+              results.forEach(element => {
+                arr.push(element);
+              });
+              group = arr;
+            }
+            callback(err, null);
+          });
+        } catch (error) {
+          callback(error);
+        }
+      },
+    ],
+    err => {
+      if (err) {
+        console.log(err);
+        return res.json({ status: 'error' });
+      }
+      return res.json({ status: 'ok', data: result, question, message, title, group });
+    }
+  );
+}
 router.post('/register', register);
 router.post('/login', login);
 router.post('/sendanswer', sendAnswer);
 router.post('/getuser', getUser);
 router.post('/question', question);
+router.post('/getuserbyid', getUserById);
+router.post('/getallusers', getAllUsers);
 router.post('/updateprofilequestion', updateProfileQuestion);
 router.get('/checkuser/:phone', checkUser);
 module.exports = router;
