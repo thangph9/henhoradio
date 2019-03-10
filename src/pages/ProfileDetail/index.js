@@ -459,6 +459,7 @@ class AdvancedProfile extends Component {
                               {this.state.type === '3' && (
                                 <div className={`${styles['radio-group']} radio-form`}>
                                   <CheckboxGroup
+                                    style={{ width: '100%' }}
                                     onChange={e => this.handleChangeCheckEditing(e)}
                                     defaultValue={this.getAnswerQuestion(
                                       !this.state[`question-number-${element}`]
