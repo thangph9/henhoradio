@@ -447,6 +447,7 @@ class AdvancedProfile extends Component {
                                               fontSize: '18px',
                                               display: 'flex',
                                               alignItems: 'center',
+                                              padding: '20px',
                                             }}
                                             value={v}
                                           >
@@ -480,6 +481,7 @@ class AdvancedProfile extends Component {
                                               fontSize: '18px',
                                               display: 'flex',
                                               alignItems: 'center',
+                                              padding: '20px',
                                             }}
                                             value={v}
                                           >
