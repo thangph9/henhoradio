@@ -36,6 +36,7 @@ class Question extends PureComponent {
     statusArrea: true,
     valueInput: '',
     arrAnswer: [],
+    validateText: true,
   };
 
   componentDidMount() {
@@ -132,9 +133,21 @@ class Question extends PureComponent {
   }
 
   handleChangeInput(e, q) {
-    this.setState({
-      valueInput: e.target.value,
-    });
+    if (
+      /^[a-zA-ZàáạảãâầấậẩẫăằắặẳẵèéẹẻẽêềếệểễìíịỉĩòóọỏõôồốộổỗơờớợởỡùúụủũưừứựửữỳýỵỷỹđÀÁẠẢÃÂẦẤẬẨẪĂẰẮẶẲẴÈÉẸẺẼÊỀẾỆỂỄÌÍỊỈĨÒÓỌỎÕÔỒỐỘỔỖƠỜỚỢỞỠÙÚỤỦŨƯỪỨỰỬỮỲÝỴỶỸĐ][a-zA-Z0-9 .,-àáạảãâầấậẩẫăằắặẳẵèéẹẻẽêềếệểễìíịỉĩòóọỏõôồốộổỗơờớợởỡùúụủũưừứựửữỳýỵỷỹđÀÁẠẢÃÂẦẤẬẨẪĂẰẮẶẲẴÈÉẸẺẼÊỀẾỆỂỄÌÍỊỈĨÒÓỌỎÕÔỒỐỘỔỖƠỜỚỢỞỠÙÚỤỦŨƯỪỨỰỬỮỲÝỴỶỸĐ!@()]{0,200}$/.test(
+        e.target.value
+      ) === true
+    ) {
+      this.setState({
+        valueInput: e.target.value,
+        validateText: true,
+      });
+    } else {
+      this.setState({
+        valueInput: e.target.value,
+        validateText: false,
+      });
+    }
   }
 
   handleClickSkip() {
@@ -221,16 +234,27 @@ class Question extends PureComponent {
                   )}
                 {dataQuestion[currentQuestion].type === '1' && (
                   <div style={{ padding: '30px' }} className={styles['list-answer']}>
-                    <TextArea
-                      value={valueInput}
-                      onChange={e =>
-                        this.handleChangeInput(e, dataQuestion[currentQuestion].question_id)
-                      }
-                      placeholder="Do something..."
-                      rows={3}
-                    />
+                    <div>
+                      <TextArea
+                        value={valueInput}
+                        onChange={e =>
+                          this.handleChangeInput(e, dataQuestion[currentQuestion].question_id)
+                        }
+                        placeholder="Do something..."
+                        rows={3}
+                      />
+                    </div>
                   </div>
                 )}
+              </div>
+              <div
+                style={
+                  this.state.validateText
+                    ? { opacity: 0 }
+                    : { opacity: 1, color: 'red', fontSize: '14px' }
+                }
+              >
+                Ký tự không hợp lệ hoặc quá dài !
               </div>
               {currentQuestion > 0 ? (
                 <div onClick={() => this.handleClickPrev()} className={styles['prev-check']}>
@@ -252,7 +276,9 @@ class Question extends PureComponent {
                 </div>
               )}
               {((dataQuestion[currentQuestion].type === '3' && arrCheck.length > 0) ||
-                (dataQuestion[currentQuestion].type === '1' && valueInput.length > 0)) &&
+                (dataQuestion[currentQuestion].type === '1' &&
+                  valueInput.length > 0 &&
+                  this.state.validateText)) &&
               currentQuestion + 1 < dataQuestion.length ? (
                 <div
                   onClick={() =>

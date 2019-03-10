@@ -44,6 +44,7 @@ class AdvancedProfile extends Component {
       'item-editing': undefined,
       groupQuestion: [],
       listQuestion: undefined,
+      validateText: true,
     };
     this.columns = [
       {
@@ -188,6 +189,7 @@ class AdvancedProfile extends Component {
       editing: false,
       questionEditing: undefined,
       submitEnable: true,
+      validateText: true,
     });
   }
 
@@ -319,17 +321,25 @@ class AdvancedProfile extends Component {
   }
 
   handleChangeTexeAria(e) {
-    if (e.target.value.length > 0) {
+    const value = e.target.value;
+    if (
+      value.length > 0 &&
+      /^[a-zA-ZàáạảãâầấậẩẫăằắặẳẵèéẹẻẽêềếệểễìíịỉĩòóọỏõôồốộổỗơờớợởỡùúụủũưừứựửữỳýỵỷỹđÀÁẠẢÃÂẦẤẬẨẪĂẰẮẶẲẴÈÉẸẺẼÊỀẾỆỂỄÌÍỊỈĨÒÓỌỎÕÔỒỐỘỔỖƠỜỚỢỞỠÙÚỤỦŨƯỪỨỰỬỮỲÝỴỶỸĐ][a-zA-Z0-9 .,-àáạảãâầấậẩẫăằắặẳẵèéẹẻẽêềếệểễìíịỉĩòóọỏõôồốộổỗơờớợởỡùúụủũưừứựửữỳýỵỷỹđÀÁẠẢÃÂẦẤẬẨẪĂẰẮẶẲẴÈÉẸẺẼÊỀẾỆỂỄÌÍỊỈĨÒÓỌỎÕÔỒỐỘỔỖƠỜỚỢỞỠÙÚỤỦŨƯỪỨỰỬỮỲÝỴỶỸĐ!@()]{0,200}$/.test(
+        value
+      ) === true
+    ) {
       this.setState({
         submitEnable: false,
+        validateText: true,
       });
     } else {
       this.setState({
         submitEnable: true,
+        validateText: false,
       });
     }
     this.setState({
-      arrTextAria: [e.target.value],
+      arrTextAria: [value],
     });
   }
 
@@ -408,23 +418,33 @@ class AdvancedProfile extends Component {
                               }`}
                             >
                               {this.state.type === '1' && (
-                                <TextArea
-                                  onChange={e => this.handleChangeTexeAria(e)}
-                                  style={{ fontSize: '18px', color: 'black', fontWeight: 600 }}
-                                  rows={8}
-                                  defaultValue={
-                                    this.state.title.filter(e => {
-                                      return e.group_id === element;
-                                    }).length > 0 &&
-                                    this.getAnswerQuestion(
-                                      !this.state[`question-number-${element}`]
-                                        ? this.state.title.filter(e => {
-                                            return e.group_id === element;
-                                          })[0].question_id
-                                        : this.state[`question-number-${element}`]
-                                    )
-                                  }
-                                />
+                                <div style={{ width: '100%' }}>
+                                  <TextArea
+                                    onChange={e => this.handleChangeTexeAria(e)}
+                                    style={{ fontSize: '18px', color: 'black', fontWeight: 600 }}
+                                    rows={8}
+                                    defaultValue={
+                                      this.state.title.filter(e => {
+                                        return e.group_id === element;
+                                      }).length > 0 &&
+                                      this.getAnswerQuestion(
+                                        !this.state[`question-number-${element}`]
+                                          ? this.state.title.filter(e => {
+                                              return e.group_id === element;
+                                            })[0].question_id
+                                          : this.state[`question-number-${element}`]
+                                      )
+                                    }
+                                  />
+                                  <div
+                                    className={styles['validate-text']}
+                                    style={
+                                      this.state.validateText ? { opacity: 0 } : { opacity: 1 }
+                                    }
+                                  >
+                                    Ký tự không hợp lệ hoặc quá dài !
+                                  </div>
+                                </div>
                               )}
                               {this.state.type === '2' && (
                                 <div className={`${styles['radio-group']} radio-form`}>
