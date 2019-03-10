@@ -22,6 +22,7 @@ import styles from './index.less';
 
 const { TextArea } = Input;
 const RadioGroup = Radio.Group;
+const CheckboxGroup = Checkbox.Group;
 @connect(({ profile, loading, authentication }) => ({
   profile,
   loading: loading.effects['profile/fetchAdvanced'],
@@ -292,7 +293,7 @@ class AdvancedProfile extends Component {
   }
 
   handleChangeCheckEditing(e) {
-    if (e.length > 0) {
+    if (e.length > 0 || (e[0] !== undefined && e[0] === '')) {
       this.setState({
         submitEnable: false,
       });
@@ -301,9 +302,18 @@ class AdvancedProfile extends Component {
         submitEnable: true,
       });
     }
-    this.setState({
-      arrCheck: e,
-    });
+
+    if (e[0] !== undefined && e[0] === '') {
+      e.splice(0, 1);
+      console.log(e);
+      this.setState({
+        arrCheck: e,
+      });
+    } else {
+      this.setState({
+        arrCheck: e,
+      });
+    }
   }
 
   handleChangeTexeAria(e) {
@@ -448,7 +458,7 @@ class AdvancedProfile extends Component {
                               )}
                               {this.state.type === '3' && (
                                 <div className={`${styles['radio-group']} radio-form`}>
-                                  <Checkbox.Group
+                                  <CheckboxGroup
                                     onChange={e => this.handleChangeCheckEditing(e)}
                                     defaultValue={this.getAnswerQuestion(
                                       !this.state[`question-number-${element}`]
@@ -475,7 +485,7 @@ class AdvancedProfile extends Component {
                                         </div>
                                       );
                                     })}
-                                  </Checkbox.Group>
+                                  </CheckboxGroup>
                                 </div>
                               )}
                             </div>

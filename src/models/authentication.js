@@ -32,7 +32,7 @@ export default {
     *login({ payload }, { call, put }) {
       const response = yield call(loginAccount, payload);
       if (response.status === 'ok') {
-        if (!localStorage.token) localStorage.token = JSON.stringify(response.token);
+        localStorage.token = JSON.stringify(response.token);
         setAuthority(['member']);
         reloadAuthorized();
         yield put({
