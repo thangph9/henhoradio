@@ -125,10 +125,12 @@ class AdvancedProfile extends Component {
         this.props.authentication.updateprofilequestion.timeline !==
           nextProps.authentication.updateprofilequestion.timeline
       ) {
-        message.success('Thay đổi dữ liệu thành công');
         this.props.dispatch({
           type: 'authentication/getuser',
         });
+        setTimeout(() => {
+          message.success('Thay đổi dữ liệu thành công');
+        }, 500);
       }
     }
   }
