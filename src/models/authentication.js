@@ -7,6 +7,8 @@ import {
   sendAnswer,
   getUser,
   updateProfileQuestion,
+  getAllUsers,
+  getUserById,
 } from '@/services/api';
 import { setAuthority } from '@/utils/authority';
 import { reloadAuthorized } from '@/utils/Authorized';
@@ -23,6 +25,8 @@ export default {
     sendanswer: {},
     getuser: {},
     updateprofilequestion: {},
+    getallusers: {},
+    getuserbyid: {},
   },
   effects: {
     *login({ payload }, { call, put }) {
@@ -85,6 +89,20 @@ export default {
         payload: response || {},
       });
     },
+    *getuserbyid({ payload }, { call, put }) {
+      const response = yield call(getUserById, payload);
+      yield put({
+        type: 'getUserById',
+        payload: response || {},
+      });
+    },
+    *getallusers({ payload }, { call, put }) {
+      const response = yield call(getAllUsers, payload);
+      yield put({
+        type: 'getAllUsers',
+        payload: response || {},
+      });
+    },
     *updateprofilequestion({ payload }, { call, put }) {
       const response = yield call(updateProfileQuestion, payload);
       yield put({
@@ -143,6 +161,18 @@ export default {
       return {
         ...state,
         updateprofilequestion: action.payload,
+      };
+    },
+    getAllUsers(state, action) {
+      return {
+        ...state,
+        getallusers: action.payload,
+      };
+    },
+    getUserById(state, action) {
+      return {
+        ...state,
+        getuserbyid: action.payload,
       };
     },
   },
