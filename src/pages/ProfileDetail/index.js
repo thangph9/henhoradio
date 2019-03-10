@@ -539,6 +539,18 @@ class AdvancedProfile extends Component {
                                   return e.group_id === element;
                                 })
                                 .map((v, i) => {
+                                  if (
+                                    v.title ===
+                                    this.getTitleQuestion(
+                                      !this.state[`question-number-${element}`]
+                                        ? this.state.title.filter(e => {
+                                            return e.group_id === element;
+                                          })[0].question_id
+                                        : this.state[`question-number-${element}`]
+                                    )
+                                  ) {
+                                    return '';
+                                  }
                                   return (
                                     <div
                                       onClick={() =>
@@ -563,6 +575,7 @@ class AdvancedProfile extends Component {
                           ) : (
                             <div className={`${styles['answer-item']} answer-item`}>
                               <span className={styles['answer-title']}>
+                                Trả lời:{' '}
                                 {this.state.title.filter(e => {
                                   return e.group_id === element;
                                 }).length > 0 &&

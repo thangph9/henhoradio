@@ -30,9 +30,9 @@ export default [
     authority: ['member'],
     routes: [
       { path: '/home', redirect: './newfeed' },
-      { path: '/home/newfeed', component: './HomePage/NewFeed' },
+      { path: '/home/newfeed', component: './HomePage' },
       { path: '/home/profile', component: './ProfileDetail' },
-      { path: '/home/otherprofile', component: './ProfileDatailWithOther' },
+      { path: '/home/other-profile', component: './ProfileDatailWithOther' },
       {
         component: '404',
       },

@@ -156,6 +156,19 @@ export async function getUser(params) {
     headers: { 'X-Access-Token': JSON.parse(localStorage.getItem('token')) },
   });
 }
+export async function getUserById(params) {
+  return request('/api/authentication/getuserbyid', {
+    method: 'POST',
+    body: params,
+  });
+}
+export async function getAllUsers(params) {
+  return request('/api/authentication/getallusers', {
+    method: 'POST',
+    body: params,
+    headers: { 'X-Access-Token': JSON.parse(localStorage.getItem('token')) },
+  });
+}
 export async function updateProfileQuestion(params) {
   return request('/api/authentication/updateprofilequestion', {
     method: 'POST',
