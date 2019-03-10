@@ -302,7 +302,7 @@ class AdvancedProfile extends Component {
       });
     }
     this.setState({
-      arrCheck: [e],
+      arrCheck: e,
     });
   }
 
