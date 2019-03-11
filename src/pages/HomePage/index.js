@@ -109,56 +109,43 @@ class NewFeed extends PureComponent {
                         key={i}
                         className={styles['cart-item']}
                       >
-                        <Card
-                          hoverable
-                          style={{ width: '100%', borderRadius: '5px' }}
-                          cover={
-                            v.avatar ? (
-                              <img alt="example" src={v.avatar} />
-                            ) : (
-                              <Avatar
-                                shape="square"
-                                icon="user"
-                                style={{
-                                  margin: '20px auto',
-                                  width: '85%',
-                                  backgroundSize: '600% 600%',
-                                  backgroundColor: '#87d068',
-                                  animation: 'card-loading 1.4s ease infinite',
-                                }}
-                                size={240}
+                        <div className={styles['box-cart']}>
+                          <div className={styles['image-cart']}>
+                            <span>
+                              <img
+                                className={styles['img-item']}
+                                style={{ width: '100%' }}
+                                src="https://www.limestone.edu/sites/default/files/user.png"
+                                alt="img"
                               />
-                            )
-                          }
-                        >
-                          <Meta title={`${v.fullname},${v.age}`} description={`${v.address}`} />
-                        </Card>
+                            </span>
+                          </div>
+                          <div className={styles['title-cart']}>
+                            <span className={styles['detail']}>{v.fullname}</span>
+                            <span className={styles['detail']}>,</span>
+                            <span className={styles['detail']}>{v.age}</span>
+                            <span className={styles['detail']}>{v.address}</span>
+                          </div>
+                        </div>
                       </Link>
                     );
                   })
                 : preLoad.map((v, i) => {
                     return (
                       <div key={i} className={styles['cart-item']}>
-                        <Card
-                          hoverable
-                          style={{ width: '100%', borderRadius: '5px' }}
-                          cover={
-                            <Avatar
-                              shape="square"
-                              style={{
-                                margin: '0 auto',
-                                marginTop: '20px',
-                                backgroundSize: '600% 600%',
-                                background:
-                                  'linear-gradient(90deg, rgba(207, 216, 220, 0.2), rgba(207, 216, 220, 0.4), rgba(207, 216, 220, 0.2))',
-                                animation: 'card-loading 1.4s ease infinite',
-                              }}
-                              size={120}
+                        <div className={styles['image-cart']}>
+                          <span>
+                            <img
+                              className={styles['img-item']}
+                              style={{ width: '100%' }}
+                              src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRRfrBguCWgYZbzZNuUieTET8xYdUatKh5t1emOHuR3Cjzihd82"
+                              alt="img"
                             />
-                          }
-                        >
-                          <Skeleton />
-                        </Card>
+                          </span>
+                        </div>
+                        <div style={{ background: '#fff' }}>
+                          <Skeleton paragraph={{ rows: 2 }} active />
+                        </div>
                       </div>
                     );
                   })}
