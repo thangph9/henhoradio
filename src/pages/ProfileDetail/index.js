@@ -19,14 +19,16 @@ import moment from 'moment';
 import { connect } from 'dva';
 import { Table, Icon, Input, Button, Skeleton, Radio, Checkbox, message } from 'antd';
 import styles from './index.less';
+import { MenuMobile } from '@/components/GlobalHeader';
 
 const { TextArea } = Input;
 const RadioGroup = Radio.Group;
 const CheckboxGroup = Checkbox.Group;
-@connect(({ profile, loading, authentication }) => ({
+@connect(({ profile, loading, authentication, myprops }) => ({
   profile,
   loading: loading.effects['profile/fetchAdvanced'],
   authentication,
+  myprops,
 }))
 class AdvancedProfile extends Component {
   constructor(props) {
@@ -75,6 +77,10 @@ class AdvancedProfile extends Component {
     const { dispatch } = this.props;
     dispatch({
       type: 'authentication/getuser',
+    });
+    this.props.dispatch({
+      type: 'myprops/menu_header_mobile',
+      payload: false,
     });
   }
 
@@ -354,50 +360,208 @@ class AdvancedProfile extends Component {
       productTable.answer = v.answer.toString();
       dataTable.push(productTable);
     });
-    return (
-      <div className={styles['profile']}>
-        <div className={styles.container}>
-          {this.state.editing && <div className={styles['editing']} />}
-          {dataUser ? (
-            <div className={styles['profile-user']}>
-              <div className={styles['detail-profile']}>
-                <div className={styles['profile-user-left']}>
-                  <div className={styles['profile-item']}>Tên tài khoản:{dataUser.phone}</div>
-                  <div className={styles['profile-item']}>Tên đầy đủ: {dataUser.fullname}</div>
-                  <div className={styles['profile-item']}>
-                    Giới tính :{dataUser.gender === 'male' ? 'Nam' : 'Nữ'}
+    if (!this.props.myprops.menu_header_mobile) {
+      return (
+        <div className={styles['profile']}>
+          <div className={styles.container}>
+            {this.state.editing && <div className={styles['editing']} />}
+            {dataUser ? (
+              <div className={styles['profile-user']}>
+                <div className={styles['detail-profile']}>
+                  <div className={styles['profile-user-left']}>
+                    <div className={styles['profile-item']}>Tên tài khoản:{dataUser.phone}</div>
+                    <div className={styles['profile-item']}>Tên đầy đủ: {dataUser.fullname}</div>
+                    <div className={styles['profile-item']}>
+                      Giới tính :{dataUser.gender === 'male' ? 'Nam' : 'Nữ'}
+                    </div>
+                  </div>
+                  <div className={styles['profile-user-right']}>
+                    <div className={styles['profile-item']}>
+                      Ngày sinh: {`${dataUser.dob_day}/${dataUser.dob_month}/${dataUser.dob_year}`}
+                    </div>
+                    <div className={styles['profile-item']}>
+                      Ngày tham gia: {moment(dataUser.createat).format('DD/MM/YYYY')}
+                    </div>
+                    <div className={styles['profile-item']}>Địa chỉ: {dataUser.address}</div>
                   </div>
                 </div>
-                <div className={styles['profile-user-right']}>
-                  <div className={styles['profile-item']}>
-                    Ngày sinh: {`${dataUser.dob_day}/${dataUser.dob_month}/${dataUser.dob_year}`}
-                  </div>
-                  <div className={styles['profile-item']}>
-                    Ngày tham gia: {moment(dataUser.createat).format('DD/MM/YYYY')}
-                  </div>
-                  <div className={styles['profile-item']}>Địa chỉ: {dataUser.address}</div>
+              </div>
+            ) : (
+              <div style={{ paddingTop: '40px' }}>
+                <div style={{ background: '#fff', padding: '15px', borderRadius: '5px' }}>
+                  <Skeleton rows={3} />
                 </div>
               </div>
-            </div>
-          ) : (
-            <div style={{ paddingTop: '40px' }}>
-              <div style={{ background: '#fff', padding: '15px', borderRadius: '5px' }}>
-                <Skeleton rows={3} />
-              </div>
-            </div>
-          )}
-          <div className={styles['edit-form']}>
-            <div className={`${styles['edit-form-left']} text-form`}>
-              {dataUser ? (
-                groupQuestion.map(element => {
-                  return (
-                    <div key={element}>
-                      {this.state['item-editing'] && this.state['item-editing'] === element ? (
-                        <div>
-                          <div className={`${styles['form-edit-item']} ${styles['essay-editing']}`}>
-                            <div className={styles['question-item']}>
+            )}
+            <div className={styles['edit-form']}>
+              <div className={`${styles['edit-form-left']} text-form`}>
+                {dataUser ? (
+                  groupQuestion.map(element => {
+                    return (
+                      <div key={element}>
+                        {this.state['item-editing'] && this.state['item-editing'] === element ? (
+                          <div>
+                            <div
+                              className={`${styles['form-edit-item']} ${styles['essay-editing']}`}
+                            >
+                              <div className={styles['question-item']}>
+                                <div className={styles['theme-question']}>
+                                  <span> {this.getTitleGroup(element)}</span>
+                                </div>
+                                <span className={styles['question-title']}>
+                                  {this.state.title.filter(e => {
+                                    return e.group_id === element;
+                                  }).length > 0 &&
+                                    this.getTitleQuestion(
+                                      !this.state[`question-number-${element}`]
+                                        ? this.state.title.filter(e => {
+                                            return e.group_id === element;
+                                          })[0].question_id
+                                        : this.state[`question-number-${element}`]
+                                    )}
+                                </span>
+                              </div>
+                              <div
+                                className={`${styles['answer-item']} answer-item ${
+                                  styles['active-editing']
+                                }`}
+                              >
+                                {this.state.type === '1' && (
+                                  <div style={{ width: '100%' }}>
+                                    <TextArea
+                                      onChange={e => this.handleChangeTexeAria(e)}
+                                      style={{ fontSize: '18px', color: 'black', fontWeight: 600 }}
+                                      rows={8}
+                                      defaultValue={
+                                        this.state.title.filter(e => {
+                                          return e.group_id === element;
+                                        }).length > 0 &&
+                                        this.getAnswerQuestion(
+                                          !this.state[`question-number-${element}`]
+                                            ? this.state.title.filter(e => {
+                                                return e.group_id === element;
+                                              })[0].question_id
+                                            : this.state[`question-number-${element}`]
+                                        )
+                                      }
+                                    />
+                                    <div
+                                      className={styles['validate-text']}
+                                      style={
+                                        this.state.validateText ? { opacity: 0 } : { opacity: 1 }
+                                      }
+                                    >
+                                      Ký tự không hợp lệ hoặc quá dài !
+                                    </div>
+                                  </div>
+                                )}
+                                {this.state.type === '2' && (
+                                  <div className={`${styles['radio-group']} radio-form`}>
+                                    <RadioGroup
+                                      onChange={e => this.handleChangeRadioEditing(e)}
+                                      defaultValue={this.getAnswerQuestion(
+                                        !this.state[`question-number-${element}`]
+                                          ? this.state.title.filter(e => {
+                                              return e.group_id === element;
+                                            })[0].question_id
+                                          : this.state[`question-number-${element}`]
+                                      )}
+                                    >
+                                      {this.state.questionEditing.answer.map((v, i) => {
+                                        return (
+                                          <div key={i} className={styles['radio-question']}>
+                                            <Radio
+                                              style={{
+                                                color: '#fff',
+                                                fontSize: '18px',
+                                                display: 'flex',
+                                                alignItems: 'center',
+                                                padding: '20px',
+                                              }}
+                                              value={v}
+                                            >
+                                              {v}
+                                            </Radio>
+                                          </div>
+                                        );
+                                      })}
+                                    </RadioGroup>
+                                  </div>
+                                )}
+                                {this.state.type === '3' && (
+                                  <div className={`${styles['radio-group']} radio-form`}>
+                                    <CheckboxGroup
+                                      style={{ width: '100%' }}
+                                      onChange={e => this.handleChangeCheckEditing(e)}
+                                      defaultValue={this.getAnswerQuestion(
+                                        !this.state[`question-number-${element}`]
+                                          ? this.state.title.filter(e => {
+                                              return e.group_id === element;
+                                            })[0].question_id
+                                          : this.state[`question-number-${element}`]
+                                      ).split(',')}
+                                    >
+                                      {this.state.questionEditing.answer.map((v, i) => {
+                                        return (
+                                          <div key={i} className={styles['radio-question']}>
+                                            <Checkbox
+                                              style={{
+                                                color: '#fff',
+                                                fontSize: '18px',
+                                                display: 'flex',
+                                                alignItems: 'center',
+                                                padding: '20px',
+                                              }}
+                                              value={v}
+                                            >
+                                              {v}
+                                            </Checkbox>
+                                          </div>
+                                        );
+                                      })}
+                                    </CheckboxGroup>
+                                  </div>
+                                )}
+                              </div>
+                            </div>
+                            <div className={styles['button-editing']}>
+                              <Button
+                                onClick={() => this.handleCancer()}
+                                style={{ marginRight: '5px' }}
+                                shape="round"
+                                size="large"
+                              >
+                                CANCER
+                              </Button>
+                              <Button
+                                disabled={this.state.submitEnable}
+                                onClick={() => this.handleSubmitEdit(this.state.questionEditing)}
+                                style={{ marginRight: '5px' }}
+                                type="primary"
+                                shape="round"
+                                icon="check"
+                                size="large"
+                              >
+                                SAVE
+                              </Button>
+                            </div>
+                          </div>
+                        ) : (
+                          <div
+                            className={styles['form-edit-item']}
+                            style={listQuestion === element ? { zIndex: 3 } : {}}
+                          >
+                            <div
+                              onClick={() => this.handleClickListQuestion(element)}
+                              className={styles['question-item']}
+                            >
                               <div className={styles['theme-question']}>
                                 <span> {this.getTitleGroup(element)}</span>
+                                {listQuestion && listQuestion === element ? (
+                                  <Icon type="caret-up" />
+                                ) : (
+                                  <Icon type="caret-down" />
+                                )}
                               </div>
                               <span className={styles['question-title']}>
                                 {this.state.title.filter(e => {
@@ -412,378 +576,225 @@ class AdvancedProfile extends Component {
                                   )}
                               </span>
                             </div>
-                            <div
-                              className={`${styles['answer-item']} answer-item ${
-                                styles['active-editing']
-                              }`}
-                            >
-                              {this.state.type === '1' && (
-                                <div style={{ width: '100%' }}>
-                                  <TextArea
-                                    onChange={e => this.handleChangeTexeAria(e)}
-                                    style={{ fontSize: '18px', color: 'black', fontWeight: 600 }}
-                                    rows={8}
-                                    defaultValue={
-                                      this.state.title.filter(e => {
-                                        return e.group_id === element;
-                                      }).length > 0 &&
-                                      this.getAnswerQuestion(
+                            {listQuestion && listQuestion === element && (
+                              <div className={styles['list-question-hidden']}>
+                                {this.state.title
+                                  .filter(e => {
+                                    return e.group_id === element;
+                                  })
+                                  .map((v, i) => {
+                                    if (
+                                      v.title ===
+                                      this.getTitleQuestion(
                                         !this.state[`question-number-${element}`]
                                           ? this.state.title.filter(e => {
                                               return e.group_id === element;
                                             })[0].question_id
                                           : this.state[`question-number-${element}`]
                                       )
+                                    ) {
+                                      return '';
                                     }
-                                  />
-                                  <div
-                                    className={styles['validate-text']}
-                                    style={
-                                      this.state.validateText ? { opacity: 0 } : { opacity: 1 }
-                                    }
-                                  >
-                                    Ký tự không hợp lệ hoặc quá dài !
-                                  </div>
-                                </div>
-                              )}
-                              {this.state.type === '2' && (
-                                <div className={`${styles['radio-group']} radio-form`}>
-                                  <RadioGroup
-                                    onChange={e => this.handleChangeRadioEditing(e)}
-                                    defaultValue={this.getAnswerQuestion(
+                                    return (
+                                      <div
+                                        onClick={() =>
+                                          this.handleClickQuestionItem(element, v.question_id)
+                                        }
+                                        key={i}
+                                        className={styles['item-question']}
+                                      >
+                                        <span>{v.title}</span>
+                                        {!this.checkQuestionAnswered(v.question_id) && (
+                                          <span className={styles['chua-hoan-thien']}>
+                                            Chưa hoàn thiện
+                                          </span>
+                                        )}
+                                      </div>
+                                    );
+                                  })}
+                              </div>
+                            )}
+                            {listQuestion && listQuestion === element ? (
+                              ''
+                            ) : (
+                              <div className={`${styles['answer-item']} answer-item`}>
+                                <span className={styles['answer-title']}>
+                                  Trả lời:{' '}
+                                  {this.state.title.filter(e => {
+                                    return e.group_id === element;
+                                  }).length > 0 &&
+                                    this.getAnswerQuestion(
                                       !this.state[`question-number-${element}`]
                                         ? this.state.title.filter(e => {
                                             return e.group_id === element;
                                           })[0].question_id
                                         : this.state[`question-number-${element}`]
                                     )}
-                                  >
-                                    {this.state.questionEditing.answer.map((v, i) => {
-                                      return (
-                                        <div key={i} className={styles['radio-question']}>
-                                          <Radio
-                                            style={{
-                                              color: '#fff',
-                                              fontSize: '18px',
-                                              display: 'flex',
-                                              alignItems: 'center',
-                                              padding: '20px',
-                                            }}
-                                            value={v}
-                                          >
-                                            {v}
-                                          </Radio>
-                                        </div>
-                                      );
-                                    })}
-                                  </RadioGroup>
-                                </div>
-                              )}
-                              {this.state.type === '3' && (
-                                <div className={`${styles['radio-group']} radio-form`}>
-                                  <CheckboxGroup
-                                    style={{ width: '100%' }}
-                                    onChange={e => this.handleChangeCheckEditing(e)}
-                                    defaultValue={this.getAnswerQuestion(
-                                      !this.state[`question-number-${element}`]
-                                        ? this.state.title.filter(e => {
-                                            return e.group_id === element;
-                                          })[0].question_id
-                                        : this.state[`question-number-${element}`]
-                                    ).split(',')}
-                                  >
-                                    {this.state.questionEditing.answer.map((v, i) => {
-                                      return (
-                                        <div key={i} className={styles['radio-question']}>
-                                          <Checkbox
-                                            style={{
-                                              color: '#fff',
-                                              fontSize: '18px',
-                                              display: 'flex',
-                                              alignItems: 'center',
-                                              padding: '20px',
-                                            }}
-                                            value={v}
-                                          >
-                                            {v}
-                                          </Checkbox>
-                                        </div>
-                                      );
-                                    })}
-                                  </CheckboxGroup>
-                                </div>
-                              )}
-                            </div>
-                          </div>
-                          <div className={styles['button-editing']}>
-                            <Button
-                              onClick={() => this.handleCancer()}
-                              style={{ marginRight: '5px' }}
-                              shape="round"
-                              size="large"
-                            >
-                              CANCER
-                            </Button>
-                            <Button
-                              disabled={this.state.submitEnable}
-                              onClick={() => this.handleSubmitEdit(this.state.questionEditing)}
-                              style={{ marginRight: '5px' }}
-                              type="primary"
-                              shape="round"
-                              icon="check"
-                              size="large"
-                            >
-                              SAVE
-                            </Button>
-                          </div>
-                        </div>
-                      ) : (
-                        <div
-                          className={styles['form-edit-item']}
-                          style={listQuestion === element ? { zIndex: 3 } : {}}
-                        >
-                          <div
-                            onClick={() => this.handleClickListQuestion(element)}
-                            className={styles['question-item']}
-                          >
-                            <div className={styles['theme-question']}>
-                              <span> {this.getTitleGroup(element)}</span>
-                              {listQuestion && listQuestion === element ? (
-                                <Icon type="caret-up" />
-                              ) : (
-                                <Icon type="caret-down" />
-                              )}
-                            </div>
-                            <span className={styles['question-title']}>
-                              {this.state.title.filter(e => {
-                                return e.group_id === element;
-                              }).length > 0 &&
-                                this.getTitleQuestion(
-                                  !this.state[`question-number-${element}`]
-                                    ? this.state.title.filter(e => {
-                                        return e.group_id === element;
-                                      })[0].question_id
-                                    : this.state[`question-number-${element}`]
-                                )}
-                            </span>
-                          </div>
-                          {listQuestion && listQuestion === element && (
-                            <div className={styles['list-question-hidden']}>
-                              {this.state.title
-                                .filter(e => {
-                                  return e.group_id === element;
-                                })
-                                .map((v, i) => {
-                                  if (
-                                    v.title ===
-                                    this.getTitleQuestion(
+                                </span>
+                                <Icon style={{ fontSize: '20px', color: '#0500BE' }} type="edit" />
+                                <span
+                                  onClick={() =>
+                                    this.handleClickEdit(
+                                      element,
                                       !this.state[`question-number-${element}`]
                                         ? this.state.title.filter(e => {
                                             return e.group_id === element;
                                           })[0].question_id
                                         : this.state[`question-number-${element}`]
                                     )
-                                  ) {
-                                    return '';
                                   }
-                                  return (
-                                    <div
-                                      onClick={() =>
-                                        this.handleClickQuestionItem(element, v.question_id)
-                                      }
-                                      key={i}
-                                      className={styles['item-question']}
-                                    >
-                                      <span>{v.title}</span>
-                                      {!this.checkQuestionAnswered(v.question_id) && (
-                                        <span className={styles['chua-hoan-thien']}>
-                                          Chưa hoàn thiện
-                                        </span>
-                                      )}
-                                    </div>
-                                  );
-                                })}
-                            </div>
-                          )}
-                          {listQuestion && listQuestion === element ? (
-                            ''
-                          ) : (
-                            <div className={`${styles['answer-item']} answer-item`}>
-                              <span className={styles['answer-title']}>
-                                Trả lời:{' '}
-                                {this.state.title.filter(e => {
-                                  return e.group_id === element;
-                                }).length > 0 &&
-                                  this.getAnswerQuestion(
-                                    !this.state[`question-number-${element}`]
-                                      ? this.state.title.filter(e => {
-                                          return e.group_id === element;
-                                        })[0].question_id
-                                      : this.state[`question-number-${element}`]
-                                  )}
-                              </span>
-                              <Icon style={{ fontSize: '20px', color: '#0500BE' }} type="edit" />
-                              <span
-                                onClick={() =>
-                                  this.handleClickEdit(
-                                    element,
-                                    !this.state[`question-number-${element}`]
-                                      ? this.state.title.filter(e => {
-                                          return e.group_id === element;
-                                        })[0].question_id
-                                      : this.state[`question-number-${element}`]
-                                  )
-                                }
-                                className={styles['edit-button']}
-                              >
-                                Edit
-                              </span>
-                            </div>
-                          )}
-                        </div>
-                      )}
+                                  className={styles['edit-button']}
+                                >
+                                  Edit
+                                </span>
+                              </div>
+                            )}
+                          </div>
+                        )}
+                      </div>
+                    );
+                  })
+                ) : (
+                  <div>
+                    <div className={styles['form-edit-item']}>
+                      <Skeleton rows={3} />
                     </div>
-                  );
-                })
+                    <div className={styles['form-edit-item']}>
+                      <Skeleton rows={3} />
+                    </div>
+                    <div className={styles['form-edit-item']}>
+                      <Skeleton rows={3} />
+                    </div>
+                    <div className={styles['form-edit-item']}>
+                      <Skeleton rows={3} />
+                    </div>
+                  </div>
+                )}
+              </div>
+              <div style={{ flexBasis: '5%' }} />
+              {dataUser ? (
+                <div className={styles['edit-form-right']}>
+                  <div className={styles['right-item']}>
+                    <div className={styles['left-icon']}>
+                      <Icon style={{ fontSize: '25px', cursor: 'pointer' }} type="profile" />
+                    </div>
+                    <div className={styles['right-body']}>
+                      <div className={styles['right-title']}>Straight, Man,Single</div>
+                      <div className={styles['right-content']}>
+                        <span className={styles['item-span']}>Add</span>
+                        <span className={styles['item-span']}>,</span>
+                        <span className={styles['item-span']}>Relation type</span>
+                        <span className={styles['item-span']}>,</span>
+                        <span className={styles['item-span']}>Height</span>
+                        <span className={styles['item-span']}>,</span>
+                        <span className={styles['item-span']}>
+                          Body type{' '}
+                          <Icon style={{ color: '#0500BE', marginLeft: '5px' }} type="edit" />
+                        </span>
+                      </div>
+                    </div>
+                  </div>
+                  <div className={styles['right-item']}>
+                    <div className={styles['left-icon']}>
+                      <Icon style={{ fontSize: '25px', cursor: 'pointer' }} type="profile" />
+                    </div>
+                    <div className={styles['right-body']}>
+                      <div className={styles['right-title']}>Straight, Man,Single</div>
+                      <div className={styles['right-content']}>
+                        <span className={styles['item-span']}>Add</span>
+                        <span className={styles['item-span']}>,</span>
+                        <span className={styles['item-span']}>Relation type</span>
+                        <span className={styles['item-span']}>,</span>
+                        <span className={styles['item-span']}>Height</span>
+                        <span className={styles['item-span']}>,</span>
+                        <span className={styles['item-span']}>
+                          Body type{' '}
+                          <Icon style={{ color: '#0500BE', marginLeft: '5px' }} type="edit" />
+                        </span>
+                      </div>
+                    </div>
+                  </div>
+                  <div className={styles['right-item']}>
+                    <div className={styles['left-icon']}>
+                      <Icon style={{ fontSize: '25px', cursor: 'pointer' }} type="profile" />
+                    </div>
+                    <div className={styles['right-body']}>
+                      <div className={styles['right-title']}>Straight, Man,Single</div>
+                      <div className={styles['right-content']}>
+                        <span className={styles['item-span']}>Add</span>
+                        <span className={styles['item-span']}>,</span>
+                        <span className={styles['item-span']}>Relation type</span>
+                        <span className={styles['item-span']}>,</span>
+                        <span className={styles['item-span']}>Height</span>
+                        <span className={styles['item-span']}>,</span>
+                        <span className={styles['item-span']}>
+                          Body type{' '}
+                          <Icon style={{ color: '#0500BE', marginLeft: '5px' }} type="edit" />
+                        </span>
+                      </div>
+                    </div>
+                  </div>
+                  <div className={styles['right-item']}>
+                    <div className={styles['left-icon']}>
+                      <Icon style={{ fontSize: '25px', cursor: 'pointer' }} type="profile" />
+                    </div>
+                    <div className={styles['right-body']}>
+                      <div className={styles['right-title']}>Straight, Man,Single</div>
+                      <div className={styles['right-content']}>
+                        <span className={styles['item-span']}>Add</span>
+                        <span className={styles['item-span']}>,</span>
+                        <span className={styles['item-span']}>Relation type</span>
+                        <span className={styles['item-span']}>,</span>
+                        <span className={styles['item-span']}>Height</span>
+                        <span className={styles['item-span']}>,</span>
+                        <span className={styles['item-span']}>
+                          Body type{' '}
+                          <Icon style={{ color: '#0500BE', marginLeft: '5px' }} type="edit" />
+                        </span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
               ) : (
-                <div>
-                  <div className={styles['form-edit-item']}>
+                <div style={{ flexBasis: '40%' }} className="skeleton">
+                  <div>
                     <Skeleton rows={3} />
                   </div>
-                  <div className={styles['form-edit-item']}>
+                  <div>
                     <Skeleton rows={3} />
                   </div>
-                  <div className={styles['form-edit-item']}>
+                  <div>
                     <Skeleton rows={3} />
                   </div>
-                  <div className={styles['form-edit-item']}>
+                  <div>
                     <Skeleton rows={3} />
                   </div>
                 </div>
               )}
             </div>
-            <div style={{ flexBasis: '5%' }} />
             {dataUser ? (
-              <div className={styles['edit-form-right']}>
-                <div className={styles['right-item']}>
-                  <div className={styles['left-icon']}>
-                    <Icon style={{ fontSize: '25px', cursor: 'pointer' }} type="profile" />
-                  </div>
-                  <div className={styles['right-body']}>
-                    <div className={styles['right-title']}>Straight, Man,Single</div>
-                    <div className={styles['right-content']}>
-                      <span className={styles['item-span']}>Add</span>
-                      <span className={styles['item-span']}>,</span>
-                      <span className={styles['item-span']}>Relation type</span>
-                      <span className={styles['item-span']}>,</span>
-                      <span className={styles['item-span']}>Height</span>
-                      <span className={styles['item-span']}>,</span>
-                      <span className={styles['item-span']}>
-                        Body type{' '}
-                        <Icon style={{ color: '#0500BE', marginLeft: '5px' }} type="edit" />
-                      </span>
-                    </div>
-                  </div>
-                </div>
-                <div className={styles['right-item']}>
-                  <div className={styles['left-icon']}>
-                    <Icon style={{ fontSize: '25px', cursor: 'pointer' }} type="profile" />
-                  </div>
-                  <div className={styles['right-body']}>
-                    <div className={styles['right-title']}>Straight, Man,Single</div>
-                    <div className={styles['right-content']}>
-                      <span className={styles['item-span']}>Add</span>
-                      <span className={styles['item-span']}>,</span>
-                      <span className={styles['item-span']}>Relation type</span>
-                      <span className={styles['item-span']}>,</span>
-                      <span className={styles['item-span']}>Height</span>
-                      <span className={styles['item-span']}>,</span>
-                      <span className={styles['item-span']}>
-                        Body type{' '}
-                        <Icon style={{ color: '#0500BE', marginLeft: '5px' }} type="edit" />
-                      </span>
-                    </div>
-                  </div>
-                </div>
-                <div className={styles['right-item']}>
-                  <div className={styles['left-icon']}>
-                    <Icon style={{ fontSize: '25px', cursor: 'pointer' }} type="profile" />
-                  </div>
-                  <div className={styles['right-body']}>
-                    <div className={styles['right-title']}>Straight, Man,Single</div>
-                    <div className={styles['right-content']}>
-                      <span className={styles['item-span']}>Add</span>
-                      <span className={styles['item-span']}>,</span>
-                      <span className={styles['item-span']}>Relation type</span>
-                      <span className={styles['item-span']}>,</span>
-                      <span className={styles['item-span']}>Height</span>
-                      <span className={styles['item-span']}>,</span>
-                      <span className={styles['item-span']}>
-                        Body type{' '}
-                        <Icon style={{ color: '#0500BE', marginLeft: '5px' }} type="edit" />
-                      </span>
-                    </div>
-                  </div>
-                </div>
-                <div className={styles['right-item']}>
-                  <div className={styles['left-icon']}>
-                    <Icon style={{ fontSize: '25px', cursor: 'pointer' }} type="profile" />
-                  </div>
-                  <div className={styles['right-body']}>
-                    <div className={styles['right-title']}>Straight, Man,Single</div>
-                    <div className={styles['right-content']}>
-                      <span className={styles['item-span']}>Add</span>
-                      <span className={styles['item-span']}>,</span>
-                      <span className={styles['item-span']}>Relation type</span>
-                      <span className={styles['item-span']}>,</span>
-                      <span className={styles['item-span']}>Height</span>
-                      <span className={styles['item-span']}>,</span>
-                      <span className={styles['item-span']}>
-                        Body type{' '}
-                        <Icon style={{ color: '#0500BE', marginLeft: '5px' }} type="edit" />
-                      </span>
-                    </div>
-                  </div>
-                </div>
+              <div>
+                {this.state.question.length === 0 ? (
+                  ''
+                ) : (
+                  <Table
+                    style={{ marginTop: '30px' }}
+                    columns={this.columns}
+                    dataSource={dataTable}
+                    bordered
+                  />
+                )}
               </div>
             ) : (
-              <div style={{ flexBasis: '40%' }} className="skeleton">
-                <div>
-                  <Skeleton rows={3} />
-                </div>
-                <div>
-                  <Skeleton rows={3} />
-                </div>
-                <div>
-                  <Skeleton rows={3} />
-                </div>
-                <div>
-                  <Skeleton rows={3} />
-                </div>
+              <div style={{ background: '#fff', borderRadius: '5px', marginTop: '20px' }}>
+                <Skeleton rows={6} />
               </div>
             )}
           </div>
-          {dataUser ? (
-            <div>
-              {this.state.question.length === 0 ? (
-                ''
-              ) : (
-                <Table
-                  style={{ marginTop: '30px' }}
-                  columns={this.columns}
-                  dataSource={dataTable}
-                  bordered
-                />
-              )}
-            </div>
-          ) : (
-            <div style={{ background: '#fff', borderRadius: '5px', marginTop: '20px' }}>
-              <Skeleton rows={6} />
-            </div>
-          )}
         </div>
-      </div>
-    );
+      );
+    }
+    return <MenuMobile {...this.props} />;
   }
 }
 
