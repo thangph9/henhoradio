@@ -873,5 +873,5 @@ router.post('/getuserbyid', getUserById);
 router.post('/getallusers', getAllUsers);
 router.post('/updateprofilequestion', updateProfileQuestion);
 router.get('/checkuser/:phone', checkUser);
-router.get('/updateprofileuser', updateProfileUser);
+router.post('/updateprofileuser', updateProfileUser);
 module.exports = router;
