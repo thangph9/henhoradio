@@ -256,9 +256,13 @@ class AdvancedProfile extends Component {
             </div>
           </div>
         ) : (
-          <div style={{ paddingTop: '40px' }}>
-            <div style={{ background: '#fff', padding: '15px', borderRadius: '5px' }}>
-              <Skeleton rows={3} />
+          <div className={styles['avatar-user']}>
+            <div className={styles['container-avatar']}>
+              <img
+                className={styles['img-avatar']}
+                alt="img"
+                src="http://www.mmlonline.org/img/user.png"
+              />
             </div>
           </div>
         )}

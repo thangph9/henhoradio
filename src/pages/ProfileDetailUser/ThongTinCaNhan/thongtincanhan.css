@@ -9,6 +9,9 @@
 }
 .avatar-image {
   flex-basis: 40%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }
 .basic-center {
   flex-basis: 5%;
@@ -38,6 +41,14 @@
 }
 .item-info {
   padding: 10px;
+}
+.background-avatar {
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: 180px;
+  width: 180px;
+  height: 180px;
+  border-radius: 50%;
 }
 @media (max-width: 767px) {
   .thong-tin-ca-nhan {

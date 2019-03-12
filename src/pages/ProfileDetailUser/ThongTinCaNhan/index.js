@@ -1,3 +1,5 @@
+/* eslint-disable no-nested-ternary */
+/* eslint-disable no-param-reassign */
 /* eslint-disable no-var */
 /* eslint-disable no-dupe-class-members */
 /* eslint-disable react/no-access-state-in-setstate */
@@ -20,7 +22,19 @@
 import React, { Component } from 'react';
 import moment from 'moment';
 import { connect } from 'dva';
-import { Table, Icon, Input, Button, Skeleton, Form, Radio, Select, Upload, Modal } from 'antd';
+import {
+  Table,
+  Icon,
+  Input,
+  Button,
+  Skeleton,
+  Form,
+  Radio,
+  Select,
+  Upload,
+  Modal,
+  Tooltip,
+} from 'antd';
 import styles from './thongtincanhan.less';
 
 const Option = Select.Option;
@@ -151,9 +165,16 @@ class ThongTinCaNhan extends Component {
   componentWillReceiveProps(nextProps) {
     if (this.props.authentication.getuser !== nextProps.authentication.getuser) {
       if (nextProps.authentication.getuser.status === 'ok') {
-        this.setState({
-          dataUser: nextProps.authentication.getuser.data,
-        });
+        this.setState(
+          {
+            dataUser: nextProps.authentication.getuser.data,
+          },
+          () => {
+            this.setState({
+              avatarImage: this.state.dataUser.avatar,
+            });
+          }
+        );
       }
     }
   }
@@ -161,8 +182,12 @@ class ThongTinCaNhan extends Component {
   handleSubmit = e => {
     e.preventDefault();
     this.props.form.validateFields((err, values) => {
+      values.avatar = this.state.avatarImage;
       if (!err) {
-        console.log('Received values of form: ', values);
+        this.props.dispatch({
+          type: 'authentication/updateprofileuser',
+          payload: values,
+        });
       }
     });
   };
@@ -191,13 +216,17 @@ class ThongTinCaNhan extends Component {
   };
 
   handleChangeAvatar(fileListAvatar) {
-    console.log(fileListAvatar);
     this.setState({ fileListAvatar: fileListAvatar.fileList }, () => {
       var image = '';
-      if (this.state.fileListAvatar[0] && this.state.fileListAvatar[0].response)
-        image = this.state.fileListAvatar[0].response.file.imageid;
+      if (
+        this.state.fileListAvatar[this.state.fileListAvatar.length - 1] &&
+        this.state.fileListAvatar[this.state.fileListAvatar.length - 1].response
+      )
+        image = this.state.fileListAvatar[this.state.fileListAvatar.length - 1].response.file
+          .imageid;
       this.setState({
         avatarImage: image,
+        resetAvatar: true,
       });
     });
   }
@@ -222,9 +251,16 @@ class ThongTinCaNhan extends Component {
     return isJPG && isLt2M;
   };
 
+  handleResetAvatar() {
+    this.setState({
+      resetAvatar: false,
+      avatarImage: this.state.dataUser.avatar,
+    });
+  }
+
   render() {
     const { getFieldDecorator } = this.props.form;
-    const { dataUser } = this.state;
+    const { dataUser, avatarImage } = this.state;
     if (dataUser) {
       return (
         <div className={styles['thong-tin-ca-nhan']}>
@@ -303,6 +339,46 @@ class ThongTinCaNhan extends Component {
                   initialValue: dataUser.address,
                 })(<Input prefix={<Icon type="home" style={{ color: 'rgba(0,0,0,.25)' }} />} />)}
               </Form.Item>
+              <div className={styles['date-of-birth']}>
+                <Form.Item label="Chiều cao">
+                  {getFieldDecorator('height', {
+                    rules: [{ required: true, message: 'Vui lòng nhập chiều cao' }, {}],
+                    initialValue: dataUser.height ? dataUser.height : '',
+                  })(
+                    <Input type="number" min={0} style={{ width: '70%' }} placeholder="Centimet" />
+                  )}
+                </Form.Item>
+                <Form.Item label="Cân nặng">
+                  {getFieldDecorator('weight', {
+                    rules: [{ required: true, message: 'Vui lòng nhập cân nặng' }, {}],
+                    initialValue: dataUser.weight ? dataUser.weight : '',
+                  })(
+                    <Input type="number" min={0} placeholder="Kilogram" style={{ width: '70%' }} />
+                  )}
+                </Form.Item>
+              </div>
+              <Form.Item label="Trình độc học vấn">
+                {getFieldDecorator('education', {
+                  rules: [{ required: true, message: 'Nhập trình độ học vấn của bạn' }],
+                  initialValue: dataUser.education ? dataUser.education.education : '',
+                })(
+                  <Input
+                    prefix={<Icon type="book" style={{ color: 'rgba(0,0,0,.25)' }} />}
+                    placeholder="Bạn từng học đến cấp độ nào?"
+                  />
+                )}
+              </Form.Item>
+              <Form.Item label="Công việc hiện tại">
+                {getFieldDecorator('jobs', {
+                  rules: [{ required: true, message: 'Nhập công việc của bạn' }],
+                  initialValue: dataUser.jobs ? dataUser.jobs.jobs : '',
+                })(
+                  <Input
+                    prefix={<Icon type="build" style={{ color: 'rgba(0,0,0,.25)' }} />}
+                    placeholder="Công việc chính hiện tại?"
+                  />
+                )}
+              </Form.Item>
               <Form.Item>
                 <Button type="primary" htmlType="submit">
                   Cập nhật thông tin
@@ -312,38 +388,41 @@ class ThongTinCaNhan extends Component {
           </div>
           <div className={styles['basic-center']} />
           <div className={styles['avatar-image']}>
-            <div>
-              <img
-                className={styles['img-avatar']}
-                alt="img"
-                src="https://gw.alipayobjects.com/zos/rmsportal/BiazfanxmamNRoxxVxka.png"
-              />
+            <div
+              className={styles['background-avatar']}
+              style={
+                avatarImage
+                  ? { backgroundImage: `url(/images/ft/${avatarImage})` }
+                  : dataUser.avatar
+                  ? { backgroundImage: `url(/images/ft/${dataUser.avatar})` }
+                  : {
+                      backgroundImage: `url('https://gw.alipayobjects.com/zos/rmsportal/BiazfanxmamNRoxxVxka.png')`,
+                    }
+              }
+            >
+              {this.state.resetAvatar ? (
+                <Tooltip placement="right" title="Huỷ bỏ">
+                  <Icon
+                    style={{ float: 'right', fontSize: '18px' }}
+                    onClick={() => this.handleResetAvatar()}
+                    type="close"
+                  />
+                </Tooltip>
+              ) : (
+                ''
+              )}
             </div>
-            <div className={styles['upload-button']}>
+            <div className={`${styles['upload-button']} upload-avatar`}>
               <Form.Item>
                 <Upload
                   action="/api/upload/avatar/"
                   listType="picture"
                   fileList={this.state.fileListAvatar}
-                  onPreview={this.handlePreviewAvatar}
                   onChange={e => this.handleChangeAvatar(e)}
-                  onRemove={this.handleRemoveAvatar}
                   beforeUpload={this.beforeUploadAvatar}
                 >
                   <Button icon="upload">Chọn ảnh</Button>
                 </Upload>
-
-                <Modal
-                  visible={this.state.previewVisibleAvatar}
-                  footer={null}
-                  onCancel={this.handleCancelAvatar}
-                >
-                  <img
-                    alt="example"
-                    style={{ width: '100%' }}
-                    src={this.state.previewImageAvatar}
-                  />
-                </Modal>
               </Form.Item>
             </div>
 

@@ -784,6 +784,86 @@ function getUserById(req, res) {
     }
   );
 }
+function updateProfileUser(req, res) {
+  let legit = {};
+  const token = req.headers['x-access-token'];
+  const params = req.body;
+  let PARAM_IS_VALID = {};
+  const verifyOptions = {
+    expiresIn: '30d',
+    algorithm: ['RS256'],
+  };
+  async.series(
+    [
+      callback => {
+        PARAM_IS_VALID.address = params.address;
+        PARAM_IS_VALID.avatar = params.avatar;
+        PARAM_IS_VALID.dob_day = params.dateinfo;
+        PARAM_IS_VALID.education = {
+          education: params.education,
+        };
+        PARAM_IS_VALID.fullname = params.fullname;
+        PARAM_IS_VALID.gender = params.gender;
+        PARAM_IS_VALID.height = params.height;
+        PARAM_IS_VALID.jobs = {
+          jobs: params.jobs,
+        };
+        PARAM_IS_VALID.dob_month = params.monthinfo;
+        PARAM_IS_VALID.weight = params.weight;
+        PARAM_IS_VALID.dob_year = params.yearinfo;
+        callback(null, null);
+      },
+      callback => {
+        try {
+          legit = jwt.verify(token, jwtpublic, verifyOptions);
+          callback(null, null);
+        } catch (e) {
+          callback(e, null);
+          return res.send({
+            status: 'error',
+            message: 'Sai ma token',
+          });
+        }
+      },
+      callback => {
+        try {
+          let update_object = {
+            address: PARAM_IS_VALID.address,
+            avatar: PARAM_IS_VALID.avatar ? models.uuidFromString(PARAM_IS_VALID.avatar) : null,
+            dob_day: PARAM_IS_VALID.dob_day,
+            dob_month: PARAM_IS_VALID.dob_month,
+            dob_year: PARAM_IS_VALID.dob_year,
+            education: PARAM_IS_VALID.education,
+            fullname: PARAM_IS_VALID.fullname,
+            gender: PARAM_IS_VALID.gender,
+            height: PARAM_IS_VALID.height,
+            jobs: PARAM_IS_VALID.jobs,
+            weight: PARAM_IS_VALID.weight,
+          };
+          let object = update_object;
+          models.instance.users.update(
+            { user_id: models.uuidFromString(legit.userid) },
+            object,
+            { if_exist: true },
+            function(err) {
+              if (err) {
+                console.log(err);
+                return res.json({ status: 'error' });
+              }
+              callback(null, null);
+            }
+          );
+        } catch (error) {
+          callback(error, null);
+        }
+      },
+    ],
+    err => {
+      if (err) return res.json({ status: 'error' });
+      return res.json({ status: 'ok', timeline: new Date().getTime() });
+    }
+  );
+}
 router.post('/register', register);
 router.post('/login', login);
 router.post('/sendanswer', sendAnswer);
@@ -793,4 +873,5 @@ router.post('/getuserbyid', getUserById);
 router.post('/getallusers', getAllUsers);
 router.post('/updateprofilequestion', updateProfileQuestion);
 router.get('/checkuser/:phone', checkUser);
+router.get('/updateprofileuser', updateProfileUser);
 module.exports = router;

@@ -9,6 +9,7 @@ import {
   updateProfileQuestion,
   getAllUsers,
   getUserById,
+  updateProfileUser,
 } from '@/services/api';
 import { setAuthority } from '@/utils/authority';
 import { reloadAuthorized } from '@/utils/Authorized';
@@ -27,6 +28,7 @@ export default {
     updateprofilequestion: {},
     getallusers: {},
     getuserbyid: {},
+    updateprofileuser: {},
   },
   effects: {
     *login({ payload }, { call, put }) {
@@ -110,6 +112,13 @@ export default {
         payload: response || {},
       });
     },
+    *updateprofileuser({ payload }, { call, put }) {
+      const response = yield call(updateProfileUser, payload);
+      yield put({
+        type: 'updateProfileUser',
+        payload: response || {},
+      });
+    },
   },
 
   reducers: {
@@ -173,6 +182,12 @@ export default {
       return {
         ...state,
         getuserbyid: action.payload,
+      };
+    },
+    updateProfileUser(state, action) {
+      return {
+        ...state,
+        updateprofileuser: action.payload,
       };
     },
   },

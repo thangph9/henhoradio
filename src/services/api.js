@@ -169,6 +169,13 @@ export async function getAllUsers(params) {
     headers: { 'X-Access-Token': JSON.parse(localStorage.getItem('token')) },
   });
 }
+export async function updateProfileUser(params) {
+  return request('/api/authentication/updateprofileuser', {
+    method: 'POST',
+    body: params,
+    headers: { 'X-Access-Token': JSON.parse(localStorage.getItem('token')) },
+  });
+}
 export async function updateProfileQuestion(params) {
   return request('/api/authentication/updateprofilequestion', {
     method: 'POST',
