@@ -261,7 +261,7 @@ class GlobalHeader extends PureComponent {
                       className={`${styles['auth-buttons__nav-link___1DCMU']} ${
                         styles['auth-buttons__btn-sign-in___1nV-O']
                       }`}
-                      to="/home/profile"
+                      to="/home/profile-user"
                     >
                       <Avatar style={{ backgroundColor: '#f9f9f9' }} size={30} icon="user" />
                     </Link>
@@ -470,7 +470,7 @@ export class MenuMobile extends PureComponent {
       <ul className={styles['ul-menu-mobile']}>
         <li className={styles['li-link']}>
           <Link
-            to="/home/profile"
+            to="/home/profile-user"
             className={styles['row']}
             style={{ width: '100%', padding: '19px' }}
           >
