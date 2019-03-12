@@ -359,7 +359,11 @@ class ThongTinCaNhan extends Component {
         </div>
       );
     }
-    return <Skeleton paragraph={{ rows: 14 }} active />;
+    return (
+      <div style={{ background: '#fff' }}>
+        <Skeleton paragraph={{ rows: 14 }} active />
+      </div>
+    );
   }
 }
 

@@ -31,8 +31,7 @@
   transition: box-shadow 0.3s;
 }
 .img-item {
-  transition: transform .3s;
-  transition-delay: 0.3s;
+  transition: transform 0.3s;
 }
 .image-cart {
   width: 100%;

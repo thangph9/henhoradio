@@ -4,6 +4,7 @@ export default {
   state: {
     menu_header: false,
     menu_header_mobile: false,
+    menu_item_profile: 0,
   },
 
   effects: {},
@@ -19,6 +20,12 @@ export default {
       return {
         ...state,
         menu_header_mobile: action.payload,
+      };
+    },
+    menu_item_profile(state, action) {
+      return {
+        ...state,
+        menu_item_profile: action.payload,
       };
     },
   },
