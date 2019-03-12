@@ -1,3 +1,4 @@
+/* eslint-disable react/no-access-state-in-setstate */
 /* eslint-disable react/jsx-first-prop-new-line */
 /* eslint-disable react/jsx-max-props-per-line */
 /* eslint-disable prefer-destructuring */
@@ -17,7 +18,7 @@
 import React, { Component } from 'react';
 import moment from 'moment';
 import { connect } from 'dva';
-import { Table, Icon, Input, Button, Skeleton, Radio, Checkbox, message } from 'antd';
+import { Table, Icon, Input, Button, Skeleton, Radio, Checkbox, message, Tooltip } from 'antd';
 import styles from './index.less';
 import { MenuMobile } from '@/components/GlobalHeader';
 
@@ -349,8 +350,18 @@ class AdvancedProfile extends Component {
     });
   }
 
+  handleClickChangeFullname() {
+    this.setState({
+      changeFullname: !this.state.changeFullname,
+    });
+  }
+
+  handleChangeFullname(e) {
+    console.log(e.target.value);
+  }
+
   render() {
-    const { dataUser, list, groupQuestion, listQuestion } = this.state;
+    const { dataUser, list, groupQuestion, listQuestion, changeFullname } = this.state;
     const dataTable = [];
     list.forEach((v, i) => {
       const productTable = {};
@@ -369,20 +380,94 @@ class AdvancedProfile extends Component {
               <div className={styles['profile-user']}>
                 <div className={styles['detail-profile']}>
                   <div className={styles['profile-user-left']}>
-                    <div className={styles['profile-item']}>Tên tài khoản:{dataUser.phone}</div>
-                    <div className={styles['profile-item']}>Tên đầy đủ: {dataUser.fullname}</div>
                     <div className={styles['profile-item']}>
-                      Giới tính :{dataUser.gender === 'male' ? 'Nam' : 'Nữ'}
+                      Tên tài khoản:{' '}
+                      <span className={styles['chi-tiet-thong-tin']}>{dataUser.phone} </span>
+                    </div>
+                    <div className={styles['profile-item']}>
+                      Tên đầy đủ:{' '}
+                      <span className={styles['chi-tiet-thong-tin']}>
+                        {changeFullname ? (
+                          <Input
+                            placeholder={dataUser.fullname}
+                            onChange={e => this.handleChangeFullname(e)}
+                          />
+                        ) : (
+                          dataUser.fullname
+                        )}
+                        <Tooltip placement="top" title="Chỉnh sửa">
+                          <Icon
+                            onClick={() => this.handleClickChangeFullname()}
+                            style={{
+                              color: '#0500BE',
+                              position: 'absolute',
+                              right: '5px',
+                              cursor: 'pointer',
+                            }}
+                            type="edit"
+                          />
+                        </Tooltip>
+                      </span>
+                    </div>
+                    <div className={styles['profile-item']}>
+                      Giới tính :{' '}
+                      <span className={styles['chi-tiet-thong-tin']}>
+                        {dataUser.gender === 'male' ? 'Nam' : 'Nữ'}
+                        <Tooltip placement="top" title="Chỉnh sửa">
+                          <Icon
+                            style={{
+                              color: '#0500BE',
+                              position: 'absolute',
+                              right: '5px',
+                              cursor: 'pointer',
+                            }}
+                            type="edit"
+                          />
+                        </Tooltip>
+                      </span>
                     </div>
                   </div>
                   <div className={styles['profile-user-right']}>
                     <div className={styles['profile-item']}>
-                      Ngày sinh: {`${dataUser.dob_day}/${dataUser.dob_month}/${dataUser.dob_year}`}
+                      Ngày sinh:{' '}
+                      <span className={styles['chi-tiet-thong-tin']}>
+                        {`${dataUser.dob_day}/${dataUser.dob_month}/${dataUser.dob_year}`}
+                        <Tooltip placement="top" title="Chỉnh sửa">
+                          <Icon
+                            style={{
+                              color: '#0500BE',
+                              position: 'absolute',
+                              right: '5px',
+                              cursor: 'pointer',
+                            }}
+                            type="edit"
+                          />
+                        </Tooltip>
+                      </span>
                     </div>
                     <div className={styles['profile-item']}>
-                      Ngày tham gia: {moment(dataUser.createat).format('DD/MM/YYYY')}
+                      Ngày tham gia:{' '}
+                      <span className={styles['chi-tiet-thong-tin']}>
+                        {moment(dataUser.createat).format('DD/MM/YYYY')}
+                      </span>
                     </div>
-                    <div className={styles['profile-item']}>Địa chỉ: {dataUser.address}</div>
+                    <div className={styles['profile-item']}>
+                      Địa chỉ:{' '}
+                      <span className={styles['chi-tiet-thong-tin']}>
+                        {dataUser.address}
+                        <Tooltip placement="top" title="Chỉnh sửa">
+                          <Icon
+                            style={{
+                              color: '#0500BE',
+                              position: 'absolute',
+                              right: '5px',
+                              cursor: 'pointer',
+                            }}
+                            type="edit"
+                          />
+                        </Tooltip>
+                      </span>
+                    </div>
                   </div>
                 </div>
               </div>
@@ -620,33 +705,35 @@ class AdvancedProfile extends Component {
                               <div className={`${styles['answer-item']} answer-item`}>
                                 <span className={styles['answer-title']}>
                                   Trả lời:{' '}
-                                  {this.state.title.filter(e => {
-                                    return e.group_id === element;
-                                  }).length > 0 &&
-                                    this.getAnswerQuestion(
-                                      !this.state[`question-number-${element}`]
-                                        ? this.state.title.filter(e => {
-                                            return e.group_id === element;
-                                          })[0].question_id
-                                        : this.state[`question-number-${element}`]
-                                    )}
+                                  <i style={{ color: '#888893', fontSize: '16px' }}>
+                                    {this.state.title.filter(e => {
+                                      return e.group_id === element;
+                                    }).length > 0 &&
+                                      this.getAnswerQuestion(
+                                        !this.state[`question-number-${element}`]
+                                          ? this.state.title.filter(e => {
+                                              return e.group_id === element;
+                                            })[0].question_id
+                                          : this.state[`question-number-${element}`]
+                                      )}
+                                  </i>
                                 </span>
-                                <Icon style={{ fontSize: '20px', color: '#0500BE' }} type="edit" />
-                                <span
-                                  onClick={() =>
-                                    this.handleClickEdit(
-                                      element,
-                                      !this.state[`question-number-${element}`]
-                                        ? this.state.title.filter(e => {
-                                            return e.group_id === element;
-                                          })[0].question_id
-                                        : this.state[`question-number-${element}`]
-                                    )
-                                  }
-                                  className={styles['edit-button']}
-                                >
-                                  Edit
-                                </span>
+                                <Tooltip placement="top" title="Chỉnh sửa">
+                                  <Icon
+                                    onClick={() =>
+                                      this.handleClickEdit(
+                                        element,
+                                        !this.state[`question-number-${element}`]
+                                          ? this.state.title.filter(e => {
+                                              return e.group_id === element;
+                                            })[0].question_id
+                                          : this.state[`question-number-${element}`]
+                                      )
+                                    }
+                                    style={{ fontSize: '20px', color: '#0500BE' }}
+                                    type="edit"
+                                  />
+                                </Tooltip>
                               </div>
                             )}
                           </div>

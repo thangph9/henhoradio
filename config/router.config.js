@@ -32,6 +32,25 @@ export default [
       { path: '/home', redirect: './newfeed' },
       { path: '/home/newfeed', component: './HomePage' },
       { path: '/home/profile', component: './ProfileDetail' },
+      { path: '/home/profile-user', redirect: '/home/profile-user/information' },
+      {
+        path: '/home/profile-user',
+        component: './ProfileDetailUser/Info',
+        routes: [
+          {
+            path: '/home/profile-user/information',
+            component: './ProfileDetailUser/ThongTinCaNhan',
+          },
+          {
+            path: '/home/profile-user/setting-security',
+            component: './ProfileDetailUser/CaiDatBaoMat',
+          },
+          {
+            path: '/home/profile-user/answer-question',
+            component: './ProfileDetailUser/HoiDapCaNhan',
+          },
+        ],
+      },
       { path: '/home/other-profile', component: './ProfileDatailWithOther' },
       {
         component: '404',
