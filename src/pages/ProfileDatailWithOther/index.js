@@ -236,36 +236,34 @@ class AdvancedProfile extends Component {
     });
     return (
       <div className={styles['profile']}>
+        {dataUser ? (
+          <div className={styles['avatar-user']}>
+            <div className={styles['container-avatar']}>
+              <img
+                className={styles['img-avatar']}
+                alt="img"
+                src="https://gw.alipayobjects.com/zos/rmsportal/BiazfanxmamNRoxxVxka.png"
+              />
+              <div className={styles['account-infomation']}>
+                <div className={styles['name-of-user']}>{dataUser.fullname}</div>
+                <div className={styles['age-address']}>
+                  <span className={styles['age-of-user']}>
+                    {new Date().getFullYear() - dataUser.dob_year}
+                  </span>
+                  <span className={styles['address-of-user']}>{dataUser.address}</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        ) : (
+          <div style={{ paddingTop: '40px' }}>
+            <div style={{ background: '#fff', padding: '15px', borderRadius: '5px' }}>
+              <Skeleton rows={3} />
+            </div>
+          </div>
+        )}
         <div className={styles.container}>
           {this.state.editing && <div className={styles['editing']} />}
-          {dataUser ? (
-            <div className={styles['profile-user']}>
-              <div className={styles['detail-profile']}>
-                <div className={styles['profile-user-left']}>
-                  <div className={styles['profile-item']}>Tên tài khoản:{dataUser.phone}</div>
-                  <div className={styles['profile-item']}>Tên đầy đủ: {dataUser.fullname}</div>
-                  <div className={styles['profile-item']}>
-                    Giới tính :{dataUser.gender === 'male' ? 'Nam' : 'Nữ'}
-                  </div>
-                </div>
-                <div className={styles['profile-user-right']}>
-                  <div className={styles['profile-item']}>
-                    Ngày sinh: {`${dataUser.dob_day}/${dataUser.dob_month}/${dataUser.dob_year}`}
-                  </div>
-                  <div className={styles['profile-item']}>
-                    Ngày tham gia: {moment(dataUser.createat).format('DD/MM/YYYY')}
-                  </div>
-                  <div className={styles['profile-item']}>Địa chỉ: {dataUser.address}</div>
-                </div>
-              </div>
-            </div>
-          ) : (
-            <div style={{ paddingTop: '40px' }}>
-              <div style={{ background: '#fff', padding: '15px', borderRadius: '5px' }}>
-                <Skeleton rows={3} />
-              </div>
-            </div>
-          )}
           <div className={styles['edit-form']}>
             <div className={`${styles['edit-form-left']} text-form`}>
               {dataUser ? (
@@ -389,18 +387,16 @@ class AdvancedProfile extends Component {
                     <Icon style={{ fontSize: '25px', cursor: 'pointer' }} type="profile" />
                   </div>
                   <div className={styles['right-body']}>
-                    <div className={styles['right-title']}>Straight, Man,Single</div>
+                    <div className={styles['right-title']}>Ngoại hình</div>
                     <div className={styles['right-content']}>
-                      <span className={styles['item-span']}>Add</span>
-                      <span className={styles['item-span']}>,</span>
-                      <span className={styles['item-span']}>Relation type</span>
-                      <span className={styles['item-span']}>,</span>
-                      <span className={styles['item-span']}>Height</span>
-                      <span className={styles['item-span']}>,</span>
-                      <span className={styles['item-span']}>
-                        Body type{' '}
-                        <Icon style={{ color: '#0500BE', marginLeft: '5px' }} type="edit" />
-                      </span>
+                      <div className={styles['box-ngoai-hinh']}>
+                        <span className={styles['item-span']}>Chiều cao: </span>
+                        <i className={styles['thong-tin-ngoai-hinh']}>177cm</i>
+                      </div>
+                      <div className={styles['box-ngoai-hinh']}>
+                        <span className={styles['item-span']}>Cân nặng:</span>
+                        <i className={styles['thong-tin-ngoai-hinh']}>70kg</i>
+                      </div>
                     </div>
                   </div>
                 </div>
@@ -409,18 +405,12 @@ class AdvancedProfile extends Component {
                     <Icon style={{ fontSize: '25px', cursor: 'pointer' }} type="profile" />
                   </div>
                   <div className={styles['right-body']}>
-                    <div className={styles['right-title']}>Straight, Man,Single</div>
+                    <div className={styles['right-title']}>Nghề nghiệp</div>
                     <div className={styles['right-content']}>
-                      <span className={styles['item-span']}>Add</span>
-                      <span className={styles['item-span']}>,</span>
-                      <span className={styles['item-span']}>Relation type</span>
-                      <span className={styles['item-span']}>,</span>
-                      <span className={styles['item-span']}>Height</span>
-                      <span className={styles['item-span']}>,</span>
-                      <span className={styles['item-span']}>
-                        Body type{' '}
-                        <Icon style={{ color: '#0500BE', marginLeft: '5px' }} type="edit" />
-                      </span>
+                      <div className={styles['box-ngoai-hinh']}>
+                        <span className={styles['item-span']}>Đang làm việc tại: </span>
+                        <i className={styles['thong-tin-ngoai-hinh']}>Công ty THHH 1 thành viên</i>
+                      </div>
                     </div>
                   </div>
                 </div>
@@ -429,38 +419,12 @@ class AdvancedProfile extends Component {
                     <Icon style={{ fontSize: '25px', cursor: 'pointer' }} type="profile" />
                   </div>
                   <div className={styles['right-body']}>
-                    <div className={styles['right-title']}>Straight, Man,Single</div>
+                    <div className={styles['right-title']}>Trình độ học vấn:</div>
                     <div className={styles['right-content']}>
-                      <span className={styles['item-span']}>Add</span>
-                      <span className={styles['item-span']}>,</span>
-                      <span className={styles['item-span']}>Relation type</span>
-                      <span className={styles['item-span']}>,</span>
-                      <span className={styles['item-span']}>Height</span>
-                      <span className={styles['item-span']}>,</span>
-                      <span className={styles['item-span']}>
-                        Body type{' '}
-                        <Icon style={{ color: '#0500BE', marginLeft: '5px' }} type="edit" />
-                      </span>
-                    </div>
-                  </div>
-                </div>
-                <div className={styles['right-item']}>
-                  <div className={styles['left-icon']}>
-                    <Icon style={{ fontSize: '25px', cursor: 'pointer' }} type="profile" />
-                  </div>
-                  <div className={styles['right-body']}>
-                    <div className={styles['right-title']}>Straight, Man,Single</div>
-                    <div className={styles['right-content']}>
-                      <span className={styles['item-span']}>Add</span>
-                      <span className={styles['item-span']}>,</span>
-                      <span className={styles['item-span']}>Relation type</span>
-                      <span className={styles['item-span']}>,</span>
-                      <span className={styles['item-span']}>Height</span>
-                      <span className={styles['item-span']}>,</span>
-                      <span className={styles['item-span']}>
-                        Body type{' '}
-                        <Icon style={{ color: '#0500BE', marginLeft: '5px' }} type="edit" />
-                      </span>
+                      <div className={styles['box-ngoai-hinh']}>
+                        <span className={styles['item-span']}>Từng học tại</span>
+                        <i className={styles['thong-tin-ngoai-hinh']}>Đại học công nghiệp Hà Nội</i>
+                      </div>
                     </div>
                   </div>
                 </div>

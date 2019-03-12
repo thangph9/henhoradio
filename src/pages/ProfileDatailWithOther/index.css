@@ -4,7 +4,7 @@
 .profile-item {
   padding: 5px;
   font-size: 15px;
-  color: rgb(76, 175, 80);
+  color: #4caf50;
   font-weight: 500;
 }
 .container {
@@ -44,12 +44,10 @@
   flex-grow: 1;
   padding-left: 30px;
 }
-// edit form
 .edit-form {
   display: flex;
   margin-top: 20px;
 }
-// edit form trai
 .edit-form-left {
   flex-basis: 55%;
   flex-wrap: wrap;
@@ -87,9 +85,9 @@
   margin-bottom: 50px;
   z-index: 3;
   border-radius: 5px;
-  &::-webkit-scrollbar {
-    width: 0 !important;
-  }
+}
+.list-question-hidden::-webkit-scrollbar {
+  width: 0 !important;
 }
 .item-question {
   background: #fff;
@@ -102,9 +100,9 @@
   font-size: 18px;
   font-weight: 600;
   cursor: pointer;
-  &:hover {
-    background: #f3f5f9;
-  }
+}
+.item-question:hover {
+  background: #f3f5f9;
 }
 .chua-hoan-thien {
   font-size: 10px;
@@ -131,10 +129,10 @@
 }
 .radio-question {
   padding: 20px;
-  &:first-child {
-    border-bottom: 0.5px solid;
-    border-color: rgba(157, 186, 242, 0.5);
-  }
+}
+.radio-question:first-child {
+  border-bottom: 0.5px solid;
+  border-color: rgba(157, 186, 242, 0.5);
 }
 .radio-group {
   flex-grow: 1;
@@ -149,7 +147,6 @@
   text-transform: uppercase;
   color: #0500be;
 }
-// edit form phai
 .profile-user-right {
   flex-grow: 1;
   padding-left: 30px;
@@ -163,10 +160,10 @@
   border-radius: 5px;
   margin-top: 12px;
   padding: 10px;
-  &:hover {
-    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
-    background: #fff;
-  }
+}
+.right-item:hover {
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+  background: #fff;
 }
 .left-icon {
   flex-basis: 10%;
@@ -218,10 +215,10 @@
   font-weight: 600;
   color: #fff;
   cursor: pointer;
-  &:hover {
-    background: rgba(255, 255, 255, 0.1);
-  }
   width: auto;
+}
+.account-infomation:hover {
+  background: rgba(255, 255, 255, 0.1);
 }
 .name-of-user {
   font-size: 22px;
@@ -230,19 +227,17 @@
   margin: 0 auto;
   display: table;
 }
-.age-of-user {
-  &::after {
-    content: '';
-    width: 5px;
-    height: 5px;
-    border-radius: 50%;
-    background: #fff;
-    margin-left: 10px;
-    margin-right: 10px;
-    display: inline-block;
-    position: relative;
-    top: -3px;
-  }
+.age-of-user::after {
+  content: '';
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: #fff;
+  margin-left: 10px;
+  margin-right: 10px;
+  display: inline-block;
+  position: relative;
+  top: -3px;
 }
 .img-avatar {
   display: inline;
@@ -279,7 +274,6 @@
     margin: 0 auto;
   }
 }
-
 @media (min-width: 992px) {
   .container {
     max-width: 960px;
@@ -289,13 +283,11 @@
     margin: 0 auto;
   }
 }
-
 @media (max-width: 767px) {
   .edit-form {
     flex-direction: column;
   }
 }
-
 @media (max-width: 575px) {
   .profile-user-left {
     padding-left: 5px;
@@ -307,7 +299,6 @@
     flex-direction: column;
   }
 }
-
 @keyframes editItem {
   from {
     max-height: 0.0000000001px;
@@ -318,7 +309,6 @@
     padding-top: 20px;
   }
 }
-
 /* Hien thi cho Firefox */
 @-moz-keyframes editItem {
   from {
@@ -330,7 +320,6 @@
     padding-top: 20px;
   }
 }
-
 /* Hien thi cho Safari and Chrome */
 @-webkit-keyframes editItem {
   from {
@@ -342,7 +331,6 @@
     padding-top: 20px;
   }
 }
-
 /* Hien thi cho Opera */
 @-o-keyframes editItem {
   from {
