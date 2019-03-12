@@ -69,7 +69,7 @@ function uploadFileAvatar(req, res) {
     }
     let imageid = Uuid.random();
     try {
-      let file = req.files[0];
+      let file = req.file;
       let image = file.buffer;
       let options = {
         filename: file.originalname,
