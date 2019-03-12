@@ -115,7 +115,7 @@ class NewFeed extends PureComponent {
                               <img
                                 className={styles['img-item']}
                                 style={{ width: '100%' }}
-                                src="https://www.limestone.edu/sites/default/files/user.png"
+                                src="http://www.mmlonline.org/img/user.png"
                                 alt="img"
                               />
                             </span>
@@ -144,7 +144,7 @@ class NewFeed extends PureComponent {
                           </span>
                         </div>
                         <div style={{ background: '#fff' }}>
-                          <Skeleton paragraph={{ rows: 2 }} active />
+                          <Skeleton paragraph={{ rows: 1 }} active />
                         </div>
                       </div>
                     );
