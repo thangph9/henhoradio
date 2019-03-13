@@ -272,12 +272,7 @@ class FormRegister extends PureComponent {
       if (values.password === values.repassword) {
         if (!err && dob_day && dob_month && dob_year && gender) {
           recaptchaRef.current.execute();
-          /*
-         dispatch({
-          type: 'authentication/register',
-          payload: values,
-        });
-         */
+
           this.setState({
             data: values,
           });
@@ -474,7 +469,7 @@ class FormRegister extends PureComponent {
       helpAddress: '',
     });
     if (
-      /^[a-zA-Z0-9 àáạảãâầấậẩẫăằắặẳẵèéẹẻẽêềếệểễìíịỉĩòóọỏõôồốộổỗơờớợởỡùúụủũưừứựửữỳýỵỷỹđÀÁẠẢÃÂẦẤẬẨẪĂẰẮẶẲẴÈÉẸẺẼÊỀẾỆỂỄÌÍỊỈĨÒÓỌỎÕÔỒỐỘỔỖƠỜỚỢỞỠÙÚỤỦŨƯỪỨỰỬỮỲÝỴỶỸĐ]{1,50}$/.test(
+      /^[a-zA-Z0-9 -àáạảãâầấậẩẫăằắặẳẵèéẹẻẽêềếệểễìíịỉĩòóọỏõôồốộổỗơờớợởỡùúụủũưừứựửữỳýỵỷỹđÀÁẠẢÃÂẦẤẬẨẪĂẰẮẶẲẴÈÉẸẺẼÊỀẾỆỂỄÌÍỊỈĨÒÓỌỎÕÔỒỐỘỔỖƠỜỚỢỞỠÙÚỤỦŨƯỪỨỰỬỮỲÝỴỶỸĐ]{1,50}$/.test(
         value
       )
     ) {
