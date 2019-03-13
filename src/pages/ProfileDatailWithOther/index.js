@@ -1,3 +1,6 @@
+/* eslint-disable camelcase */
+/* eslint-disable no-param-reassign */
+/* eslint-disable no-return-assign */
 /* eslint-disable prefer-template */
 /* eslint-disable react/jsx-first-prop-new-line */
 /* eslint-disable react/jsx-max-props-per-line */
@@ -18,11 +21,12 @@
 import React, { Component } from 'react';
 import moment from 'moment';
 import { connect } from 'dva';
-import { Table, Icon, Input, Button, Skeleton, Radio, Checkbox, message } from 'antd';
+import { Table, Icon, Input, Button, Skeleton, Radio, Checkbox, message, Tooltip } from 'antd';
 import styles from './index.less';
 
 const { TextArea } = Input;
 const RadioGroup = Radio.Group;
+const CheckboxGroup = Checkbox.Group;
 @connect(({ profile, loading, authentication }) => ({
   profile,
   loading: loading.effects['profile/fetchAdvanced'],
@@ -40,10 +44,12 @@ class AdvancedProfile extends Component {
       arrRadio: [],
       arrCheck: [],
       arrTextAria: [],
+      yourQuestion: [],
       submitEnable: true,
       'item-editing': undefined,
       groupQuestion: [],
       listQuestion: undefined,
+      validateText: true,
     };
     this.columns = [
       {
@@ -90,6 +96,7 @@ class AdvancedProfile extends Component {
             question: nextProps.authentication.getuserbyid.question,
             title: nextProps.authentication.getuserbyid.title,
             group: nextProps.authentication.getuserbyid.group,
+            yourQuestion: nextProps.authentication.getuserbyid.yourQuestion,
           },
           () => {
             const { title, question } = this.state;
@@ -120,6 +127,27 @@ class AdvancedProfile extends Component {
         );
       } else if (nextProps.authentication.getuserbyid.status === 'error1') {
         nextProps.history.push({ pathname: `home/profile/404` });
+      }
+    }
+    if (
+      this.props.authentication.updateprofilequestion !==
+      nextProps.authentication.updateprofilequestion
+    ) {
+      if (
+        nextProps.authentication.updateprofilequestion.status === 'ok' &&
+        this.props.authentication.updateprofilequestion.timeline !==
+          nextProps.authentication.updateprofilequestion.timeline
+      ) {
+        const { id } = this.props.location.query;
+        this.props.dispatch({
+          type: 'authentication/getuserbyid',
+          payload: {
+            id,
+          },
+        });
+        setTimeout(() => {
+          message.success('Thay đổi dữ liệu thành công');
+        }, 500);
       }
     }
   }
@@ -223,6 +251,105 @@ class AdvancedProfile extends Component {
     });
   }
 
+  checkYourQuestion(question_id) {
+    const result = this.state.yourQuestion.find(element => {
+      return element.question_id === question_id;
+    });
+    if (result) return true;
+    return false;
+  }
+
+  handleCancer() {
+    this.setState({
+      'item-editing': undefined,
+      editing: false,
+      questionEditing: undefined,
+      submitEnable: true,
+      validateText: true,
+    });
+  }
+
+  handleSubmitEdit(value) {
+    if (value.type === '1') {
+      this.props.dispatch({
+        type: 'authentication/updateprofilequestion',
+        payload: {
+          question_id: value.question_id,
+          answer: this.state.arrTextAria,
+        },
+      });
+    } else if (value.type === '2') {
+      this.props.dispatch({
+        type: 'authentication/updateprofilequestion',
+        payload: {
+          question_id: value.question_id,
+          answer: this.state.arrRadio,
+        },
+      });
+    } else if (value.type === '3') {
+      this.props.dispatch({
+        type: 'authentication/updateprofilequestion',
+        payload: {
+          question_id: value.question_id,
+          answer: this.state.arrCheck,
+        },
+      });
+    }
+    this.setState({
+      'item-editing': undefined,
+      editing: false,
+      questionEditing: undefined,
+      submitEnable: true,
+    });
+  }
+
+  handleClickEdit(v, e) {
+    const { title } = this.state;
+    const type = title.find(element => {
+      return element.question_id === e;
+    });
+    const { list } = this.state;
+    if (type.type === '1') {
+      const answer = list.find(element => {
+        return element.question_id === e;
+      });
+      if (answer) {
+        this.setState({
+          arrTextAria: answer.answer,
+          submitEnable: false,
+        });
+      }
+    }
+    if (type.type === '2') {
+      const answer = list.find(element => {
+        return element.question_id === e;
+      });
+      if (answer) {
+        this.setState({
+          arrRadio: answer.answer,
+          submitEnable: false,
+        });
+      }
+    }
+    if (type.type === '3') {
+      const answer = list.find(element => {
+        return element.question_id === e;
+      });
+      if (answer) {
+        this.setState({
+          arrCheck: answer.answer,
+          submitEnable: false,
+        });
+      }
+    }
+    this.setState({
+      editing: true,
+      'item-editing': v,
+      questionEditing: type,
+      type: type.type,
+    });
+  }
+
   render() {
     const { dataUser, list, groupQuestion, listQuestion } = this.state;
     const dataTable = [];
@@ -280,7 +407,124 @@ class AdvancedProfile extends Component {
                 groupQuestion.map(element => {
                   return (
                     <div key={element}>
-                      {
+                      {this.state['item-editing'] && this.state['item-editing'] === element ? (
+                        <div>
+                          <div className={`${styles['form-edit-item']} ${styles['essay-editing']}`}>
+                            <div className={styles['question-item']}>
+                              <div className={styles['theme-question']}>
+                                <span> {this.getTitleGroup(element)}</span>
+                              </div>
+                              <span className={styles['question-title']}>
+                                {this.state.title.filter(e => {
+                                  return e.group_id === element;
+                                }).length > 0 &&
+                                  this.getTitleQuestion(
+                                    !this.state[`question-number-${element}`]
+                                      ? this.state.title.filter(e => {
+                                          return e.group_id === element;
+                                        })[0].question_id
+                                      : this.state[`question-number-${element}`]
+                                  )}
+                              </span>
+                            </div>
+                            <div
+                              className={`${styles['answer-item']} answer-item ${
+                                styles['active-editing']
+                              }`}
+                            >
+                              {this.state.type === '1' && (
+                                <div style={{ width: '100%' }}>
+                                  <TextArea
+                                    onChange={e => this.handleChangeTexeAria(e)}
+                                    style={{ fontSize: '18px', color: 'black', fontWeight: 600 }}
+                                    rows={8}
+                                  />
+                                  <div
+                                    className={styles['validate-text']}
+                                    style={
+                                      this.state.validateText ? { opacity: 0 } : { opacity: 1 }
+                                    }
+                                  >
+                                    Ký tự không hợp lệ hoặc quá dài !
+                                  </div>
+                                </div>
+                              )}
+                              {this.state.type === '2' && (
+                                <div className={`${styles['radio-group']} radio-form`}>
+                                  <RadioGroup onChange={e => this.handleChangeRadioEditing(e)}>
+                                    {this.state.questionEditing.answer.map((v, i) => {
+                                      return (
+                                        <div key={i} className={styles['radio-question']}>
+                                          <Radio
+                                            style={{
+                                              color: '#fff',
+                                              fontSize: '18px',
+                                              display: 'flex',
+                                              alignItems: 'center',
+                                              padding: '20px',
+                                            }}
+                                            value={v}
+                                          >
+                                            {v}
+                                          </Radio>
+                                        </div>
+                                      );
+                                    })}
+                                  </RadioGroup>
+                                </div>
+                              )}
+                              {this.state.type === '3' && (
+                                <div className={`${styles['radio-group']} radio-form`}>
+                                  <CheckboxGroup
+                                    style={{ width: '100%' }}
+                                    onChange={e => this.handleChangeCheckEditing(e)}
+                                  >
+                                    {this.state.questionEditing.answer.map((v, i) => {
+                                      return (
+                                        <div key={i} className={styles['radio-question']}>
+                                          <Checkbox
+                                            style={{
+                                              color: '#fff',
+                                              fontSize: '18px',
+                                              display: 'flex',
+                                              alignItems: 'center',
+                                              padding: '20px',
+                                            }}
+                                            value={v}
+                                          >
+                                            {v}
+                                          </Checkbox>
+                                        </div>
+                                      );
+                                    })}
+                                  </CheckboxGroup>
+                                </div>
+                              )}
+                            </div>
+                          </div>
+                          <div className={styles['button-editing']}>
+                            <Button
+                              onClick={() => this.handleCancer()}
+                              style={{ marginRight: '5px' }}
+                              shape="round"
+                              size="large"
+                            >
+                              CANCER
+                            </Button>
+                            <Button
+                              disabled={this.state.submitEnable}
+                              onClick={() => this.handleSubmitEdit(this.state.questionEditing)}
+                              style={{ marginRight: '5px' }}
+                              type="primary"
+                              shape="round"
+                              icon="check"
+                              size="large"
+                            >
+                              SAVE
+                            </Button>
+                          </div>
+                        </div>
+                      ) : (
                         <div
                           className={styles['form-edit-item']}
                           style={listQuestion === element ? { zIndex: 3 } : {}}
@@ -353,22 +597,72 @@ class AdvancedProfile extends Component {
                           ) : (
                             <div className={`${styles['answer-item']} answer-item`}>
                               <span className={styles['answer-title']}>
-                                Trả lời:{' '}
-                                {this.state.title.filter(e => {
-                                  return e.group_id === element;
-                                }).length > 0 &&
-                                  this.getAnswerQuestion(
+                                {this.checkYourQuestion(
+                                  !this.state[`question-number-${element}`]
+                                    ? this.state.title.filter(e => {
+                                        return e.group_id === element;
+                                      })[0].question_id
+                                    : this.state[`question-number-${element}`]
+                                ) && <span> Trả lời: </span>}
+                                <i
+                                  style={{
+                                    display: 'inline',
+                                    fontSize: '16px',
+                                    color: '#aeb4bf',
+                                    fontWeight: '600',
+                                  }}
+                                >
+                                  {this.checkYourQuestion(
                                     !this.state[`question-number-${element}`]
                                       ? this.state.title.filter(e => {
                                           return e.group_id === element;
                                         })[0].question_id
                                       : this.state[`question-number-${element}`]
+                                  ) ? (
+                                    this.state.title.filter(e => {
+                                      return e.group_id === element;
+                                    }).length > 0 &&
+                                    this.getAnswerQuestion(
+                                      !this.state[`question-number-${element}`]
+                                        ? this.state.title.filter(e => {
+                                            return e.group_id === element;
+                                          })[0].question_id
+                                        : this.state[`question-number-${element}`]
+                                    )
+                                  ) : (
+                                    <span>
+                                      Bạn cần trả lời câu hỏi này để xem câu trả lời của đối phương
+                                      <Tooltip
+                                        placement="topLeft"
+                                        title="Chỉnh sửa câu trả lời của bạn ngay"
+                                      >
+                                        <Icon
+                                          onClick={() =>
+                                            this.handleClickEdit(
+                                              element,
+                                              !this.state[`question-number-${element}`]
+                                                ? this.state.title.filter(e => {
+                                                    return e.group_id === element;
+                                                  })[0].question_id
+                                                : this.state[`question-number-${element}`]
+                                            )
+                                          }
+                                          style={{
+                                            color: '#104da1',
+                                            marginLeft: '10px',
+                                            cursor: 'pointer',
+                                          }}
+                                          type="edit"
+                                        />
+                                      </Tooltip>
+                                    </span>
                                   )}
+                                </i>
                               </span>
                             </div>
                           )}
                         </div>
-                      }
+                      )}
                     </div>
                   );
                 })

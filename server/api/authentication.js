@@ -683,9 +683,26 @@ function getUserById(req, res) {
   let group = [];
   let message = '';
   let userid = undefined;
+  let yourQuestion = [];
+  const token = req.headers['x-access-token'];
+  const verifyOptions = {
+    expiresIn: '30d',
+    algorithm: ['RS256'],
+  };
   let params = req.body;
   async.series(
     [
+      callback => {
+        try {
+          legit = jwt.verify(token, jwtpublic, verifyOptions);
+          callback(null, null);
+        } catch (e) {
+          return res.send({
+            status: 'error',
+            message: 'Sai ma token',
+          });
+        }
+      },
       function(callback) {
         try {
           let id = params.id;
@@ -743,6 +760,30 @@ function getUserById(req, res) {
       },
       callback => {
         try {
+          models.instance.profile.find(
+            { user_id: models.uuidFromString(legit.userid) },
+            { select: ['question_id', 'answer'] },
+            function(err, results) {
+              if (results && results.length > 0) {
+                let arr = [];
+                results.forEach(element => {
+                  let a = JSON.stringify(element);
+                  let obj = JSON.parse(a);
+                  arr.push(obj);
+                });
+                yourQuestion = arr;
+              } else {
+                message = 'Chưa trả lời câu hỏi';
+              }
+              callback(err, null);
+            }
+          );
+        } catch (error) {
+          callback(error, null);
+        }
+      },
+      callback => {
+        try {
           models.instance.question.find({}, function(err, results) {
             if (results && results.length > 0) {
               let arr = [];
@@ -779,7 +820,15 @@ function getUserById(req, res) {
         console.log(err);
         return res.json({ status: 'error' });
       }
-      return res.json({ status: 'ok', data: result, question, message, title, group });
+      return res.json({
+        status: 'ok',
+        data: result,
+        question,
+        message,
+        title,
+        group,
+        yourQuestion,
+      });
     }
   );
 }

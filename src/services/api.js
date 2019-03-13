@@ -160,6 +160,7 @@ export async function getUserById(params) {
   return request('/api/authentication/getuserbyid', {
     method: 'POST',
     body: params,
+    headers: { 'X-Access-Token': JSON.parse(localStorage.getItem('token')) },
   });
 }
 export async function getAllUsers(params) {
