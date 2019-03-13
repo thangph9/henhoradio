@@ -287,7 +287,14 @@ class ThongTinCaNhan extends Component {
             <Form onSubmit={this.handleSubmit} className="login-form">
               <Form.Item label="Tên đầy đủ">
                 {getFieldDecorator('fullname', {
-                  rules: [{ required: true, message: 'Vui lòng nhập đầy đủ tên của bạn' }],
+                  rules: [
+                    { required: true, message: 'Vui lòng nhập đầy đủ tên của bạn' },
+                    {
+                      required: true,
+                      message: 'Ký tự không hợp lệ!',
+                      pattern: /^[a-zA-Z0-9àáạảãâầấậẩẫăằắặẳẵèéẹẻẽêềếệểễìíịỉĩòóọỏõôồốộổỗơờớợởỡùúụủũưừứựửữỳýỵỷỹđÀÁẠẢÃÂẦẤẬẨẪĂẰẮẶẲẴÈÉẸẺẼÊỀẾỆỂỄÌÍỊỈĨÒÓỌỎÕÔỒỐỘỔỖƠỜỚỢỞỠÙÚỤỦŨƯỪỨỰỬỮỲÝỴỶỸĐ][a-zA-Z0-9 àáạảãâầấậẩẫăằắặẳẵèéẹẻẽêềếệểễìíịỉĩòóọỏõôồốộổỗơờớợởỡùúụủũưừứựửữỳýỵỷỹđÀÁẠẢÃÂẦẤẬẨẪĂẰẮẶẲẴÈÉẸẺẼÊỀẾỆỂỄÌÍỊỈĨÒÓỌỎÕÔỒỐỘỔỖƠỜỚỢỞỠÙÚỤỦŨƯỪỨỰỬỮỲÝỴỶỸĐ]{2,30}$/,
+                    },
+                  ],
                   initialValue: dataUser.fullname,
                 })(<Input prefix={<Icon type="user" style={{ color: 'rgba(0,0,0,.25)' }} />} />)}
               </Form.Item>
@@ -354,7 +361,14 @@ class ThongTinCaNhan extends Component {
               </div>
               <Form.Item label="Địa chỉ">
                 {getFieldDecorator('address', {
-                  rules: [{ required: true, message: 'Vui lòng chọn giới tính' }],
+                  rules: [
+                    { required: true, message: 'Vui lòng chọn giới tính' },
+                    {
+                      required: true,
+                      message: 'Ký tự không hợp lệ!',
+                      pattern: /^[a-zA-Z0-9àáạảãâầấậẩẫăằắặẳẵèéẹẻẽêềếệểễìíịỉĩòóọỏõôồốộổỗơờớợởỡùúụủũưừứựửữỳýỵỷỹđÀÁẠẢÃÂẦẤẬẨẪĂẰẮẶẲẴÈÉẸẺẼÊỀẾỆỂỄÌÍỊỈĨÒÓỌỎÕÔỒỐỘỔỖƠỜỚỢỞỠÙÚỤỦŨƯỪỨỰỬỮỲÝỴỶỸĐ][a-zA-Z0-9 àáạảãâầấậẩẫăằắặẳẵèéẹẻẽêềếệểễìíịỉĩòóọỏõôồốộổỗơờớợởỡùúụủũưừứựửữỳýỵỷỹđÀÁẠẢÃÂẦẤẬẨẪĂẰẮẶẲẴÈÉẸẺẼÊỀẾỆỂỄÌÍỊỈĨÒÓỌỎÕÔỒỐỘỔỖƠỜỚỢỞỠÙÚỤỦŨƯỪỨỰỬỮỲÝỴỶỸĐ]{2,30}$/,
+                    },
+                  ],
                   initialValue: dataUser.address,
                 })(<Input prefix={<Icon type="home" style={{ color: 'rgba(0,0,0,.25)' }} />} />)}
               </Form.Item>
@@ -378,7 +392,14 @@ class ThongTinCaNhan extends Component {
               </div>
               <Form.Item label="Trình độc học vấn">
                 {getFieldDecorator('education', {
-                  rules: [{ required: true, message: 'Nhập trình độ học vấn của bạn' }],
+                  rules: [
+                    { required: true, message: 'Nhập trình độ học vấn của bạn' },
+                    {
+                      required: true,
+                      message: 'Ký tự không hợp lệ!',
+                      pattern: /^[a-zA-Z0-9àáạảãâầấậẩẫăằắặẳẵèéẹẻẽêềếệểễìíịỉĩòóọỏõôồốộổỗơờớợởỡùúụủũưừứựửữỳýỵỷỹđÀÁẠẢÃÂẦẤẬẨẪĂẰẮẶẲẴÈÉẸẺẼÊỀẾỆỂỄÌÍỊỈĨÒÓỌỎÕÔỒỐỘỔỖƠỜỚỢỞỠÙÚỤỦŨƯỪỨỰỬỮỲÝỴỶỸĐ][a-zA-Z0-9 àáạảãâầấậẩẫăằắặẳẵèéẹẻẽêềếệểễìíịỉĩòóọỏõôồốộổỗơờớợởỡùúụủũưừứựửữỳýỵỷỹđÀÁẠẢÃÂẦẤẬẨẪĂẰẮẶẲẴÈÉẸẺẼÊỀẾỆỂỄÌÍỊỈĨÒÓỌỎÕÔỒỐỘỔỖƠỜỚỢỞỠÙÚỤỦŨƯỪỨỰỬỮỲÝỴỶỸĐ]{2,30}$/,
+                    },
+                  ],
                   initialValue: dataUser.education ? dataUser.education.education : '',
                 })(
                   <Input
@@ -389,7 +410,14 @@ class ThongTinCaNhan extends Component {
               </Form.Item>
               <Form.Item label="Công việc hiện tại">
                 {getFieldDecorator('jobs', {
-                  rules: [{ required: true, message: 'Nhập công việc của bạn' }],
+                  rules: [
+                    { required: true, message: 'Nhập công việc của bạn' },
+                    {
+                      required: true,
+                      message: 'Ký tự không hợp lệ!',
+                      pattern: /^[a-zA-Z0-9àáạảãâầấậẩẫăằắặẳẵèéẹẻẽêềếệểễìíịỉĩòóọỏõôồốộổỗơờớợởỡùúụủũưừứựửữỳýỵỷỹđÀÁẠẢÃÂẦẤẬẨẪĂẰẮẶẲẴÈÉẸẺẼÊỀẾỆỂỄÌÍỊỈĨÒÓỌỎÕÔỒỐỘỔỖƠỜỚỢỞỠÙÚỤỦŨƯỪỨỰỬỮỲÝỴỶỸĐ][a-zA-Z0-9 àáạảãâầấậẩẫăằắặẳẵèéẹẻẽêềếệểễìíịỉĩòóọỏõôồốộổỗơờớợởỡùúụủũưừứựửữỳýỵỷỹđÀÁẠẢÃÂẦẤẬẨẪĂẰẮẶẲẴÈÉẸẺẼÊỀẾỆỂỄÌÍỊỈĨÒÓỌỎÕÔỒỐỘỔỖƠỜỚỢỞỠÙÚỤỦŨƯỪỨỰỬỮỲÝỴỶỸĐ]{2,30}$/,
+                    },
+                  ],
                   initialValue: dataUser.jobs ? dataUser.jobs.jobs : '',
                 })(
                   <Input
