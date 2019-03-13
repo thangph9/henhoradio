@@ -110,15 +110,11 @@ class NewFeed extends PureComponent {
                         className={styles['cart-item']}
                       >
                         <div className={styles['box-cart']}>
-                          <div className={styles['image-cart']}>
-                            <span>
-                              <img
-                                className={styles['img-item']}
-                                style={{ width: '100%' }}
-                                src="http://www.mmlonline.org/img/user.png"
-                                alt="img"
-                              />
-                            </span>
+                          <div style={{ overflow: 'hidden' }}>
+                            <div
+                              className={styles['background-avatar']}
+                              style={{ backgroundImage: `url(/images/ft/${v.avatar})` }}
+                            />
                           </div>
                           <div className={styles['title-cart']}>
                             <span className={styles['detail']}>{v.fullname}</span>

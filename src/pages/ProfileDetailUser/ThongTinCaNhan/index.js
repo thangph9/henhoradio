@@ -34,6 +34,7 @@ import {
   Upload,
   Modal,
   Tooltip,
+  message,
 } from 'antd';
 import styles from './thongtincanhan.less';
 
@@ -175,6 +176,24 @@ class ThongTinCaNhan extends Component {
             });
           }
         );
+      }
+    }
+    if (
+      this.props.authentication.updateprofileuser !== nextProps.authentication.updateprofileuser
+    ) {
+      if (
+        nextProps.authentication.updateprofileuser.status === 'ok' &&
+        this.props.authentication.updateprofileuser.timeline !==
+          nextProps.authentication.updateprofileuser.timeline
+      ) {
+        nextProps.dispatch({
+          type: 'authentication/getuser',
+        });
+        setTimeout(() => {
+          message.success('Cập nhật thông tin thành công !');
+        }, 500);
+      } else {
+        message.error('Có lỗi xảy ra !');
       }
     }
   }
@@ -440,7 +459,9 @@ class ThongTinCaNhan extends Component {
     }
     return (
       <div style={{ background: '#fff' }}>
-        <Skeleton paragraph={{ rows: 14 }} active />
+        <Skeleton paragraph={{ rows: 5 }} active />
+        <Skeleton paragraph={{ rows: 5 }} active />
+        <Skeleton paragraph={{ rows: 5 }} active />
       </div>
     );
   }

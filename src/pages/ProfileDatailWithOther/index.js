@@ -239,10 +239,15 @@ class AdvancedProfile extends Component {
         {dataUser ? (
           <div className={styles['avatar-user']}>
             <div className={styles['container-avatar']}>
-              <img
-                className={styles['img-avatar']}
-                alt="img"
-                src="https://gw.alipayobjects.com/zos/rmsportal/BiazfanxmamNRoxxVxka.png"
+              <div
+                className={styles['background-avatar']}
+                style={
+                  dataUser.avatar
+                    ? { backgroundImage: `url(/images/ft/${dataUser.avatar})` }
+                    : {
+                        backgroundImage: `url('https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRRfrBguCWgYZbzZNuUieTET8xYdUatKh5t1emOHuR3Cjzihd82')`,
+                      }
+                }
               />
               <div className={styles['account-infomation']}>
                 <div className={styles['name-of-user']}>{dataUser.fullname}</div>
@@ -258,10 +263,11 @@ class AdvancedProfile extends Component {
         ) : (
           <div className={styles['avatar-user']}>
             <div className={styles['container-avatar']}>
-              <img
-                className={styles['img-avatar']}
-                alt="img"
-                src="http://www.mmlonline.org/img/user.png"
+              <div
+                className={styles['background-avatar']}
+                style={{
+                  backgroundImage: `url(https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRRfrBguCWgYZbzZNuUieTET8xYdUatKh5t1emOHuR3Cjzihd82)`,
+                }}
               />
             </div>
           </div>
@@ -395,11 +401,11 @@ class AdvancedProfile extends Component {
                     <div className={styles['right-content']}>
                       <div className={styles['box-ngoai-hinh']}>
                         <span className={styles['item-span']}>Chiều cao: </span>
-                        <i className={styles['thong-tin-ngoai-hinh']}>177cm</i>
+                        <i className={styles['thong-tin-ngoai-hinh']}>{dataUser.height}cm</i>
                       </div>
                       <div className={styles['box-ngoai-hinh']}>
                         <span className={styles['item-span']}>Cân nặng:</span>
-                        <i className={styles['thong-tin-ngoai-hinh']}>70kg</i>
+                        <i className={styles['thong-tin-ngoai-hinh']}>{dataUser.weight}kg</i>
                       </div>
                     </div>
                   </div>
@@ -412,8 +418,8 @@ class AdvancedProfile extends Component {
                     <div className={styles['right-title']}>Nghề nghiệp</div>
                     <div className={styles['right-content']}>
                       <div className={styles['box-ngoai-hinh']}>
-                        <span className={styles['item-span']}>Đang làm việc tại: </span>
-                        <i className={styles['thong-tin-ngoai-hinh']}>Công ty THHH 1 thành viên</i>
+                        <span className={styles['item-span']}>Công việc hiện tại: </span>
+                        <i className={styles['thong-tin-ngoai-hinh']}>{dataUser.jobs.jobs}</i>
                       </div>
                     </div>
                   </div>
@@ -426,8 +432,10 @@ class AdvancedProfile extends Component {
                     <div className={styles['right-title']}>Trình độ học vấn:</div>
                     <div className={styles['right-content']}>
                       <div className={styles['box-ngoai-hinh']}>
-                        <span className={styles['item-span']}>Từng học tại</span>
-                        <i className={styles['thong-tin-ngoai-hinh']}>Đại học công nghiệp Hà Nội</i>
+                        <span className={styles['item-span']}>Cấp bậc:</span>
+                        <i className={styles['thong-tin-ngoai-hinh']}>
+                          {dataUser.education.education}
+                        </i>
                       </div>
                     </div>
                   </div>

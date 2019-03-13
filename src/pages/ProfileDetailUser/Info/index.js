@@ -58,13 +58,6 @@ class Info extends Component {
         <div className={styles['container']}>
           <div className={styles['main']}>
             <div className={styles['detail-left']}>
-              <div className={styles['avatar-cart']}>
-                <img
-                  className={styles['img-avatar']}
-                  alt="img"
-                  src="https://gw.alipayobjects.com/zos/rmsportal/BiazfanxmamNRoxxVxka.png"
-                />
-              </div>
               <div className={styles['menu']}>
                 <div
                   onClick={() => this.handleClickItemMenu(0)}
