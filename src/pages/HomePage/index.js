@@ -113,7 +113,13 @@ class NewFeed extends PureComponent {
                           <div style={{ overflow: 'hidden' }}>
                             <div
                               className={styles['background-avatar']}
-                              style={{ backgroundImage: `url(/images/ft/${v.avatar})` }}
+                              style={
+                                v.avatar
+                                  ? { backgroundImage: `url(/images/ft/${v.avatar})` }
+                                  : {
+                                      backgroundImage: `url(https://mcgillmbajapan.com/wp-content/themes/mcgill/img/anonymous-avatar.png)`,
+                                    }
+                              }
                             />
                           </div>
                           <div className={styles['title-cart']}>
