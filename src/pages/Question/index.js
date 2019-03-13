@@ -165,6 +165,16 @@ class Question extends PureComponent {
         });
       }
     }
+    if (this.props.authentication.sendanswer !== nextProps.authentication.sendanswer) {
+      if (
+        nextProps.authentication.sendanswer.status === 'ok' &&
+        nextProps.authentication.sendanswer.timeline !==
+          this.props.authentication.sendanswer.timeline
+      ) {
+        message.success('Khảo sát thành công! Xin mời đăng nhập ');
+        nextProps.history.push({ pathname: '/login', search: '?ref=0' });
+      }
+    }
   }
 
   render() {

@@ -446,8 +446,7 @@ function sendAnswer(req, res) {
   async.series(tasks, err => {});
   return res.json({
     status: 'ok',
-    user_id: legit.userid,
-    answer: params.answer,
+    timeline: new Date().getTime(),
   });
 }
 function getUser(req, res) {
