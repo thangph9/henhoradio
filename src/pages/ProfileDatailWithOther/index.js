@@ -597,13 +597,20 @@ class AdvancedProfile extends Component {
                           ) : (
                             <div className={`${styles['answer-item']} answer-item`}>
                               <span className={styles['answer-title']}>
-                                {this.checkYourQuestion(
+                                {(this.checkYourQuestion(
                                   !this.state[`question-number-${element}`]
                                     ? this.state.title.filter(e => {
                                         return e.group_id === element;
                                       })[0].question_id
                                     : this.state[`question-number-${element}`]
-                                ) && <span> Trả lời: </span>}
+                                ) ||
+                                  !this.checkQuestionAnswered(
+                                    !this.state[`question-number-${element}`]
+                                      ? this.state.title.filter(e => {
+                                          return e.group_id === element;
+                                        })[0].question_id
+                                      : this.state[`question-number-${element}`]
+                                  )) && <span> Trả lời: </span>}
                                 <i
                                   style={{
                                     display: 'inline',
@@ -613,6 +620,13 @@ class AdvancedProfile extends Component {
                                   }}
                                 >
                                   {this.checkYourQuestion(
+                                    !this.state[`question-number-${element}`]
+                                      ? this.state.title.filter(e => {
+                                          return e.group_id === element;
+                                        })[0].question_id
+                                      : this.state[`question-number-${element}`]
+                                  ) ||
+                                  !this.checkQuestionAnswered(
                                     !this.state[`question-number-${element}`]
                                       ? this.state.title.filter(e => {
                                           return e.group_id === element;
