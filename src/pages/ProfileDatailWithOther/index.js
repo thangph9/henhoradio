@@ -222,7 +222,7 @@ class AdvancedProfile extends Component {
   }
 
   handleChangeCheckEditing(e) {
-    if (e.length > 0) {
+    if (e.length > 0 || (e[0] !== undefined && e[0] === '')) {
       this.setState({
         submitEnable: false,
       });
@@ -231,9 +231,18 @@ class AdvancedProfile extends Component {
         submitEnable: true,
       });
     }
-    this.setState({
-      arrCheck: [e],
-    });
+
+    if (e[0] !== undefined && e[0] === '') {
+      e.splice(0, 1);
+      console.log(e);
+      this.setState({
+        arrCheck: e,
+      });
+    } else {
+      this.setState({
+        arrCheck: e,
+      });
+    }
   }
 
   handleChangeTexeAria(e) {
