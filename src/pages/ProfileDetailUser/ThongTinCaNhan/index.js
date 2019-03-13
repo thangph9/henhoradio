@@ -415,7 +415,7 @@ class ThongTinCaNhan extends Component {
                     {
                       required: true,
                       message: 'Ký tự không hợp lệ!',
-                      pattern: /^[a-zA-Z0-9àáạảãâầấậẩẫăằắặẳẵèéẹẻẽêềếệểễìíịỉĩòóọỏõôồốộổỗơờớợởỡùúụủũưừứựửữỳýỵỷỹđÀÁẠẢÃÂẦẤẬẨẪĂẰẮẶẲẴÈÉẸẺẼÊỀẾỆỂỄÌÍỊỈĨÒÓỌỎÕÔỒỐỘỔỖƠỜỚỢỞỠÙÚỤỦŨƯỪỨỰỬỮỲÝỴỶỸĐ][a-zA-Z0-9 àáạảãâầấậẩẫăằắặẳẵèéẹẻẽêềếệểễìíịỉĩòóọỏõôồốộổỗơờớợởỡùúụủũưừứựửữỳýỵỷỹđÀÁẠẢÃÂẦẤẬẨẪĂẰẮẶẲẴÈÉẸẺẼÊỀẾỆỂỄÌÍỊỈĨÒÓỌỎÕÔỒỐỘỔỖƠỜỚỢỞỠÙÚỤỦŨƯỪỨỰỬỮỲÝỴỶỸĐ]{2,30}$/,
+                      pattern: /^[a-zA-Z0-9 àáạảãâầấậẩẫăằắặẳẵèéẹẻẽêềếệểễìíịỉĩòóọỏõôồốộổỗơờớợởỡùúụủũưừứựửữỳýỵỷỹđÀÁẠẢÃÂẦẤẬẨẪĂẰẮẶẲẴÈÉẸẺẼÊỀẾỆỂỄÌÍỊỈĨÒÓỌỎÕÔỒỐỘỔỖƠỜỚỢỞỠÙÚỤỦŨƯỪỨỰỬỮỲÝỴỶỸĐ]{1,50}$/,
                     },
                   ],
                   initialValue: dataUser.jobs ? dataUser.jobs.jobs : '',
@@ -487,9 +487,11 @@ class ThongTinCaNhan extends Component {
     }
     return (
       <div style={{ background: '#fff' }}>
-        <Skeleton paragraph={{ rows: 5 }} active />
-        <Skeleton paragraph={{ rows: 5 }} active />
-        <Skeleton paragraph={{ rows: 5 }} active />
+        <Skeleton paragraph={{ rows: 3 }} active />
+        <Skeleton paragraph={{ rows: 3 }} active />
+        <Skeleton paragraph={{ rows: 2 }} active />
+        <Skeleton paragraph={{ rows: 4 }} active />
+        <Skeleton paragraph={{ rows: 4 }} active />
       </div>
     );
   }

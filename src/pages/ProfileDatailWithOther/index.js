@@ -401,11 +401,15 @@ class AdvancedProfile extends Component {
                     <div className={styles['right-content']}>
                       <div className={styles['box-ngoai-hinh']}>
                         <span className={styles['item-span']}>Chiều cao: </span>
-                        <i className={styles['thong-tin-ngoai-hinh']}>{dataUser.height}cm</i>
+                        <i className={styles['thong-tin-ngoai-hinh']}>
+                          {dataUser.height ? `${dataUser.height} cm` : 'Chưa xác định'}
+                        </i>
                       </div>
                       <div className={styles['box-ngoai-hinh']}>
                         <span className={styles['item-span']}>Cân nặng:</span>
-                        <i className={styles['thong-tin-ngoai-hinh']}>{dataUser.weight}kg</i>
+                        <i className={styles['thong-tin-ngoai-hinh']}>
+                          {dataUser.weight ? `${dataUser.weight} kg` : 'Chưa xác định'}
+                        </i>
                       </div>
                     </div>
                   </div>
@@ -419,7 +423,9 @@ class AdvancedProfile extends Component {
                     <div className={styles['right-content']}>
                       <div className={styles['box-ngoai-hinh']}>
                         <span className={styles['item-span']}>Công việc hiện tại: </span>
-                        <i className={styles['thong-tin-ngoai-hinh']}>{dataUser.jobs.jobs}</i>
+                        <i className={styles['thong-tin-ngoai-hinh']}>
+                          {dataUser.jobs ? dataUser.jobs.jobs : 'Chưa xác định'}
+                        </i>
                       </div>
                     </div>
                   </div>
@@ -434,7 +440,7 @@ class AdvancedProfile extends Component {
                       <div className={styles['box-ngoai-hinh']}>
                         <span className={styles['item-span']}>Cấp bậc:</span>
                         <i className={styles['thong-tin-ngoai-hinh']}>
-                          {dataUser.education.education}
+                          {dataUser.education ? dataUser.education.education : 'Chưa xác định'}
                         </i>
                       </div>
                     </div>
