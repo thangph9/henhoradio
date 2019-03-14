@@ -33,6 +33,10 @@ module.exports = {
       type: 'map',
       typeDef: '<text,uuid>',
     },
+    phones: {
+      type: 'map',
+      typeDef: '<text,text>',
+    },
     createat: 'timestamp',
   },
   key: ['user_id'],
