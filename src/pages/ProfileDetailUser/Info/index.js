@@ -36,6 +36,7 @@ class Info extends Component {
     super(props);
     this.state = {
       currentMainRight: 0,
+      dataUser: {},
     };
   }
 
@@ -69,7 +70,18 @@ class Info extends Component {
           <div className={styles['main']}>
             <div className={styles['detail-left']}>
               <div className={styles['avatar-cart']}>
-                <div className={styles['background-avatar']} />
+                <div
+                  className={styles['background-avatar']}
+                  style={
+                    dataUser.avatar
+                      ? {
+                          backgroundImage: `url(/images/ft/${dataUser.avatar})`,
+                        }
+                      : {
+                          backgroundImage: `url('https://gw.alipayobjects.com/zos/rmsportal/BiazfanxmamNRoxxVxka.png')`,
+                        }
+                  }
+                />
               </div>
               <div className={styles['menu']}>
                 <div
