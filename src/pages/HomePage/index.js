@@ -146,7 +146,7 @@ class NewFeed extends PureComponent {
                           </span>
                         </div>
                         <div style={{ background: '#fff' }}>
-                          <Skeleton paragraph={{ rows: 1 }} active />
+                          <Skeleton paragraph={{ rows: 2 }} active />
                         </div>
                       </div>
                     );

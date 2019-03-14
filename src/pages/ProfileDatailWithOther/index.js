@@ -692,16 +692,16 @@ class AdvancedProfile extends Component {
               ) : (
                 <div>
                   <div className={styles['form-edit-item']}>
-                    <Skeleton rows={3} />
+                    <Skeleton rows={3} active />
                   </div>
                   <div className={styles['form-edit-item']}>
-                    <Skeleton rows={3} />
+                    <Skeleton rows={3} active />
                   </div>
                   <div className={styles['form-edit-item']}>
-                    <Skeleton rows={3} />
+                    <Skeleton rows={3} active />
                   </div>
                   <div className={styles['form-edit-item']}>
-                    <Skeleton rows={3} />
+                    <Skeleton rows={3} active />
                   </div>
                 </div>
               )}
