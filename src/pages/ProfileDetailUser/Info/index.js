@@ -69,16 +69,7 @@ class Info extends Component {
           <div className={styles['main']}>
             <div className={styles['detail-left']}>
               <div className={styles['avatar-cart']}>
-                <div
-                  className={styles['background-avatar']}
-                  style={
-                    dataUser
-                      ? { backgroundImage: `url(/images/ft/${dataUser.avatar})` }
-                      : {
-                          backgroundImage: `url('https://gw.alipayobjects.com/zos/rmsportal/BiazfanxmamNRoxxVxka.png')`,
-                        }
-                  }
-                />
+                <div className={styles['background-avatar']} />
               </div>
               <div className={styles['menu']}>
                 <div
