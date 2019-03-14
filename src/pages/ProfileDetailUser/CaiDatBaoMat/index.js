@@ -64,6 +64,8 @@ class CaiDatBaoMat extends Component {
       checkCharPass: '',
       valiRePass: '',
       editEmail: false,
+      editPhone: false,
+      formPass: false,
     };
   }
 
@@ -250,9 +252,33 @@ class CaiDatBaoMat extends Component {
     });
   }
 
+  handleChangePhone() {
+    this.setState({
+      editPhone: true,
+    });
+  }
+
+  handleDonePhone() {
+    this.setState({
+      editPhone: false,
+    });
+  }
+
   handleDoneEmail() {
     this.setState({
       editEmail: false,
+    });
+  }
+
+  handleChangeFormPass() {
+    this.setState({
+      formPass: true,
+    });
+  }
+
+  handleCloseFormPass() {
+    this.setState({
+      formPass: false,
     });
   }
 
@@ -265,9 +291,44 @@ class CaiDatBaoMat extends Component {
           <div className={styles['item']}>
             <div className={styles['title-item']}>
               Điện thoai liên hệ
-              <div style={{ color: 'rgba(0, 0, 0, 0.45)' }}>
-                Số điện thoại: <span className={styles['text-item']}>{dataUser.phone}</span>
-              </div>
+              {!this.state.editPhone ? (
+                <Icon
+                  onClick={() => this.handleChangePhone()}
+                  type="edit"
+                  style={{
+                    display: 'inline',
+                    marginLeft: '5px',
+                    color: '#3260c7',
+                    cursor: 'pointer',
+                  }}
+                />
+              ) : (
+                <Icon
+                  onClick={() => this.handleDonePhone()}
+                  type="check-circle"
+                  style={{
+                    display: 'inline',
+                    marginLeft: '5px',
+                    color: '#3260c7',
+                    cursor: 'pointer',
+                  }}
+                />
+              )}
+              {this.state.editPhone ? (
+                <Input
+                  size="small"
+                  style={{ marginTop: '5px', width: '40%', display: 'block' }}
+                  placeholder="Nhập số điện thoại của bạn"
+                />
+              ) : (
+                <div style={{ color: 'rgba(0, 0, 0, 0.45)' }}>
+                  Số điện thoại:{' '}
+                  <span className={styles['text-item']}>
+                    {' '}
+                    {dataUser.phones ? dataUser.phones['1'] : 'Chưa có'}
+                  </span>
+                </div>
+              )}
             </div>
           </div>
           <div className={styles['item']}>
@@ -316,52 +377,38 @@ class CaiDatBaoMat extends Component {
           <div className={styles['item']}>
             <div className={styles['title-item']}>
               Thay đổi mật khẩu
-              <div className={styles['form-pass']}>
-                <Form onSubmit={this.handleSubmit} className="login-form">
-                  <Form.Item>
-                    {getFieldDecorator('password', {
-                      rules: [
-                        {
-                          required: true,
-                          message: 'Nhập mật khẩu',
-                        },
-                      ],
-                    })(
-                      <Input
-                        size="large"
-                        type="password"
-                        autoComplete="password"
-                        placeholder="Mật khẩu hiện tại"
-                      />
-                    )}
-                  </Form.Item>
-                  <Form.Item help={help} validateStatus={this.state.valiPass} hasFeedback>
-                    <Popover
-                      content={
-                        <div style={{ padding: '4px 0' }}>
-                          <Icon
-                            onClick={() => this.handleClosePass()}
-                            style={{
-                              position: 'absolute',
-                              right: '10px',
-                              top: '10px',
-                              cursor: 'pointer',
-                            }}
-                            type="close"
-                          />
-                          {passwordStatusMap[this.getPasswordStatus()]}
-                          {this.renderPasswordProgress()}
-                          <div style={{ marginTop: 10 }}>Mât khẩu ít nhất 6 ký tự</div>
-                        </div>
-                      }
-                      overlayStyle={{ width: 240 }}
-                      placement="right"
-                      visible={visible}
-                    >
-                      {getFieldDecorator('newpassword', {
+              {!this.state.formPass ? (
+                <Icon
+                  onClick={() => this.handleChangeFormPass()}
+                  style={{
+                    display: 'inline',
+                    marginLeft: '4px',
+                    color: '#3260c7',
+                    cursor: 'pointer',
+                  }}
+                  type="edit"
+                />
+              ) : (
+                <Icon
+                  onClick={() => this.handleCloseFormPass()}
+                  style={{
+                    display: 'inline',
+                    marginLeft: '4px',
+                    color: '#3260c7',
+                    cursor: 'pointer',
+                  }}
+                  type="check-circle"
+                />
+              )}
+              {this.state.formPass && (
+                <div className={styles['form-pass']}>
+                  <Form onSubmit={this.handleSubmit} className="login-form">
+                    <Form.Item>
+                      {getFieldDecorator('password', {
                         rules: [
                           {
-                            validator: this.checkPassword,
+                            required: true,
+                            message: 'Nhập mật khẩu',
                           },
                         ],
                       })(
@@ -369,40 +416,79 @@ class CaiDatBaoMat extends Component {
                           size="large"
                           type="password"
                           autoComplete="password"
-                          placeholder="Mật khẩu mới"
+                          placeholder="Mật khẩu hiện tại"
                         />
                       )}
-                    </Popover>
-                  </Form.Item>
-                  <Form.Item
-                    help={this.state.helpRePass}
-                    validateStatus={this.state.valiRePass}
-                    hasFeedback
-                  >
-                    {getFieldDecorator('repassword', {
-                      rules: [
-                        {
-                          required: true,
-                        },
-                      ],
-                    })(
-                      <Input
-                        size="large"
-                        autoComplete="repassword"
-                        onChange={e => this.handleChangeRePass(e)}
-                        onBlur={e => this.validRepassword(e)}
-                        type="password"
-                        placeholder="Nhập lại mật khẩu"
-                      />
-                    )}
-                  </Form.Item>
-                  <Form.Item>
-                    <Button block size="large" type="primary" htmlType="submit">
-                      Thay đổi mật khẩu
-                    </Button>
-                  </Form.Item>
-                </Form>
-              </div>
+                    </Form.Item>
+                    <Form.Item help={help} validateStatus={this.state.valiPass} hasFeedback>
+                      <Popover
+                        content={
+                          <div style={{ padding: '4px 0' }}>
+                            <Icon
+                              onClick={() => this.handleClosePass()}
+                              style={{
+                                position: 'absolute',
+                                right: '10px',
+                                top: '10px',
+                                cursor: 'pointer',
+                              }}
+                              type="close"
+                            />
+                            {passwordStatusMap[this.getPasswordStatus()]}
+                            {this.renderPasswordProgress()}
+                            <div style={{ marginTop: 10 }}>Mât khẩu ít nhất 6 ký tự</div>
+                          </div>
+                        }
+                        overlayStyle={{ width: 240 }}
+                        placement="right"
+                        visible={visible}
+                      >
+                        {getFieldDecorator('newpassword', {
+                          rules: [
+                            {
+                              validator: this.checkPassword,
+                            },
+                          ],
+                        })(
+                          <Input
+                            size="large"
+                            type="password"
+                            autoComplete="password"
+                            placeholder="Mật khẩu mới"
+                          />
+                        )}
+                      </Popover>
+                    </Form.Item>
+                    <Form.Item
+                      help={this.state.helpRePass}
+                      validateStatus={this.state.valiRePass}
+                      hasFeedback
+                    >
+                      {getFieldDecorator('repassword', {
+                        rules: [
+                          {
+                            required: true,
+                          },
+                        ],
+                      })(
+                        <Input
+                          size="large"
+                          autoComplete="repassword"
+                          onChange={e => this.handleChangeRePass(e)}
+                          onBlur={e => this.validRepassword(e)}
+                          type="password"
+                          placeholder="Nhập lại mật khẩu"
+                        />
+                      )}
+                    </Form.Item>
+                    <Form.Item>
+                      <Button block size="large" type="primary" htmlType="submit">
+                        Thay đổi mật khẩu
+                      </Button>
+                    </Form.Item>
+                  </Form>
+                </div>
+              )}
             </div>
           </div>
         </div>
