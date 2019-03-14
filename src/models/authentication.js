@@ -11,6 +11,8 @@ import {
   getUserById,
   updateProfileUser,
   changePass,
+  updatePhone,
+  updateEmail,
 } from '@/services/api';
 import { setAuthority } from '@/utils/authority';
 import { reloadAuthorized } from '@/utils/Authorized';
@@ -31,6 +33,8 @@ export default {
     getuserbyid: {},
     updateprofileuser: {},
     changepass: {},
+    updatephone: {},
+    updateemail: {},
   },
   effects: {
     *login({ payload }, { call, put }) {
@@ -76,6 +80,20 @@ export default {
       const response = yield call(changePass, payload);
       yield put({
         type: 'changePass',
+        payload: response || {},
+      });
+    },
+    *updatephone({ payload }, { call, put }) {
+      const response = yield call(updatePhone, payload);
+      yield put({
+        type: 'updatePhone',
+        payload: response || {},
+      });
+    },
+    *updateemail({ payload }, { call, put }) {
+      const response = yield call(updateEmail, payload);
+      yield put({
+        type: 'updateEmail',
         payload: response || {},
       });
     },
@@ -203,6 +221,18 @@ export default {
       return {
         ...state,
         changepass: action.payload,
+      };
+    },
+    updatePhone(state, action) {
+      return {
+        ...state,
+        updatephone: action.payload,
+      };
+    },
+    updateEmail(state, action) {
+      return {
+        ...state,
+        updateemail: action.payload,
       };
     },
   },

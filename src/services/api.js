@@ -156,6 +156,20 @@ export async function changePass(params) {
     headers: { 'X-Access-Token': JSON.parse(localStorage.getItem('token')) },
   });
 }
+export async function updatePhone(params) {
+  return request('/api/authentication/updatephone', {
+    method: 'POST',
+    body: params,
+    headers: { 'X-Access-Token': JSON.parse(localStorage.getItem('token')) },
+  });
+}
+export async function updateEmail(params) {
+  return request('/api/authentication/updateemail', {
+    method: 'POST',
+    body: params,
+    headers: { 'X-Access-Token': JSON.parse(localStorage.getItem('token')) },
+  });
+}
 export async function getUser(params) {
   return request('/api/authentication/getuser', {
     method: 'POST',

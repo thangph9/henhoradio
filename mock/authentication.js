@@ -1009,6 +1009,118 @@ function changePass(req, res) {
     }
   );
 }
+function updatePhone(req, res) {
+  let legit = {};
+  const token = req.headers['x-access-token'];
+  const params = req.body;
+  let PARAM_IS_VALID = {};
+  const verifyOptions = {
+    expiresIn: '30d',
+    algorithm: ['RS256'],
+  };
+  async.series(
+    [
+      callback => {
+        PARAM_IS_VALID.phone = { '1': params.phone };
+        callback(null, null);
+      },
+      callback => {
+        try {
+          legit = jwt.verify(token, jwtpublic, verifyOptions);
+          callback(null, null);
+        } catch (e) {
+          callback(e, null);
+          return res.send({
+            status: 'error',
+            message: 'Sai ma token',
+          });
+        }
+      },
+      callback => {
+        try {
+          let update_object = {
+            phones: PARAM_IS_VALID.phone,
+          };
+          let object = update_object;
+          models.instance.users.update(
+            { user_id: models.uuidFromString(legit.userid) },
+            object,
+            { if_exist: true },
+            function(err) {
+              if (err) {
+                console.log(err);
+                return res.json({ status: 'error' });
+              }
+              callback(null, null);
+            }
+          );
+        } catch (error) {
+          callback(error, null);
+        }
+      },
+    ],
+    err => {
+      if (err) return res.json({ status: 'error' });
+      return res.json({ status: 'ok', timeline: new Date().getTime() });
+    }
+  );
+}
+function updateEmail(req, res) {
+  let legit = {};
+  const token = req.headers['x-access-token'];
+  const params = req.body;
+  let PARAM_IS_VALID = {};
+  const verifyOptions = {
+    expiresIn: '30d',
+    algorithm: ['RS256'],
+  };
+  async.series(
+    [
+      callback => {
+        PARAM_IS_VALID.email = params.email;
+        callback(null, null);
+      },
+      callback => {
+        try {
+          legit = jwt.verify(token, jwtpublic, verifyOptions);
+          callback(null, null);
+        } catch (e) {
+          callback(e, null);
+          return res.send({
+            status: 'error',
+            message: 'Sai ma token',
+          });
+        }
+      },
+      callback => {
+        try {
+          let update_object = {
+            email: PARAM_IS_VALID.email,
+          };
+          let object = update_object;
+          models.instance.users.update(
+            { user_id: models.uuidFromString(legit.userid) },
+            object,
+            { if_exist: true },
+            function(err) {
+              if (err) {
+                console.log(err);
+                return res.json({ status: 'error' });
+              }
+              callback(null, null);
+            }
+          );
+        } catch (error) {
+          callback(error, null);
+        }
+      },
+    ],
+    err => {
+      if (err) return res.json({ status: 'error' });
+      return res.json({ status: 'ok', timeline: new Date().getTime() });
+    }
+  );
+}
 export default {
   'POST /api/authentication/register': register,
   'POST /api/authentication/login': login,
@@ -1021,4 +1133,6 @@ export default {
   'POST /api/authentication/getuserbyid': getUserById,
   'POST /api/authentication/updateprofileuser': updateProfileUser,
   'POST /api/authentication/changepass': changePass,
+  'POST /api/authentication/updatephone': updatePhone,
+  'POST /api/authentication/updateemail': updateEmail,
 };

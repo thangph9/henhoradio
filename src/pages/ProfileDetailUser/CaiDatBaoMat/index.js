@@ -1,3 +1,4 @@
+/* eslint-disable no-useless-escape */
 /* eslint-disable react/no-access-state-in-setstate */
 /* eslint-disable react/jsx-first-prop-new-line */
 /* eslint-disable react/jsx-max-props-per-line */
@@ -66,6 +67,8 @@ class CaiDatBaoMat extends Component {
       editEmail: false,
       editPhone: false,
       formPass: false,
+      valuePhone: '',
+      valueEmail: '',
     };
   }
 
@@ -81,7 +84,10 @@ class CaiDatBaoMat extends Component {
 
   componentWillReceiveProps(nextProps) {
     if (this.props.authentication.getuser !== nextProps.authentication.getuser) {
-      if (nextProps.authentication.getuser.status === 'ok') {
+      if (
+        nextProps.authentication.getuser.status === 'ok' &&
+        nextProps.authentication.getuser.timeline !== this.props.authentication.getuser.timeline
+      ) {
         this.setState(
           {
             dataUser: nextProps.authentication.getuser.data,
@@ -108,6 +114,34 @@ class CaiDatBaoMat extends Component {
           this.props.authentication.changepass.timeline
       ) {
         message.error('Mật khẩu cũ không chính xác! Vui lòng kiểm tra lại ');
+      }
+    }
+    if (this.props.authentication.updatephone !== nextProps.authentication.updatephone) {
+      if (
+        nextProps.authentication.updatephone.status === 'ok' &&
+        nextProps.authentication.updatephone.timeline !==
+          this.props.authentication.updatephone.timeline
+      ) {
+        this.props.dispatch({
+          type: 'authentication/getuser',
+        });
+        setTimeout(() => {
+          message.success('Cập nhật số điện thoại thành công!');
+        }, 500);
+      }
+    }
+    if (this.props.authentication.updateemail !== nextProps.authentication.updateemail) {
+      if (
+        nextProps.authentication.updateemail.status === 'ok' &&
+        nextProps.authentication.updateemail.timeline !==
+          this.props.authentication.updateemail.timeline
+      ) {
+        this.props.dispatch({
+          type: 'authentication/getuser',
+        });
+        setTimeout(() => {
+          message.success('Cập Email thoại thành công!');
+        }, 500);
       }
     }
   }
@@ -259,12 +293,36 @@ class CaiDatBaoMat extends Component {
   }
 
   handleDonePhone() {
+    if (/^\d{10}$/.test(this.state.valuePhone) === false) {
+      message.error('Số điện thoại không đúng!');
+      return;
+    }
+    this.props.dispatch({
+      type: 'authentication/updatephone',
+      payload: {
+        phone: this.state.valuePhone,
+      },
+    });
     this.setState({
       editPhone: false,
     });
   }
 
   handleDoneEmail() {
+    if (
+      /^([a-zA-Z0-9_\.\-])+\@(([a-zA-Z0-9\-])+\.)+([a-zA-Z0-9]{2,4})+$/.test(
+        this.state.valueEmail
+      ) === false
+    ) {
+      message.error('Email không đúng định dạng!');
+      return;
+    }
+    this.props.dispatch({
+      type: 'authentication/updateemail',
+      payload: {
+        email: this.state.valueEmail,
+      },
+    });
     this.setState({
       editEmail: false,
     });
@@ -279,6 +337,18 @@ class CaiDatBaoMat extends Component {
   handleCloseFormPass() {
     this.setState({
       formPass: false,
+    });
+  }
+
+  handleChangeInputPhone(e) {
+    this.setState({
+      valuePhone: e.target.value,
+    });
+  }
+
+  handleChangeInputEmail(e) {
+    this.setState({
+      valueEmail: e.target.value,
     });
   }
 
@@ -316,6 +386,7 @@ class CaiDatBaoMat extends Component {
               )}
               {this.state.editPhone ? (
                 <Input
+                  onChange={e => this.handleChangeInputPhone(e)}
                   size="small"
                   style={{ marginTop: '5px', width: '40%', display: 'block' }}
                   placeholder="Nhập số điện thoại của bạn"
@@ -325,7 +396,7 @@ class CaiDatBaoMat extends Component {
                   Số điện thoại:{' '}
                   <span className={styles['text-item']}>
                     {' '}
-                    {dataUser.phones ? dataUser.phones['1'] : 'Chưa có'}
+                    {dataUser.phones ? dataUser.phones['1'] : dataUser.phone}
                   </span>
                 </div>
               )}
@@ -359,6 +430,7 @@ class CaiDatBaoMat extends Component {
               )}
               {this.state.editEmail ? (
                 <Input
+                  onChange={e => this.handleChangeInputEmail(e)}
                   size="small"
                   style={{ marginTop: '5px', width: '40%', display: 'block' }}
                   placeholder="Nhập email của bạn"

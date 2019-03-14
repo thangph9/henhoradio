@@ -557,7 +557,15 @@ function getUser(req, res) {
     ],
     err => {
       if (err) return res.json({ status: 'error' });
-      return res.json({ status: 'ok', data: result, question, message, title, group });
+      return res.json({
+        status: 'ok',
+        data: result,
+        question,
+        message,
+        title,
+        group,
+        timeline: new Date().getTime(),
+      });
     }
   );
 }
@@ -1018,6 +1026,118 @@ function changePass(req, res) {
     }
   );
 }
+function updatePhone(req, res) {
+  let legit = {};
+  const token = req.headers['x-access-token'];
+  const params = req.body;
+  let PARAM_IS_VALID = {};
+  const verifyOptions = {
+    expiresIn: '30d',
+    algorithm: ['RS256'],
+  };
+  async.series(
+    [
+      callback => {
+        PARAM_IS_VALID.phone = { '1': params.phone };
+        callback(null, null);
+      },
+      callback => {
+        try {
+          legit = jwt.verify(token, jwtpublic, verifyOptions);
+          callback(null, null);
+        } catch (e) {
+          callback(e, null);
+          return res.send({
+            status: 'error',
+            message: 'Sai ma token',
+          });
+        }
+      },
+      callback => {
+        try {
+          let update_object = {
+            phones: PARAM_IS_VALID.phone,
+          };
+          let object = update_object;
+          models.instance.users.update(
+            { user_id: models.uuidFromString(legit.userid) },
+            object,
+            { if_exist: true },
+            function(err) {
+              if (err) {
+                console.log(err);
+                return res.json({ status: 'error' });
+              }
+              callback(null, null);
+            }
+          );
+        } catch (error) {
+          callback(error, null);
+        }
+      },
+    ],
+    err => {
+      if (err) return res.json({ status: 'error' });
+      return res.json({ status: 'ok', timeline: new Date().getTime() });
+    }
+  );
+}
+function updateEmail(req, res) {
+  let legit = {};
+  const token = req.headers['x-access-token'];
+  const params = req.body;
+  let PARAM_IS_VALID = {};
+  const verifyOptions = {
+    expiresIn: '30d',
+    algorithm: ['RS256'],
+  };
+  async.series(
+    [
+      callback => {
+        PARAM_IS_VALID.email = params.email;
+        callback(null, null);
+      },
+      callback => {
+        try {
+          legit = jwt.verify(token, jwtpublic, verifyOptions);
+          callback(null, null);
+        } catch (e) {
+          callback(e, null);
+          return res.send({
+            status: 'error',
+            message: 'Sai ma token',
+          });
+        }
+      },
+      callback => {
+        try {
+          let update_object = {
+            email: PARAM_IS_VALID.email,
+          };
+          let object = update_object;
+          models.instance.users.update(
+            { user_id: models.uuidFromString(legit.userid) },
+            object,
+            { if_exist: true },
+            function(err) {
+              if (err) {
+                console.log(err);
+                return res.json({ status: 'error' });
+              }
+              callback(null, null);
+            }
+          );
+        } catch (error) {
+          callback(error, null);
+        }
+      },
+    ],
+    err => {
+      if (err) return res.json({ status: 'error' });
+      return res.json({ status: 'ok', timeline: new Date().getTime() });
+    }
+  );
+}
 router.post('/register', register);
 router.post('/login', login);
 router.post('/sendanswer', sendAnswer);
@@ -1029,4 +1149,6 @@ router.post('/updateprofilequestion', updateProfileQuestion);
 router.get('/checkuser/:phone', checkUser);
 router.post('/updateprofileuser', updateProfileUser);
 router.post('/changepass', changePass);
+router.post('/updateemail', updateEmail);
+router.post('/updatephone', updatePhone);
 module.exports = router;
