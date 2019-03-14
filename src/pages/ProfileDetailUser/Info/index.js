@@ -49,15 +49,37 @@ class Info extends Component {
     }
   }
 
+  componentWillReceiveProps(nextProps) {
+    if (this.props.authentication.getuser !== nextProps.authentication.getuser) {
+      if (nextProps.authentication.getuser.status === 'ok') {
+        this.setState({
+          dataUser: nextProps.authentication.getuser.data,
+        });
+      }
+    }
+  }
+
   render() {
     const { menu_item_profile } = this.props.myprops;
-    const { currentMainRight } = this.state;
+    const { currentMainRight, dataUser } = this.state;
     const { children } = this.props;
     return (
       <div className={styles['profile']}>
         <div className={styles['container']}>
           <div className={styles['main']}>
             <div className={styles['detail-left']}>
+              <div className={styles['avatar-cart']}>
+                <div
+                  className={styles['background-avatar']}
+                  style={
+                    dataUser
+                      ? { backgroundImage: `url(/images/ft/${dataUser.avatar})` }
+                      : {
+                          backgroundImage: `url('https://gw.alipayobjects.com/zos/rmsportal/BiazfanxmamNRoxxVxka.png')`,
+                        }
+                  }
+                />
+              </div>
               <div className={styles['menu']}>
                 <div
                   onClick={() => this.handleClickItemMenu(0)}

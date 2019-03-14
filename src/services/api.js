@@ -149,6 +149,13 @@ export async function sendAnswer(params) {
     headers: { 'X-Access-Token': JSON.parse(localStorage.getItem('token')) },
   });
 }
+export async function changePass(params) {
+  return request('/api/authentication/changepass', {
+    method: 'POST',
+    body: params,
+    headers: { 'X-Access-Token': JSON.parse(localStorage.getItem('token')) },
+  });
+}
 export async function getUser(params) {
   return request('/api/authentication/getuser', {
     method: 'POST',

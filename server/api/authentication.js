@@ -1,3 +1,4 @@
+/* eslint-disable no-underscore-dangle */
 /* eslint-disable no-undef-init */
 /* eslint-disable no-shadow */
 /* eslint-disable camelcase */
@@ -912,6 +913,111 @@ function updateProfileUser(req, res) {
     }
   );
 }
+function changePass(req, res) {
+  let params = req.body;
+  let PARAM_IS_VALID = {};
+  let msg = '';
+  let hashPassword = '';
+  let _salt = '';
+  let _hash = '';
+  let saltRounds = 10;
+  let queries = [];
+  let token = req.headers['x-access-token'];
+  let verifyOptions = {
+    expiresIn: '30d',
+    algorithm: ['RS256'],
+  };
+  let legit = {};
+  try {
+    legit = jwt.verify(token, jwtpublic, verifyOptions);
+  } catch (e) {
+    return res.send({
+      status: 'error',
+      message: 'Có lỗi xảy ra! vui lòng đăng nhập lại trước khi đổi mật khẩu',
+    });
+  }
+  async.series(
+    [
+      function(callback) {
+        PARAM_IS_VALID.password = params.password;
+        PARAM_IS_VALID.newpassword = params.newpassword;
+        callback(null, null);
+      },
+      function(callback) {
+        models.instance.login.find({ phone: legit.phone }, function(err, _user) {
+          if (_user !== undefined && _user.length > 0) {
+            hashPassword = _user[0].password;
+          } else {
+            msg = MESSAGE.USER_NOT_FOUND;
+          }
+          callback(err, null);
+        });
+      },
+      function(callback) {
+        if (hashPassword !== '') {
+          bcrypt.compare(PARAM_IS_VALID.password, hashPassword, function(err, result) {
+            // res == true
+            if (result === false) {
+              return res.json({
+                status: 'error0',
+                message: 'Mật khẩu cũ không chính xác',
+                timeline: new Date().getTime(),
+              });
+            }
+            callback(err, null);
+          });
+        } else callback(null, null);
+      },
+      function(callback) {
+        bcrypt.genSalt(saltRounds, function(err, salt) {
+          _salt = salt;
+          callback(err, null);
+        });
+      },
+      function(callback) {
+        bcrypt.hash(params.newpassword, _salt, function(err, hash) {
+          _hash = hash;
+          callback(err, null);
+        });
+      },
+      function(callback) {
+        try {
+          let update_password_object = {
+            password: _hash,
+            password_salt: _salt,
+          };
+          let update_password = () => {
+            let object = update_password_object;
+            let update = models.instance.login.update(
+              { phone: legit.phone, user_id: models.uuidFromString(legit.userid) },
+              object,
+              { if_exist: true, return_query: true }
+            );
+            return update;
+          };
+          queries.push(update_password());
+          callback(null, null);
+        } catch (error) {
+          callback(error, null);
+        }
+      },
+    ],
+    function(err, result) {
+      if (err) return res.json({ status: 'error1' });
+      models.doBatch(queries, function(err) {
+        if (err) {
+          console.log(err);
+          return res.json({ status: 'error2' });
+        }
+        return res.json({
+          status: 'ok',
+          message: 'Thay đổi mật khẩu thành công',
+          timeline: new Date().getTime(),
+        });
+      });
+    }
+  );
+}
 router.post('/register', register);
 router.post('/login', login);
 router.post('/sendanswer', sendAnswer);
@@ -922,4 +1028,5 @@ router.post('/getallusers', getAllUsers);
 router.post('/updateprofilequestion', updateProfileQuestion);
 router.get('/checkuser/:phone', checkUser);
 router.post('/updateprofileuser', updateProfileUser);
+router.post('/changepass', changePass);
 module.exports = router;

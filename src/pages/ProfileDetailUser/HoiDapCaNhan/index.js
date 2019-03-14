@@ -56,12 +56,12 @@ class HoiDapCaNhan extends Component {
       type: 'myprops/menu_item_profile',
       payload: 2,
     });
-    dispatch({
-      type: 'authentication/getuser',
-    });
     this.props.dispatch({
       type: 'myprops/menu_header_mobile',
       payload: false,
+    });
+    this.props.dispatch({
+      type: 'authentication/getuser',
     });
   }
 

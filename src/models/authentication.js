@@ -10,6 +10,7 @@ import {
   getAllUsers,
   getUserById,
   updateProfileUser,
+  changePass,
 } from '@/services/api';
 import { setAuthority } from '@/utils/authority';
 import { reloadAuthorized } from '@/utils/Authorized';
@@ -29,6 +30,7 @@ export default {
     getallusers: {},
     getuserbyid: {},
     updateprofileuser: {},
+    changepass: {},
   },
   effects: {
     *login({ payload }, { call, put }) {
@@ -67,6 +69,13 @@ export default {
       const response = yield call(checkUser, payload);
       yield put({
         type: 'checkUserAuthentication',
+        payload: response || {},
+      });
+    },
+    *changepass({ payload }, { call, put }) {
+      const response = yield call(changePass, payload);
+      yield put({
+        type: 'changePass',
         payload: response || {},
       });
     },
@@ -188,6 +197,12 @@ export default {
       return {
         ...state,
         updateprofileuser: action.payload,
+      };
+    },
+    changePass(state, action) {
+      return {
+        ...state,
+        changepass: action.payload,
       };
     },
   },
