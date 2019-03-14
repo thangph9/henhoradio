@@ -13,12 +13,21 @@ module.exports = {
     fullname: 'text',
     gender: 'varchar',
     height: 'text',
+    weight: 'text',
     hhr_goal: 'text',
     phone: 'text',
     uniqueid: 'int',
     video: {
       type: 'map',
       typeDef: '<text,uuid>',
+    },
+    jobs: {
+      type: 'map',
+      typeDef: '<text,text>',
+    },
+    education: {
+      type: 'map',
+      typeDef: '<text,text>',
     },
     audio: {
       type: 'map',

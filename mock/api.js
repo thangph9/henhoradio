@@ -34,6 +34,17 @@ const avatars2 = [
   'https://gw.alipayobjects.com/zos/rmsportal/UrQsqscbKEpNuJcvBZBu.png',
 ];
 
+const audios = [
+  'https://gamepedia.cursecdn.com/dota2_gamepedia/d/d7/Anti_kill_12.mp3',
+  'https://gamepedia.cursecdn.com/dota2_gamepedia/b/b9/Anti_ability_manavoid_04.mp3',
+  'https://gamepedia.cursecdn.com/dota2_gamepedia/a/a3/Face_kill_07.mp3',
+  'https://gamepedia.cursecdn.com/dota2_gamepedia/7/79/Face_kill_12.mp3',
+  'https://gamepedia.cursecdn.com/dota2_gamepedia/e/e0/Drag_inthebag_01.mp3',
+  'https://gamepedia.cursecdn.com/dota2_gamepedia/2/27/Timb_death_20.mp3',
+  'https://gamepedia.cursecdn.com/dota2_gamepedia/5/59/Tide_rival_02.mp3',
+  'https://gamepedia.cursecdn.com/dota2_gamepedia/9/96/Tide_spawn_03.mp3',
+];
+
 const covers = [
   'https://gw.alipayobjects.com/zos/rmsportal/uMfMFlvUuceEyPpotzlq.png',
   'https://gw.alipayobjects.com/zos/rmsportal/iZBVOIhGJiAnhplqjvZW.png',
@@ -69,6 +80,7 @@ function fakeList(count) {
       owner: user[i % 10],
       title: titles[i % 8],
       avatar: avatars[i % 8],
+      audio: audios[i % 8],
       cover: parseInt(i / 4, 10) % 2 === 0 ? covers[i % 4] : covers[3 - (i % 4)],
       status: ['active', 'exception', 'normal'][i % 3],
       percent: Math.ceil(Math.random() * 50) + 50,

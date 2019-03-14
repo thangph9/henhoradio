@@ -1,3 +1,8 @@
+/* eslint-disable no-use-before-define */
+/* eslint-disable no-shadow */
+
+/* eslint-disable array-callback-return */
+/* eslint-disable prefer-const */
 /* eslint-disable no-unused-vars */
 /* eslint-disable consistent-return */
 /* eslint-disable prefer-arrow-callback */
@@ -8,6 +13,7 @@ const driver = require('cassandra-driver');
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const request = require('request'); // eslint-disable-line
+let mp3Duration = require('mp3-duration');
 const models = require('../settings');
 /* eslint-disable prefer-destructuring */
 const Uuid = driver.types.Uuid;
@@ -279,7 +285,34 @@ function login(req, res) {
     }
   });
 }
+function getTrackList(req, res) {
+  let result = [];
+  let dataDuration = [];
+  let dataTemp = [];
+  async.series(
+    [
+      function(callback) {
+        try {
+          models.instance.track.find({}, function(err, trackData) {
+            let a = JSON.stringify(trackData);
+            result = JSON.parse(a);
+            callback(err, null);
+          });
+        } catch (error) {
+          callback(error, null);
+        }
+      },
+    ],
+    err => {
+      setTimeout(() => {
+        if (err) return res.json({ status: 'error' });
+        return res.json({ status: 'ok', data: result });
+      }, 4000);
+    }
+  );
+}
 export default {
-  'POST /api/authentication/register': register,
-  'POST /api/authentication/login': login,
+  // 'POST /api/authentication/register': register,
+  // 'POST /api/authentication/login': login,
+  'POST /api/tracklist': getTrackList,
 };
