@@ -698,7 +698,7 @@ function getUserById(req, res) {
     expiresIn: '30d',
     algorithm: ['RS256'],
   };
-  let params = req.body;
+  let params = req.params;
   async.series(
     [
       callback => {
@@ -1138,13 +1138,67 @@ function updateEmail(req, res) {
     }
   );
 }
+function getOnlyUser(req, res) {
+  let result = {};
+  let legit = {};
+  const token = req.headers['x-access-token'];
+  const verifyOptions = {
+    expiresIn: '30d',
+    algorithm: ['RS256'],
+  };
+  async.series(
+    [
+      callback => {
+        try {
+          legit = jwt.verify(token, jwtpublic, verifyOptions);
+          callback(null, null);
+        } catch (e) {
+          return res.send({
+            status: 'error',
+            message: 'Sai ma token',
+          });
+        }
+      },
+      callback => {
+        try {
+          models.instance.users.find({ user_id: models.uuidFromString(legit.userid) }, function(
+            err,
+            user
+          ) {
+            if (user && user.length > 0) {
+              result = user[0];
+            } else {
+              return res.json({
+                status: 'error',
+                message: 'Không tìm thấy tài khoản này',
+              });
+            }
+            callback(err, null);
+          });
+        } catch (error) {
+          console.log(error);
+          res.send({ status: 'error' });
+        }
+      },
+    ],
+    err => {
+      if (err) return res.json({ status: 'error' });
+      return res.json({
+        status: 'ok',
+        data: result,
+        timeline: new Date().getTime(),
+      });
+    }
+  );
+}
 router.post('/register', register);
 router.post('/login', login);
-router.post('/sendanswer', sendAnswer);
-router.post('/getuser', getUser);
+router.get('/sendanswer', sendAnswer);
+router.get('/getuser', getUser);
+router.get('/getonlyuser', getOnlyUser);
 router.post('/question', question);
-router.post('/getuserbyid', getUserById);
-router.post('/getallusers', getAllUsers);
+router.get('/getuserbyid/:id', getUserById);
+router.get('/getallusers', getAllUsers);
 router.post('/updateprofilequestion', updateProfileQuestion);
 router.get('/checkuser/:phone', checkUser);
 router.post('/updateprofileuser', updateProfileUser);

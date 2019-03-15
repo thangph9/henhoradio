@@ -159,16 +159,16 @@ class ThongTinCaNhan extends Component {
       payload: 0,
     });
     dispatch({
-      type: 'authentication/getuser',
+      type: 'authentication/getonlyuser',
     });
   }
 
   componentWillReceiveProps(nextProps) {
-    if (this.props.authentication.getuser !== nextProps.authentication.getuser) {
-      if (nextProps.authentication.getuser.status === 'ok') {
+    if (this.props.authentication.getonlyuser !== nextProps.authentication.getonlyuser) {
+      if (nextProps.authentication.getonlyuser.status === 'ok') {
         this.setState(
           {
-            dataUser: nextProps.authentication.getuser.data,
+            dataUser: nextProps.authentication.getonlyuser.data,
           },
           () => {
             this.setState({
@@ -187,7 +187,7 @@ class ThongTinCaNhan extends Component {
           nextProps.authentication.updateprofileuser.timeline
       ) {
         nextProps.dispatch({
-          type: 'authentication/getuser',
+          type: 'authentication/getonlyuser',
         });
         this.setState({
           resetAvatar: false,

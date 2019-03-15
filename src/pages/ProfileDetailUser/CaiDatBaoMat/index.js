@@ -78,19 +78,20 @@ class CaiDatBaoMat extends Component {
       payload: 1,
     });
     this.props.dispatch({
-      type: 'authentication/getuser',
+      type: 'authentication/getonlyuser',
     });
   }
 
   componentWillReceiveProps(nextProps) {
-    if (this.props.authentication.getuser !== nextProps.authentication.getuser) {
+    if (this.props.authentication.getonlyuser !== nextProps.authentication.getonlyuser) {
       if (
-        nextProps.authentication.getuser.status === 'ok' &&
-        nextProps.authentication.getuser.timeline !== this.props.authentication.getuser.timeline
+        nextProps.authentication.getonlyuser.status === 'ok' &&
+        nextProps.authentication.getonlyuser.timeline !==
+          this.props.authentication.getonlyuser.timeline
       ) {
         this.setState(
           {
-            dataUser: nextProps.authentication.getuser.data,
+            dataUser: nextProps.authentication.getonlyuser.data,
           },
           () => {
             this.setState({
@@ -123,7 +124,7 @@ class CaiDatBaoMat extends Component {
           this.props.authentication.updatephone.timeline
       ) {
         this.props.dispatch({
-          type: 'authentication/getuser',
+          type: 'authentication/getonlyuser',
         });
         setTimeout(() => {
           message.success('Cập nhật số điện thoại thành công!');
@@ -137,7 +138,7 @@ class CaiDatBaoMat extends Component {
           this.props.authentication.updateemail.timeline
       ) {
         this.props.dispatch({
-          type: 'authentication/getuser',
+          type: 'authentication/getonlyuser',
         });
         setTimeout(() => {
           message.success('Cập Email thoại thành công!');

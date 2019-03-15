@@ -13,6 +13,7 @@ import {
   changePass,
   updatePhone,
   updateEmail,
+  getOnlyUser,
 } from '@/services/api';
 import { setAuthority } from '@/utils/authority';
 import { reloadAuthorized } from '@/utils/Authorized';
@@ -35,6 +36,7 @@ export default {
     changepass: {},
     updatephone: {},
     updateemail: {},
+    getonlyuser: {},
   },
   effects: {
     *login({ payload }, { call, put }) {
@@ -115,6 +117,13 @@ export default {
       const response = yield call(getUser, payload);
       yield put({
         type: 'getUser',
+        payload: response || {},
+      });
+    },
+    *getonlyuser({ payload }, { call, put }) {
+      const response = yield call(getOnlyUser, payload);
+      yield put({
+        type: 'getOnlyUser',
         payload: response || {},
       });
     },
@@ -233,6 +242,12 @@ export default {
       return {
         ...state,
         updateemail: action.payload,
+      };
+    },
+    getOnlyUser(state, action) {
+      return {
+        ...state,
+        getonlyuser: action.payload,
       };
     },
   },

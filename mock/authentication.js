@@ -681,7 +681,7 @@ function getUserById(req, res) {
     expiresIn: '30d',
     algorithm: ['RS256'],
   };
-  let params = req.body;
+  let params = req.params;
   async.series(
     [
       callback => {
@@ -1121,16 +1121,70 @@ function updateEmail(req, res) {
     }
   );
 }
+function getOnlyUser(req, res) {
+  let result = {};
+  let legit = {};
+  const token = req.headers['x-access-token'];
+  const verifyOptions = {
+    expiresIn: '30d',
+    algorithm: ['RS256'],
+  };
+  async.series(
+    [
+      callback => {
+        try {
+          legit = jwt.verify(token, jwtpublic, verifyOptions);
+          callback(null, null);
+        } catch (e) {
+          return res.send({
+            status: 'error',
+            message: 'Sai ma token',
+          });
+        }
+      },
+      callback => {
+        try {
+          models.instance.users.find({ user_id: models.uuidFromString(legit.userid) }, function(
+            err,
+            user
+          ) {
+            if (user && user.length > 0) {
+              result = user[0];
+            } else {
+              return res.json({
+                status: 'error',
+                message: 'Không tìm thấy tài khoản này',
+              });
+            }
+            callback(err, null);
+          });
+        } catch (error) {
+          console.log(error);
+          res.send({ status: 'error' });
+        }
+      },
+    ],
+    err => {
+      if (err) return res.json({ status: 'error' });
+      return res.json({
+        status: 'ok',
+        data: result,
+        timeline: new Date().getTime(),
+      });
+    }
+  );
+}
 export default {
   'POST /api/authentication/register': register,
   'POST /api/authentication/login': login,
   'GET /api/authentication/checkuser/:phone': checkUser,
-  'POST /api/authentication/question': question,
+  'GET /api/authentication/question': question,
   'POST /api/authentication/sendanswer': sendAnswer,
-  'POST /api/authentication/getuser': getUser,
+  'GET /api/authentication/getuser': getUser,
+  'GET /api/authentication/getonlyuser': getOnlyUser,
   'POST /api/authentication/updateprofilequestion': updateProfileQuestion,
-  'POST /api/authentication/getallusers': getAllUsers,
-  'POST /api/authentication/getuserbyid': getUserById,
+  'GET /api/authentication/getallusers': getAllUsers,
+  'GET /api/authentication/getuserbyid/:id': getUserById,
   'POST /api/authentication/updateprofileuser': updateProfileUser,
   'POST /api/authentication/changepass': changePass,
   'POST /api/authentication/updatephone': updatePhone,

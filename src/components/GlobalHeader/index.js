@@ -56,7 +56,7 @@ class GlobalHeader extends PureComponent {
 
   componentDidMount() {
     this.props.dispatch({
-      type: 'authentication/getuser',
+      type: 'authentication/getonlyuser',
     });
   }
 
@@ -66,10 +66,14 @@ class GlobalHeader extends PureComponent {
         open: nextProps.myprops.menu_header,
       });
     }
-    if (this.props.authentication.getuser !== nextProps.authentication.getuser) {
-      if (nextProps.authentication.getuser.status === 'ok') {
+    if (this.props.authentication.getonlyuser !== nextProps.authentication.getonlyuser) {
+      if (
+        nextProps.authentication.getonlyuser.status === 'ok' &&
+        nextProps.authentication.getonlyuser.timeline !==
+          this.props.authentication.getonlyuser.timeline
+      ) {
         this.setState({
-          dataUser: nextProps.authentication.getuser.data,
+          dataUser: nextProps.authentication.getonlyuser.data,
         });
       }
     }

@@ -81,9 +81,7 @@ class AdvancedProfile extends Component {
     const { id } = this.props.location.query;
     dispatch({
       type: 'authentication/getuserbyid',
-      payload: {
-        id,
-      },
+      payload: id,
     });
   }
 

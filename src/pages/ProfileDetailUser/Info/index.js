@@ -51,10 +51,10 @@ class Info extends Component {
   }
 
   componentWillReceiveProps(nextProps) {
-    if (this.props.authentication.getuser !== nextProps.authentication.getuser) {
-      if (nextProps.authentication.getuser.status === 'ok') {
+    if (this.props.authentication.getonlyuser !== nextProps.authentication.getonlyuser) {
+      if (nextProps.authentication.getonlyuser.status === 'ok') {
         this.setState({
-          dataUser: nextProps.authentication.getuser.data,
+          dataUser: nextProps.authentication.getonlyuser.data,
         });
       }
     }

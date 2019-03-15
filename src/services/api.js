@@ -133,10 +133,9 @@ export async function RegisterAccount(params) {
     body: params,
   });
 }
-export async function questionRegister(params) {
+export async function questionRegister() {
   return request('/api/authentication/question', {
-    method: 'POST',
-    body: params,
+    method: 'GET',
   });
 }
 export async function checkUser(params) {
@@ -170,24 +169,27 @@ export async function updateEmail(params) {
     headers: { 'X-Access-Token': JSON.parse(localStorage.getItem('token')) },
   });
 }
-export async function getUser(params) {
+export async function getUser() {
   return request('/api/authentication/getuser', {
-    method: 'POST',
-    body: params,
+    method: 'GET',
+    headers: { 'X-Access-Token': JSON.parse(localStorage.getItem('token')) },
+  });
+}
+export async function getOnlyUser() {
+  return request('/api/authentication/getonlyuser', {
+    method: 'GET',
     headers: { 'X-Access-Token': JSON.parse(localStorage.getItem('token')) },
   });
 }
 export async function getUserById(params) {
-  return request('/api/authentication/getuserbyid', {
-    method: 'POST',
-    body: params,
+  return request(`/api/authentication/getuserbyid/${params}`, {
+    method: 'GET',
     headers: { 'X-Access-Token': JSON.parse(localStorage.getItem('token')) },
   });
 }
-export async function getAllUsers(params) {
+export async function getAllUsers() {
   return request('/api/authentication/getallusers', {
-    method: 'POST',
-    body: params,
+    method: 'GET',
     headers: { 'X-Access-Token': JSON.parse(localStorage.getItem('token')) },
   });
 }
