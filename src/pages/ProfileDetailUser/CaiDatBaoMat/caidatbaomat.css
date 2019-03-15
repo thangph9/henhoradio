@@ -1,9 +1,14 @@
 .cai-dat-bao-mat {
   background: #fff;
+  margin-bottom: 200px;
 }
 .item {
   padding: 15px;
   border-bottom: 1px solid #f3f5f9;
+}
+.item:last-child {
+  border-bottom: none;
+  padding: 27.5px 15px;
 }
 .title-item {
   font-size: 16px;

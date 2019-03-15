@@ -571,10 +571,7 @@ class CaiDatBaoMat extends Component {
         <div style={{ background: '#fff' }}>
           <Skeleton active rows={2} />
         </div>
-        <div style={{ background: '#fff' }}>
-          <Skeleton active rows={1} />
-        </div>
-        <div style={{ background: '#fff' }}>
+        <div style={{ background: '#fff', padding: '5px' }}>
           <Skeleton active rows={2} />
         </div>
       </div>
