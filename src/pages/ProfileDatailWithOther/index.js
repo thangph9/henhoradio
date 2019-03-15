@@ -234,7 +234,6 @@ class AdvancedProfile extends Component {
 
     if (e[0] !== undefined && e[0] === '') {
       e.splice(0, 1);
-      console.log(e);
       this.setState({
         arrCheck: e,
       });
@@ -691,17 +690,37 @@ class AdvancedProfile extends Component {
                 })
               ) : (
                 <div>
-                  <div className={styles['form-edit-item']}>
-                    <Skeleton paragraph={{ rows: 4 }} active />
+                  <div className={`${styles['form-edit-item']} hoi-dap-ca-nhan`}>
+                    <div style={{ paddingTop: '8px', paddingBottom: '35px' }}>
+                      <Skeleton paragraph={{ rows: 1 }} active />
+                    </div>
+                    <div style={{ paddingBottom: '8px' }}>
+                      <Skeleton title={false} paragraph={{ rows: 1 }} active />
+                    </div>
                   </div>
-                  <div className={styles['form-edit-item']}>
-                    <Skeleton paragraph={{ rows: 4 }} active />
+                  <div className={`${styles['form-edit-item']} hoi-dap-ca-nhan`}>
+                    <div style={{ paddingTop: '8px', paddingBottom: '35px' }}>
+                      <Skeleton paragraph={{ rows: 1 }} active />
+                    </div>
+                    <div style={{ paddingBottom: '8px' }}>
+                      <Skeleton title={false} paragraph={{ rows: 1 }} active />
+                    </div>
                   </div>
-                  <div className={styles['form-edit-item']}>
-                    <Skeleton paragraph={{ rows: 4 }} active />
+                  <div className={`${styles['form-edit-item']} hoi-dap-ca-nhan`}>
+                    <div style={{ paddingTop: '8px', paddingBottom: '35px' }}>
+                      <Skeleton paragraph={{ rows: 1 }} active />
+                    </div>
+                    <div style={{ paddingBottom: '8px' }}>
+                      <Skeleton title={false} paragraph={{ rows: 1 }} active />
+                    </div>
                   </div>
-                  <div className={styles['form-edit-item']}>
-                    <Skeleton paragraph={{ rows: 4 }} active />
+                  <div className={`${styles['form-edit-item']} hoi-dap-ca-nhan`}>
+                    <div style={{ paddingTop: '8px', paddingBottom: '35px' }}>
+                      <Skeleton paragraph={{ rows: 1 }} active />
+                    </div>
+                    <div style={{ paddingBottom: '8px' }}>
+                      <Skeleton title={false} paragraph={{ rows: 1 }} active />
+                    </div>
                   </div>
                 </div>
               )}
@@ -766,17 +785,14 @@ class AdvancedProfile extends Component {
               </div>
             ) : (
               <div style={{ flexBasis: '40%' }} className="skeleton">
-                <div>
-                  <Skeleton rows={3} />
+                <div style={{ paddingBottom: '20px', paddingTop: '15px' }}>
+                  <Skeleton paragraph={{ rows: 2 }} />
                 </div>
-                <div>
-                  <Skeleton rows={3} />
+                <div style={{ paddingBottom: '20px', paddingTop: '15px' }}>
+                  <Skeleton paragraph={{ rows: 1 }} />
                 </div>
-                <div>
-                  <Skeleton rows={3} />
-                </div>
-                <div>
-                  <Skeleton rows={3} />
+                <div style={{ paddingBottom: '20px', paddingTop: '15px' }}>
+                  <Skeleton paragraph={{ rows: 1 }} />
                 </div>
               </div>
             )}

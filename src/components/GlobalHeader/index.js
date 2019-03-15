@@ -1,13 +1,15 @@
 import React, { PureComponent } from 'react';
 import { Link } from 'react-router-dom';
 import Debounce from 'lodash-decorators/debounce';
-import { Icon, Avatar, Button } from 'antd';
+import { Icon, Button } from 'antd';
 import styles from './styles.less';
 
 // eslint-disable-next-line no-undef
 
 class GlobalHeader extends PureComponent {
-  state = {};
+  state = {
+    dataUser: {},
+  };
 
   componentWillUnmount() {
     this.triggerResizeEvent.cancel();
@@ -51,11 +53,25 @@ class GlobalHeader extends PureComponent {
       }
     );
   }
+
+  componentDidMount() {
+    this.props.dispatch({
+      type: 'authentication/getuser',
+    });
+  }
+
   componentWillReceiveProps(nextProps) {
     if (nextProps.myprops.menu_header !== this.props.myprops.menu_header) {
       this.setState({
         open: nextProps.myprops.menu_header,
       });
+    }
+    if (this.props.authentication.getuser !== nextProps.authentication.getuser) {
+      if (nextProps.authentication.getuser.status === 'ok') {
+        this.setState({
+          dataUser: nextProps.authentication.getuser.data,
+        });
+      }
     }
   }
   toggleMenuMobile() {
@@ -70,6 +86,7 @@ class GlobalHeader extends PureComponent {
     this.props.history.push({ pathname: '/' });
   }
   render() {
+    const { dataUser } = this.state;
     return (
       <div className={`${styles.header__header___1t3MH}`}>
         <nav
@@ -263,7 +280,18 @@ class GlobalHeader extends PureComponent {
                       }`}
                       to="/home/profile-user"
                     >
-                      <Avatar style={{ backgroundColor: '#f9f9f9' }} size={30} icon="user" />
+                      <div
+                        className={styles['background-avatar']}
+                        style={
+                          dataUser.avatar
+                            ? {
+                                backgroundImage: `url(/images/ft/${dataUser.avatar})`,
+                              }
+                            : {
+                                backgroundImage: `url('https://gw.alipayobjects.com/zos/rmsportal/BiazfanxmamNRoxxVxka.png')`,
+                              }
+                        }
+                      />
                     </Link>
                   </div>
                 </li>

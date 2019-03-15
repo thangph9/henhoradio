@@ -567,12 +567,29 @@ class CaiDatBaoMat extends Component {
       );
     }
     return (
-      <div className={styles['cai-dat-bao-mat']}>
-        <div style={{ background: '#fff' }}>
-          <Skeleton active rows={2} />
+      <div className={`${styles['cai-dat-bao-mat']} cai-dat-bao-mat`}>
+        <div
+          style={{
+            background: '#fff',
+            paddingTop: '24px',
+            paddingBottom: '10px',
+            borderBottom: '1px solid #f3f5f9',
+          }}
+        >
+          <Skeleton title={false} active paragraph={{ rows: 2 }} />
         </div>
-        <div style={{ background: '#fff', padding: '5px' }}>
-          <Skeleton active rows={2} />
+        <div
+          style={{
+            background: '#fff',
+            paddingTop: '24px',
+            paddingBottom: '10px',
+            borderBottom: '1px solid #f3f5f9',
+          }}
+        >
+          <Skeleton title={false} active paragraph={{ rows: 2 }} />
+        </div>
+        <div style={{ background: '#fff', paddingTop: '32px', paddingBottom: '18px' }}>
+          <Skeleton title={false} active paragraph={{ rows: 1 }} />
         </div>
       </div>
     );

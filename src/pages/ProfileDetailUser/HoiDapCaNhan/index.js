@@ -296,7 +296,7 @@ class HoiDapCaNhan extends Component {
 
     if (e[0] !== undefined && e[0] === '') {
       e.splice(0, 1);
-      console.log(e);
+
       this.setState({
         arrCheck: e,
       });
@@ -596,17 +596,37 @@ class HoiDapCaNhan extends Component {
     }
     return (
       <div>
-        <div className={`${styles['form-edit-item']}`} style={{ padding: '15px' }}>
-          <Skeleton paragraph={{ rows: 4 }} active />
+        <div className={`${styles['form-edit-item']} hoi-dap-ca-nhan`} style={{ padding: '15px' }}>
+          <div>
+            <Skeleton paragraph={{ rows: 1 }} active />
+          </div>
+          <div style={{ paddingTop: '45px' }}>
+            <Skeleton title={false} paragraph={{ rows: 1 }} active />
+          </div>
         </div>
-        <div className={`${styles['form-edit-item']}`} style={{ padding: '15px' }}>
-          <Skeleton paragraph={{ rows: 4 }} active />
+        <div className={`${styles['form-edit-item']} hoi-dap-ca-nhan`} style={{ padding: '15px' }}>
+          <div>
+            <Skeleton paragraph={{ rows: 1 }} active />
+          </div>
+          <div style={{ paddingTop: '45px' }}>
+            <Skeleton title={false} paragraph={{ rows: 1 }} active />
+          </div>
         </div>
-        <div className={`${styles['form-edit-item']}`} style={{ padding: '15px' }}>
-          <Skeleton paragraph={{ rows: 4 }} active />
+        <div className={`${styles['form-edit-item']} hoi-dap-ca-nhan`} style={{ padding: '15px' }}>
+          <div>
+            <Skeleton paragraph={{ rows: 1 }} active />
+          </div>
+          <div style={{ paddingTop: '45px' }}>
+            <Skeleton title={false} paragraph={{ rows: 1 }} active />
+          </div>
         </div>
-        <div className={`${styles['form-edit-item']}`} style={{ padding: '15px' }}>
-          <Skeleton paragraph={{ rows: 4 }} active />
+        <div className={`${styles['form-edit-item']} hoi-dap-ca-nhan`} style={{ padding: '15px' }}>
+          <div>
+            <Skeleton paragraph={{ rows: 1 }} active />
+          </div>
+          <div style={{ paddingTop: '45px' }}>
+            <Skeleton title={false} paragraph={{ rows: 1 }} active />
+          </div>
         </div>
       </div>
     );
