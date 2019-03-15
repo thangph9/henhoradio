@@ -692,16 +692,16 @@ class AdvancedProfile extends Component {
               ) : (
                 <div>
                   <div className={styles['form-edit-item']}>
-                    <Skeleton rows={3} active />
+                    <Skeleton paragraph={{ rows: 4 }} active />
                   </div>
                   <div className={styles['form-edit-item']}>
-                    <Skeleton rows={3} active />
+                    <Skeleton paragraph={{ rows: 4 }} active />
                   </div>
                   <div className={styles['form-edit-item']}>
-                    <Skeleton rows={3} active />
+                    <Skeleton paragraph={{ rows: 4 }} active />
                   </div>
                   <div className={styles['form-edit-item']}>
-                    <Skeleton rows={3} active />
+                    <Skeleton paragraph={{ rows: 4 }} active />
                   </div>
                 </div>
               )}
@@ -781,7 +781,8 @@ class AdvancedProfile extends Component {
               </div>
             )}
           </div>
-          {dataUser ? (
+          {/*
+            dataUser ? (
             <div>
               {this.state.question.length === 0 ? (
                 ''
@@ -798,7 +799,8 @@ class AdvancedProfile extends Component {
             <div style={{ background: '#fff', borderRadius: '5px', marginTop: '20px' }}>
               <Skeleton rows={6} />
             </div>
-          )}
+          )
+          */}
         </div>
       </div>
     );

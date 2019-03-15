@@ -596,17 +596,17 @@ class HoiDapCaNhan extends Component {
     }
     return (
       <div>
-        <div style={{ background: '#fff', marginBottom: '12px' }}>
-          <Skeleton active rows={3} />
+        <div className={`${styles['form-edit-item']}`} style={{ padding: '15px' }}>
+          <Skeleton paragraph={{ rows: 4 }} active />
         </div>
-        <div style={{ background: '#fff', marginBottom: '12px' }}>
-          <Skeleton active rows={3} />
+        <div className={`${styles['form-edit-item']}`} style={{ padding: '15px' }}>
+          <Skeleton paragraph={{ rows: 4 }} active />
         </div>
-        <div style={{ background: '#fff', marginBottom: '12px' }}>
-          <Skeleton active rows={3} />
+        <div className={`${styles['form-edit-item']}`} style={{ padding: '15px' }}>
+          <Skeleton paragraph={{ rows: 4 }} active />
         </div>
-        <div style={{ background: '#fff', marginBottom: '12px' }}>
-          <Skeleton active rows={3} />
+        <div className={`${styles['form-edit-item']}`} style={{ padding: '15px' }}>
+          <Skeleton paragraph={{ rows: 4 }} active />
         </div>
       </div>
     );
