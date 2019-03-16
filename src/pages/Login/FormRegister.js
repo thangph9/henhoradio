@@ -1,10 +1,6 @@
-/* eslint-disable prefer-const */
-/* eslint-disable react/sort-comp */
-/* eslint-disable react/destructuring-assignment */
-/* eslint-disable camelcase */
-/* eslint-disable react/no-unused-state */
-/* eslint-disable no-return-assign */
 /* eslint-disable no-unused-vars */
+/* eslint-disable camelcase */
+
 import React, { PureComponent } from 'react';
 import { connect } from 'dva';
 import { Form, Input, Button, Popover, Progress, Select, Icon } from 'antd';
@@ -13,7 +9,6 @@ import ReCAPTCHA from 'react-google-recaptcha';
 import 'antd/dist/antd.less';
 import styles from './styles.less';
 
-let recaptchaInstance;
 const recaptchaRef = React.createRef();
 const { Option } = Select;
 
@@ -142,7 +137,6 @@ class FormRegister extends PureComponent {
     checkCharPass: '',
     helpRePass: '',
     valiRePass: '',
-    messageName: 'Nhập tên của bạn',
   };
 
   componentWillReceiveProps(nextProps) {
@@ -164,7 +158,7 @@ class FormRegister extends PureComponent {
         recaptchaRef.current.reset();
       }
     }
-    if (this.props.authentication.checkuser !== nextProps.authentication.checkuser) {
+    if (authentication.checkuser !== nextProps.authentication.checkuser) {
       if (nextProps.authentication.checkuser.status === 'ok') {
         this.setState({
           valiPhone: 'success',
@@ -179,17 +173,18 @@ class FormRegister extends PureComponent {
     }
   }
 
-  getPasswordStatus = () => {
-    const { form } = this.props;
-    const value = form.getFieldValue('password');
-    if (value && value.length > 9) {
-      return 'ok';
+  componentWillUpdate(nextProps, nextState) {
+    const { data, value } = this.state;
+    const { dispatch } = this.props;
+    const dataCaptcha = data;
+    if (value !== nextState.value && nextState.value.length > 0) {
+      dataCaptcha.captcha = nextState.value;
+      dispatch({
+        type: 'authentication/register',
+        payload: dataCaptcha,
+      });
     }
-    if (value && value.length > 5) {
-      return 'pass';
-    }
-    return 'poor';
-  };
+  }
 
   handleSubmit = e => {
     e.preventDefault();
@@ -272,7 +267,12 @@ class FormRegister extends PureComponent {
       if (values.password === values.repassword) {
         if (!err && dob_day && dob_month && dob_year && gender) {
           recaptchaRef.current.execute();
-
+          /*
+        dispatch({
+          type: 'authentication/register',
+          payload: values,
+        });
+        */
           this.setState({
             data: values,
           });
@@ -281,18 +281,17 @@ class FormRegister extends PureComponent {
     });
   };
 
-  componentWillUpdate(nextProps, nextState) {
-    const { data, value } = this.state;
-    const { dispatch } = this.props;
-    let dataCaptcha = data;
-    if (value !== nextState.value && nextState.value.length > 0) {
-      dataCaptcha.captcha = nextState.value;
-      dispatch({
-        type: 'authentication/register',
-        payload: dataCaptcha,
-      });
+  getPasswordStatus = () => {
+    const { form } = this.props;
+    const value = form.getFieldValue('password');
+    if (value && value.length > 9) {
+      return 'ok';
     }
-  }
+    if (value && value.length > 5) {
+      return 'pass';
+    }
+    return 'poor';
+  };
 
   checkPassword = (rule, value, callback) => {
     const { visible, confirmDirty } = this.state;
@@ -337,11 +336,12 @@ class FormRegister extends PureComponent {
 
   renderPasswordProgress = () => {
     const { form } = this.props;
+    const { checkCharPass } = this.state;
     const value = form.getFieldValue('password');
     const passwordStatus = this.getPasswordStatus();
     return value && value.length ? (
       <div className={styles[`progress-${passwordStatus}`]}>
-        <span style={{ color: 'red' }}>{this.state.checkCharPass}</span>
+        <span style={{ color: 'red' }}>{checkCharPass}</span>
         <Progress
           status={passwordProgressMap[passwordStatus]}
           className={styles.progress}
@@ -421,9 +421,10 @@ class FormRegister extends PureComponent {
   }
 
   handleBlurPhone(e) {
+    const { localtion } = this.props;
     const { value } = e.target;
     const { form, dispatch } = this.props;
-    const pathname = this.props.localtion;
+    const pathname = localtion;
     if (!/^\d{10}$/.test(value)) {
       this.setState({
         helpPhone: 'Số điện thoại không hợp lệ',
@@ -502,8 +503,22 @@ class FormRegister extends PureComponent {
   render() {
     const {
       form: { getFieldDecorator },
+      validatting,
     } = this.props;
-    const { help, visible, monthSelected, helpPhone, valiPhone } = this.state;
+    const {
+      help,
+      visible,
+      monthSelected,
+      helpPhone,
+      valiPhone,
+      helpName,
+      valiName,
+      helpAddress,
+      valiAddress,
+      valiPass,
+      helpRePass,
+      valiRePass,
+    } = this.state;
     const A = [];
     dayInMonthFull.map((v, i) => {
       A[i] = (
@@ -527,8 +542,8 @@ class FormRegister extends PureComponent {
         <Form.Item
           label="Tên"
           hasFeedback
-          help={this.state.helpName}
-          validateStatus={this.state.valiName}
+          help={helpName}
+          validateStatus={valiName}
           style={{ width: '45%', display: 'inline-block', marginBottom: '0px' }}
         >
           {getFieldDecorator('fullname', {
@@ -592,8 +607,8 @@ class FormRegister extends PureComponent {
         </Form.Item>
         <Form.Item
           label="Địa chỉ"
-          help={this.state.helpAddress}
-          validateStatus={this.state.valiAddress}
+          help={helpAddress}
+          validateStatus={valiAddress}
           hasFeedback
           style={{ width: '45%', display: 'inline-block', marginBottom: '0px' }}
         >
@@ -622,7 +637,7 @@ class FormRegister extends PureComponent {
         </Form.Item>
         <Form.Item
           help={helpPhone}
-          validateStatus={this.props.validatting ? 'validating' : valiPhone}
+          validateStatus={validatting ? 'validating' : valiPhone}
           label="Số điện thoại"
           hasFeedback
           style={{ marginBottom: '0px' }}
@@ -644,7 +659,7 @@ class FormRegister extends PureComponent {
         </Form.Item>
         <Form.Item
           help={help}
-          validateStatus={this.state.valiPass}
+          validateStatus={valiPass}
           hasFeedback
           label="Mật khẩu"
           style={{ marginBottom: '0px' }}
@@ -682,12 +697,7 @@ class FormRegister extends PureComponent {
             )}
           </Popover>
         </Form.Item>
-        <Form.Item
-          help={this.state.helpRePass}
-          validateStatus={this.state.valiRePass}
-          hasFeedback
-          label="Nhập lại"
-        >
+        <Form.Item help={helpRePass} validateStatus={valiRePass} hasFeedback label="Nhập lại">
           {getFieldDecorator('repassword', {
             rules: [
               {

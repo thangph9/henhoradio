@@ -1,50 +1,17 @@
-/* eslint-disable no-nested-ternary */
-/* eslint-disable no-param-reassign */
-/* eslint-disable no-var */
-/* eslint-disable no-dupe-class-members */
 /* eslint-disable react/no-access-state-in-setstate */
-/* eslint-disable react/jsx-first-prop-new-line */
-/* eslint-disable react/jsx-max-props-per-line */
-/* eslint-disable prefer-destructuring */
-/* eslint-disable no-unused-vars */
-/* eslint-disable class-methods-use-this */
-/* eslint-disable react/jsx-closing-tag-location */
-/* eslint-disable react/jsx-indent-props */
-/* eslint-disable react/jsx-indent */
+/* eslint-disable no-nested-ternary */
 /* eslint-disable react/no-array-index-key */
-/* eslint-disable arrow-body-style */
-/* eslint-disable dot-notation */
-/* eslint-disable no-undef */
-/* eslint-disable no-plusplus */
-/* eslint-disable react/no-unused-state */
 /* eslint-disable react/destructuring-assignment */
-/* eslint-disable react/sort-comp */
+/* eslint-disable no-param-reassign */
+
 import React, { Component } from 'react';
 import moment from 'moment';
 import { connect } from 'dva';
-import {
-  Table,
-  Icon,
-  Input,
-  Button,
-  Skeleton,
-  Form,
-  Radio,
-  Select,
-  Upload,
-  Modal,
-  Tooltip,
-  message,
-} from 'antd';
+import { Icon, Input, Button, Skeleton, Form, Radio, Select, Upload, Tooltip, message } from 'antd';
 import styles from './thongtincanhan.less';
 
+// eslint-disable-next-line prefer-destructuring
 const Option = Select.Option;
-const uploadButton = (
-  <div>
-    <Icon type="plus" />
-    <div className="ant-upload-text">Upload</div>
-  </div>
-);
 const years = [
   2002,
   2001,
@@ -164,7 +131,9 @@ class ThongTinCaNhan extends Component {
   }
 
   componentWillReceiveProps(nextProps) {
-    if (this.props.authentication.getonlyuser !== nextProps.authentication.getonlyuser) {
+    const { authentication } = this.props;
+
+    if (authentication.getonlyuser !== nextProps.authentication.getonlyuser) {
       if (nextProps.authentication.getonlyuser.status === 'ok') {
         this.setState(
           {
@@ -178,12 +147,10 @@ class ThongTinCaNhan extends Component {
         );
       }
     }
-    if (
-      this.props.authentication.updateprofileuser !== nextProps.authentication.updateprofileuser
-    ) {
+    if (authentication.updateprofileuser !== nextProps.authentication.updateprofileuser) {
       if (
         nextProps.authentication.updateprofileuser.status === 'ok' &&
-        this.props.authentication.updateprofileuser.timeline !==
+        authentication.updateprofileuser.timeline !==
           nextProps.authentication.updateprofileuser.timeline
       ) {
         nextProps.dispatch({
@@ -202,59 +169,18 @@ class ThongTinCaNhan extends Component {
   }
 
   handleSubmit = e => {
+    const { form, dispatch } = this.props;
+    const { avatarImage } = this.state;
     e.preventDefault();
-    this.props.form.validateFields((err, values) => {
-      values.avatar = this.state.avatarImage;
+    form.validateFields((err, values) => {
+      values.avatar = avatarImage;
       if (!err) {
-        this.props.dispatch({
+        dispatch({
           type: 'authentication/updateprofileuser',
           payload: values,
         });
       }
     });
-  };
-
-  handleChangeDay(e) {
-    console.log(e);
-  }
-
-  handleChangeMonth(e) {
-    console.log(e);
-  }
-
-  handleChangeYear(e) {
-    console.log(e);
-  }
-
-  handleChangeAvatar(e) {
-    console.log(e);
-  }
-
-  handlePreviewAvatar = file => {
-    this.setState({
-      previewImageAvatar: file.url || file.thumbUrl,
-      previewVisibleAvatar: true,
-    });
-  };
-
-  handleChangeAvatar(fileListAvatar) {
-    this.setState({ fileListAvatar: fileListAvatar.fileList }, () => {
-      var image = '';
-      if (
-        this.state.fileListAvatar[this.state.fileListAvatar.length - 1] &&
-        this.state.fileListAvatar[this.state.fileListAvatar.length - 1].response
-      )
-        image = this.state.fileListAvatar[this.state.fileListAvatar.length - 1].response.file
-          .imageid;
-      this.setState({
-        avatarImage: image,
-        resetAvatar: true,
-      });
-    });
-  }
-
-  handleRemoveAvatar = file => {
-    console.log(file);
   };
 
   beforeUploadAvatar = file => {
@@ -274,9 +200,26 @@ class ThongTinCaNhan extends Component {
   };
 
   handleResetAvatar() {
+    const { dataUser } = this.state;
     this.setState({
       resetAvatar: false,
-      avatarImage: this.state.dataUser.avatar,
+      avatarImage: dataUser.avatar,
+    });
+  }
+
+  handleChangeAvatar(fileListAvatar) {
+    this.setState({ fileListAvatar: fileListAvatar.fileList }, () => {
+      let image = '';
+      if (
+        this.state.fileListAvatar[this.state.fileListAvatar.length - 1] &&
+        this.state.fileListAvatar[this.state.fileListAvatar.length - 1].response
+      )
+        image = this.state.fileListAvatar[this.state.fileListAvatar.length - 1].response.file
+          .imageid;
+      this.setState({
+        avatarImage: image,
+        resetAvatar: true,
+      });
     });
   }
 
@@ -319,13 +262,11 @@ class ThongTinCaNhan extends Component {
                     initialValue: dataUser.dob_day,
                   })(
                     <Select style={{ minWidth: '100px' }} onChange={e => this.handleChangeDay(e)}>
-                      {dayInMonthFull.map((v, i) => {
-                        return (
-                          <Option key={i} value={v}>
-                            {v}
-                          </Option>
-                        );
-                      })}
+                      {dayInMonthFull.map((v, i) => (
+                        <Option key={i} value={v}>
+                          {v}
+                        </Option>
+                      ))}
                     </Select>
                   )}
                 </Form.Item>
@@ -335,13 +276,11 @@ class ThongTinCaNhan extends Component {
                     initialValue: dataUser.dob_month,
                   })(
                     <Select style={{ minWidth: '100px' }} onChange={e => this.handleChangeMonth(e)}>
-                      {months.map((v, i) => {
-                        return (
-                          <Option key={i} value={v}>
-                            {v}
-                          </Option>
-                        );
-                      })}
+                      {months.map((v, i) => (
+                        <Option key={i} value={v}>
+                          {v}
+                        </Option>
+                      ))}
                     </Select>
                   )}
                 </Form.Item>
@@ -351,13 +290,11 @@ class ThongTinCaNhan extends Component {
                     initialValue: dataUser.dob_year,
                   })(
                     <Select style={{ minWidth: '100px' }} onChange={e => this.handleChangeYear(e)}>
-                      {years.map((v, i) => {
-                        return (
-                          <Option key={i} value={v}>
-                            {v}
-                          </Option>
-                        );
-                      })}
+                      {years.map((v, i) => (
+                        <Option key={i} value={v}>
+                          {v}
+                        </Option>
+                      ))}
                     </Select>
                   )}
                 </Form.Item>

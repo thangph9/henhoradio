@@ -1,17 +1,11 @@
-/* eslint-disable prefer-const */
-/* eslint-disable react/destructuring-assignment */
-/* eslint-disable no-param-reassign */
 /* eslint-disable no-unused-vars */
-/* eslint-disable react/sort-comp */
-/* eslint-disable no-return-assign */
 /* eslint-disable react/no-unused-state */
+
 import React, { PureComponent } from 'react';
 import { connect } from 'dva';
-// import { Redirect } from 'react-router-dom';
 import { Form, Input, Button } from 'antd';
-import { Link, Redirect } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import ReCAPTCHA from 'react-google-recaptcha';
-import { getAuthority } from '@/utils/authority';
 // import styles from './styles.less';
 const recaptchaRef = React.createRef();
 // eslint-disable-next-line no-unused-vars
@@ -48,31 +42,9 @@ class FormLogin extends PureComponent {
     }
   }
 
-  handleChangeCaptcha = value => {
-    this.setState({ value });
-  };
-
-  handleSubmit = e => {
-    e.preventDefault();
-    const { form, dispatch } = this.props;
-    form.validateFields((err, values) => {
-      if (!err) {
-        recaptchaRef.current.execute();
-        this.setState({
-          data: values,
-        });
-        /*
-          dispatch({
-          type: 'authentication/login',
-          payload: values,
-        });
-        */
-      }
-    });
-  };
-
   componentWillUpdate(nextProps, nextState) {
-    const { dispatch } = this.props;
+    /*
+      const { dispatch } = this.props;
     const { data, value } = this.state;
     let dataCaptcha = data;
     if (value !== nextState.value && nextState.value.length > 0) {
@@ -82,7 +54,30 @@ class FormLogin extends PureComponent {
         payload: dataCaptcha,
       });
     }
+    */
   }
+
+  handleSubmit = e => {
+    e.preventDefault();
+    const { form, dispatch } = this.props;
+    form.validateFields((err, values) => {
+      if (!err) {
+        // recaptchaRef.current.execute();
+        this.setState({
+          data: values,
+        });
+
+        dispatch({
+          type: 'authentication/login',
+          payload: values,
+        });
+      }
+    });
+  };
+
+  handleChangeCaptcha = value => {
+    this.setState({ value });
+  };
 
   handleChangePhone(value) {
     this.setState({
@@ -92,7 +87,9 @@ class FormLogin extends PureComponent {
   }
 
   render() {
-    const { getFieldDecorator } = this.props.form;
+    const {
+      form: { getFieldDecorator },
+    } = this.props;
     const { help, validateStatus } = this.state;
     return (
       <Form onSubmit={e => this.handleSubmit(e)}>

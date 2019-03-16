@@ -1,27 +1,10 @@
-/* eslint-disable camelcase */
-/* eslint-disable no-param-reassign */
-/* eslint-disable no-return-assign */
-/* eslint-disable prefer-template */
-/* eslint-disable react/jsx-first-prop-new-line */
-/* eslint-disable react/jsx-max-props-per-line */
-/* eslint-disable prefer-destructuring */
-/* eslint-disable no-unused-vars */
-/* eslint-disable class-methods-use-this */
-/* eslint-disable react/jsx-closing-tag-location */
-/* eslint-disable react/jsx-indent-props */
-/* eslint-disable react/jsx-indent */
 /* eslint-disable react/no-array-index-key */
-/* eslint-disable arrow-body-style */
-/* eslint-disable dot-notation */
-/* eslint-disable no-undef */
-/* eslint-disable no-plusplus */
-/* eslint-disable react/no-unused-state */
 /* eslint-disable react/destructuring-assignment */
-/* eslint-disable react/sort-comp */
+/* eslint-disable camelcase */
+/* eslint-disable no-plusplus */
 import React, { Component } from 'react';
-import moment from 'moment';
 import { connect } from 'dva';
-import { Table, Icon, Input, Button, Skeleton, Radio, Checkbox, message, Tooltip } from 'antd';
+import { Icon, Input, Button, Skeleton, Radio, Checkbox, message, Tooltip } from 'antd';
 import styles from './index.less';
 
 const { TextArea } = Input;
@@ -77,8 +60,8 @@ class AdvancedProfile extends Component {
   }
 
   componentDidMount() {
-    const { dispatch } = this.props;
-    const { id } = this.props.location.query;
+    const { dispatch, location } = this.props;
+    const { id } = location.query;
     dispatch({
       type: 'authentication/getuserbyid',
       payload: id,
@@ -86,7 +69,8 @@ class AdvancedProfile extends Component {
   }
 
   componentWillReceiveProps(nextProps) {
-    if (this.props.authentication.getuserbyid !== nextProps.authentication.getuserbyid) {
+    const { authentication, location, dispatch } = this.props;
+    if (authentication.getuserbyid !== nextProps.authentication.getuserbyid) {
       if (nextProps.authentication.getuserbyid.status === 'ok') {
         this.setState(
           {
@@ -127,17 +111,14 @@ class AdvancedProfile extends Component {
         nextProps.history.push({ pathname: `home/profile/404` });
       }
     }
-    if (
-      this.props.authentication.updateprofilequestion !==
-      nextProps.authentication.updateprofilequestion
-    ) {
+    if (authentication.updateprofilequestion !== nextProps.authentication.updateprofilequestion) {
       if (
         nextProps.authentication.updateprofilequestion.status === 'ok' &&
-        this.props.authentication.updateprofilequestion.timeline !==
+        authentication.updateprofilequestion.timeline !==
           nextProps.authentication.updateprofilequestion.timeline
       ) {
-        const { id } = this.props.location.query;
-        this.props.dispatch({
+        const { id } = location.query;
+        dispatch({
           type: 'authentication/getuserbyid',
           payload: {
             id,
@@ -150,18 +131,28 @@ class AdvancedProfile extends Component {
     }
   }
 
-  handleClickListQuestion(v) {
-    if (this.state.listQuestion === v) {
-      this.setState({
-        listQuestion: undefined,
-        editing: false,
-      });
-    } else {
-      this.setState({
-        listQuestion: v,
-        editing: true,
-      });
-    }
+  getTitleGroup(value) {
+    const { group } = this.state;
+    return group.find(e => e.group_id === value).title;
+  }
+
+  getTitleQuestion(value) {
+    const { title } = this.state;
+    return title.find(element => element.question_id === value).title;
+  }
+
+  getAnswerQuestion(value) {
+    const { list } = this.state;
+    const answer = list.find(element => element.question_id === value);
+    if (answer) return answer.answer.toString();
+    return '';
+  }
+
+  checkQuestionAnswered(value) {
+    const { list } = this.state;
+    const question = list.find(element => element.question_id === value);
+    if (question) return true;
+    return false;
   }
 
   handleClickQuestionItem(element, value) {
@@ -172,36 +163,19 @@ class AdvancedProfile extends Component {
     });
   }
 
-  getTitleGroup(value) {
-    const { group } = this.state;
-    return group.find(e => {
-      return e.group_id === value;
-    }).title;
-  }
-
-  checkQuestionAnswered(value) {
-    const { list } = this.state;
-    const question = list.find(element => {
-      return element.question_id === value;
-    });
-    if (question) return true;
-    return false;
-  }
-
-  getTitleQuestion(value) {
-    const { title } = this.state;
-    return title.find(element => {
-      return element.question_id === value;
-    }).title;
-  }
-
-  getAnswerQuestion(value) {
-    const { list } = this.state;
-    const answer = list.find(element => {
-      return element.question_id === value;
-    });
-    if (answer) return answer.answer.toString();
-    return '';
+  handleClickListQuestion(v) {
+    const { listQuestion } = this.state;
+    if (listQuestion === v) {
+      this.setState({
+        listQuestion: undefined,
+        editing: false,
+      });
+    } else {
+      this.setState({
+        listQuestion: v,
+        editing: true,
+      });
+    }
   }
 
   handleChangeRadioEditing(e) {
@@ -258,9 +232,8 @@ class AdvancedProfile extends Component {
   }
 
   checkYourQuestion(question_id) {
-    const result = this.state.yourQuestion.find(element => {
-      return element.question_id === question_id;
-    });
+    const { yourQuestion } = this.state;
+    const result = yourQuestion.find(element => element.question_id === question_id);
     if (result) return true;
     return false;
   }
@@ -276,28 +249,30 @@ class AdvancedProfile extends Component {
   }
 
   handleSubmitEdit(value) {
+    const { dispatch } = this.props;
+    const { arrTextAria, arrRadio, arrCheck } = this.state;
     if (value.type === '1') {
-      this.props.dispatch({
+      dispatch({
         type: 'authentication/updateprofilequestion',
         payload: {
           question_id: value.question_id,
-          answer: this.state.arrTextAria,
+          answer: arrTextAria,
         },
       });
     } else if (value.type === '2') {
-      this.props.dispatch({
+      dispatch({
         type: 'authentication/updateprofilequestion',
         payload: {
           question_id: value.question_id,
-          answer: this.state.arrRadio,
+          answer: arrRadio,
         },
       });
     } else if (value.type === '3') {
-      this.props.dispatch({
+      dispatch({
         type: 'authentication/updateprofilequestion',
         payload: {
           question_id: value.question_id,
-          answer: this.state.arrCheck,
+          answer: arrCheck,
         },
       });
     }
@@ -311,14 +286,10 @@ class AdvancedProfile extends Component {
 
   handleClickEdit(v, e) {
     const { title } = this.state;
-    const type = title.find(element => {
-      return element.question_id === e;
-    });
+    const type = title.find(element => element.question_id === e);
     const { list } = this.state;
     if (type.type === '1') {
-      const answer = list.find(element => {
-        return element.question_id === e;
-      });
+      const answer = list.find(element => element.question_id === e);
       if (answer) {
         this.setState({
           arrTextAria: answer.answer,
@@ -327,9 +298,7 @@ class AdvancedProfile extends Component {
       }
     }
     if (type.type === '2') {
-      const answer = list.find(element => {
-        return element.question_id === e;
-      });
+      const answer = list.find(element => element.question_id === e);
       if (answer) {
         this.setState({
           arrRadio: answer.answer,
@@ -338,9 +307,7 @@ class AdvancedProfile extends Component {
       }
     }
     if (type.type === '3') {
-      const answer = list.find(element => {
-        return element.question_id === e;
-      });
+      const answer = list.find(element => element.question_id === e);
       if (answer) {
         this.setState({
           arrCheck: answer.answer,
@@ -357,7 +324,7 @@ class AdvancedProfile extends Component {
   }
 
   render() {
-    const { dataUser, list, groupQuestion, listQuestion } = this.state;
+    const { dataUser, list, groupQuestion, listQuestion, editing } = this.state;
     const dataTable = [];
     list.forEach((v, i) => {
       const productTable = {};
@@ -368,7 +335,7 @@ class AdvancedProfile extends Component {
       dataTable.push(productTable);
     });
     return (
-      <div className={styles['profile']}>
+      <div className={styles.profile}>
         {dataUser ? (
           <div className={styles['avatar-user']}>
             <div className={styles['container-avatar']}>
@@ -406,286 +373,262 @@ class AdvancedProfile extends Component {
           </div>
         )}
         <div className={styles.container}>
-          {this.state.editing && <div className={styles['editing']} />}
+          {editing && <div className={styles.editing} />}
           <div className={styles['edit-form']}>
             <div className={`${styles['edit-form-left']} text-form`}>
               {dataUser ? (
-                groupQuestion.map(element => {
-                  return (
-                    <div key={element}>
-                      {this.state['item-editing'] && this.state['item-editing'] === element ? (
-                        <div>
-                          <div className={`${styles['form-edit-item']} ${styles['essay-editing']}`}>
-                            <div className={styles['question-item']}>
-                              <div className={styles['theme-question']}>
-                                <span> {this.getTitleGroup(element)}</span>
-                              </div>
-                              <span className={styles['question-title']}>
-                                {this.state.title.filter(e => {
-                                  return e.group_id === element;
-                                }).length > 0 &&
-                                  this.getTitleQuestion(
-                                    !this.state[`question-number-${element}`]
-                                      ? this.state.title.filter(e => {
-                                          return e.group_id === element;
-                                        })[0].question_id
-                                      : this.state[`question-number-${element}`]
-                                  )}
-                              </span>
-                            </div>
-                            <div
-                              className={`${styles['answer-item']} answer-item ${
-                                styles['active-editing']
-                              }`}
-                            >
-                              {this.state.type === '1' && (
-                                <div style={{ width: '100%' }}>
-                                  <TextArea
-                                    onChange={e => this.handleChangeTexeAria(e)}
-                                    style={{ fontSize: '18px', color: 'black', fontWeight: 600 }}
-                                    rows={8}
-                                  />
-                                  <div
-                                    className={styles['validate-text']}
-                                    style={
-                                      this.state.validateText ? { opacity: 0 } : { opacity: 1 }
-                                    }
-                                  >
-                                    Ký tự không hợp lệ hoặc quá dài !
-                                  </div>
-                                </div>
-                              )}
-                              {this.state.type === '2' && (
-                                <div className={`${styles['radio-group']} radio-form`}>
-                                  <RadioGroup onChange={e => this.handleChangeRadioEditing(e)}>
-                                    {this.state.questionEditing.answer.map((v, i) => {
-                                      return (
-                                        <div key={i} className={styles['radio-question']}>
-                                          <Radio
-                                            style={{
-                                              color: '#fff',
-                                              fontSize: '18px',
-                                              display: 'flex',
-                                              alignItems: 'center',
-                                              padding: '20px',
-                                            }}
-                                            value={v}
-                                          >
-                                            {v}
-                                          </Radio>
-                                        </div>
-                                      );
-                                    })}
-                                  </RadioGroup>
-                                </div>
-                              )}
-                              {this.state.type === '3' && (
-                                <div className={`${styles['radio-group']} radio-form`}>
-                                  <CheckboxGroup
-                                    style={{ width: '100%' }}
-                                    onChange={e => this.handleChangeCheckEditing(e)}
-                                  >
-                                    {this.state.questionEditing.answer.map((v, i) => {
-                                      return (
-                                        <div key={i} className={styles['radio-question']}>
-                                          <Checkbox
-                                            style={{
-                                              color: '#fff',
-                                              fontSize: '18px',
-                                              display: 'flex',
-                                              alignItems: 'center',
-                                              padding: '20px',
-                                            }}
-                                            value={v}
-                                          >
-                                            {v}
-                                          </Checkbox>
-                                        </div>
-                                      );
-                                    })}
-                                  </CheckboxGroup>
-                                </div>
-                              )}
-                            </div>
-                          </div>
-                          <div className={styles['button-editing']}>
-                            <Button
-                              onClick={() => this.handleCancer()}
-                              style={{ marginRight: '5px' }}
-                              shape="round"
-                              size="large"
-                            >
-                              CANCER
-                            </Button>
-                            <Button
-                              disabled={this.state.submitEnable}
-                              onClick={() => this.handleSubmitEdit(this.state.questionEditing)}
-                              style={{ marginRight: '5px' }}
-                              type="primary"
-                              shape="round"
-                              icon="check"
-                              size="large"
-                            >
-                              SAVE
-                            </Button>
-                          </div>
-                        </div>
-                      ) : (
-                        <div
-                          className={styles['form-edit-item']}
-                          style={listQuestion === element ? { zIndex: 3 } : {}}
-                        >
-                          <div
-                            onClick={() => this.handleClickListQuestion(element)}
-                            className={styles['question-item']}
-                          >
+                groupQuestion.map(element => (
+                  <div key={element}>
+                    {this.state['item-editing'] && this.state['item-editing'] === element ? (
+                      <div>
+                        <div className={`${styles['form-edit-item']} ${styles['essay-editing']}`}>
+                          <div className={styles['question-item']}>
                             <div className={styles['theme-question']}>
                               <span> {this.getTitleGroup(element)}</span>
-                              {listQuestion && listQuestion === element ? (
-                                <Icon type="caret-up" />
-                              ) : (
-                                <Icon type="caret-down" />
-                              )}
                             </div>
                             <span className={styles['question-title']}>
-                              {this.state.title.filter(e => {
-                                return e.group_id === element;
-                              }).length > 0 &&
+                              {this.state.title.filter(e => e.group_id === element).length > 0 &&
                                 this.getTitleQuestion(
                                   !this.state[`question-number-${element}`]
-                                    ? this.state.title.filter(e => {
-                                        return e.group_id === element;
-                                      })[0].question_id
+                                    ? this.state.title.filter(e => e.group_id === element)[0]
+                                        .question_id
                                     : this.state[`question-number-${element}`]
                                 )}
                             </span>
                           </div>
-                          {listQuestion && listQuestion === element && (
-                            <div className={styles['list-question-hidden']}>
-                              {this.state.title
-                                .filter(e => {
-                                  return e.group_id === element;
-                                })
-                                .map((v, i) => {
-                                  if (
-                                    v.title ===
-                                    this.getTitleQuestion(
-                                      !this.state[`question-number-${element}`]
-                                        ? this.state.title.filter(e => {
-                                            return e.group_id === element;
-                                          })[0].question_id
-                                        : this.state[`question-number-${element}`]
-                                    )
-                                  ) {
-                                    return '';
-                                  }
-                                  return (
-                                    <div
-                                      onClick={() =>
-                                        this.handleClickQuestionItem(element, v.question_id)
-                                      }
-                                      key={i}
-                                      className={styles['item-question']}
-                                    >
-                                      <span>{v.title}</span>
-                                      {!this.checkQuestionAnswered(v.question_id) && (
-                                        <span className={styles['chua-hoan-thien']}>
-                                          Chưa hoàn thiện
-                                        </span>
-                                      )}
+                          <div
+                            className={`${styles['answer-item']} answer-item ${
+                              styles['active-editing']
+                            }`}
+                          >
+                            {this.state.type === '1' && (
+                              <div style={{ width: '100%' }}>
+                                <TextArea
+                                  onChange={e => this.handleChangeTexeAria(e)}
+                                  style={{ fontSize: '18px', color: 'black', fontWeight: 600 }}
+                                  rows={8}
+                                />
+                                <div
+                                  className={styles['validate-text']}
+                                  style={this.state.validateText ? { opacity: 0 } : { opacity: 1 }}
+                                >
+                                  Ký tự không hợp lệ hoặc quá dài !
+                                </div>
+                              </div>
+                            )}
+                            {this.state.type === '2' && (
+                              <div className={`${styles['radio-group']} radio-form`}>
+                                <RadioGroup onChange={e => this.handleChangeRadioEditing(e)}>
+                                  {this.state.questionEditing.answer.map((v, i) => (
+                                    <div key={i} className={styles['radio-question']}>
+                                      <Radio
+                                        style={{
+                                          color: '#fff',
+                                          fontSize: '18px',
+                                          display: 'flex',
+                                          alignItems: 'center',
+                                          padding: '20px',
+                                        }}
+                                        value={v}
+                                      >
+                                        {v}
+                                      </Radio>
                                     </div>
-                                  );
-                                })}
-                            </div>
-                          )}
-                          {listQuestion && listQuestion === element ? (
-                            ''
-                          ) : (
-                            <div className={`${styles['answer-item']} answer-item`}>
-                              <span className={styles['answer-title']}>
-                                {(this.checkYourQuestion(
+                                  ))}
+                                </RadioGroup>
+                              </div>
+                            )}
+                            {this.state.type === '3' && (
+                              <div className={`${styles['radio-group']} radio-form`}>
+                                <CheckboxGroup
+                                  style={{ width: '100%' }}
+                                  onChange={e => this.handleChangeCheckEditing(e)}
+                                >
+                                  {this.state.questionEditing.answer.map((v, i) => (
+                                    <div key={i} className={styles['radio-question']}>
+                                      <Checkbox
+                                        style={{
+                                          color: '#fff',
+                                          fontSize: '18px',
+                                          display: 'flex',
+                                          alignItems: 'center',
+                                          padding: '20px',
+                                        }}
+                                        value={v}
+                                      >
+                                        {v}
+                                      </Checkbox>
+                                    </div>
+                                  ))}
+                                </CheckboxGroup>
+                              </div>
+                            )}
+                          </div>
+                        </div>
+                        <div className={styles['button-editing']}>
+                          <Button
+                            onClick={() => this.handleCancer()}
+                            style={{ marginRight: '5px' }}
+                            shape="round"
+                            size="large"
+                          >
+                            CANCER
+                          </Button>
+                          <Button
+                            disabled={this.state.submitEnable}
+                            onClick={() => this.handleSubmitEdit(this.state.questionEditing)}
+                            style={{ marginRight: '5px' }}
+                            type="primary"
+                            shape="round"
+                            icon="check"
+                            size="large"
+                          >
+                            SAVE
+                          </Button>
+                        </div>
+                      </div>
+                    ) : (
+                      <div
+                        className={styles['form-edit-item']}
+                        style={listQuestion === element ? { zIndex: 3 } : {}}
+                      >
+                        <div
+                          onClick={() => this.handleClickListQuestion(element)}
+                          className={styles['question-item']}
+                        >
+                          <div className={styles['theme-question']}>
+                            <span> {this.getTitleGroup(element)}</span>
+                            {listQuestion && listQuestion === element ? (
+                              <Icon type="caret-up" />
+                            ) : (
+                              <Icon type="caret-down" />
+                            )}
+                          </div>
+                          <span className={styles['question-title']}>
+                            {this.state.title.filter(e => e.group_id === element).length > 0 &&
+                              this.getTitleQuestion(
+                                !this.state[`question-number-${element}`]
+                                  ? this.state.title.filter(e => e.group_id === element)[0]
+                                      .question_id
+                                  : this.state[`question-number-${element}`]
+                              )}
+                          </span>
+                        </div>
+                        {listQuestion && listQuestion === element && (
+                          <div className={styles['list-question-hidden']}>
+                            {this.state.title
+                              .filter(e => e.group_id === element)
+                              .map((v, i) => {
+                                if (
+                                  v.title ===
+                                  this.getTitleQuestion(
+                                    !this.state[`question-number-${element}`]
+                                      ? this.state.title.filter(e => e.group_id === element)[0]
+                                          .question_id
+                                      : this.state[`question-number-${element}`]
+                                  )
+                                ) {
+                                  return '';
+                                }
+                                return (
+                                  <div
+                                    onClick={() =>
+                                      this.handleClickQuestionItem(element, v.question_id)
+                                    }
+                                    key={i}
+                                    className={styles['item-question']}
+                                  >
+                                    <span>{v.title}</span>
+                                    {!this.checkQuestionAnswered(v.question_id) && (
+                                      <span className={styles['chua-hoan-thien']}>
+                                        Chưa hoàn thiện
+                                      </span>
+                                    )}
+                                  </div>
+                                );
+                              })}
+                          </div>
+                        )}
+                        {listQuestion && listQuestion === element ? (
+                          ''
+                        ) : (
+                          <div className={`${styles['answer-item']} answer-item`}>
+                            <span className={styles['answer-title']}>
+                              {(this.checkYourQuestion(
+                                !this.state[`question-number-${element}`]
+                                  ? this.state.title.filter(e => e.group_id === element)[0]
+                                      .question_id
+                                  : this.state[`question-number-${element}`]
+                              ) ||
+                                !this.checkQuestionAnswered(
                                   !this.state[`question-number-${element}`]
-                                    ? this.state.title.filter(e => {
-                                        return e.group_id === element;
-                                      })[0].question_id
+                                    ? this.state.title.filter(e => e.group_id === element)[0]
+                                        .question_id
+                                    : this.state[`question-number-${element}`]
+                                )) && <span> Trả lời: </span>}
+                              <i
+                                style={{
+                                  display: 'inline',
+                                  fontSize: '16px',
+                                  color: '#aeb4bf',
+                                  fontWeight: '600',
+                                }}
+                              >
+                                {this.checkYourQuestion(
+                                  !this.state[`question-number-${element}`]
+                                    ? this.state.title.filter(e => e.group_id === element)[0]
+                                        .question_id
                                     : this.state[`question-number-${element}`]
                                 ) ||
-                                  !this.checkQuestionAnswered(
+                                !this.checkQuestionAnswered(
+                                  !this.state[`question-number-${element}`]
+                                    ? this.state.title.filter(e => e.group_id === element)[0]
+                                        .question_id
+                                    : this.state[`question-number-${element}`]
+                                ) ? (
+                                  this.state.title.filter(e => e.group_id === element).length > 0 &&
+                                  this.getAnswerQuestion(
                                     !this.state[`question-number-${element}`]
-                                      ? this.state.title.filter(e => {
-                                          return e.group_id === element;
-                                        })[0].question_id
+                                      ? this.state.title.filter(e => e.group_id === element)[0]
+                                          .question_id
                                       : this.state[`question-number-${element}`]
-                                  )) && <span> Trả lời: </span>}
-                                <i
-                                  style={{
-                                    display: 'inline',
-                                    fontSize: '16px',
-                                    color: '#aeb4bf',
-                                    fontWeight: '600',
-                                  }}
-                                >
-                                  {this.checkYourQuestion(
-                                    !this.state[`question-number-${element}`]
-                                      ? this.state.title.filter(e => {
-                                          return e.group_id === element;
-                                        })[0].question_id
-                                      : this.state[`question-number-${element}`]
-                                  ) ||
-                                  !this.checkQuestionAnswered(
-                                    !this.state[`question-number-${element}`]
-                                      ? this.state.title.filter(e => {
-                                          return e.group_id === element;
-                                        })[0].question_id
-                                      : this.state[`question-number-${element}`]
-                                  ) ? (
-                                    this.state.title.filter(e => {
-                                      return e.group_id === element;
-                                    }).length > 0 &&
-                                    this.getAnswerQuestion(
-                                      !this.state[`question-number-${element}`]
-                                        ? this.state.title.filter(e => {
-                                            return e.group_id === element;
-                                          })[0].question_id
-                                        : this.state[`question-number-${element}`]
-                                    )
-                                  ) : (
-                                    <span>
-                                      Bạn cần trả lời câu hỏi này để xem câu trả lời của đối phương
-                                      <Tooltip
-                                        placement="topLeft"
-                                        title="Chỉnh sửa câu trả lời của bạn ngay"
-                                      >
-                                        <Icon
-                                          onClick={() =>
-                                            this.handleClickEdit(
-                                              element,
-                                              !this.state[`question-number-${element}`]
-                                                ? this.state.title.filter(e => {
-                                                    return e.group_id === element;
-                                                  })[0].question_id
-                                                : this.state[`question-number-${element}`]
-                                            )
-                                          }
-                                          style={{
-                                            color: '#104da1',
-                                            marginLeft: '10px',
-                                            cursor: 'pointer',
-                                          }}
-                                          type="edit"
-                                        />
-                                      </Tooltip>
-                                    </span>
-                                  )}
-                                </i>
-                              </span>
-                            </div>
-                          )}
-                        </div>
-                      )}
-                    </div>
-                  );
-                })
+                                  )
+                                ) : (
+                                  <span>
+                                    Bạn cần trả lời câu hỏi này để xem câu trả lời của đối phương
+                                    <Tooltip
+                                      placement="topLeft"
+                                      title="Chỉnh sửa câu trả lời của bạn ngay"
+                                    >
+                                      <Icon
+                                        onClick={() =>
+                                          this.handleClickEdit(
+                                            element,
+                                            !this.state[`question-number-${element}`]
+                                              ? this.state.title.filter(
+                                                  e => e.group_id === element
+                                                )[0].question_id
+                                              : this.state[`question-number-${element}`]
+                                          )
+                                        }
+                                        style={{
+                                          color: '#104da1',
+                                          marginLeft: '10px',
+                                          cursor: 'pointer',
+                                        }}
+                                        type="edit"
+                                      />
+                                    </Tooltip>
+                                  </span>
+                                )}
+                              </i>
+                            </span>
+                          </div>
+                        )}
+                      </div>
+                    )}
+                  </div>
+                ))
               ) : (
                 <div>
                   <div className={`${styles['form-edit-item']} hoi-dap-ca-nhan`}>

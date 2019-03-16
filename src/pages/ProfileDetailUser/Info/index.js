@@ -1,30 +1,8 @@
 /* eslint-disable camelcase */
-/* eslint-disable react/no-access-state-in-setstate */
-/* eslint-disable react/jsx-first-prop-new-line */
-/* eslint-disable react/jsx-max-props-per-line */
-/* eslint-disable prefer-destructuring */
-/* eslint-disable no-unused-vars */
-/* eslint-disable class-methods-use-this */
-/* eslint-disable react/jsx-closing-tag-location */
-/* eslint-disable react/jsx-indent-props */
-/* eslint-disable react/jsx-indent */
-/* eslint-disable react/no-array-index-key */
-/* eslint-disable arrow-body-style */
-/* eslint-disable dot-notation */
-/* eslint-disable no-undef */
-/* eslint-disable no-plusplus */
-/* eslint-disable react/no-unused-state */
-/* eslint-disable react/destructuring-assignment */
-/* eslint-disable react/sort-comp */
 import React, { Component } from 'react';
-import moment from 'moment';
 import { connect } from 'dva';
-import { Table, Icon, Input, Button, Skeleton, Radio, Checkbox, message, Tooltip } from 'antd';
 import styles from './MenuLeft.less';
 
-const { TextArea } = Input;
-const RadioGroup = Radio.Group;
-const CheckboxGroup = Checkbox.Group;
 @connect(({ profile, loading, authentication, myprops }) => ({
   profile,
   loading: loading.effects['profile/fetchAdvanced'],
@@ -35,23 +13,13 @@ class Info extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      currentMainRight: 0,
       dataUser: {},
     };
   }
 
-  handleClickItemMenu(v) {
-    if (v === 0) {
-      this.props.history.push({ pathname: '/home/profile-user/information' });
-    } else if (v === 1) {
-      this.props.history.push({ pathname: '/home/profile-user/setting-security' });
-    } else if (v === 2) {
-      this.props.history.push({ pathname: '/home/profile-user/answer-question' });
-    }
-  }
-
   componentWillReceiveProps(nextProps) {
-    if (this.props.authentication.getonlyuser !== nextProps.authentication.getonlyuser) {
+    const { authentication } = this.props;
+    if (authentication.getonlyuser !== nextProps.authentication.getonlyuser) {
       if (nextProps.authentication.getonlyuser.status === 'ok') {
         this.setState({
           dataUser: nextProps.authentication.getonlyuser.data,
@@ -60,14 +28,27 @@ class Info extends Component {
     }
   }
 
+  handleClickItemMenu(v) {
+    const { history } = this.props;
+    if (v === 0) {
+      history.push({ pathname: '/home/profile-user/information' });
+    } else if (v === 1) {
+      history.push({ pathname: '/home/profile-user/setting-security' });
+    } else if (v === 2) {
+      history.push({ pathname: '/home/profile-user/answer-question' });
+    }
+  }
+
   render() {
-    const { menu_item_profile } = this.props.myprops;
-    const { currentMainRight, dataUser } = this.state;
+    const {
+      myprops: { menu_item_profile },
+    } = this.props;
+    const { dataUser } = this.state;
     const { children } = this.props;
     return (
-      <div className={styles['profile']}>
-        <div className={styles['container']}>
-          <div className={styles['main']}>
+      <div className={styles.profile}>
+        <div className={styles.container}>
+          <div className={styles.main}>
             <div className={styles['detail-left']}>
               <div className={styles['avatar-cart']}>
                 <div
@@ -83,12 +64,12 @@ class Info extends Component {
                   }
                 />
               </div>
-              <div className={styles['menu']}>
+              <div className={styles.menu}>
                 <div
                   onClick={() => this.handleClickItemMenu(0)}
                   className={
                     menu_item_profile === 0
-                      ? `${styles['menu-item-left']} ${styles['active']}`
+                      ? `${styles['menu-item-left']} ${styles.active}`
                       : styles['menu-item-left']
                   }
                 >
@@ -98,7 +79,7 @@ class Info extends Component {
                   onClick={() => this.handleClickItemMenu(1)}
                   className={
                     menu_item_profile === 1
-                      ? `${styles['menu-item-left']} ${styles['active']}`
+                      ? `${styles['menu-item-left']} ${styles.active}`
                       : styles['menu-item-left']
                   }
                 >
@@ -108,7 +89,7 @@ class Info extends Component {
                   onClick={() => this.handleClickItemMenu(2)}
                   className={
                     menu_item_profile === 2
-                      ? `${styles['menu-item-left']} ${styles['active']}`
+                      ? `${styles['menu-item-left']} ${styles.active}`
                       : styles['menu-item-left']
                   }
                 >

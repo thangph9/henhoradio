@@ -1,43 +1,9 @@
 /* eslint-disable no-useless-escape */
-/* eslint-disable react/no-access-state-in-setstate */
-/* eslint-disable react/jsx-first-prop-new-line */
-/* eslint-disable react/jsx-max-props-per-line */
-/* eslint-disable prefer-destructuring */
-/* eslint-disable no-unused-vars */
-/* eslint-disable class-methods-use-this */
-/* eslint-disable react/jsx-closing-tag-location */
-/* eslint-disable react/jsx-indent-props */
-/* eslint-disable react/jsx-indent */
-/* eslint-disable react/no-array-index-key */
-/* eslint-disable arrow-body-style */
-/* eslint-disable dot-notation */
-/* eslint-disable no-undef */
-/* eslint-disable no-plusplus */
-/* eslint-disable react/no-unused-state */
-/* eslint-disable react/destructuring-assignment */
-/* eslint-disable react/sort-comp */
 import React, { Component } from 'react';
-import moment from 'moment';
 import { connect } from 'dva';
-import {
-  Table,
-  Icon,
-  Input,
-  Button,
-  Skeleton,
-  Radio,
-  Checkbox,
-  message,
-  Tooltip,
-  Form,
-  Popover,
-  Progress,
-} from 'antd';
+import { Icon, Input, Button, Skeleton, message, Form, Popover, Progress } from 'antd';
 import styles from './caidatbaomat.less';
 
-const { TextArea } = Input;
-const RadioGroup = Radio.Group;
-const CheckboxGroup = Checkbox.Group;
 const passwordStatusMap = {
   ok: <div className={styles.success}>Mức độ：Mạnh</div>,
   pass: <div className={styles.warning}>Mức độ：Vừa</div>,
@@ -73,57 +39,48 @@ class CaiDatBaoMat extends Component {
   }
 
   componentDidMount() {
-    this.props.dispatch({
+    const { dispatch } = this.props;
+    dispatch({
       type: 'myprops/menu_item_profile',
       payload: 1,
     });
-    this.props.dispatch({
+    dispatch({
       type: 'authentication/getonlyuser',
     });
   }
 
   componentWillReceiveProps(nextProps) {
-    if (this.props.authentication.getonlyuser !== nextProps.authentication.getonlyuser) {
+    const { authentication, dispatch } = this.props;
+    if (authentication.getonlyuser !== nextProps.authentication.getonlyuser) {
       if (
         nextProps.authentication.getonlyuser.status === 'ok' &&
-        nextProps.authentication.getonlyuser.timeline !==
-          this.props.authentication.getonlyuser.timeline
+        nextProps.authentication.getonlyuser.timeline !== authentication.getonlyuser.timeline
       ) {
-        this.setState(
-          {
-            dataUser: nextProps.authentication.getonlyuser.data,
-          },
-          () => {
-            this.setState({
-              avatarImage: this.state.dataUser.avatar,
-            });
-          }
-        );
+        this.setState({
+          dataUser: nextProps.authentication.getonlyuser.data,
+        });
       }
     }
-    if (this.props.authentication.changepass !== nextProps.authentication.changepass) {
+    if (authentication.changepass !== nextProps.authentication.changepass) {
       if (
         nextProps.authentication.changepass.status === 'ok' &&
-        nextProps.authentication.changepass.timeline !==
-          this.props.authentication.changepass.timeline
+        nextProps.authentication.changepass.timeline !== authentication.changepass.timeline
       ) {
         message.success('Thay đổi mật khẩu thành công ');
       }
       if (
         nextProps.authentication.changepass.status === 'error0' &&
-        nextProps.authentication.changepass.timeline !==
-          this.props.authentication.changepass.timeline
+        nextProps.authentication.changepass.timeline !== authentication.changepass.timeline
       ) {
         message.error('Mật khẩu cũ không chính xác! Vui lòng kiểm tra lại ');
       }
     }
-    if (this.props.authentication.updatephone !== nextProps.authentication.updatephone) {
+    if (authentication.updatephone !== nextProps.authentication.updatephone) {
       if (
         nextProps.authentication.updatephone.status === 'ok' &&
-        nextProps.authentication.updatephone.timeline !==
-          this.props.authentication.updatephone.timeline
+        nextProps.authentication.updatephone.timeline !== authentication.updatephone.timeline
       ) {
-        this.props.dispatch({
+        dispatch({
           type: 'authentication/getonlyuser',
         });
         setTimeout(() => {
@@ -131,13 +88,12 @@ class CaiDatBaoMat extends Component {
         }, 500);
       }
     }
-    if (this.props.authentication.updateemail !== nextProps.authentication.updateemail) {
+    if (authentication.updateemail !== nextProps.authentication.updateemail) {
       if (
         nextProps.authentication.updateemail.status === 'ok' &&
-        nextProps.authentication.updateemail.timeline !==
-          this.props.authentication.updateemail.timeline
+        nextProps.authentication.updateemail.timeline !== authentication.updateemail.timeline
       ) {
-        this.props.dispatch({
+        dispatch({
           type: 'authentication/getonlyuser',
         });
         setTimeout(() => {
@@ -149,7 +105,7 @@ class CaiDatBaoMat extends Component {
 
   handleSubmit = e => {
     e.preventDefault();
-    const { form } = this.props;
+    const { form, dispatch } = this.props;
     const repassword = form.getFieldValue('repassword');
     const newpassword = form.getFieldValue('newpassword');
     if (!repassword) {
@@ -163,12 +119,12 @@ class CaiDatBaoMat extends Component {
         valiRePass: 'error',
       });
     }
-    this.props.form.validateFields((err, values) => {
+    form.validateFields((err, values) => {
       if (!err) {
         if (values.repassword !== values.newpassword) {
           return;
         }
-        this.props.dispatch({
+        dispatch({
           type: 'authentication/changepass',
           payload: values,
         });
@@ -189,12 +145,13 @@ class CaiDatBaoMat extends Component {
   };
 
   renderPasswordProgress = () => {
+    const { checkCharPass } = this.state;
     const { form } = this.props;
     const value = form.getFieldValue('newpassword');
     const passwordStatus = this.getPasswordStatus();
     return value && value.length ? (
       <div className={styles[`progress-${passwordStatus}`]}>
-        <span style={{ color: 'red' }}>{this.state.checkCharPass}</span>
+        <span style={{ color: 'red' }}>{checkCharPass}</span>
         <Progress
           status={passwordProgressMap[passwordStatus]}
           className={styles.progress}
@@ -205,18 +162,6 @@ class CaiDatBaoMat extends Component {
       </div>
     ) : null;
   };
-
-  validRepassword() {
-    const { form } = this.props;
-    const password = form.getFieldValue('newpassword');
-    const repassword = form.getFieldValue('repassword');
-    if (password !== repassword) {
-      this.setState({
-        valiRePass: 'error',
-        helpRePass: 'Nhập lại mật khẩu chưa đúng!',
-      });
-    }
-  }
 
   checkPassword = (rule, value, callback) => {
     const { visible, confirmDirty } = this.state;
@@ -260,6 +205,18 @@ class CaiDatBaoMat extends Component {
     }
   };
 
+  validRepassword() {
+    const { form } = this.props;
+    const password = form.getFieldValue('newpassword');
+    const repassword = form.getFieldValue('repassword');
+    if (password !== repassword) {
+      this.setState({
+        valiRePass: 'error',
+        helpRePass: 'Nhập lại mật khẩu chưa đúng!',
+      });
+    }
+  }
+
   handleClosePass() {
     this.setState({
       visible: false,
@@ -294,14 +251,16 @@ class CaiDatBaoMat extends Component {
   }
 
   handleDonePhone() {
-    if (/^\d{10}$/.test(this.state.valuePhone) === false) {
+    const { valuePhone } = this.state;
+    const { dispatch } = this.props;
+    if (/^\d{10}$/.test(valuePhone) === false) {
       message.error('Số điện thoại không đúng!');
       return;
     }
-    this.props.dispatch({
+    dispatch({
       type: 'authentication/updatephone',
       payload: {
-        phone: this.state.valuePhone,
+        phone: valuePhone,
       },
     });
     this.setState({
@@ -310,18 +269,18 @@ class CaiDatBaoMat extends Component {
   }
 
   handleDoneEmail() {
+    const { valueEmail } = this.state;
+    const { dispatch } = this.props;
     if (
-      /^([a-zA-Z0-9_\.\-])+\@(([a-zA-Z0-9\-])+\.)+([a-zA-Z0-9]{2,4})+$/.test(
-        this.state.valueEmail
-      ) === false
+      /^([a-zA-Z0-9_\.\-])+\@(([a-zA-Z0-9\-])+\.)+([a-zA-Z0-9]{2,4})+$/.test(valueEmail) === false
     ) {
       message.error('Email không đúng định dạng!');
       return;
     }
-    this.props.dispatch({
+    dispatch({
       type: 'authentication/updateemail',
       payload: {
-        email: this.state.valueEmail,
+        email: valueEmail,
       },
     });
     this.setState({
@@ -354,15 +313,27 @@ class CaiDatBaoMat extends Component {
   }
 
   render() {
-    const { visible, help, dataUser } = this.state;
-    const { getFieldDecorator } = this.props.form;
+    const {
+      visible,
+      help,
+      dataUser,
+      editPhone,
+      editEmail,
+      formPass,
+      valiPass,
+      helpRePass,
+      valiRePass,
+    } = this.state;
+    const {
+      form: { getFieldDecorator },
+    } = this.props;
     if (dataUser) {
       return (
         <div className={styles['cai-dat-bao-mat']}>
-          <div className={styles['item']}>
+          <div className={styles.item}>
             <div className={styles['title-item']}>
               Điện thoai liên hệ
-              {!this.state.editPhone ? (
+              {!editPhone ? (
                 <Icon
                   onClick={() => this.handleChangePhone()}
                   type="edit"
@@ -385,7 +356,7 @@ class CaiDatBaoMat extends Component {
                   }}
                 />
               )}
-              {this.state.editPhone ? (
+              {editPhone ? (
                 <Input
                   onChange={e => this.handleChangeInputPhone(e)}
                   size="small"
@@ -403,10 +374,10 @@ class CaiDatBaoMat extends Component {
               )}
             </div>
           </div>
-          <div className={styles['item']}>
+          <div className={styles.item}>
             <div className={styles['title-item']}>
               Địa chỉ khôi phục{' '}
-              {!this.state.editEmail ? (
+              {!editEmail ? (
                 <Icon
                   onClick={() => this.handleChangeEmail()}
                   type="edit"
@@ -429,7 +400,7 @@ class CaiDatBaoMat extends Component {
                   }}
                 />
               )}
-              {this.state.editEmail ? (
+              {editEmail ? (
                 <Input
                   onChange={e => this.handleChangeInputEmail(e)}
                   size="small"
@@ -447,10 +418,10 @@ class CaiDatBaoMat extends Component {
               )}
             </div>
           </div>
-          <div className={styles['item']}>
+          <div className={styles.item}>
             <div className={styles['title-item']}>
               Thay đổi mật khẩu
-              {!this.state.formPass ? (
+              {!formPass ? (
                 <Icon
                   onClick={() => this.handleChangeFormPass()}
                   style={{
@@ -473,7 +444,7 @@ class CaiDatBaoMat extends Component {
                   type="check-circle"
                 />
               )}
-              {this.state.formPass && (
+              {formPass && (
                 <div className={styles['form-pass']}>
                   <Form onSubmit={this.handleSubmit} className="login-form">
                     <Form.Item>
@@ -493,7 +464,7 @@ class CaiDatBaoMat extends Component {
                         />
                       )}
                     </Form.Item>
-                    <Form.Item help={help} validateStatus={this.state.valiPass} hasFeedback>
+                    <Form.Item help={help} validateStatus={valiPass} hasFeedback>
                       <Popover
                         content={
                           <div style={{ padding: '4px 0' }}>
@@ -532,11 +503,7 @@ class CaiDatBaoMat extends Component {
                         )}
                       </Popover>
                     </Form.Item>
-                    <Form.Item
-                      help={this.state.helpRePass}
-                      validateStatus={this.state.valiRePass}
-                      hasFeedback
-                    >
+                    <Form.Item help={helpRePass} validateStatus={valiRePass} hasFeedback>
                       {getFieldDecorator('repassword', {
                         rules: [
                           {

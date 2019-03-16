@@ -1,24 +1,7 @@
-/* eslint-disable react/jsx-closing-tag-location */
-/* eslint-disable react/jsx-indent */
-/* eslint-disable react/no-access-state-in-setstate */
-/* eslint-disable arrow-body-style */
-/* eslint-disable react/no-array-index-key */
-/* eslint-disable no-useless-concat */
-/* eslint-disable class-methods-use-this */
-/* eslint-disable prefer-template */
-/* eslint-disable dot-notation */
-/* eslint-disable react/require-render-return */
-/* eslint-disable prefer-const */
 /* eslint-disable react/destructuring-assignment */
-/* eslint-disable no-param-reassign */
-/* eslint-disable no-unused-vars */
-/* eslint-disable react/sort-comp */
-/* eslint-disable no-return-assign */
-/* eslint-disable react/no-unused-state */
 import React, { PureComponent } from 'react';
 import { connect } from 'dva';
-import { Form, Input, Button, Icon, Avatar, Radio, Checkbox, message } from 'antd';
-import { Link, Redirect } from 'react-router-dom';
+import { Input, Icon, Avatar, Radio, Checkbox, message } from 'antd';
 import styles from './index.less';
 
 const RadioGroup = Radio.Group;
@@ -33,14 +16,14 @@ class Question extends PureComponent {
     currentQuestion: 0,
     arrCheck: [],
     effectMain: false,
-    statusArrea: true,
     valueInput: '',
     arrAnswer: [],
     validateText: true,
   };
 
   componentDidMount() {
-    this.props.dispatch({
+    const { dispatch } = this.props;
+    dispatch({
       type: 'authentication/questionregister',
     });
     setTimeout(() => {
@@ -48,113 +31,6 @@ class Question extends PureComponent {
         effectMain: true,
       });
     }, 100);
-  }
-
-  onChangeRadio(e, q) {
-    let obj = {
-      question: q,
-      answer: [e.target.value],
-      type: '2',
-    };
-    let arr = this.state.arrAnswer;
-    arr[arr.length] = obj;
-    if (this.state.currentQuestion + 1 < this.state.dataQuestion.length) {
-      setTimeout(() => {
-        this.setState({
-          currentQuestion: this.state.currentQuestion + 1,
-          arrAnswer: arr,
-        });
-      }, 500);
-    }
-  }
-
-  onChangeCheckBox(e, q) {
-    this.setState({
-      arrCheck: e,
-    });
-  }
-
-  handleClickNext(q, t) {
-    let arr = this.state.arrAnswer;
-
-    if (t === '1') {
-      let obj = {
-        question: q,
-        answer: [this.state.valueInput],
-        type: '1',
-      };
-      arr[arr.length] = obj;
-      this.setState({
-        arrAnswer: arr,
-      });
-    } else if (t === '3') {
-      let obj = {
-        question: q,
-        answer: this.state.arrCheck,
-        type: '3',
-      };
-      arr[arr.length] = obj;
-      this.setState({
-        arrAnswer: arr,
-      });
-    }
-    if (this.state.currentQuestion + 1 < this.state.dataQuestion.length) {
-      this.setState({
-        currentQuestion: this.state.currentQuestion + 1,
-        valueInput: '',
-      });
-    }
-  }
-
-  handleClickPrev() {
-    this.setState(
-      {
-        currentQuestion: this.state.currentQuestion - 1,
-        valueInput: '',
-      },
-      () => {
-        let arr = this.state.arrAnswer;
-        arr.splice(arr.length - 1, 1);
-        this.setState({
-          arrAnswer: arr,
-        });
-      }
-    );
-  }
-
-  handleClickSubmit() {
-    // message.info('Đã gửi!');
-    this.props.dispatch({
-      type: 'authentication/sendanswer',
-      payload: {
-        answer: this.state.arrAnswer,
-      },
-    });
-  }
-
-  handleChangeInput(e, q) {
-    if (
-      /^[a-zA-Z0-9àáạảãâầấậẩẫăằắặẳẵèéẹẻẽêềếệểễìíịỉĩòóọỏõôồốộổỗơờớợởỡùúụủũưừứựửữỳýỵỷỹđÀÁẠẢÃÂẦẤẬẨẪĂẰẮẶẲẴÈÉẸẺẼÊỀẾỆỂỄÌÍỊỈĨÒÓỌỎÕÔỒỐỘỔỖƠỜỚỢỞỠÙÚỤỦŨƯỪỨỰỬỮỲÝỴỶỸĐ][a-zA-Z0-9 .,-àáạảãâầấậẩẫăằắặẳẵèéẹẻẽêềếệểễìíịỉĩòóọỏõôồốộổỗơờớợởỡùúụủũưừứựửữỳýỵỷỹđÀÁẠẢÃÂẦẤẬẨẪĂẰẮẶẲẴÈÉẸẺẼÊỀẾỆỂỄÌÍỊỈĨÒÓỌỎÕÔỒỐỘỔỖƠỜỚỢỞỠÙÚỤỦŨƯỪỨỰỬỮỲÝỴỶỸĐ!@()]{0,200}$/.test(
-        e.target.value
-      ) === true
-    ) {
-      this.setState({
-        valueInput: e.target.value,
-        validateText: true,
-      });
-    } else {
-      this.setState({
-        valueInput: e.target.value,
-        validateText: false,
-      });
-    }
-  }
-
-  handleClickSkip() {
-    this.setState({
-      currentQuestion: this.state.currentQuestion + 1,
-      valueInput: '',
-    });
   }
 
   componentWillReceiveProps(nextProps) {
@@ -177,22 +53,132 @@ class Question extends PureComponent {
     }
   }
 
+  onChangeRadio(e, q) {
+    const { arrAnswer, currentQuestion, dataQuestion } = this.state;
+    const obj = {
+      question: q,
+      answer: [e.target.value],
+      type: '2',
+    };
+    const arr = arrAnswer;
+    arr[arr.length] = obj;
+    if (currentQuestion + 1 < dataQuestion.length) {
+      setTimeout(() => {
+        this.setState({
+          currentQuestion: currentQuestion + 1,
+          arrAnswer: arr,
+        });
+      }, 500);
+    }
+  }
+
+  onChangeCheckBox(e) {
+    this.setState({
+      arrCheck: e,
+    });
+  }
+
+  handleClickNext(q, t) {
+    const { arrAnswer, valueInput, arrCheck, currentQuestion, dataQuestion } = this.state;
+    const arr = arrAnswer;
+
+    if (t === '1') {
+      const obj = {
+        question: q,
+        answer: [valueInput],
+        type: '1',
+      };
+      arr[arr.length] = obj;
+      this.setState({
+        arrAnswer: arr,
+      });
+    } else if (t === '3') {
+      const obj = {
+        question: q,
+        answer: arrCheck,
+        type: '3',
+      };
+      arr[arr.length] = obj;
+      this.setState({
+        arrAnswer: arr,
+      });
+    }
+    if (currentQuestion + 1 < dataQuestion.length) {
+      this.setState({
+        currentQuestion: currentQuestion + 1,
+        valueInput: '',
+      });
+    }
+  }
+
+  handleClickPrev() {
+    const { currentQuestion, arrAnswer } = this.state;
+    this.setState(
+      {
+        currentQuestion: currentQuestion - 1,
+        valueInput: '',
+      },
+      () => {
+        const arr = arrAnswer;
+        arr.splice(arr.length - 1, 1);
+        this.setState({
+          arrAnswer: arr,
+        });
+      }
+    );
+  }
+
+  handleClickSubmit() {
+    const { dispatch } = this.props;
+    const { arrAnswer } = this.state;
+    dispatch({
+      type: 'authentication/sendanswer',
+      payload: {
+        answer: arrAnswer,
+      },
+    });
+  }
+
+  handleChangeInput(e) {
+    if (
+      /^[a-zA-Z0-9àáạảãâầấậẩẫăằắặẳẵèéẹẻẽêềếệểễìíịỉĩòóọỏõôồốộổỗơờớợởỡùúụủũưừứựửữỳýỵỷỹđÀÁẠẢÃÂẦẤẬẨẪĂẰẮẶẲẴÈÉẸẺẼÊỀẾỆỂỄÌÍỊỈĨÒÓỌỎÕÔỒỐỘỔỖƠỜỚỢỞỠÙÚỤỦŨƯỪỨỰỬỮỲÝỴỶỸĐ][a-zA-Z0-9 .,-àáạảãâầấậẩẫăằắặẳẵèéẹẻẽêềếệểễìíịỉĩòóọỏõôồốộổỗơờớợởỡùúụủũưừứựửữỳýỵỷỹđÀÁẠẢÃÂẦẤẬẨẪĂẰẮẶẲẴÈÉẸẺẼÊỀẾỆỂỄÌÍỊỈĨÒÓỌỎÕÔỒỐỘỔỖƠỜỚỢỞỠÙÚỤỦŨƯỪỨỰỬỮỲÝỴỶỸĐ!@()]{0,200}$/.test(
+        e.target.value
+      ) === true
+    ) {
+      this.setState({
+        valueInput: e.target.value,
+        validateText: true,
+      });
+    } else {
+      this.setState({
+        valueInput: e.target.value,
+        validateText: false,
+      });
+    }
+  }
+
+  handleClickSkip() {
+    this.setState({
+      // eslint-disable-next-line react/no-access-state-in-setstate
+      currentQuestion: this.state.currentQuestion + 1,
+      valueInput: '',
+    });
+  }
+
   render() {
     const { currentQuestion, dataQuestion, arrCheck, effectMain, valueInput } = this.state;
     return (
       <div style={{ background: '#F3F5F9', marginTop: '-20px', height: '100%' }}>
-        <div className={styles['container']}>
+        <div className={styles.container}>
           {dataQuestion.length > 0 && (
-            <div
-              className={effectMain ? styles['main'] + ' ' + styles['main-effect'] : styles['main']}
-            >
-              <div className={styles['number-of-question'] + ' ' + styles['center-item']}>
+            <div className={effectMain ? `${styles.main} ${styles['main-effect']}` : styles.main}>
+              <div className={`${styles['number-of-question']} ${styles['center-item']}`}>
                 {currentQuestion + 1} of {dataQuestion.length}
               </div>
-              <div className={styles['current-question'] + ' ' + styles['center-item']}>
+              <div className={`${styles['current-question']} ${styles['center-item']}`}>
                 {dataQuestion[currentQuestion].title}
               </div>
-              <div className={styles['avatar']}>
+              <div className={styles.avatar}>
                 <span className={styles['your-name']}>Bạn</span> <Avatar size="large" icon="user" />
               </div>
               <div className={styles['current-answer']}>
@@ -204,19 +190,16 @@ class Question extends PureComponent {
                         this.onChangeRadio(e, dataQuestion[currentQuestion].question_id)
                       }
                     >
-                      {dataQuestion[currentQuestion].answer.map((v, i) => {
-                        return (
-                          <Radio
-                            key={i}
-                            value={v}
-                            className={
-                              styles['radio'] + ' ' + 'question-page' + ' ' + styles['list-answer']
-                            }
-                          >
-                            {v}
-                          </Radio>
-                        );
-                      })}
+                      {dataQuestion[currentQuestion].answer.map((v, i) => (
+                        <Radio
+                          // eslint-disable-next-line react/no-array-index-key
+                          key={i}
+                          value={v}
+                          className={`${styles.radio} question-page ${styles['list-answer']}`}
+                        >
+                          {v}
+                        </Radio>
+                      ))}
                     </RadioGroup>
                   )}
                 {dataQuestion[currentQuestion].answer &&
@@ -227,19 +210,16 @@ class Question extends PureComponent {
                         this.onChangeCheckBox(e, dataQuestion[currentQuestion].question_id)
                       }
                     >
-                      {dataQuestion[currentQuestion].answer.map((v, i) => {
-                        return (
-                          <Checkbox
-                            key={i}
-                            value={v}
-                            className={
-                              styles['check'] + ' ' + 'question-page' + ' ' + styles['list-answer']
-                            }
-                          >
-                            {v}
-                          </Checkbox>
-                        );
-                      })}
+                      {dataQuestion[currentQuestion].answer.map((v, i) => (
+                        <Checkbox
+                          // eslint-disable-next-line react/no-array-index-key
+                          key={i}
+                          value={v}
+                          className={`${styles.check}  question-page ${styles['list-answer']}`}
+                        >
+                          {v}
+                        </Checkbox>
+                      ))}
                     </Checkbox.Group>
                   )}
                 {dataQuestion[currentQuestion].type === '1' && (
