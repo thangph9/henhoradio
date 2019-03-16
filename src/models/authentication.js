@@ -137,7 +137,7 @@ export default {
     *getallusers({ payload }, { call, put }) {
       const response = yield call(getAllUsers, payload);
       yield put({
-        type: 'getAllUsers',
+        type: 'getAllUsersReducer',
         payload: response || {},
       });
     },
@@ -208,7 +208,7 @@ export default {
         updateprofilequestion: action.payload,
       };
     },
-    getAllUsers(state, action) {
+    getAllUsersReducer(state, action) {
       return {
         ...state,
         getallusers: action.payload,
