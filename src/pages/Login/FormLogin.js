@@ -43,10 +43,9 @@ class FormLogin extends PureComponent {
   }
 
   componentWillUpdate(nextProps, nextState) {
-    /*
-      const { dispatch } = this.props;
+    const { dispatch } = this.props;
     const { data, value } = this.state;
-    let dataCaptcha = data;
+    const dataCaptcha = data;
     if (value !== nextState.value && nextState.value.length > 0) {
       dataCaptcha.captcha = nextState.value;
       dispatch({
@@ -54,7 +53,6 @@ class FormLogin extends PureComponent {
         payload: dataCaptcha,
       });
     }
-    */
   }
 
   handleSubmit = e => {
@@ -62,15 +60,16 @@ class FormLogin extends PureComponent {
     const { form, dispatch } = this.props;
     form.validateFields((err, values) => {
       if (!err) {
-        // recaptchaRef.current.execute();
+        recaptchaRef.current.execute();
         this.setState({
           data: values,
         });
-
+        /*
         dispatch({
           type: 'authentication/login',
           payload: values,
         });
+        */
       }
     });
   };

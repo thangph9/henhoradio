@@ -385,12 +385,6 @@ class FormRegister extends PureComponent {
     });
   };
 
-  handleChangeIntent = value => {};
-
-  handleChangeMonth = value => {};
-
-  handleChangeYear = value => {};
-
   handleChangeCaptcha = value => {
     this.setState({ value });
   };
