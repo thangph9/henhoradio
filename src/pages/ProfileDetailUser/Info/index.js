@@ -64,7 +64,7 @@ class Info extends Component {
                           backgroundImage: `url(/images/ft/${dataUser.avatar})`,
                         }
                       : {
-                          backgroundImage: `url('https://gw.alipayobjects.com/zos/rmsportal/BiazfanxmamNRoxxVxka.png')`,
+                          background: '#f2f2f2',
                         }
                   }
                 />
