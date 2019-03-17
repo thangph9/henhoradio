@@ -252,10 +252,17 @@ export default {
       const i = newgetuser.question.findIndex(
         element => element.question_id === action.payload.question_id
       );
-      newgetuser.question[i] = {
-        question_id: action.payload.question_id,
-        answer: action.payload.answer,
-      };
+      if (i === -1) {
+        newgetuser.question.push({
+          question_id: action.payload.question_id,
+          answer: action.payload.answer,
+        });
+      } else {
+        newgetuser.question[i] = {
+          question_id: action.payload.question_id,
+          answer: action.payload.answer,
+        };
+      }
       const a = JSON.stringify(newgetuser);
       return {
         ...state,

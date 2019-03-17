@@ -130,7 +130,6 @@ class ThongTinCaNhan extends Component {
         dataUser: authentication.getonlyuser,
       },
       () => {
-        console.log(this.state.dataUser);
         this.setState({
           avatarImage: this.state.dataUser.avatar,
         });

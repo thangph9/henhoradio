@@ -24,6 +24,15 @@ class Info extends Component {
     });
   }
 
+  componentWillReceiveProps(nextProps) {
+    const { authentication } = this.props;
+    if (authentication.getonlyuser !== nextProps.authentication.getonlyuser) {
+      this.setState({
+        dataUser: nextProps.authentication.getonlyuser,
+      });
+    }
+  }
+
   handleClickItemMenu(v) {
     const { history } = this.props;
     if (v === 0) {
