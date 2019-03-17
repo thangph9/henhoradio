@@ -110,28 +110,7 @@ class HomeLayout extends React.PureComponent {
     isMobile: false,
     menuData: this.getMenuData(),
   };
-  componentDidMount() {
-    const { dispatch } = this.props;
-    dispatch({
-      type: 'user/fetchCurrent',
-    });
-    dispatch({
-      type: 'setting/getSetting',
-    });
-    this.renderRef = requestAnimationFrame(() => {
-      this.setState({
-        rendering: false,
-      });
-    });
-    this.enquireHandler = enquireScreen(mobile => {
-      const { isMobile } = this.state;
-      if (isMobile !== mobile) {
-        this.setState({
-          isMobile: mobile,
-        });
-      }
-    });
-  }
+  componentDidMount() {}
 
   componentDidUpdate(preProps) {
     // After changing to phone mode,

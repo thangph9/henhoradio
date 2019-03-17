@@ -1,3 +1,4 @@
+/* eslint-disable class-methods-use-this */
 /* eslint-disable react/no-array-index-key */
 /* eslint-disable react/destructuring-assignment */
 /* eslint-disable no-plusplus */
@@ -51,58 +52,42 @@ class HoiDapCaNhan extends Component {
   }
 
   componentWillReceiveProps(nextProps) {
-    const { authentication, dispatch } = this.props;
+    const { authentication } = this.props;
     if (authentication.getuser !== nextProps.authentication.getuser) {
-      if (nextProps.authentication.getuser.status === 'ok') {
-        this.setState(
-          {
-            dataUser: nextProps.authentication.getuser.data,
-            question: nextProps.authentication.getuser.question,
-            title: nextProps.authentication.getuser.title,
-            group: nextProps.authentication.getuser.group,
-          },
-          () => {
-            const { title, question } = this.state;
-            const arrGroup = [];
-            title.forEach(element => {
-              arrGroup.push(element.group_id);
-            });
-            this.setState({
-              groupQuestion: Array.from(new Set(arrGroup)),
-            });
-            const arr = [];
-            for (let i = 0; i < title.length; i++) {
-              for (let j = 0; j < question.length; j++) {
-                if (question[j].question_id === title[i].question_id) {
-                  const obj = {};
-                  obj.question_id = question[j].question_id;
-                  obj.title = title[i].title;
-                  obj.answer = question[j].answer;
-                  obj.groupid = title[i].group_id;
-                  arr.push(obj);
-                }
+      this.setState(
+        {
+          dataUser: nextProps.authentication.getuser.result,
+          question: nextProps.authentication.getuser.question,
+          title: nextProps.authentication.getuser.title,
+          group: nextProps.authentication.getuser.group,
+        },
+        () => {
+          const { title, question } = this.state;
+          const arrGroup = [];
+          title.forEach(element => {
+            arrGroup.push(element.group_id);
+          });
+          this.setState({
+            groupQuestion: Array.from(new Set(arrGroup)),
+          });
+          const arr = [];
+          for (let i = 0; i < title.length; i++) {
+            for (let j = 0; j < question.length; j++) {
+              if (question[j].question_id === title[i].question_id) {
+                const obj = {};
+                obj.question_id = question[j].question_id;
+                obj.title = title[i].title;
+                obj.answer = question[j].answer;
+                obj.groupid = title[i].group_id;
+                arr.push(obj);
               }
             }
-            this.setState({
-              list: arr,
-            });
           }
-        );
-      }
-    }
-    if (authentication.updateprofilequestion !== nextProps.authentication.updateprofilequestion) {
-      if (
-        nextProps.authentication.updateprofilequestion.status === 'ok' &&
-        authentication.updateprofilequestion.timeline !==
-          nextProps.authentication.updateprofilequestion.timeline
-      ) {
-        dispatch({
-          type: 'authentication/getuser',
-        });
-        setTimeout(() => {
-          message.success('Thay đổi dữ liệu thành công');
-        }, 500);
-      }
+          this.setState({
+            list: arr,
+          });
+        }
+      );
     }
   }
 
@@ -292,11 +277,22 @@ class HoiDapCaNhan extends Component {
       this.setState({
         submitEnable: true,
       });
-      message.warning('Số lượng ký tự quá dài hoặc chứa ký tự không hợp lệ!');
     }
     this.setState({
       arrTextAria: [value],
     });
+  }
+
+  handleBlurTextAria(e) {
+    const { value } = e.target;
+    if (
+      value.length === 0 ||
+      /^[a-zA-Z0-9àáạảãâầấậẩẫăằắặẳẵèéẹẻẽêềếệểễìíịỉĩòóọỏõôồốộổỗơờớợởỡùúụủũưừứựửữỳýỵỷỹđÀÁẠẢÃÂẦẤẬẨẪĂẰẮẶẲẴÈÉẸẺẼÊỀẾỆỂỄÌÍỊỈĨÒÓỌỎÕÔỒỐỘỔỖƠỜỚỢỞỠÙÚỤỦŨƯỪỨỰỬỮỲÝỴỶỸĐ][a-zA-Z0-9 .,-àáạảãâầấậẩẫăằắặẳẵèéẹẻẽêềếệểễìíịỉĩòóọỏõôồốộổỗơờớợởỡùúụủũưừứựửữỳýỵỷỹđÀÁẠẢÃÂẦẤẬẨẪĂẰẮẶẲẴÈÉẸẺẼÊỀẾỆỂỄÌÍỊỈĨÒÓỌỎÕÔỒỐỘỔỖƠỜỚỢỞỠÙÚỤỦŨƯỪỨỰỬỮỲÝỴỶỸĐ!@()]{0,200}$/.test(
+        value
+      ) === false
+    ) {
+      message.warning('Số lượng ký tự quá dài hoặc chứa ký tự không hợp lệ!');
+    }
   }
 
   render() {
@@ -330,6 +326,7 @@ class HoiDapCaNhan extends Component {
                         <div style={{ width: '100%' }}>
                           <TextArea
                             onChange={e => this.handleChangeTexeAria(e)}
+                            onBlur={e => this.handleBlurTextAria(e)}
                             style={{ fontSize: '18px', color: 'black', fontWeight: 600 }}
                             rows={8}
                             defaultValue={

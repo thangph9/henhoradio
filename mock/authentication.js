@@ -538,12 +538,14 @@ function getUser(req, res) {
       if (err) return res.json({ status: 'error' });
       return res.json({
         status: 'ok',
-        data: result,
-        question,
-        message,
-        title,
-        group,
-        timeline: new Date().getTime(),
+        data: {
+          result,
+          question,
+          message,
+          title,
+          group,
+          timeline: new Date().getTime(),
+        },
       });
     }
   );
@@ -577,7 +579,6 @@ function updateProfileQuestion(req, res) {
       },
       callback => {
         try {
-          console.log(PARAM_IS_VALID.answer);
           let update_object = {
             answer: PARAM_IS_VALID.answer,
           };
@@ -808,18 +809,18 @@ function getUserById(req, res) {
       },
     ],
     err => {
-      if (err) {
-        console.log(err);
-        return res.json({ status: 'error' });
-      }
+      if (err) return res.json({ status: 'error' });
       return res.json({
         status: 'ok',
-        data: result,
-        question,
-        message,
-        title,
-        group,
-        yourQuestion,
+        data: {
+          result,
+          question,
+          message,
+          title,
+          group,
+          yourQuestion,
+          timeline: new Date().getTime(),
+        },
       });
     }
   );

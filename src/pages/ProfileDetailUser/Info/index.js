@@ -17,15 +17,11 @@ class Info extends Component {
     };
   }
 
-  componentWillReceiveProps(nextProps) {
+  componentDidMount() {
     const { authentication } = this.props;
-    if (authentication.getonlyuser !== nextProps.authentication.getonlyuser) {
-      if (nextProps.authentication.getonlyuser.status === 'ok') {
-        this.setState({
-          dataUser: nextProps.authentication.getonlyuser.data,
-        });
-      }
-    }
+    this.setState({
+      dataUser: authentication.getonlyuser,
+    });
   }
 
   handleClickItemMenu(v) {

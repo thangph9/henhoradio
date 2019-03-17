@@ -71,45 +71,41 @@ class AdvancedProfile extends Component {
   componentWillReceiveProps(nextProps) {
     const { authentication, location, dispatch } = this.props;
     if (authentication.getuserbyid !== nextProps.authentication.getuserbyid) {
-      if (nextProps.authentication.getuserbyid.status === 'ok') {
-        this.setState(
-          {
-            dataUser: nextProps.authentication.getuserbyid.data,
-            question: nextProps.authentication.getuserbyid.question,
-            title: nextProps.authentication.getuserbyid.title,
-            group: nextProps.authentication.getuserbyid.group,
-            yourQuestion: nextProps.authentication.getuserbyid.yourQuestion,
-          },
-          () => {
-            const { title, question } = this.state;
-            const arrGroup = [];
-            title.forEach(element => {
-              arrGroup.push(element.group_id);
-            });
-            this.setState({
-              groupQuestion: Array.from(new Set(arrGroup)),
-            });
-            const arr = [];
-            for (let i = 0; i < title.length; i++) {
-              for (let j = 0; j < question.length; j++) {
-                if (question[j].question_id === title[i].question_id) {
-                  const obj = {};
-                  obj.question_id = question[j].question_id;
-                  obj.title = title[i].title;
-                  obj.answer = question[j].answer;
-                  obj.groupid = title[i].group_id;
-                  arr.push(obj);
-                }
+      this.setState(
+        {
+          dataUser: nextProps.authentication.getuserbyid.result,
+          question: nextProps.authentication.getuserbyid.question,
+          title: nextProps.authentication.getuserbyid.title,
+          group: nextProps.authentication.getuserbyid.group,
+          yourQuestion: nextProps.authentication.getuserbyid.yourQuestion,
+        },
+        () => {
+          const { title, question } = this.state;
+          const arrGroup = [];
+          title.forEach(element => {
+            arrGroup.push(element.group_id);
+          });
+          this.setState({
+            groupQuestion: Array.from(new Set(arrGroup)),
+          });
+          const arr = [];
+          for (let i = 0; i < title.length; i++) {
+            for (let j = 0; j < question.length; j++) {
+              if (question[j].question_id === title[i].question_id) {
+                const obj = {};
+                obj.question_id = question[j].question_id;
+                obj.title = title[i].title;
+                obj.answer = question[j].answer;
+                obj.groupid = title[i].group_id;
+                arr.push(obj);
               }
             }
-            this.setState({
-              list: arr,
-            });
           }
-        );
-      } else if (nextProps.authentication.getuserbyid.status === 'error1') {
-        nextProps.history.push({ pathname: `home/profile/404` });
-      }
+          this.setState({
+            list: arr,
+          });
+        }
+      );
     }
     if (authentication.updateprofilequestion !== nextProps.authentication.updateprofilequestion) {
       if (

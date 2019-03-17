@@ -1,3 +1,4 @@
+/* eslint-disable no-shadow */
 import {
   loginAccount,
   RegisterAccount,
@@ -15,6 +16,7 @@ import {
   updateEmail,
   getOnlyUser,
 } from '@/services/api';
+import { message } from 'antd';
 import { setAuthority } from '@/utils/authority';
 import { reloadAuthorized } from '@/utils/Authorized';
 
@@ -30,7 +32,7 @@ export default {
     sendanswer: {},
     getuser: {},
     updateprofilequestion: {},
-    getallusers: {},
+    getallusers: [],
     getuserbyid: {},
     updateprofileuser: {},
     changepass: {},
@@ -80,24 +82,40 @@ export default {
     },
     *changepass({ payload }, { call, put }) {
       const response = yield call(changePass, payload);
-      yield put({
-        type: 'changePass',
-        payload: response || {},
-      });
+      if (response && response.status === 'ok') {
+        message.success('Thay đổi mật khẩu thành công !');
+        yield put({
+          type: 'changePass',
+        });
+      } else if (response && response.status === 'error0') {
+        message.error('Mật khẩu cũ không chính xác !');
+      } else {
+        message.error('Có lỗi xảy ra !');
+      }
     },
     *updatephone({ payload }, { call, put }) {
       const response = yield call(updatePhone, payload);
-      yield put({
-        type: 'updatePhone',
-        payload: response || {},
-      });
+      if (response && response.status === 'ok') {
+        message.success('Thay đổi dữ liệu thành công !');
+        yield put({
+          type: 'updatePhone',
+          payload,
+        });
+      } else {
+        message.error('Thao tác không thành công');
+      }
     },
     *updateemail({ payload }, { call, put }) {
       const response = yield call(updateEmail, payload);
-      yield put({
-        type: 'updateEmail',
-        payload: response || {},
-      });
+      if (response && response.status === 'ok') {
+        message.success('Thay đổi thành công !');
+        yield put({
+          type: 'updateEmail',
+          payload,
+        });
+      } else {
+        message.error('Thay đổi không thành công !');
+      }
     },
     *questionregister({ payload }, { call, put }) {
       const response = yield call(questionRegister, payload);
@@ -115,45 +133,71 @@ export default {
     },
     *getuser({ payload }, { call, put }) {
       const response = yield call(getUser, payload);
-      yield put({
-        type: 'getUser',
-        payload: response || {},
-      });
+      if (response && response.status === 'ok') {
+        yield put({
+          type: 'getUser',
+          payload: response.data,
+        });
+      } else {
+        message.error('Có lỗi xảy ra. Hãy thử đăng nhập lại !');
+      }
     },
     *getonlyuser({ payload }, { call, put }) {
       const response = yield call(getOnlyUser, payload);
-      yield put({
-        type: 'getOnlyUser',
-        payload: response || {},
-      });
+      if (response && response.status === 'ok') {
+        yield put({
+          type: 'getOnlyUser',
+          payload: response.data,
+        });
+      } else {
+        message.error('Có lỗi xảy ra. Hãy thử đăng nhập lại !');
+      }
     },
     *getuserbyid({ payload }, { call, put }) {
       const response = yield call(getUserById, payload);
-      yield put({
-        type: 'getUserById',
-        payload: response || {},
-      });
+      if (response && response.status === 'ok') {
+        yield put({
+          type: 'getUserById',
+          payload: response.data,
+        });
+      } else {
+        message.error('Có lỗi xảy ra. Hãy thử đăng nhập lại !');
+      }
     },
     *getallusers({ payload }, { call, put }) {
       const response = yield call(getAllUsers, payload);
-      yield put({
-        type: 'getAllUsersReducer',
-        payload: response || {},
-      });
+      if (response && response.status === 'ok') {
+        yield put({
+          type: 'getAllUsers',
+          payload: response.data,
+        });
+      } else {
+        message.error('Có lỗi xảy ra. Hãy thử đăng nhập lại !');
+      }
     },
     *updateprofilequestion({ payload }, { call, put }) {
       const response = yield call(updateProfileQuestion, payload);
-      yield put({
-        type: 'updateProfileQuestion',
-        payload: response || {},
-      });
+      if (response && response.status === 'ok') {
+        message.success('Thay đổi dữ liệu thành công !');
+        yield put({
+          type: 'updateProfileQuestion',
+          payload,
+        });
+      } else {
+        message.error('Thay đổi thất bại !');
+      }
     },
     *updateprofileuser({ payload }, { call, put }) {
       const response = yield call(updateProfileUser, payload);
-      yield put({
-        type: 'updateProfileUser',
-        payload: response || {},
-      });
+      if (response && response.status === 'ok') {
+        yield put({
+          type: 'updateProfileUser',
+          payload,
+        });
+        message.success('Thay đổi thông tin thành công !');
+      } else {
+        message.error('Có lỗi xảy ra !');
+      }
     },
   },
 
@@ -199,18 +243,29 @@ export default {
     getUser(state, action) {
       return {
         ...state,
+
         getuser: action.payload,
       };
     },
     updateProfileQuestion(state, action) {
+      const newgetuser = state.getuser;
+      const i = newgetuser.question.findIndex(
+        element => element.question_id === action.payload.question_id
+      );
+      newgetuser.question[i] = {
+        question_id: action.payload.question_id,
+        answer: action.payload.answer,
+      };
+      const a = JSON.stringify(newgetuser);
       return {
         ...state,
-        updateprofilequestion: action.payload,
+        getuser: JSON.parse(a),
       };
     },
-    getAllUsersReducer(state, action) {
+    getAllUsers(state, action) {
+      const { getonlyuser } = state;
       return {
-        ...state,
+        getonlyuser,
         getallusers: action.payload,
       };
     },
@@ -221,27 +276,45 @@ export default {
       };
     },
     updateProfileUser(state, action) {
+      const oldProps = state.getonlyuser;
+      oldProps.address = action.payload.address;
+      oldProps.gender = action.payload.gender;
+      oldProps.dob_day = action.payload.dateinfo;
+      oldProps.dob_month = action.payload.monthinfo;
+      oldProps.dob_year = action.payload.yearinfo;
+      oldProps.fullname = action.payload.fullname;
+      oldProps.height = action.payload.height;
+      oldProps.weight = action.payload.weight;
+      oldProps.education = { education: action.payload.education };
+      oldProps.jobs = { jobs: action.payload.jobs };
+      oldProps.avatar = action.payload.avatar;
+      const newProps = JSON.stringify(oldProps);
       return {
         ...state,
-        updateprofileuser: action.payload,
+        getonlyuser: JSON.parse(newProps),
       };
     },
-    changePass(state, action) {
+    changePass(state) {
       return {
         ...state,
-        changepass: action.payload,
       };
     },
     updatePhone(state, action) {
+      const oldProps = state.getonlyuser;
+      oldProps.phones = { '1': action.payload.phone };
+      const a = JSON.stringify(oldProps);
       return {
         ...state,
-        updatephone: action.payload,
+        getonlyuser: JSON.parse(a),
       };
     },
     updateEmail(state, action) {
+      const oldProps = state.getonlyuser;
+      oldProps.email = action.payload.email;
+      const a = JSON.stringify(oldProps);
       return {
         ...state,
-        updateemail: action.payload,
+        getonlyuser: JSON.parse(a),
       };
     },
     getOnlyUser(state, action) {

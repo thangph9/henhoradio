@@ -120,51 +120,38 @@ class ThongTinCaNhan extends Component {
   }
 
   componentDidMount() {
-    const { dispatch } = this.props;
+    const { dispatch, authentication } = this.props;
     dispatch({
       type: 'myprops/menu_item_profile',
       payload: 0,
     });
-    dispatch({
-      type: 'authentication/getonlyuser',
-    });
+    this.setState(
+      {
+        dataUser: authentication.getonlyuser,
+      },
+      () => {
+        console.log(this.state.dataUser);
+        this.setState({
+          avatarImage: this.state.dataUser.avatar,
+        });
+      }
+    );
   }
 
   componentWillReceiveProps(nextProps) {
     const { authentication } = this.props;
-
     if (authentication.getonlyuser !== nextProps.authentication.getonlyuser) {
-      if (nextProps.authentication.getonlyuser.status === 'ok') {
-        this.setState(
-          {
-            dataUser: nextProps.authentication.getonlyuser.data,
-          },
-          () => {
-            this.setState({
-              avatarImage: this.state.dataUser.avatar,
-            });
-          }
-        );
-      }
-    }
-    if (authentication.updateprofileuser !== nextProps.authentication.updateprofileuser) {
-      if (
-        nextProps.authentication.updateprofileuser.status === 'ok' &&
-        authentication.updateprofileuser.timeline !==
-          nextProps.authentication.updateprofileuser.timeline
-      ) {
-        nextProps.dispatch({
-          type: 'authentication/getonlyuser',
-        });
-        this.setState({
-          resetAvatar: false,
-        });
-        setTimeout(() => {
-          message.success('Cập nhật thông tin thành công !');
-        }, 500);
-      } else {
-        message.error('Có lỗi xảy ra !');
-      }
+      this.setState(
+        {
+          dataUser: nextProps.authentication.getonlyuser,
+        },
+        () => {
+          this.setState({
+            avatarImage: nextProps.authentication.getonlyuser.avatar,
+            resetAvatar: false,
+          });
+        }
+      );
     }
   }
 
@@ -261,7 +248,7 @@ class ThongTinCaNhan extends Component {
                     rules: [{ required: true, message: 'Vui lòng chọn giới tính' }],
                     initialValue: dataUser.dob_day,
                   })(
-                    <Select style={{ minWidth: '100px' }} onChange={e => this.handleChangeDay(e)}>
+                    <Select style={{ minWidth: '100px' }}>
                       {dayInMonthFull.map((v, i) => (
                         <Option key={i} value={v}>
                           {v}
@@ -275,7 +262,7 @@ class ThongTinCaNhan extends Component {
                     rules: [{ required: true, message: 'Vui lòng chọn giới tính' }],
                     initialValue: dataUser.dob_month,
                   })(
-                    <Select style={{ minWidth: '100px' }} onChange={e => this.handleChangeMonth(e)}>
+                    <Select style={{ minWidth: '100px' }}>
                       {months.map((v, i) => (
                         <Option key={i} value={v}>
                           {v}
@@ -289,7 +276,7 @@ class ThongTinCaNhan extends Component {
                     rules: [{ required: true, message: 'Vui lòng chọn giới tính' }],
                     initialValue: dataUser.dob_year,
                   })(
-                    <Select style={{ minWidth: '100px' }} onChange={e => this.handleChangeYear(e)}>
+                    <Select style={{ minWidth: '100px' }}>
                       {years.map((v, i) => (
                         <Option key={i} value={v}>
                           {v}

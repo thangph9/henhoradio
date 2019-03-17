@@ -559,12 +559,14 @@ function getUser(req, res) {
       if (err) return res.json({ status: 'error' });
       return res.json({
         status: 'ok',
-        data: result,
-        question,
-        message,
-        title,
-        group,
-        timeline: new Date().getTime(),
+        data: {
+          result,
+          question,
+          message,
+          title,
+          group,
+          timeline: new Date().getTime(),
+        },
       });
     }
   );
@@ -831,12 +833,15 @@ function getUserById(req, res) {
       }
       return res.json({
         status: 'ok',
-        data: result,
-        question,
-        message,
-        title,
-        group,
-        yourQuestion,
+        data: {
+          result,
+          question,
+          message,
+          title,
+          group,
+          yourQuestion,
+          timeline: new Date().getTime(),
+        },
       });
     }
   );

@@ -67,15 +67,9 @@ class GlobalHeader extends PureComponent {
       });
     }
     if (this.props.authentication.getonlyuser !== nextProps.authentication.getonlyuser) {
-      if (
-        nextProps.authentication.getonlyuser.status === 'ok' &&
-        nextProps.authentication.getonlyuser.timeline !==
-          this.props.authentication.getonlyuser.timeline
-      ) {
-        this.setState({
-          dataUser: nextProps.authentication.getonlyuser.data,
-        });
-      }
+      this.setState({
+        dataUser: nextProps.authentication.getonlyuser,
+      });
     }
   }
   toggleMenuMobile() {

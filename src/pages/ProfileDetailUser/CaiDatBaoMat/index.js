@@ -39,67 +39,22 @@ class CaiDatBaoMat extends Component {
   }
 
   componentDidMount() {
-    const { dispatch } = this.props;
+    const { dispatch, authentication } = this.props;
     dispatch({
       type: 'myprops/menu_item_profile',
       payload: 1,
     });
-    dispatch({
-      type: 'authentication/getonlyuser',
+    this.setState({
+      dataUser: authentication.getonlyuser,
     });
   }
 
   componentWillReceiveProps(nextProps) {
-    const { authentication, dispatch } = this.props;
+    const { authentication } = this.props;
     if (authentication.getonlyuser !== nextProps.authentication.getonlyuser) {
-      if (
-        nextProps.authentication.getonlyuser.status === 'ok' &&
-        nextProps.authentication.getonlyuser.timeline !== authentication.getonlyuser.timeline
-      ) {
-        this.setState({
-          dataUser: nextProps.authentication.getonlyuser.data,
-        });
-      }
-    }
-    if (authentication.changepass !== nextProps.authentication.changepass) {
-      if (
-        nextProps.authentication.changepass.status === 'ok' &&
-        nextProps.authentication.changepass.timeline !== authentication.changepass.timeline
-      ) {
-        message.success('Thay đổi mật khẩu thành công ');
-      }
-      if (
-        nextProps.authentication.changepass.status === 'error0' &&
-        nextProps.authentication.changepass.timeline !== authentication.changepass.timeline
-      ) {
-        message.error('Mật khẩu cũ không chính xác! Vui lòng kiểm tra lại ');
-      }
-    }
-    if (authentication.updatephone !== nextProps.authentication.updatephone) {
-      if (
-        nextProps.authentication.updatephone.status === 'ok' &&
-        nextProps.authentication.updatephone.timeline !== authentication.updatephone.timeline
-      ) {
-        dispatch({
-          type: 'authentication/getonlyuser',
-        });
-        setTimeout(() => {
-          message.success('Cập nhật số điện thoại thành công!');
-        }, 500);
-      }
-    }
-    if (authentication.updateemail !== nextProps.authentication.updateemail) {
-      if (
-        nextProps.authentication.updateemail.status === 'ok' &&
-        nextProps.authentication.updateemail.timeline !== authentication.updateemail.timeline
-      ) {
-        dispatch({
-          type: 'authentication/getonlyuser',
-        });
-        setTimeout(() => {
-          message.success('Cập Email thoại thành công!');
-        }, 500);
-      }
+      this.setState({
+        dataUser: nextProps.authentication.getonlyuser,
+      });
     }
   }
 

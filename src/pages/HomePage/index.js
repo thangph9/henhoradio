@@ -32,12 +32,10 @@ class NewFeed extends PureComponent {
   componentWillReceiveProps(nextProps) {
     const { authentication } = this.props;
     if (authentication.getallusers !== nextProps.authentication.getallusers) {
-      if (nextProps.authentication.getallusers.status === 'ok') {
-        this.setState({
-          allUser: nextProps.authentication.getallusers.data,
-          loadingPage: false,
-        });
-      }
+      this.setState({
+        allUser: nextProps.authentication.getallusers,
+        loadingPage: false,
+      });
     }
   }
 
@@ -80,18 +78,16 @@ class NewFeed extends PureComponent {
                   ))
                 : preLoad.map((v, i) => (
                     <div key={i} className={styles['cart-item']}>
-                      <div className={styles['image-cart']}>
-                        <span>
-                          <img
-                            className={styles['img-item']}
-                            style={{ width: '100%' }}
-                            src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRRfrBguCWgYZbzZNuUieTET8xYdUatKh5t1emOHuR3Cjzihd82"
-                            alt="img"
+                      <div className={styles['box-cart']}>
+                        <div style={{ overflow: 'hidden' }}>
+                          <div
+                            className={styles['background-avatar']}
+                            style={{ background: '#fff' }}
                           />
-                        </span>
-                      </div>
-                      <div style={{ background: '#fff' }}>
-                        <Skeleton paragraph={{ rows: 2 }} active />
+                        </div>
+                        <div className={`${styles['title-cart']} home-page-preload`}>
+                          <Skeleton title={false} paragraph={{ rows: 2 }} active />
+                        </div>
                       </div>
                     </div>
                   ))}
