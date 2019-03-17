@@ -1201,7 +1201,7 @@ router.post('/login', login);
 router.get('/sendanswer', sendAnswer);
 router.get('/getuser', getUser);
 router.get('/getonlyuser', getOnlyUser);
-router.post('/question', question);
+router.get('/question', question);
 router.get('/getuserbyid/:id', getUserById);
 router.get('/getallusers', getAllUsers);
 router.post('/updateprofilequestion', updateProfileQuestion);
