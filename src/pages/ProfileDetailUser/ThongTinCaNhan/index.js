@@ -1,3 +1,5 @@
+/* eslint-disable react/jsx-closing-tag-location */
+/* eslint-disable react/jsx-indent */
 /* eslint-disable react/no-access-state-in-setstate */
 /* eslint-disable no-nested-ternary */
 /* eslint-disable react/no-array-index-key */
@@ -106,8 +108,9 @@ const dayInMonthFull = [
   30,
   31,
 ];
-@connect(({ authentication, myprops }) => ({
+@connect(({ authentication, myprops, loading }) => ({
   authentication,
+  loading: loading.effects['authentication/getonlyuser'],
   myprops,
 }))
 @Form.create()
@@ -211,8 +214,9 @@ class ThongTinCaNhan extends Component {
 
   render() {
     const { getFieldDecorator } = this.props.form;
+    const { loading } = this.props;
     const { dataUser, avatarImage } = this.state;
-    if (dataUser) {
+    if (dataUser && !loading) {
       return (
         <div className={styles['thong-tin-ca-nhan']}>
           <div className={styles['form-edit']}>
@@ -412,12 +416,46 @@ class ThongTinCaNhan extends Component {
       );
     }
     return (
-      <div style={{ background: '#fff' }}>
-        <Skeleton paragraph={{ rows: 3 }} active />
-        <Skeleton paragraph={{ rows: 3 }} active />
-        <Skeleton paragraph={{ rows: 2 }} active />
-        <Skeleton paragraph={{ rows: 4 }} active />
-        <Skeleton paragraph={{ rows: 4 }} active />
+      <div className={`${styles['thong-tin-ca-nhan']} thong-tin-ca-nhan`}>
+        <div className={styles['form-edit']}>
+          <div>
+            {' '}
+            <Skeleton paragraph={{ rows: 1 }} />
+          </div>
+          <div style={{ paddingTop: '20px' }}>
+            {' '}
+            <Skeleton paragraph={{ rows: 1 }} />
+          </div>
+          <div style={{ paddingTop: '20px' }}>
+            {' '}
+            <Skeleton paragraph={{ rows: 1 }} />
+          </div>
+          <div style={{ paddingTop: '20px' }}>
+            {' '}
+            <Skeleton paragraph={{ rows: 1 }} />
+          </div>
+          <div style={{ paddingTop: '20px' }}>
+            {' '}
+            <Skeleton paragraph={{ rows: 1 }} />
+          </div>
+          <div style={{ paddingTop: '20px' }}>
+            {' '}
+            <Skeleton paragraph={{ rows: 1 }} />
+          </div>
+          <div style={{ paddingTop: '20px' }}>
+            {' '}
+            <Skeleton paragraph={{ rows: 1 }} />
+          </div>
+          <div className="button-stelekon" style={{ paddingTop: '40px' }}>
+            {' '}
+            <Skeleton title={false} paragraph={{ rows: 1 }} />
+          </div>
+        </div>
+
+        <div className={styles['basic-center']} />
+        <div className={styles['avatar-image']}>
+          <div className={styles['background-avatar']} style={{ background: '#f2f2f2' }} />
+        </div>
       </div>
     );
   }

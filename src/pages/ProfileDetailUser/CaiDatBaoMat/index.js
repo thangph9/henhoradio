@@ -16,7 +16,7 @@ const passwordProgressMap = {
 };
 @connect(({ profile, loading, authentication, myprops }) => ({
   profile,
-  loading: loading.effects['profile/fetchAdvanced'],
+  loading: loading.effects['authentication/getonlyuser'],
   authentication,
   myprops,
 }))
@@ -281,8 +281,9 @@ class CaiDatBaoMat extends Component {
     } = this.state;
     const {
       form: { getFieldDecorator },
+      loading,
     } = this.props;
-    if (dataUser) {
+    if (dataUser && !loading) {
       return (
         <div className={styles['cai-dat-bao-mat']}>
           <div className={styles.item}>

@@ -12,7 +12,7 @@ const RadioGroup = Radio.Group;
 const CheckboxGroup = Checkbox.Group;
 @connect(({ profile, loading, authentication, myprops }) => ({
   profile,
-  loading: loading.effects['profile/fetchAdvanced'],
+  loading: loading.effects['authentication/getuser'],
   authentication,
   myprops,
 }))
@@ -297,7 +297,8 @@ class HoiDapCaNhan extends Component {
 
   render() {
     const { groupQuestion, listQuestion, editing } = this.state;
-    if (groupQuestion.length > 0) {
+    const { loading } = this.props;
+    if (groupQuestion.length > 0 && !loading) {
       return (
         <div className="text-form">
           {editing && <div className={styles.editing} />}
