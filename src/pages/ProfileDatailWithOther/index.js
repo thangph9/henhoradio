@@ -627,35 +627,35 @@ class AdvancedProfile extends Component {
                 ))
               ) : (
                 <div>
-                  <div className={`${styles['form-edit-item']} hoi-dap-ca-nhan`}>
+                  <div className={`${styles['form-edit-item']} preload-by-id`}>
                     <div style={{ paddingTop: '8px', paddingBottom: '35px' }}>
                       <Skeleton paragraph={{ rows: 1 }} active />
                     </div>
-                    <div style={{ paddingBottom: '8px' }}>
+                    <div style={{ paddingBottom: '8px' }} className="answer-preload">
                       <Skeleton title={false} paragraph={{ rows: 1 }} active />
                     </div>
                   </div>
-                  <div className={`${styles['form-edit-item']} hoi-dap-ca-nhan`}>
+                  <div className={`${styles['form-edit-item']} preload-by-id`}>
                     <div style={{ paddingTop: '8px', paddingBottom: '35px' }}>
                       <Skeleton paragraph={{ rows: 1 }} active />
                     </div>
-                    <div style={{ paddingBottom: '8px' }}>
+                    <div style={{ paddingBottom: '8px' }} className="answer-preload">
                       <Skeleton title={false} paragraph={{ rows: 1 }} active />
                     </div>
                   </div>
-                  <div className={`${styles['form-edit-item']} hoi-dap-ca-nhan`}>
+                  <div className={`${styles['form-edit-item']} preload-by-id`}>
                     <div style={{ paddingTop: '8px', paddingBottom: '35px' }}>
                       <Skeleton paragraph={{ rows: 1 }} active />
                     </div>
-                    <div style={{ paddingBottom: '8px' }}>
+                    <div style={{ paddingBottom: '8px' }} className="answer-preload">
                       <Skeleton title={false} paragraph={{ rows: 1 }} active />
                     </div>
                   </div>
-                  <div className={`${styles['form-edit-item']} hoi-dap-ca-nhan`}>
+                  <div className={`${styles['form-edit-item']} preload-by-id`}>
                     <div style={{ paddingTop: '8px', paddingBottom: '35px' }}>
                       <Skeleton paragraph={{ rows: 1 }} active />
                     </div>
-                    <div style={{ paddingBottom: '8px' }}>
+                    <div style={{ paddingBottom: '8px' }} className="answer-preload">
                       <Skeleton title={false} paragraph={{ rows: 1 }} active />
                     </div>
                   </div>

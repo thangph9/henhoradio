@@ -809,19 +809,21 @@ function getUserById(req, res) {
       },
     ],
     err => {
-      if (err) return res.json({ status: 'error' });
-      return res.json({
-        status: 'ok',
-        data: {
-          result,
-          question,
-          message,
-          title,
-          group,
-          yourQuestion,
-          timeline: new Date().getTime(),
-        },
-      });
+      setTimeout(() => {
+        if (err) return res.json({ status: 'error' });
+        return res.json({
+          status: 'ok',
+          data: {
+            result,
+            question,
+            message,
+            title,
+            group,
+            yourQuestion,
+            timeline: new Date().getTime(),
+          },
+        });
+      }, 500000000);
     }
   );
 }
