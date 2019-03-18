@@ -530,7 +530,7 @@ class HoiDapCaNhan extends Component {
           <div>
             <Skeleton paragraph={{ rows: 1 }} active />
           </div>
-          <div style={{ paddingTop: '45px' }}>
+          <div style={{ paddingTop: '45px' }} className="answer-preload">
             <Skeleton title={false} paragraph={{ rows: 1 }} active />
           </div>
         </div>
@@ -538,7 +538,7 @@ class HoiDapCaNhan extends Component {
           <div>
             <Skeleton paragraph={{ rows: 1 }} active />
           </div>
-          <div style={{ paddingTop: '45px' }}>
+          <div style={{ paddingTop: '45px' }} className="answer-preload">
             <Skeleton title={false} paragraph={{ rows: 1 }} active />
           </div>
         </div>
@@ -546,7 +546,7 @@ class HoiDapCaNhan extends Component {
           <div>
             <Skeleton paragraph={{ rows: 1 }} active />
           </div>
-          <div style={{ paddingTop: '45px' }}>
+          <div style={{ paddingTop: '45px' }} className="answer-preload">
             <Skeleton title={false} paragraph={{ rows: 1 }} active />
           </div>
         </div>
@@ -554,7 +554,7 @@ class HoiDapCaNhan extends Component {
           <div>
             <Skeleton paragraph={{ rows: 1 }} active />
           </div>
-          <div style={{ paddingTop: '45px' }}>
+          <div style={{ paddingTop: '45px' }} className="answer-preload">
             <Skeleton title={false} paragraph={{ rows: 1 }} active />
           </div>
         </div>

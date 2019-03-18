@@ -422,27 +422,46 @@ class ThongTinCaNhan extends Component {
             {' '}
             <Skeleton paragraph={{ rows: 1 }} />
           </div>
-          <div style={{ paddingTop: '20px' }}>
+          <div style={{ paddingTop: '25px', width: '115px' }}>
             {' '}
             <Skeleton paragraph={{ rows: 1 }} />
           </div>
-          <div style={{ paddingTop: '20px' }}>
+          <div style={{ paddingTop: '45px' }}>
+            {' '}
+            <Skeleton paragraph={{ rows: 0 }} />
+            <div style={{ display: 'flex' }}>
+              <div style={{ flexGrow: 1 }}>
+                <Skeleton title={false} paragraph={{ rows: 1 }} />
+              </div>
+              <div style={{ flexGrow: 1 }}>
+                <Skeleton title={false} paragraph={{ rows: 1 }} />
+              </div>
+              <div style={{ flexGrow: 1 }}>
+                <Skeleton title={false} paragraph={{ rows: 1 }} />
+              </div>
+            </div>
+          </div>
+          <div style={{ paddingTop: '35px' }}>
             {' '}
             <Skeleton paragraph={{ rows: 1 }} />
           </div>
-          <div style={{ paddingTop: '20px' }}>
+          <div style={{ paddingTop: '35px' }}>
+            {' '}
+            <Skeleton paragraph={{ rows: 0 }} />
+            <div style={{ display: 'flex' }}>
+              <div style={{ flexGrow: 1 }}>
+                <Skeleton title={false} paragraph={{ rows: 1 }} />
+              </div>
+              <div style={{ flexGrow: 1 }}>
+                <Skeleton title={false} paragraph={{ rows: 1 }} />
+              </div>
+            </div>
+          </div>
+          <div style={{ paddingTop: '25px' }}>
             {' '}
             <Skeleton paragraph={{ rows: 1 }} />
           </div>
-          <div style={{ paddingTop: '20px' }}>
-            {' '}
-            <Skeleton paragraph={{ rows: 1 }} />
-          </div>
-          <div style={{ paddingTop: '20px' }}>
-            {' '}
-            <Skeleton paragraph={{ rows: 1 }} />
-          </div>
-          <div style={{ paddingTop: '20px' }}>
+          <div style={{ paddingTop: '30px' }}>
             {' '}
             <Skeleton paragraph={{ rows: 1 }} />
           </div>
@@ -453,8 +472,16 @@ class ThongTinCaNhan extends Component {
         </div>
 
         <div className={styles['basic-center']} />
-        <div className={styles['avatar-image']}>
+        <div className={styles['avatar-image']} style={{ position: 'relative' }}>
           <div className={styles['background-avatar']} style={{ background: '#f2f2f2' }} />
+          <div className="upload-stelekon" style={{ width: '100%' }}>
+            {' '}
+            <Skeleton title={false} paragraph={{ rows: 1 }} />
+          </div>
+          <div style={{ width: '100%', transform: 'translateY(70px)' }}>
+            <Skeleton title={false} paragraph={{ rows: 1 }} />
+            <Skeleton title={false} paragraph={{ rows: 1 }} />
+          </div>
         </div>
       </div>
     );
