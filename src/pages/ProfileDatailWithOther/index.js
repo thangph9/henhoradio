@@ -4,7 +4,7 @@
 /* eslint-disable no-plusplus */
 import React, { Component } from 'react';
 import { connect } from 'dva';
-import { Icon, Input, Button, Skeleton, Radio, Checkbox, message, Tooltip } from 'antd';
+import { Icon, Input, Button, Skeleton, Radio, Checkbox, message } from 'antd';
 import styles from './index.less';
 
 const { TextArea } = Input;
@@ -591,30 +591,23 @@ class AdvancedProfile extends Component {
                                   )
                                 ) : (
                                   <span>
-                                    Bạn cần trả lời câu hỏi này để xem câu trả lời của đối phương
-                                    <Tooltip
-                                      placement="topLeft"
-                                      title="Chỉnh sửa câu trả lời của bạn ngay"
+                                    Bạn cần{' '}
+                                    <span
+                                      className={styles['answer-span']}
+                                      onClick={() =>
+                                        this.handleClickEdit(
+                                          element,
+                                          !this.state[`question-number-${element}`]
+                                            ? this.state.title.filter(
+                                                e => e.group_id === element
+                                              )[0].question_id
+                                            : this.state[`question-number-${element}`]
+                                        )
+                                      }
                                     >
-                                      <Icon
-                                        onClick={() =>
-                                          this.handleClickEdit(
-                                            element,
-                                            !this.state[`question-number-${element}`]
-                                              ? this.state.title.filter(
-                                                  e => e.group_id === element
-                                                )[0].question_id
-                                              : this.state[`question-number-${element}`]
-                                          )
-                                        }
-                                        style={{
-                                          color: '#104da1',
-                                          marginLeft: '10px',
-                                          cursor: 'pointer',
-                                        }}
-                                        type="edit"
-                                      />
-                                    </Tooltip>
+                                      trả lời
+                                    </span>{' '}
+                                    câu hỏi này để xem câu trả lời của đối phương
                                   </span>
                                 )}
                               </i>

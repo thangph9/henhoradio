@@ -249,30 +249,40 @@ export default {
     },
     updateProfileQuestion(state, action) {
       const newgetuser = state.getuser;
-      const i = newgetuser.question.findIndex(
-        element => element.question_id === action.payload.question_id
-      );
-      if (i === -1) {
-        newgetuser.question.push({
+      const newgetuserbyid = state.getuserbyid;
+      if (newgetuser.question) {
+        const i = newgetuser.question.findIndex(
+          element => element.question_id === action.payload.question_id
+        );
+        if (i === -1) {
+          newgetuser.question.push({
+            question_id: action.payload.question_id,
+            answer: action.payload.answer,
+          });
+        } else {
+          newgetuser.question[i] = {
+            question_id: action.payload.question_id,
+            answer: action.payload.answer,
+          };
+        }
+      }
+      const a = JSON.stringify(newgetuser);
+      if (newgetuserbyid.question) {
+        newgetuserbyid.yourQuestion.push({
           question_id: action.payload.question_id,
           answer: action.payload.answer,
         });
-      } else {
-        newgetuser.question[i] = {
-          question_id: action.payload.question_id,
-          answer: action.payload.answer,
-        };
       }
-      const a = JSON.stringify(newgetuser);
+      const b = JSON.stringify(newgetuserbyid);
       return {
         ...state,
         getuser: JSON.parse(a),
+        getuserbyid: JSON.parse(b),
       };
     },
     getAllUsers(state, action) {
-      const { getonlyuser } = state;
       return {
-        getonlyuser,
+        ...state,
         getallusers: action.payload,
       };
     },
