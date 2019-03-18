@@ -63,6 +63,10 @@ export default [
     component: '../layouts/EmptyLayout',
     routes: [{ path: '/test', component: './User/RegisterResult.js' }],
   },
+  {
+    path: '/landing-page',
+    routes: [{ path: '/landing-page', component: './LandingPage' }],
+  },
   // front-end
 
   {
