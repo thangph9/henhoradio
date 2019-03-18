@@ -428,15 +428,17 @@ class ThongTinCaNhan extends Component {
           </div>
           <div style={{ paddingTop: '45px' }}>
             {' '}
-            <Skeleton paragraph={{ rows: 0 }} />
             <div style={{ display: 'flex' }}>
-              <div style={{ flexGrow: 1 }}>
+              <div style={{ flexGrow: 1, paddingRight: '3px' }} className="date-of-birth-profile">
+                <Skeleton paragraph={{ rows: 0 }} />
                 <Skeleton title={false} paragraph={{ rows: 1 }} />
               </div>
-              <div style={{ flexGrow: 1 }}>
+              <div style={{ flexGrow: 1, paddingRight: '3px' }} className="date-of-birth-profile">
+                <Skeleton paragraph={{ rows: 0 }} />
                 <Skeleton title={false} paragraph={{ rows: 1 }} />
               </div>
-              <div style={{ flexGrow: 1 }}>
+              <div style={{ flexGrow: 1, paddingRight: '3px' }} className="date-of-birth-profile">
+                <Skeleton paragraph={{ rows: 0 }} />
                 <Skeleton title={false} paragraph={{ rows: 1 }} />
               </div>
             </div>
@@ -447,12 +449,13 @@ class ThongTinCaNhan extends Component {
           </div>
           <div style={{ paddingTop: '35px' }}>
             {' '}
-            <Skeleton paragraph={{ rows: 0 }} />
             <div style={{ display: 'flex' }}>
-              <div style={{ flexGrow: 1 }}>
+              <div style={{ flexGrow: 1, paddingRight: '5px' }} className="date-of-birth-profile">
+                <Skeleton paragraph={{ rows: 0 }} />
                 <Skeleton title={false} paragraph={{ rows: 1 }} />
               </div>
-              <div style={{ flexGrow: 1 }}>
+              <div style={{ flexGrow: 1, paddingRight: '5px' }} className="date-of-birth-profile">
+                <Skeleton paragraph={{ rows: 0 }} />
                 <Skeleton title={false} paragraph={{ rows: 1 }} />
               </div>
             </div>
