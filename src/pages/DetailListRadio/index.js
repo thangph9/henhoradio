@@ -328,14 +328,26 @@ class ListRadio extends PureComponent {
               : preLoad.map((v, i) => (
                   <div key={i} className={styles['cart-item']}>
                     <div className={styles['box-cart']}>
-                      <div style={{ overflow: 'hidden' }}>
-                        <div
-                          className={styles['background-avatar']}
-                          style={{ background: '#fff' }}
-                        />
+                      <div className={styles['member-information']}>
+                        <li className={styles['li-skeleton']} />
+                        <li className={styles['li-skeleton']} />
+                        <li className={styles['li-skeleton']} />
+                        <li className={styles['li-skeleton']} />
+                        <li className={styles['li-skeleton']} />
                       </div>
-                      <div className={`${styles['title-cart']} home-page-preload`}>
-                        <Skeleton title={false} paragraph={{ rows: 2 }} active />
+                      <div
+                        style={{ borderTop: '1px solid #95a5a6' }}
+                        className={`${styles['title-cart']} home-page-preload`}
+                      >
+                        <Icon
+                          style={{
+                            cursor: 'pointer',
+                            margin: '0 auto',
+                            display: 'table',
+                            fontSize: '20px',
+                          }}
+                          type="play-circle"
+                        />
                       </div>
                     </div>
                   </div>

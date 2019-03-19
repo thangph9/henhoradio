@@ -9,6 +9,7 @@ import styles from './styles.less';
 class GlobalHeader extends PureComponent {
   state = {
     dataUser: {},
+    loaded: false,
   };
 
   componentWillUnmount() {
@@ -67,9 +68,24 @@ class GlobalHeader extends PureComponent {
       });
     }
     if (this.props.authentication.getonlyuser !== nextProps.authentication.getonlyuser) {
-      this.setState({
-        dataUser: nextProps.authentication.getonlyuser,
-      });
+      this.setState(
+        {
+          dataUser: nextProps.authentication.getonlyuser,
+        },
+        () => {
+          const { dataUser } = this.state;
+          const imgLoader = new Image();
+          imgLoader.src = `/images/ft/${dataUser.avatar}`;
+          imgLoader.onload = () => {
+            if (this.imgElm && dataUser.avatar) {
+              this.imgElm.style.backgroundImage = `url(/images/ft/${dataUser.avatar})`;
+              this.setState({
+                loaded: true,
+              });
+            }
+          };
+        }
+      );
     }
   }
   toggleMenuMobile() {
@@ -279,16 +295,12 @@ class GlobalHeader extends PureComponent {
                       to="/home/profile-user"
                     >
                       <div
+                        ref={imgElm => (this.imgElm = imgElm)}
                         className={styles['background-avatar']}
-                        style={
-                          dataUser.avatar
-                            ? {
-                                backgroundImage: `url(/images/ft/${dataUser.avatar})`,
-                              }
-                            : {
-                                background: '#f2f2f2',
-                              }
-                        }
+                        style={{
+                          backgroundImage: `url(https://avatars.servers.getgo.com/2205256774854474505_medium.jpg)`,
+                          backgroundColor: this.state.loaded ? 'none' : 'rgb(242, 242, 242)',
+                        }}
                       />
                     </Link>
                   </div>
