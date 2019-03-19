@@ -156,7 +156,7 @@ class LandingPage extends PureComponent {
                         <h2>
                           {dataAllUser[5].fullname}
                           <br />
-                          Giới tính: {dataAllUser[4].gender === 'male' ? 'Nam' : 'Nữ'}
+                          Giới tính: {dataAllUser[5].gender === 'male' ? 'Nam' : 'Nữ'}
                         </h2>
                         <p>{dataAllUser[5].address}</p>
                       </div>
