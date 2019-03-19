@@ -15,7 +15,7 @@ const plugins = [
       },
       locale: {
         enable: true, // default false
-        default: 'zh-CN', // default zh-CN
+        default: 'vi-VN', // default zh-CN
         baseNavigator: true, // default true, when it is true, will use `navigator.language` overwrite default
       },
       dynamicImport: {
@@ -72,13 +72,13 @@ export default {
   externals: {
     '@antv/data-set': 'DataSet',
   },
-  // proxy: {
-  //   '/server/api/': {
-  //     target: 'https://preview.pro.ant.design/',
-  //     changeOrigin: true,
-  //     pathRewrite: { '^/server': '' },
-  //   },
-  // },
+  proxy: {
+    '/api': {
+      target: 'http://localhost:8003',
+      changeOrigin: true,
+      pathRewrite: { '^/api': '' },
+    },
+  },
   ignoreMomentLocale: true,
   lessLoaderOptions: {
     javascriptEnabled: true,
