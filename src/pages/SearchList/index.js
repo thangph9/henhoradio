@@ -23,6 +23,7 @@
 /* eslint-disable jsx-a11y/media-has-caption */
 /* eslint-disable class-methods-use-this */
 import React, { PureComponent } from 'react';
+import { Link } from 'react-router-dom';
 import { connect } from 'dva';
 import moment from 'moment';
 import {
@@ -41,10 +42,6 @@ import {
   Input,
   Skeleton,
 } from 'antd';
-import TagSelect from '@/components/TagSelect';
-import StandardFormRow from '@/components/StandardFormRow';
-
-import { formatWan } from '@/utils/utils';
 
 import styles from './index.less';
 
@@ -315,7 +312,7 @@ class FilterCardList extends PureComponent {
       form,
     } = this.props;
     const { getFieldDecorator } = form;
-    const { dataFilter, dataFilterDay, dataFilterRadio, dataList, dataDuration } = this.state;
+    const { dataFilter, dataList, dataDuration } = this.state;
     const CardInfo = ({ activeUser, newUser }) => (
       <div className={styles.cardInfo}>
         <div>
@@ -420,124 +417,132 @@ class FilterCardList extends PureComponent {
             rowKey="id"
             style={{ marginTop: 24 }}
             grid={{ gutter: 24, xl: 4, lg: 3, md: 3, sm: 2, xs: 1 }}
-            // loading={this.props.loadingPage}
             dataSource={dataFilter ? dataFilter : dataList}
             pagination={paginationProps}
             renderItem={item => (
               <List.Item key={item.id}>
-                <Card
-                  onMouseMove={e =>
-                    this.handleMouseMove(
-                      e,
-                      `tua-${item.audio}`,
-                      item.audio,
-                      Math.trunc(dataDuration[`${item.audio}`])
-                    )
-                  }
-                  className={styles.abc}
-                  hoverable
-                  bodyStyle={{ paddingBottom: 30 }}
-                  actions={[
-                    <Tooltip title="下载">
-                      <Icon type="download" />
-                    </Tooltip>,
-                    <Tooltip
-                      // onClick={() => this.handleClickAudio(`${item.audio}`,dataDuration[`${item.audio}`])}
-                      onClick={() =>
-                        this.handleClickAudio(item.audio, Math.trunc(dataDuration[`${item.audio}`]))
-                      }
-                      title={
-                        !this.state[`audio-${item.audio}`]
-                          ? 'Play'
-                          : this.state[`audio-${item.audio}`].paused
-                          ? 'Play'
-                          : 'Pause'
-                      }
-                    >
-                      <Icon
-                        type={
-                          !this.state[`audio-${item.audio}`]
-                            ? 'play-circle'
-                            : this.state[`audio-${item.audio}`].paused
-                            ? 'play-circle'
-                            : 'pause-circle'
-                        }
-                      />
-                    </Tooltip>,
-                    <Tooltip title="分享">
-                      <Icon type="share-alt" />
-                    </Tooltip>,
-                    <Dropdown overlay={itemMenu}>
-                      <Icon type="ellipsis" />
-                    </Dropdown>,
-                  ]}
+                <Link
+                  to={`detail-list?page=1&radio=${item.local}&date=${moment(item.date)
+                    .format('D/M/YYYY')
+                    .replace(/\//g, '_')}`}
                 >
-                  <Card.Meta
-                    avatar={<Avatar size="small" src={item.avatar} />}
-                    title={item.title}
-                  />
-                  <div className={styles.cardItemContent}>
-                    <div style={{ paddingBottom: '10px' }}>
-                      <p>MC: {item.mc}</p>
-                      <span style={{ display: 'block' }}>
-                        Đài phát: {item.local === 'HN' ? 'Hà Nội' : 'Hồ Chí Minh'}
-                      </span>
-                      <span>Ngày phát: {moment(item.date).format('DD/MM/YYYY')}</span>
-                    </div>
-                    <div id={`time-${item.audio}`} className={styles['time-audio']}>
-                      <div className={styles['time-in-audio']}>
-                        {this.state[`timming-${item.audio}`]
-                          ? this.getTimeInAudio(Math.trunc(this.state[`timming-${item.audio}`]))
-                          : `0:0`}
+                  <Card
+                    onMouseMove={e =>
+                      this.handleMouseMove(
+                        e,
+                        `tua-${item.audio}`,
+                        item.audio,
+                        Math.trunc(dataDuration[`${item.audio}`])
+                      )
+                    }
+                    className={styles.abc}
+                    hoverable
+                    bodyStyle={{ paddingBottom: 30 }}
+                    actions={[
+                      <Tooltip title="下载">
+                        <Icon type="download" />
+                      </Tooltip>,
+                      <Tooltip
+                        // onClick={() => this.handleClickAudio(`${item.audio}`,dataDuration[`${item.audio}`])}
+                        onClick={() =>
+                          this.handleClickAudio(
+                            item.audio,
+                            Math.trunc(dataDuration[`${item.audio}`])
+                          )
+                        }
+                        title={
+                          !this.state[`audio-${item.audio}`]
+                            ? 'Play'
+                            : this.state[`audio-${item.audio}`].paused
+                            ? 'Play'
+                            : 'Pause'
+                        }
+                      >
+                        <Icon
+                          type={
+                            !this.state[`audio-${item.audio}`]
+                              ? 'play-circle'
+                              : this.state[`audio-${item.audio}`].paused
+                              ? 'play-circle'
+                              : 'pause-circle'
+                          }
+                        />
+                      </Tooltip>,
+                      <Tooltip title="分享">
+                        <Icon type="share-alt" />
+                      </Tooltip>,
+                      <Dropdown overlay={itemMenu}>
+                        <Icon type="ellipsis" />
+                      </Dropdown>,
+                    ]}
+                  >
+                    <Card.Meta
+                      avatar={<Avatar size="small" src={item.avatar} />}
+                      title={item.title}
+                    />
+                    <div className={styles.cardItemContent}>
+                      <div style={{ paddingBottom: '10px' }}>
+                        <p>MC: {item.mc}</p>
+                        <span style={{ display: 'block' }}>
+                          Đài phát: {item.local === 'HN' ? 'Hà Nội' : 'Hồ Chí Minh'}
+                        </span>
+                        <span>Ngày phát: {moment(item.date).format('DD/MM/YYYY')}</span>
                       </div>
-                      <div className={styles['time-in-audio']}>
-                        {this.getTimeInAudio(Math.trunc(dataDuration[`${item.audio}`]))}
+                      <div id={`time-${item.audio}`} className={styles['time-audio']}>
+                        <div className={styles['time-in-audio']}>
+                          {this.state[`timming-${item.audio}`]
+                            ? this.getTimeInAudio(Math.trunc(this.state[`timming-${item.audio}`]))
+                            : `0:0`}
+                        </div>
+                        <div className={styles['time-in-audio']}>
+                          {this.getTimeInAudio(Math.trunc(dataDuration[`${item.audio}`]))}
+                        </div>
                       </div>
-                    </div>
-                    {this.state[`dot-${item.audio}`] && (
+                      {this.state[`dot-${item.audio}`] && (
+                        <div
+                          className={styles['dot-tua']}
+                          style={{
+                            marginLeft: `${(this.state[`timming-${item.audio}`] * 100) /
+                              Math.trunc(dataDuration[`${item.audio}`]) -
+                              2}%`,
+                          }}
+                        />
+                      )}
                       <div
-                        className={styles['dot-tua']}
-                        style={{
-                          marginLeft: `${(this.state[`timming-${item.audio}`] * 100) /
-                            Math.trunc(dataDuration[`${item.audio}`]) -
-                            2}%`,
-                        }}
+                        id={`tua-${item.audio}`}
+                        className={styles['border-tua']}
+                        onClick={e =>
+                          this.handleClickSlideBarAudio(
+                            e,
+                            `tua-${item.audio}`,
+                            item.audio,
+                            Math.trunc(dataDuration[`${item.audio}`])
+                          )
+                        }
+                        onMouseUp={e => this.handleMouseUp(e, `tua-${item.audio}`, item.audio)}
+                        onMouseDown={e => this.handleMouseDown(e, `tua-${item.audio}`, item.audio)}
                       />
-                    )}
-                    <div
-                      id={`tua-${item.audio}`}
-                      className={styles['border-tua']}
-                      onClick={e =>
-                        this.handleClickSlideBarAudio(
-                          e,
-                          `tua-${item.audio}`,
-                          item.audio,
-                          Math.trunc(dataDuration[`${item.audio}`])
-                        )
-                      }
-                      onMouseUp={e => this.handleMouseUp(e, `tua-${item.audio}`, item.audio)}
-                      onMouseDown={e => this.handleMouseDown(e, `tua-${item.audio}`, item.audio)}
-                    />
-                    <audio
-                      controls
-                      type="audio/mpeg"
-                      style={{ display: 'none' }}
-                      id={item.audio}
-                      src={`http://35.192.153.201:8080/upload/audio/local/${item.audio}`}
-                    />
-                    <div
-                      style={
-                        this.state[`playing-${item.audio}`] === `${item.audio}`
-                          ? {
-                              width: `${(this.state[`timming-${item.audio}`] * 100) /
-                                Math.trunc(dataDuration[`${item.audio}`])}%`,
-                            }
-                          : {}
-                      }
-                      className={styles['border-audio']}
-                    />
-                  </div>
-                </Card>
+                      <audio
+                        controls
+                        type="audio/mpeg"
+                        style={{ display: 'none' }}
+                        id={item.audio}
+                        src={`http://35.192.153.201:8080/upload/audio/local/${item.audio}`}
+                      />
+                      <div
+                        style={
+                          this.state[`playing-${item.audio}`] === `${item.audio}`
+                            ? {
+                                width: `${(this.state[`timming-${item.audio}`] * 100) /
+                                  Math.trunc(dataDuration[`${item.audio}`])}%`,
+                              }
+                            : {}
+                        }
+                        className={styles['border-audio']}
+                      />
+                    </div>
+                  </Card>
+                </Link>
               </List.Item>
             )}
           />

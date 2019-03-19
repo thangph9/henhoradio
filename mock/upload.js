@@ -117,8 +117,84 @@ function getTrackList(req, res) {
     }
   );
 }
+const dataDetail = [
+  {
+    member_id: 1,
+    address: 'Hà Nội',
+    name: 'Nguyễn Hoàng Z',
+    day: 12,
+    month: 2,
+    year: 1997,
+    gender: 'male',
+    timeup: '25/3/2019',
+    job: 'Bác sĩ',
+    audio:
+      'https://vnno-zn-5-tf-mp3-s1-zmp3.zadn.vn/b9aa20ec13abfaf5a3ba/1502019886813006440?authen=exp=1553534527~acl=/b9aa20ec13abfaf5a3ba/*~hmac=ad06a1317a812e3daccae0676a42de9c',
+    duration: 298,
+  },
+  {
+    member_id: 1,
+    address: 'Hà Nội',
+    day: 12,
+    name: 'Nguyễn Văn F',
+    month: 2,
+    year: 1997,
+    gender: 'male',
+    timeup: '25/3/2019',
+    job: 'Bác sĩ',
+    audio:
+      'https://vnno-vn-6-tf-mp3-s1-zmp3.zadn.vn/0287cab2fef517ab4ee4/4725938721176572736?authen=exp=1553534564~acl=/0287cab2fef517ab4ee4/*~hmac=45098c77c7f1d862d340a29217b04205',
+    duration: 192,
+  },
+  {
+    member_id: 2,
+    address: 'Thái Bình',
+    name: 'Nguyễn Thị A',
+    day: 4,
+    month: 1,
+    year: 1984,
+    gender: 'female',
+    timeup: '24/3/2019',
+    job: 'Giáo sư',
+    audio:
+      'https://vnno-zn-5-tf-mp3-s1-zmp3.zadn.vn/01265cb096f47faa26e5/6908679624977146479?authen=exp=1553534573~acl=/01265cb096f47faa26e5/*~hmac=c5f477e19e4c290852caf9d1e9d1d85a',
+    duration: 306,
+  },
+  {
+    member_id: 3,
+    address: 'Hà Nội',
+    name: 'Nguyễn Thị B',
+    day: 10,
+    month: 7,
+    year: 1992,
+    gender: 'female',
+    timeup: '25/3/2019',
+    job: 'Giáo viên',
+    audio:
+      'https://vnno-zn-5-tf-mp3-s1-zmp3.zadn.vn/500d4c758e31676f3e20/5421244242980541085?authen=exp=1553532314~acl=/500d4c758e31676f3e20/*~hmac=e1110b52b3257093a1177a0b138084d0',
+    duration: 217,
+  },
+  {
+    member_id: 4,
+    address: 'Hà Nam',
+    name: 'Nguyễn Văm D',
+    day: 12,
+    month: 5,
+    year: 1985,
+    gender: 'male',
+    timeup: '23/3/2019',
+    job: 'Kỹ sư',
+    audio:
+      'https://vnno-vn-6-tf-mp3-s1-zmp3.zadn.vn/a3a723e410a3f9fda0b2/4959260805179337474?authen=exp=1553532257~acl=/a3a723e410a3f9fda0b2/*~hmac=2fddc41d35338e71efe280b818731291',
+    duration: 305,
+  },
+];
+function getDetailList(req, res) {
+  res.json({ status: 'ok', data: dataDetail });
+}
 export default {
   'POST /upload/audio': audioUpload,
   'GET /upload/audio/:audioid': loadAudio,
   'GET /api/tracklist': getTrackList,
+  'GET /api/detaillist': getDetailList,
 };

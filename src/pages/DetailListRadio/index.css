@@ -4,6 +4,20 @@
   margin-right: auto;
   background-color: #f3f5f9;
 }
+.filter-data {
+  padding: 5px;
+  display: flex;
+  margin-bottom: 40px;
+}
+.filter-data .filter-date {
+  flex: 1;
+}
+.filter-data .filter-radio {
+  flex: 1;
+}
+.filter-data .filter-radio > div {
+  width: 175px;
+}
 .row {
   display: flex;
   flex-wrap: wrap;
@@ -40,11 +54,15 @@
   display: flex;
   flex-direction: column;
   justify-content: center;
+  background: #74b9ff;
 }
 .member-information li {
   list-style: none;
   display: flex;
   justify-content: space-between;
+}
+.member-information li h4 {
+  color: #d63031;
 }
 .background-avatar {
   background-position: center;
@@ -69,6 +87,30 @@
 .title-cart {
   background: #fff;
   padding: 20px;
+}
+.slide-play {
+  width: 100%;
+  min-height: 3px;
+  position: relative;
+  outline: 0;
+  background-color: #bdc3c7;
+  cursor: pointer;
+}
+.played {
+  height: 100%;
+  position: relative;
+  background: #EA2027;
+}
+.dots {
+  position: absolute;
+  top: -3px;
+  right: -6px;
+  width: 10px;
+  height: 10px;
+  background-color: #EA2027;
+  border-radius: 50%;
+  border: 1px solid #EA2027;
+  outline: 0;
 }
 .detail {
   color: black;

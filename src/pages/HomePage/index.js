@@ -1,3 +1,4 @@
+/* eslint-disable react/destructuring-assignment */
 /* eslint-disable react/jsx-indent */
 /* eslint-disable react/no-array-index-key */
 /* eslint-disable no-plusplus */
@@ -5,7 +6,8 @@
 import React, { PureComponent } from 'react';
 import { connect } from 'dva';
 import { Link } from 'react-router-dom';
-import { Skeleton } from 'antd';
+import { Skeleton, Pagination } from 'antd';
+import LazyImage from './LazyImage';
 import { MenuMobile } from '@/components/GlobalHeader';
 import styles from './index.less';
 
@@ -27,6 +29,8 @@ class NewFeed extends PureComponent {
     dispatch({
       type: 'authentication/getallusers',
     });
+    if (!this.props.location.query.page)
+      this.props.history.push({ pathname: '/home/newfeed', search: '?page=1' });
   }
 
   componentWillReceiveProps(nextProps) {
@@ -39,43 +43,43 @@ class NewFeed extends PureComponent {
     }
   }
 
+  handleChangePagination(v1) {
+    this.props.history.push({ pathname: `/home/newfeed`, search: `?page=${v1}` });
+  }
+
   render() {
     const { allUser, loadingPage, preLoad } = this.state;
-    const { myprops } = this.props;
+    const {
+      myprops,
+      location: {
+        query: { page },
+      },
+    } = this.props;
     if (!myprops.menu_header_mobile) {
       return (
         <div style={{ paddingTop: '32px', background: '#f3f5f9' }}>
           <div className={styles.container}>
             <div className={styles.row}>
               {!loadingPage
-                ? allUser.map((v, i) => (
-                    <Link
-                      to={`/home/other-profile?id=${v.user_id.replace(/-/g, '')}`}
-                      key={i}
-                      className={styles['cart-item']}
-                    >
-                      <div className={styles['box-cart']}>
-                        <div style={{ overflow: 'hidden' }}>
-                          <div
-                            className={styles['background-avatar']}
-                            style={
-                              v.avatar
-                                ? { backgroundImage: `url(/images/ft/${v.avatar})` }
-                                : {
-                                    backgroundImage: `url(https://mcgillmbajapan.com/wp-content/themes/mcgill/img/anonymous-avatar.png)`,
-                                  }
-                            }
-                          />
+                ? allUser
+                    .filter((value, index) => index >= page * 20 - 20 && index < page * 20)
+                    .map((v, i) => (
+                      <Link
+                        to={`/home/other-profile?id=${v.user_id.replace(/-/g, '')}`}
+                        key={i}
+                        className={styles['cart-item']}
+                      >
+                        <div className={styles['box-cart']}>
+                          <LazyImage number={i % 20} avatar={v.avatar} />
+                          <div className={styles['title-cart']}>
+                            <span className={styles.detail}>{v.fullname}</span>
+                            <span className={styles.detail}>,</span>
+                            <span className={styles.detail}>{v.age}</span>
+                            <span className={styles.detail}>{v.address}</span>
+                          </div>
                         </div>
-                        <div className={styles['title-cart']}>
-                          <span className={styles.detail}>{v.fullname}</span>
-                          <span className={styles.detail}>,</span>
-                          <span className={styles.detail}>{v.age}</span>
-                          <span className={styles.detail}>{v.address}</span>
-                        </div>
-                      </div>
-                    </Link>
-                  ))
+                      </Link>
+                    ))
                 : preLoad.map((v, i) => (
                     <div key={i} className={styles['cart-item']}>
                       <div className={styles['box-cart']}>
@@ -92,6 +96,13 @@ class NewFeed extends PureComponent {
                     </div>
                   ))}
             </div>
+            <Pagination
+              style={{ padding: '5px', float: 'right', marginTop: '30px', marginBottom: '20px' }}
+              onChange={(v1, v2) => this.handleChangePagination(v1, v2)}
+              current={Number(page)}
+              pageSize={20}
+              total={allUser.length}
+            />
           </div>
         </div>
       );

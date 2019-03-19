@@ -75,6 +75,12 @@ export async function trackList(params) {
     body: params,
   });
 }
+export async function getDetailList(params) {
+  return request('/api/detaillist', {
+    method: 'GET',
+    body: params,
+  });
+}
 export async function removeFakeList(params) {
   const { count = 5, ...restParams } = params;
   return request(`/api/fake_list?count=${count}`, {
@@ -118,6 +124,12 @@ export async function fakeAccountLogin(params) {
 export async function fakeRegister(params) {
   return request('/api/register', {
     method: 'POST',
+    body: params,
+  });
+}
+export async function getMembers(params) {
+  return request('/api/members/getmembers', {
+    method: 'GET',
     body: params,
   });
 }

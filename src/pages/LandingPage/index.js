@@ -7,11 +7,13 @@
 /* eslint-disable no-param-reassign */
 /* eslint-disable no-cond-assign */
 /* eslint-disable react/no-unused-state */
+/* eslint-disable no-return-assign */
 /* eslint-disable react/react-in-jsx-scope */
 
 import { PureComponent } from 'react';
 import { connect } from 'dva';
 import { Icon } from 'antd';
+import Image from './Image';
 import styles from './index.less';
 
 @connect(({ loading, authentication }) => ({
@@ -74,57 +76,18 @@ class LandingPage extends PureComponent {
     const { dataAllUser, activeImage } = this.state;
     if (value > dataAllUser.length + 5 || value < 0) return '';
     return (
-      <div
-        style={
-          this.resultClassBox(value) === `${styles['center-box']}`
-            ? {
-                backgroundImage: `url(/images/ft/${
-                  dataAllUser[this.resultIndexUser(this.resultClassBox(value))].image[activeImage]
-                })`,
-              }
-            : {
-                backgroundImage: `url(/images/ft/${
-                  dataAllUser[this.resultIndexUser(this.resultClassBox(value))].avatar
-                })`,
-              }
-        }
-        className={this.resultClassImage(value)}
-      >
-        <div className={`${styles.content}`}>
-          <h2>
-            {dataAllUser[this.resultIndexUser(this.resultClassBox(value))].fullname}
-            <br />
-            Giới tính:{' '}
-            {dataAllUser[this.resultIndexUser(this.resultClassBox(value))].gender === 'male'
-              ? 'Nam'
-              : 'Nữ'}
-          </h2>
-          <p>{dataAllUser[this.resultIndexUser(this.resultClassBox(value))].address}</p>
-        </div>
-        <div
-          style={
-            dataAllUser[this.resultIndexUser(this.resultClassBox(value))].gender === 'male'
-              ? { backgroundImage: 'linear-gradient(to top,blue,transparent)' }
-              : { backgroundImage: 'linear-gradient(to top,#c21833,transparent)' }
-          }
-          className={styles['background-gradient']}
-        />
-        {this.resultClassBox(value) === `${styles['center-box']}` && (
-          <div className={styles['image-card']}>
-            {dataAllUser[this.resultIndexUser(this.resultClassBox(value))].image.map((v, i) => (
-              <span
-                key={v}
-                onClick={() => this.handleClickImage(i)}
-                className={
-                  activeImage === i
-                    ? `${styles['item-image']} ${styles['active-image']}`
-                    : styles['item-image']
-                }
-              />
-            ))}
-          </div>
-        )}
-      </div>
+      <Image
+        dataAllUser={dataAllUser}
+        activeImage={activeImage}
+        resultClass={this.resultClassBox(value)}
+        valueLoaded={value}
+        avatar={dataAllUser[this.resultIndexUser(this.resultClassBox(value))].avatar}
+        fullname={dataAllUser[this.resultIndexUser(this.resultClassBox(value))].fullname}
+        gender={dataAllUser[this.resultIndexUser(this.resultClassBox(value))].gender}
+        address={dataAllUser[this.resultIndexUser(this.resultClassBox(value))].address}
+        image={dataAllUser[this.resultIndexUser(this.resultClassBox(value))].image}
+        resultClassImage={this.resultClassImage(value)}
+      />
     );
   }
 
@@ -180,7 +143,7 @@ class LandingPage extends PureComponent {
     if (v % 5 === 1) return `${styles['right-image']} ${styles['effect-hover']}`;
     if (v % 5 === 2) return `${styles['center-image']} ${styles['effect-hover']}`;
     if (v % 5 === 3) return `${styles['left-image']} ${styles['effect-hover']}`;
-    return '';
+    return 'abc';
   }
 
   resultIndexUser(value) {
@@ -388,15 +351,24 @@ class LandingPage extends PureComponent {
               <div className={styles['slide-bar-container']}>
                 <div className={styles['main-slide']}>
                   <div className={styles['left-box']}>
-                    <div style={{ background: '#f2f2f2' }} className={styles['left-image']} />
+                    <div
+                      style={{ background: '#f2f2f2', opacity: 1 }}
+                      className={styles['left-image']}
+                    />
                   </div>
                   <div className={styles['center-box']}>
-                    <div style={{ background: '#f2f2f2' }} className={styles['center-image']}>
+                    <div
+                      style={{ background: '#f2f2f2', opacity: 1 }}
+                      className={styles['center-image']}
+                    >
                       <div style={{ paddingBottom: '80px' }} className={styles.content} />
                     </div>
                   </div>
                   <div className={styles['right-box']}>
-                    <div style={{ background: '#f2f2f2' }} className={styles['right-image']}>
+                    <div
+                      style={{ background: '#f2f2f2', opacity: 1 }}
+                      className={styles['right-image']}
+                    >
                       <div className={styles.content} />
                     </div>
                   </div>

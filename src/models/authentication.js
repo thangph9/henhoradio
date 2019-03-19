@@ -15,6 +15,7 @@ import {
   updatePhone,
   updateEmail,
   getOnlyUser,
+  getDetailList,
 } from '@/services/api';
 import { message } from 'antd';
 import { setAuthority } from '@/utils/authority';
@@ -39,6 +40,7 @@ export default {
     updatephone: {},
     updateemail: {},
     getonlyuser: {},
+    getdetaillist: [],
   },
   effects: {
     *login({ payload }, { call, put }) {
@@ -147,6 +149,17 @@ export default {
       if (response && response.status === 'ok') {
         yield put({
           type: 'getOnlyUser',
+          payload: response.data,
+        });
+      } else {
+        message.error('Có lỗi xảy ra. Hãy thử đăng nhập lại !');
+      }
+    },
+    *getdetaillist({ payload }, { call, put }) {
+      const response = yield call(getDetailList, payload);
+      if (response && response.status === 'ok') {
+        yield put({
+          type: 'getDetailList',
           payload: response.data,
         });
       } else {
@@ -338,6 +351,12 @@ export default {
       return {
         ...state,
         getonlyuser: action.payload,
+      };
+    },
+    getDetailList(state, action) {
+      return {
+        ...state,
+        getdetaillist: action.payload,
       };
     },
   },
