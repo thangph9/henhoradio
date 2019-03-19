@@ -115,15 +115,47 @@ ul {
   position: absolute;
   border-radius: 15px;
   left: 50%;
+  cursor: pointer;
   top: 50%;
   width: 100%;
   height: 70%;
-  background-image: url('http://s1.1zoom.me/b5050/596/Evening_Forests_Mountains_Firewatch_Campo_Santo_549147_1366x768.jpg');
   background-size: cover;
   box-shadow: 0 10px 15px rgba(0, 0, 0, 0.3);
   background-position: center;
   background-repeat: no-repeat;
+  transition: all 0.8s;
   transform: translate(-50%, -45%) perspective(900px) rotateY(20deg);
+}
+.left-image:hover {
+  transform: translate(-55%, -45%) rotateY(0deg);
+  box-shadow: 0 20px 20px rgba(0, 0, 0, 0.4);
+}
+.content {
+  position: absolute;
+  width: 100%;
+  bottom: -100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  color: #ecf0f1;
+  padding-bottom: 40px;
+  box-sizing: border-box;
+  transition: bottom 0.8s;
+  z-index: 1;
+}
+.content h2 {
+  color: #ecf0f1;
+  text-align: center;
+  font-size: 22px;
+}
+.background-gradient {
+  position: absolute;
+  opacity: 0;
+  width: 100%;
+  height: 100%;
+  transition: opacity 0.8s;
+  z-index: 0;
 }
 .center-box {
   position: relative;
@@ -135,13 +167,20 @@ ul {
   top: 50%;
   border-radius: 15px;
   width: 100%;
+  cursor: pointer;
   box-shadow: 0 20px 20px rgba(0, 0, 0, 0.4);
   height: 90%;
-  background-image: url('https://orig15.deviantart.net/25c2/f/2013/277/d/1/lunar_dew_forest_by_jambi20-d6p71ld.jpg');
   transform: translate(-50%, -50%);
   background-size: cover;
   background-position: center;
   background-repeat: no-repeat;
+  animation: center 3.5s infinite;
+}
+.center-image:hover {
+  -webkit-animation-play-state: paused;
+  -moz-animation-play-state: paused;
+  -o-animation-play-state: paused;
+  animation-play-state: paused;
 }
 .right-box {
   position: relative;
@@ -152,17 +191,41 @@ ul {
   left: 50%;
   top: 50%;
   border-radius: 15px;
+  cursor: pointer;
   box-shadow: 0 10px 15px rgba(0, 0, 0, 0.3);
   width: 100%;
   height: 70%;
-  background-image: url('https://images8.alphacoders.com/424/424433.jpg');
   background-size: cover;
   background-position: center;
   background-repeat: no-repeat;
-  transform: translate(-50%, -45%);
+  transition: all 0.8s;
   transform: translate(-50%, -45%) perspective(900px) rotateY(-20deg);
 }
+.right-image:hover {
+  transform: translate(-45%, -45%) rotateY(0deg);
+  box-shadow: 0 20px 20px rgba(0, 0, 0, 0.4);
+}
+.effect-hover {
+  overflow: hidden;
+}
+.effect-hover:hover .content {
+  bottom: 0.0000000001px;
+}
+.effect-hover:hover .background-gradient {
+  opacity: 0.4;
+}
 @keyframes animate {
+  0% {
+    transform: translate(-50%, -50%);
+  }
+  50% {
+    transform: translate(-50%, -45%);
+  }
+  100% {
+    transform: translate(-50%, -50%);
+  }
+}
+@keyframes center {
   0% {
     transform: translate(-50%, -50%);
   }

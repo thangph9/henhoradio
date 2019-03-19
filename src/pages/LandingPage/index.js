@@ -8,15 +8,33 @@ import { connect } from 'dva';
 import { Icon } from 'antd';
 import styles from './index.less';
 
-@connect(({ loading }) => ({
-  loading,
+@connect(({ loading, authentication }) => ({
+  loadingPage: loading.effects['authentication/getallusers'],
+  authentication,
 }))
 class LandingPage extends PureComponent {
   constructor(props) {
     super(props);
     this.state = {
       number: 0,
+      dataAllUser: [],
     };
+  }
+
+  componentDidMount() {
+    const { dispatch } = this.props;
+    dispatch({
+      type: 'authentication/getallusers',
+    });
+  }
+
+  componentWillReceiveProps(nextProps) {
+    const { authentication } = this.props;
+    if (authentication.getallusers !== nextProps.authentication.getallusers) {
+      this.setState({
+        dataAllUser: nextProps.authentication.getallusers,
+      });
+    }
   }
 
   handleClickMenu(value) {
@@ -33,7 +51,8 @@ class LandingPage extends PureComponent {
   }
 
   render() {
-    const { number } = this.state;
+    const { number, dataAllUser } = this.state;
+    const { loadingPage } = this.props;
     return (
       <div className={styles['landing-page']}>
         <div className={styles.container}>
@@ -78,21 +97,103 @@ class LandingPage extends PureComponent {
               </li>
             </div>
           </ul>
-          <div className={styles['slide-bar']}>
-            <div className={styles['slide-bar-container']}>
-              <div className={styles['main-slide']}>
-                <div className={styles['left-box']}>
-                  <div className={styles['left-image']} />
-                </div>
-                <div className={styles['center-box']}>
-                  <div className={styles['center-image']} />
-                </div>
-                <div className={styles['right-box']}>
-                  <div className={styles['right-image']} />
+          {!loadingPage && dataAllUser.length > 0 ? (
+            <div className={styles['slide-bar']}>
+              <div className={styles['slide-bar-container']}>
+                <div className={styles['main-slide']}>
+                  <div className={styles['left-box']}>
+                    <div
+                      style={{ backgroundImage: `url(/images/ft/${dataAllUser[3].avatar})` }}
+                      className={`${styles['left-image']} ${styles['effect-hover']}`}
+                    >
+                      <div className={`${styles.content}`}>
+                        <h2>
+                          {dataAllUser[3].fullname}
+                          <br />
+                          Giới tính: {dataAllUser[3].gender === 'male' ? 'Nam' : 'Nữ'}
+                        </h2>
+                        <p>{dataAllUser[3].address}</p>
+                      </div>
+                      <div
+                        style={
+                          dataAllUser[3].gender === 'male'
+                            ? { backgroundImage: 'linear-gradient(to top,#3498db,transparent)' }
+                            : { backgroundImage: 'linear-gradient(to top,#c21833,transparent)' }
+                        }
+                        className={styles['background-gradient']}
+                      />
+                    </div>
+                  </div>
+                  <div className={styles['center-box']}>
+                    <div
+                      style={{ backgroundImage: `url(/images/ft/${dataAllUser[4].avatar})` }}
+                      className={`${styles['center-image']} ${styles['effect-hover']}`}
+                    >
+                      <div style={{ paddingBottom: '100px' }} className={`${styles.content}`}>
+                        <h2>
+                          {dataAllUser[4].fullname}
+                          <br />
+                          Giới tính: {dataAllUser[4].gender === 'male' ? 'Nam' : 'Nữ'}
+                        </h2>
+                        <p>{dataAllUser[4].address}</p>
+                      </div>
+                      <div
+                        style={
+                          dataAllUser[4].gender === 'male'
+                            ? { backgroundImage: 'linear-gradient(to top,#3498db,transparent)' }
+                            : { backgroundImage: 'linear-gradient(to top,#c21833,transparent)' }
+                        }
+                        className={styles['background-gradient']}
+                      />
+                    </div>
+                  </div>
+                  <div className={styles['right-box']}>
+                    <div
+                      style={{ backgroundImage: `url(/images/ft/${dataAllUser[5].avatar})` }}
+                      className={`${styles['right-image']} ${styles['effect-hover']}`}
+                    >
+                      <div className={`${styles.content}`}>
+                        <h2>
+                          {dataAllUser[5].fullname}
+                          <br />
+                          Giới tính: {dataAllUser[4].gender === 'male' ? 'Nam' : 'Nữ'}
+                        </h2>
+                        <p>{dataAllUser[5].address}</p>
+                      </div>
+                      <div
+                        style={
+                          dataAllUser[5].gender === 'male'
+                            ? { backgroundImage: 'linear-gradient(to top,#3498db,transparent)' }
+                            : { backgroundImage: 'linear-gradient(to top,#c21833,transparent)' }
+                        }
+                        className={styles['background-gradient']}
+                      />
+                    </div>
+                  </div>
                 </div>
               </div>
             </div>
-          </div>
+          ) : (
+            <div className={styles['slide-bar']}>
+              <div className={styles['slide-bar-container']}>
+                <div className={styles['main-slide']}>
+                  <div className={styles['left-box']}>
+                    <div style={{ background: '#f2f2f2' }} className={styles['left-image']} />
+                  </div>
+                  <div className={styles['center-box']}>
+                    <div style={{ background: '#f2f2f2' }} className={styles['center-image']}>
+                      <div style={{ paddingBottom: '100px' }} className={styles.content} />
+                    </div>
+                  </div>
+                  <div className={styles['right-box']}>
+                    <div style={{ background: '#f2f2f2' }} className={styles['right-image']}>
+                      <div className={styles.content} />
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          )}
         </div>
       </div>
     );
