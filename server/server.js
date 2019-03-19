@@ -7,8 +7,8 @@ const path = require('path');
 const fs = require('fs');
 
 const api = require('./api');
-const images = require('./api/images');
-const upload = require('./api/upload');
+// const images = require('./api/images');
+// const upload = require('./api/upload');
 
 const app = express();
 
@@ -40,8 +40,6 @@ app.use((req, res, next) => {
   next();
 });
 app.use('/api', api);
-app.use(images);
-app.use(upload);
 app.get('/*', (req, res) => {
   res.sendFile(path.join(__dirname, '../dist', 'index.html'));
 });
