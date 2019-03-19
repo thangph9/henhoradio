@@ -128,13 +128,13 @@ export async function fakeRegister(params) {
   });
 }
 export async function getMembers(params) {
-  return request('http://localhost:8003/api/members/getmembers', {
+  return request('/api/members/getmembers', {
     method: 'GET',
     body: params,
   });
 }
 export async function loginAccount(params) {
-  return request('http://localhost:8003/api/authentication/login', {
+  return request('/api/authentication/login', {
     method: 'POST',
     body: params,
   });
