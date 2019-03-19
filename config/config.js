@@ -74,7 +74,7 @@ export default {
   },
   proxy: {
     '/api': {
-      target: 'http://localhost:8003',
+      target: 'https://henhoradio.net/',
       changeOrigin: true,
       pathRewrite: { '^/api': '' },
     },
