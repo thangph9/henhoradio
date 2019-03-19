@@ -18,6 +18,7 @@ class LandingPage extends PureComponent {
     this.state = {
       number: 0,
       dataAllUser: [],
+      leftCard: 1,
     };
   }
 
@@ -50,8 +51,24 @@ class LandingPage extends PureComponent {
     }
   }
 
+  handleClickNextCard() {
+    const { leftCard } = this.state;
+    const prevState = leftCard;
+    this.setState({
+      leftCard: prevState + 1,
+    });
+  }
+
+  handleClickPrevCard() {
+    const { leftCard } = this.state;
+    const prevState = leftCard;
+    this.setState({
+      leftCard: prevState - 1,
+    });
+  }
+
   render() {
-    const { number, dataAllUser } = this.state;
+    const { number, dataAllUser, leftCard } = this.state;
     const { loadingPage } = this.props;
     return (
       <div className={styles['landing-page']}>
@@ -102,45 +119,78 @@ class LandingPage extends PureComponent {
               <div className={styles['slide-bar-container']}>
                 <div className={styles['main-slide']}>
                   <div className={styles['left-box']}>
-                    <div
-                      style={{ backgroundImage: `url(/images/ft/${dataAllUser[3].avatar})` }}
-                      className={`${styles['left-image']} ${styles['effect-hover']}`}
-                    >
-                      <div className={`${styles.content}`}>
-                        <h2>
-                          {dataAllUser[3].fullname}
-                          <br />
-                          Giới tính: {dataAllUser[3].gender === 'male' ? 'Nam' : 'Nữ'}
-                        </h2>
-                        <p>{dataAllUser[3].address}</p>
-                      </div>
+                    {leftCard !== 0 && (
                       <div
-                        style={
-                          dataAllUser[3].gender === 'male'
-                            ? { backgroundImage: 'linear-gradient(to top,#3498db,transparent)' }
-                            : { backgroundImage: 'linear-gradient(to top,#c21833,transparent)' }
-                        }
-                        className={styles['background-gradient']}
-                      />
-                    </div>
+                        style={{
+                          backgroundImage: `url(/images/ft/${dataAllUser[leftCard - 1].avatar})`,
+                        }}
+                        className={`${styles['left-image']} ${styles['effect-hover']}`}
+                      >
+                        <div className={`${styles.content}`}>
+                          <h2>
+                            {dataAllUser[leftCard - 1].fullname}
+                            <br />
+                            Giới tính: {dataAllUser[leftCard - 1].gender === 'male' ? 'Nam' : 'Nữ'}
+                          </h2>
+                          <p>{dataAllUser[leftCard - 1].address}</p>
+                        </div>
+                        <div
+                          style={
+                            dataAllUser[leftCard - 1].gender === 'male'
+                              ? { backgroundImage: 'linear-gradient(to top,blue,transparent)' }
+                              : { backgroundImage: 'linear-gradient(to top,#c21833,transparent)' }
+                          }
+                          className={styles['background-gradient']}
+                        />
+                      </div>
+                    )}
                   </div>
                   <div className={styles['center-box']}>
                     <div
-                      style={{ backgroundImage: `url(/images/ft/${dataAllUser[4].avatar})` }}
+                      style={{ backgroundImage: `url(/images/ft/${dataAllUser[leftCard].avatar})` }}
                       className={`${styles['center-image']} ${styles['effect-hover']}`}
                     >
+                      {leftCard - 1 >= 0 && (
+                        <Icon
+                          onClick={() => this.handleClickPrevCard()}
+                          style={{
+                            position: 'absolute',
+                            zIndex: 2,
+                            top: '50%',
+                            fontSize: '35px',
+                            transform: 'translateY(-50%)',
+                            color: '#0652DD',
+                          }}
+                          type="left"
+                        />
+                      )}
                       <div style={{ paddingBottom: '100px' }} className={`${styles.content}`}>
                         <h2>
-                          {dataAllUser[4].fullname}
+                          {dataAllUser[leftCard].fullname}
                           <br />
-                          Giới tính: {dataAllUser[4].gender === 'male' ? 'Nam' : 'Nữ'}
+                          Giới tính: {dataAllUser[leftCard].gender === 'male' ? 'Nam' : 'Nữ'}
                         </h2>
-                        <p>{dataAllUser[4].address}</p>
+                        <p>{dataAllUser[leftCard].address}</p>
                       </div>
+                      {dataAllUser.length > leftCard + 1 && (
+                        <Icon
+                          onClick={() => this.handleClickNextCard()}
+                          style={{
+                            position: 'absolute',
+                            zIndex: 2,
+                            top: '50%',
+                            right: '0px',
+                            fontSize: '35px',
+                            transform: 'translateY(-50%)',
+                            color: '#0652DD',
+                          }}
+                          type="right"
+                        />
+                      )}
                       <div
                         style={
-                          dataAllUser[4].gender === 'male'
-                            ? { backgroundImage: 'linear-gradient(to top,#3498db,transparent)' }
+                          dataAllUser[leftCard].gender === 'male'
+                            ? { backgroundImage: 'linear-gradient(to top,blue,transparent)' }
                             : { backgroundImage: 'linear-gradient(to top,#c21833,transparent)' }
                         }
                         className={styles['background-gradient']}
@@ -148,27 +198,31 @@ class LandingPage extends PureComponent {
                     </div>
                   </div>
                   <div className={styles['right-box']}>
-                    <div
-                      style={{ backgroundImage: `url(/images/ft/${dataAllUser[5].avatar})` }}
-                      className={`${styles['right-image']} ${styles['effect-hover']}`}
-                    >
-                      <div className={`${styles.content}`}>
-                        <h2>
-                          {dataAllUser[5].fullname}
-                          <br />
-                          Giới tính: {dataAllUser[5].gender === 'male' ? 'Nam' : 'Nữ'}
-                        </h2>
-                        <p>{dataAllUser[5].address}</p>
-                      </div>
+                    {leftCard + 1 !== dataAllUser.length && (
                       <div
-                        style={
-                          dataAllUser[5].gender === 'male'
-                            ? { backgroundImage: 'linear-gradient(to top,#3498db,transparent)' }
-                            : { backgroundImage: 'linear-gradient(to top,#c21833,transparent)' }
-                        }
-                        className={styles['background-gradient']}
-                      />
-                    </div>
+                        style={{
+                          backgroundImage: `url(/images/ft/${dataAllUser[leftCard + 1].avatar})`,
+                        }}
+                        className={`${styles['right-image']} ${styles['effect-hover']}`}
+                      >
+                        <div className={`${styles.content}`}>
+                          <h2>
+                            {dataAllUser[leftCard + 1].fullname}
+                            <br />
+                            Giới tính: {dataAllUser[leftCard + 1].gender === 'male' ? 'Nam' : 'Nữ'}
+                          </h2>
+                          <p>{dataAllUser[leftCard + 1].address}</p>
+                        </div>
+                        <div
+                          style={
+                            dataAllUser[leftCard + 1].gender === 'male'
+                              ? { backgroundImage: 'linear-gradient(to top,blue,transparent)' }
+                              : { backgroundImage: 'linear-gradient(to top,#c21833,transparent)' }
+                          }
+                          className={styles['background-gradient']}
+                        />
+                      </div>
+                    )}
                   </div>
                 </div>
               </div>
@@ -182,7 +236,7 @@ class LandingPage extends PureComponent {
                   </div>
                   <div className={styles['center-box']}>
                     <div style={{ background: '#f2f2f2' }} className={styles['center-image']}>
-                      <div style={{ paddingBottom: '100px' }} className={styles.content} />
+                      <div style={{ paddingBottom: '80px' }} className={styles.content} />
                     </div>
                   </div>
                   <div className={styles['right-box']}>
