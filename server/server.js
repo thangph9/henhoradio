@@ -48,7 +48,7 @@ app.get('/*', (req, res) => {
 //  Here you can add any code.
 const server = https.createServer(credentials, app);
 if (!module.parent) {
-  server.listen(445, () => {
+  server.listen(443, () => {
     console.log('server running at https://henhoradio.net/');
   });
   http
@@ -56,7 +56,7 @@ if (!module.parent) {
       res.writeHead(301, { Location: 'https://'.concat(req.headers.host, req.url) });
       res.end();
     })
-    .listen(8003);
+    .listen(80);
   /*
     app.listen(8001, () => {
   console.log('server dev running port 8001');
