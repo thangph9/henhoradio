@@ -49,14 +49,14 @@ app.get('/*', (req, res) => {
 const server = https.createServer(credentials, app);
 if (!module.parent) {
   server.listen(443, () => {
-    console.log('server running at https://123order.vn/');
+    console.log('server running at https://henhoradio.net/');
   });
   http
     .createServer((req, res) => {
       res.writeHead(301, { Location: 'https://'.concat(req.headers.host, req.url) });
       res.end();
     })
-    .listen(80);
+    .listen(8003);
   /*
     app.listen(8001, () => {
   console.log('server dev running port 8001');
