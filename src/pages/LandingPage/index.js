@@ -19,6 +19,7 @@ class LandingPage extends PureComponent {
       number: 0,
       dataAllUser: [],
       leftCard: 1,
+      activeMenu: false,
     };
   }
 
@@ -67,11 +68,71 @@ class LandingPage extends PureComponent {
     });
   }
 
+  handleClickActiveMenu() {
+    const { activeMenu } = this.state;
+    const newState = !activeMenu;
+    this.setState({
+      activeMenu: newState,
+    });
+  }
+
   render() {
-    const { number, dataAllUser, leftCard } = this.state;
+    const { number, dataAllUser, leftCard, activeMenu } = this.state;
     const { loadingPage } = this.props;
     return (
       <div className={styles['landing-page']}>
+        <div className={styles['menu-hidden']}>
+          <div className={activeMenu && styles['to-left-icon']}>
+            <Icon onClick={() => this.handleClickActiveMenu()} type="menu-unfold" />
+          </div>
+        </div>
+        <div className={activeMenu ? `${styles['active-menu']} ${styles.nav}` : styles.nav}>
+          <ul>
+            <li onClick={() => this.handleClickMenu(1)}>
+              <a>
+                <Icon style={{ paddingRight: '5px' }} type="mail" />
+                Message
+              </a>
+              <div
+                className={number === 1 ? `${styles['s-menu']} ${styles.active}` : styles['s-menu']}
+              >
+                <a href="#">New</a>
+                <a href="#">Sent</a>
+                <a href="#">Spam</a>
+              </div>
+            </li>
+            <li onClick={() => this.handleClickMenu(2)}>
+              <a>
+                <Icon style={{ paddingRight: '5px' }} type="setting" />
+                Setting
+              </a>
+              <div
+                className={number === 2 ? `${styles['s-menu']} ${styles.active}` : styles['s-menu']}
+              >
+                <a href="#">Password</a>
+                <a href="#">Email</a>
+              </div>
+            </li>
+            <li onClick={() => this.handleClickMenu(3)}>
+              <a>
+                <Icon style={{ paddingRight: '5px' }} type="user" />
+                Profile
+              </a>
+              <div
+                className={number === 3 ? `${styles['s-menu']} ${styles.active}` : styles['s-menu']}
+              >
+                <a href="#">Post</a>
+                <a href="#">Question</a>
+              </div>
+            </li>
+            <li>
+              <a href="#">
+                <Icon style={{ paddingRight: '5px' }} type="poweroff" />
+                Logout
+              </a>
+            </li>
+          </ul>
+        </div>
         <div className={styles.container}>
           <ul className={styles['menu-bar']}>
             <div className={styles.menu}>
