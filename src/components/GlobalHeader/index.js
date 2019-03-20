@@ -298,7 +298,11 @@ class GlobalHeader extends PureComponent {
                         ref={imgElm => (this.imgElm = imgElm)}
                         className={styles['background-avatar']}
                         style={{
-                          backgroundImage: `url(https://avatars.servers.getgo.com/2205256774854474505_medium.jpg)`,
+                          backgroundImage:
+                            dataUser.gender === 'male'
+                              ? `url(https://twoo01-a.akamaihd.net/static/1636596845823273814/images/generic/avatar-male.jpg)`
+                              : dataUser.gender === 'female' &&
+                                `url(https://twoo01-a.akamaihd.net/static/1636596845823273814/images/generic/avatar-female.jpg)`,
                           backgroundColor: this.state.loaded ? 'none' : 'rgb(242, 242, 242)',
                         }}
                       />

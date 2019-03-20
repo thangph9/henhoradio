@@ -162,8 +162,6 @@ export default {
           type: 'getDetailList',
           payload: response.data,
         });
-      } else {
-        message.error('Có lỗi xảy ra. Hãy thử đăng nhập lại !');
       }
     },
     *getuserbyid({ payload }, { call, put }) {
@@ -173,8 +171,6 @@ export default {
           type: 'getUserById',
           payload: response.data,
         });
-      } else {
-        message.error('Có lỗi xảy ra. Hãy thử đăng nhập lại !');
       }
     },
     *getallusers({ payload }, { call, put }) {
@@ -184,8 +180,6 @@ export default {
           type: 'getAllUsers',
           payload: response.data,
         });
-      } else {
-        message.error('Có lỗi xảy ra. Hãy thử đăng nhập lại !');
       }
     },
     *updateprofilequestion({ payload }, { call, put }) {
@@ -256,7 +250,6 @@ export default {
     getUser(state, action) {
       return {
         ...state,
-
         getuser: action.payload,
       };
     },

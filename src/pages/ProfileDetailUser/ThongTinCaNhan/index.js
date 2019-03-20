@@ -167,10 +167,25 @@ class ThongTinCaNhan extends Component {
           dataUser: nextProps.authentication.getonlyuser,
         },
         () => {
-          this.setState({
-            avatarImage: nextProps.authentication.getonlyuser.avatar,
-            resetAvatar: false,
-          });
+          this.setState(
+            {
+              avatarImage: nextProps.authentication.getonlyuser.avatar,
+              resetAvatar: false,
+            },
+            () => {
+              const { avatarImage } = this.state;
+              const imgLoader = new Image();
+              imgLoader.src = `/images/ft/${avatarImage}`;
+              imgLoader.onload = () => {
+                if (this.imgElm && avatarImage) {
+                  this.imgElm.style.backgroundImage = `url(/images/ft/${avatarImage})`;
+                  this.setState({
+                    loadedAvatar: true,
+                  });
+                }
+              };
+            }
+          );
         }
       );
     }
@@ -411,7 +426,11 @@ class ThongTinCaNhan extends Component {
               ref={imgElm => (this.imgElm = imgElm)}
               className={styles['background-avatar']}
               style={{
-                backgroundImage: `url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAqIAAAGAAQMAAABMQ5IQAAAAA1BMVEX///+nxBvIAAAANklEQVR42u3BAQEAAACCoP6vbojAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAIC8A4EAAAFVQt90AAAAAElFTkSuQmCC)`,
+                backgroundImage:
+                  dataUser.gender === 'male'
+                    ? `url(https://twoo01-a.akamaihd.net/static/1636596845823273814/images/generic/avatar-male.jpg)`
+                    : dataUser.gender === 'female' &&
+                      `url(https://twoo01-a.akamaihd.net/static/1636596845823273814/images/generic/avatar-female.jpg)`,
                 backgroundColor: this.state.loadedAvatar ? 'none' : 'rgb(242, 242, 242)',
               }}
             >

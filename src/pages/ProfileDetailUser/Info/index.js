@@ -82,6 +82,7 @@ class Info extends Component {
       myprops: { menu_item_profile },
     } = this.props;
     const { children } = this.props;
+    const { dataUser } = this.state;
     return (
       <div className={styles.profile}>
         <div className={styles.container}>
@@ -91,10 +92,18 @@ class Info extends Component {
                 <div
                   ref={imgElm => (this.imgElm = imgElm)}
                   className={styles['background-avatar']}
-                  style={{
-                    backgroundImage: `url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAqIAAAGAAQMAAABMQ5IQAAAAA1BMVEX///+nxBvIAAAANklEQVR42u3BAQEAAACCoP6vbojAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAIC8A4EAAAFVQt90AAAAAElFTkSuQmCC)`,
-                    backgroundColor: this.state.loaded ? 'none' : 'rgb(242, 242, 242)',
-                  }}
+                  style={
+                    dataUser
+                      ? {
+                          backgroundImage:
+                            dataUser.gender === 'male'
+                              ? `url(https://twoo01-a.akamaihd.net/static/1636596845823273814/images/generic/avatar-male.jpg)`
+                              : dataUser.gender === 'female' &&
+                                `url(https://twoo01-a.akamaihd.net/static/1636596845823273814/images/generic/avatar-female.jpg)`,
+                          backgroundColor: this.state.loaded ? 'none' : 'rgb(242, 242, 242)',
+                        }
+                      : { background: '#f2f2f2' }
+                  }
                 />
               </div>
               <div className={styles.menu}>

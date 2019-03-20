@@ -1,3 +1,4 @@
+/* eslint-disable no-nested-ternary */
 /* eslint-disable react/sort-comp */
 /* eslint-disable no-return-assign */
 /* eslint-disable react/destructuring-assignment */
@@ -17,7 +18,6 @@ function elementInViewport(el) {
     rect.top <= (window.innerHeight || document.documentElement.clientHeight)
   );
 }
-const host = '';
 
 @connect(({ list, user, authentication, myprops }) => ({
   list,
@@ -38,10 +38,10 @@ class LazyImage extends PureComponent {
     const { avatar, number } = this.props;
     if (number < 12 && avatar) {
       const imgLoader = new Image();
-      imgLoader.src = `${host}/images/ft/${avatar}`;
+      imgLoader.src = `/images/ft/${avatar}`;
       imgLoader.onload = () => {
         if (this.imgElm && avatar) {
-          this.imgElm.style.backgroundImage = `url(${host}/images/ft/${avatar})`;
+          this.imgElm.style.backgroundImage = `url(/images/ft/${avatar})`;
           this.setState({
             loaded: true,
           });
@@ -57,10 +57,10 @@ class LazyImage extends PureComponent {
     if (!this.state.loaded && elementInViewport(this.imgElm) && avatar) {
       // Load real image
       const imgLoader = new Image();
-      imgLoader.src = `${host}/images/ft/${avatar}`;
+      imgLoader.src = `/images/ft/${avatar}`;
       imgLoader.onload = () => {
         if (this.imgElm && avatar) {
-          this.imgElm.style.backgroundImage = `url(${host}/images/ft/${avatar})`;
+          this.imgElm.style.backgroundImage = `url(/images/ft/${avatar})`;
           this.setState({
             loaded: true,
           });
@@ -78,10 +78,10 @@ class LazyImage extends PureComponent {
         },
         () => {
           const imgLoader = new Image();
-          imgLoader.src = `${host}/images/ft/${nextprops.avatar}`;
+          imgLoader.src = `/images/ft/${nextprops.avatar}`;
           imgLoader.onload = () => {
             if (this.imgElm && nextprops.avatar) {
-              this.imgElm.style.backgroundImage = `url(${host}/images/ft/${nextprops.avatar})`;
+              this.imgElm.style.backgroundImage = `url(/images/ft/${nextprops.avatar})`;
               this.setState({
                 loaded: true,
               });
@@ -93,14 +93,19 @@ class LazyImage extends PureComponent {
   }
 
   render() {
-    const { avatar } = this.props;
+    const { avatar, gender } = this.props;
     return (
       <div className={styles['avatar-image']}>
         <div
           ref={imgElm => (this.imgElm = imgElm)}
           className={styles['background-avatar']}
           style={{
-            backgroundImage: `url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAqIAAAGAAQMAAABMQ5IQAAAAA1BMVEX///+nxBvIAAAANklEQVR42u3BAQEAAACCoP6vbojAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAIC8A4EAAAFVQt90AAAAAElFTkSuQmCC)`,
+            backgroundImage:
+              gender === 'male'
+                ? `url(https://twoo01-a.akamaihd.net/static/1636596845823273814/images/generic/avatar-male.jpg)`
+                : gender === 'female'
+                ? `url(https://twoo01-a.akamaihd.net/static/1636596845823273814/images/generic/avatar-female.jpg)`
+                : `url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAqIAAAGAAQMAAABMQ5IQAAAAA1BMVEX///+nxBvIAAAANklEQVR42u3BAQEAAACCoP6vbojAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAIC8A4EAAAFVQt90AAAAAElFTkSuQmCC)`,
           }}
         />
         {!this.state.loaded && avatar && (
