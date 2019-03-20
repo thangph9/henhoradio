@@ -79,9 +79,14 @@ export default {
       pathRewrite: { '^/api': '' },
     },
     '/upload': {
-      target: 'http://cdn.henhoradio.net/',
+      target: 'http://cdn.henhoradio.net/upload',
       changeOrigin: true,
       pathRewrite: { '^/upload': '' },
+    },
+    '/images': {
+      target: 'http://cdn.henhoradio.net/images',
+      changeOrigin: true,
+      pathRewrite: { '^/images': '' },
     },
   },
   ignoreMomentLocale: true,

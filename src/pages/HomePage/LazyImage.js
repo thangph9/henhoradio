@@ -17,6 +17,7 @@ function elementInViewport(el) {
     rect.top <= (window.innerHeight || document.documentElement.clientHeight)
   );
 }
+const host = '';
 
 @connect(({ list, user, authentication, myprops }) => ({
   list,
@@ -37,10 +38,10 @@ class LazyImage extends PureComponent {
     const { avatar, number } = this.props;
     if (number < 12 && avatar) {
       const imgLoader = new Image();
-      imgLoader.src = `http://cdn.henhoradio.net/images/ft/${avatar}`;
+      imgLoader.src = `${host}/images/ft/${avatar}`;
       imgLoader.onload = () => {
         if (this.imgElm && avatar) {
-          this.imgElm.style.backgroundImage = `url(http://cdn.henhoradio.net/images/ft/${avatar})`;
+          this.imgElm.style.backgroundImage = `url(${host}/images/ft/${avatar})`;
           this.setState({
             loaded: true,
           });
@@ -56,10 +57,10 @@ class LazyImage extends PureComponent {
     if (!this.state.loaded && elementInViewport(this.imgElm) && avatar) {
       // Load real image
       const imgLoader = new Image();
-      imgLoader.src = `http://cdn.henhoradio.net/images/ft/${avatar}`;
+      imgLoader.src = `${host}/images/ft/${avatar}`;
       imgLoader.onload = () => {
         if (this.imgElm && avatar) {
-          this.imgElm.style.backgroundImage = `url(http://cdn.henhoradio.net/images/ft/${avatar})`;
+          this.imgElm.style.backgroundImage = `url(${host}/images/ft/${avatar})`;
           this.setState({
             loaded: true,
           });
@@ -77,12 +78,10 @@ class LazyImage extends PureComponent {
         },
         () => {
           const imgLoader = new Image();
-          imgLoader.src = `http://cdn.henhoradio.net/images/ft/${nextprops.avatar}`;
+          imgLoader.src = `${host}/images/ft/${nextprops.avatar}`;
           imgLoader.onload = () => {
             if (this.imgElm && nextprops.avatar) {
-              this.imgElm.style.backgroundImage = `url(http://cdn.henhoradio.net/images/ft/${
-                nextprops.avatar
-              })`;
+              this.imgElm.style.backgroundImage = `url(${host}/images/ft/${nextprops.avatar})`;
               this.setState({
                 loaded: true,
               });
