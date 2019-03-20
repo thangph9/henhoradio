@@ -6,6 +6,7 @@
 import { PureComponent } from 'react';
 import { connect } from 'dva';
 import { Icon } from 'antd';
+import { Link } from 'react-router-dom';
 import styles from './index.less';
 
 @connect(({ loading, authentication }) => ({
@@ -178,10 +179,28 @@ class LandingPage extends PureComponent {
           {!loadingPage && dataAllUser.length > 0 ? (
             <div className={styles['slide-bar']}>
               <div className={styles['slide-bar-container']}>
+                {leftCard - 1 >= 0 && (
+                  <div className={styles['arrow-left']}>
+                    <Icon
+                      onClick={() => this.handleClickPrevCard()}
+                      style={{
+                        position: 'absolute',
+                        zIndex: 2,
+                        top: '50%',
+                        left: '-5%',
+                        fontSize: '35px',
+                        transform: 'translateY(-50%)',
+                        color: '#0652DD',
+                      }}
+                      type="left"
+                    />
+                  </div>
+                )}
                 <div className={styles['main-slide']}>
                   <div className={styles['left-box']}>
                     {leftCard !== 0 && (
                       <div
+                        onClick={() => this.handleClickPrevCard()}
                         style={{
                           backgroundImage: `url(/images/ft/${dataAllUser[leftCard - 1].avatar})`,
                         }}
@@ -206,25 +225,14 @@ class LandingPage extends PureComponent {
                       </div>
                     )}
                   </div>
-                  <div className={styles['center-box']}>
+                  <Link
+                    to={`/home/other-profile?id=${dataAllUser[leftCard].user_id.replace(/-/g, '')}`}
+                    className={styles['center-box']}
+                  >
                     <div
                       style={{ backgroundImage: `url(/images/ft/${dataAllUser[leftCard].avatar})` }}
                       className={`${styles['center-image']} ${styles['effect-hover']}`}
                     >
-                      {leftCard - 1 >= 0 && (
-                        <Icon
-                          onClick={() => this.handleClickPrevCard()}
-                          style={{
-                            position: 'absolute',
-                            zIndex: 2,
-                            top: '50%',
-                            fontSize: '35px',
-                            transform: 'translateY(-50%)',
-                            color: '#0652DD',
-                          }}
-                          type="left"
-                        />
-                      )}
                       <div style={{ paddingBottom: '100px' }} className={`${styles.content}`}>
                         <h2>
                           {dataAllUser[leftCard].fullname}
@@ -233,21 +241,6 @@ class LandingPage extends PureComponent {
                         </h2>
                         <p>{dataAllUser[leftCard].address}</p>
                       </div>
-                      {dataAllUser.length > leftCard + 1 && (
-                        <Icon
-                          onClick={() => this.handleClickNextCard()}
-                          style={{
-                            position: 'absolute',
-                            zIndex: 2,
-                            top: '50%',
-                            right: '0px',
-                            fontSize: '35px',
-                            transform: 'translateY(-50%)',
-                            color: '#0652DD',
-                          }}
-                          type="right"
-                        />
-                      )}
                       <div
                         style={
                           dataAllUser[leftCard].gender === 'male'
@@ -257,10 +250,11 @@ class LandingPage extends PureComponent {
                         className={styles['background-gradient']}
                       />
                     </div>
-                  </div>
+                  </Link>
                   <div className={styles['right-box']}>
                     {leftCard + 1 !== dataAllUser.length && (
                       <div
+                        onClick={() => this.handleClickNextCard()}
                         style={{
                           backgroundImage: `url(/images/ft/${dataAllUser[leftCard + 1].avatar})`,
                         }}
@@ -286,6 +280,23 @@ class LandingPage extends PureComponent {
                     )}
                   </div>
                 </div>
+                {dataAllUser.length > leftCard + 1 && (
+                  <div className={styles['arrow-right']}>
+                    <Icon
+                      onClick={() => this.handleClickNextCard()}
+                      style={{
+                        position: 'absolute',
+                        zIndex: 2,
+                        top: '50%',
+                        right: '-5%',
+                        fontSize: '35px',
+                        transform: 'translateY(-50%)',
+                        color: '#0652DD',
+                      }}
+                      type="right"
+                    />
+                  </div>
+                )}
               </div>
             </div>
           ) : (
