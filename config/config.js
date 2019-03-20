@@ -83,6 +83,11 @@ export default {
       changeOrigin: true,
       pathRewrite: { '^/upload': '' },
     },
+    '/image': {
+      target: 'http://cdn.henhoradio.net/',
+      changeOrigin: true,
+      pathRewrite: { '^/image': '' },
+    },
   },
   ignoreMomentLocale: true,
   lessLoaderOptions: {
