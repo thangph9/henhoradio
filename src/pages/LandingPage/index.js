@@ -34,9 +34,12 @@ class LandingPage extends PureComponent {
   componentWillReceiveProps(nextProps) {
     const { authentication } = this.props;
     if (authentication.getallusers !== nextProps.authentication.getallusers) {
-      this.setState({
-        dataAllUser: nextProps.authentication.getallusers,
-      });
+      this.setState(
+        {
+          dataAllUser: nextProps.authentication.getallusers,
+        },
+        () => {}
+      );
     }
   }
 
@@ -83,7 +86,7 @@ class LandingPage extends PureComponent {
     return (
       <div className={styles['landing-page']}>
         <div className={styles['menu-hidden']}>
-          <div className={activeMenu && styles['to-left-icon']}>
+          <div className={activeMenu ? styles['to-left-icon'] : ''}>
             <Icon onClick={() => this.handleClickActiveMenu()} type="menu-unfold" />
           </div>
         </div>
@@ -202,7 +205,9 @@ class LandingPage extends PureComponent {
                       <div
                         onClick={() => this.handleClickPrevCard()}
                         style={{
-                          backgroundImage: `url(/images/ft/${dataAllUser[leftCard - 1].avatar})`,
+                          backgroundImage: `url(/images/ft/${
+                            dataAllUser[leftCard - 1].avatar
+                          }),url()`,
                         }}
                         className={`${styles['left-image']} ${styles['effect-hover']}`}
                       >
