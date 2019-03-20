@@ -266,12 +266,14 @@ class FormRegister extends PureComponent {
       }
       if (values.password === values.repassword) {
         if (!err && dob_day && dob_month && dob_year && gender) {
-          // recaptchaRef.current.execute();
+          recaptchaRef.current.execute();
 
-          dispatch({
+          /*
+            dispatch({
             type: 'authentication/register',
             payload: values,
           });
+          */
 
           this.setState({
             data: values,
