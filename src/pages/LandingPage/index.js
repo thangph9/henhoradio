@@ -27,6 +27,7 @@ class LandingPage extends PureComponent {
       leftCard: 1,
       activeMenu: false,
       loaded: 0,
+      activeImage: 0,
     };
   }
 
@@ -44,22 +45,49 @@ class LandingPage extends PureComponent {
         {
           dataAllUser: nextProps.authentication.getallusers,
         },
-        () => {}
+        () => {
+          const { dataAllUser } = this.state;
+          const arr = [];
+          for (let i = 0; i < dataAllUser.length; i += 1) {
+            if (i === 6) break;
+            arr[i] = dataAllUser[i].avatar;
+          }
+          const data = dataAllUser;
+          data.forEach(element => {
+            element.image = arr;
+          });
+          this.setState({
+            dataAllUser: data,
+          });
+        }
       );
     }
   }
 
+  handleClickImage(value) {
+    this.setState({
+      activeImage: value,
+    });
+  }
+
   renderBox(value) {
-    const { dataAllUser } = this.state;
+    const { dataAllUser, activeImage } = this.state;
     if (value > dataAllUser.length + 5 || value < 0) return '';
     return (
       <div
-        onClick={() => this.handleClickPrevCard()}
-        style={{
-          backgroundImage: `url(/images/ft/${
-            dataAllUser[this.resultIndexUser(this.resultClassBox(value))].avatar
-          })`,
-        }}
+        style={
+          this.resultClassBox(value) === `${styles['center-box']}`
+            ? {
+                backgroundImage: `url(/images/ft/${
+                  dataAllUser[this.resultIndexUser(this.resultClassBox(value))].image[activeImage]
+                })`,
+              }
+            : {
+                backgroundImage: `url(/images/ft/${
+                  dataAllUser[this.resultIndexUser(this.resultClassBox(value))].avatar
+                })`,
+              }
+        }
         className={this.resultClassImage(value)}
       >
         <div className={`${styles.content}`}>
@@ -81,6 +109,21 @@ class LandingPage extends PureComponent {
           }
           className={styles['background-gradient']}
         />
+        {this.resultClassBox(value) === `${styles['center-box']}` && (
+          <div className={styles['image-card']}>
+            {dataAllUser[this.resultIndexUser(this.resultClassBox(value))].image.map((v, i) => (
+              <span
+                key={v}
+                onClick={() => this.handleClickImage(i)}
+                className={
+                  activeImage === i
+                    ? `${styles['item-image']} ${styles['active-image']}`
+                    : styles['item-image']
+                }
+              />
+            ))}
+          </div>
+        )}
       </div>
     );
   }
