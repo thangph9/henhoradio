@@ -103,6 +103,8 @@ ul {
 .left-box {
   position: relative;
   flex-basis: 30%;
+  transition: all 0.4s;
+  order: 0;
 }
 
 .left-image {
@@ -117,8 +119,8 @@ ul {
   background-size: cover;
   background-position: center;
   background-repeat: no-repeat;
-  transition: transform 0.8s, background-image 0.8s;
   transform: translate(-50%, -45%) perspective(1000px) rotateY(20deg);
+  transition: height 0.4s, width 0.4s, box-shadow 0.4s, transform 0.4s;
   &:hover {
     transform: translate(-55%, -45%) rotateY(0deg);
     box-shadow: 0 20px 20px rgba(0, 0, 0, 0.4);
@@ -156,6 +158,8 @@ ul {
 .center-box {
   position: relative;
   flex-basis: 40%;
+  transition: all 0.4s;
+  order: 1;
 }
 .center-image {
   position: absolute;
@@ -170,11 +174,13 @@ ul {
   background-size: cover;
   background-position: center;
   background-repeat: no-repeat;
-  transition: background-image 0.8s;
+  transition: height 0.4s, width 0.4s, box-shadow 0.4s, transform 0.4s;
 }
 .right-box {
   position: relative;
   flex-basis: 30%;
+  transition: all 0.4s;
+  order: 2;
 }
 .right-image {
   position: absolute;
@@ -188,8 +194,8 @@ ul {
   background-size: cover;
   background-position: center;
   background-repeat: no-repeat;
-  transition: transform 0.8s, background-image 0.8s;
   transform: translate(-50%, -45%) perspective(1000px) rotateY(-20deg);
+  transition: height 0.4s, width 0.4s, box-shadow 0.4s, transform 0.4s;
   &:hover {
     transform: translate(-45%, -45%) rotateY(0deg);
     box-shadow: 0 20px 20px rgba(0, 0, 0, 0.4);
@@ -289,14 +295,20 @@ ul {
   .left-box {
     width: 100%;
     max-width: 153px;
+    transition: all 0.4s;
+    order: 0;
   }
   .center-box {
     width: 100%;
     max-width: 204px;
+    transition: all 0.4s;
+    order: 1;
   }
   .right-box {
     width: 100%;
     max-width: 153px;
+    transition: all 0.4s;
+    order: 2;
   }
   .s-menu a:hover::before {
     opacity: 1;
@@ -343,14 +355,20 @@ ul {
   .left-box {
     width: 100%;
     max-width: 165px;
+    transition: all 0.4s;
+    order: 0;
   }
   .center-box {
     width: 100%;
     max-width: 220px;
+    transition: all 0.4s;
+    order: 1;
   }
   .right-box {
     width: 100%;
     max-width: 165px;
+    transition: all 0.4s;
+    order: 2;
   }
   .arrow-left {
     position: absolute;
@@ -394,14 +412,20 @@ ul {
   .left-box {
     width: 100%;
     max-width: 214px;
+    transition: all 0.4s;
+    order: 0;
   }
   .center-box {
     width: 100%;
     max-width: 284px;
+    transition: all 0.4s;
+    order: 1;
   }
   .right-box {
     width: 100%;
     max-width: 214px;
+    transition: all 0.4s;
+    order: 2;
   }
   .arrow-left {
     position: absolute;
@@ -445,14 +469,20 @@ ul {
   .left-box {
     width: 100%;
     max-width: 258px;
+    transition: all 0.4s;
+    order: 0;
   }
   .center-box {
     width: 100%;
     max-width: 348px;
+    transition: all 0.4s;
+    order: 1;
   }
   .right-box {
     width: 100%;
     max-width: 258px;
+    transition: all 0.4s;
+    order: 2;
   }
   .arrow-left {
     position: absolute;
@@ -488,6 +518,8 @@ ul {
     width: 100%;
     flex-basis: 100%;
     max-width: 100%;
+    transition: all 0.4s;
+    order: 1;
   }
   .menu-hidden {
     display: block;

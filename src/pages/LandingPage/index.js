@@ -1,3 +1,9 @@
+/* eslint-disable no-nested-ternary */
+/* eslint-disable react/sort-comp */
+/* eslint-disable react/no-access-state-in-setstate */
+/* eslint-disable react/no-will-update-set-state */
+/* eslint-disable react/destructuring-assignment */
+/* eslint-disable class-methods-use-this */
 /* eslint-disable no-param-reassign */
 /* eslint-disable no-cond-assign */
 /* eslint-disable react/no-unused-state */
@@ -6,7 +12,6 @@
 import { PureComponent } from 'react';
 import { connect } from 'dva';
 import { Icon } from 'antd';
-import { Link } from 'react-router-dom';
 import styles from './index.less';
 
 @connect(({ loading, authentication }) => ({
@@ -21,6 +26,7 @@ class LandingPage extends PureComponent {
       dataAllUser: [],
       leftCard: 1,
       activeMenu: false,
+      loaded: 0,
     };
   }
 
@@ -43,6 +49,41 @@ class LandingPage extends PureComponent {
     }
   }
 
+  renderBox(value) {
+    const { dataAllUser } = this.state;
+    return (
+      <div
+        onClick={() => this.handleClickPrevCard()}
+        style={{
+          backgroundImage: `url(/images/ft/${
+            dataAllUser[this.resultIndexUser(this.resultClassBox(value))].avatar
+          }),url()`,
+        }}
+        className={this.resultClassImage(value)}
+      >
+        <div className={`${styles.content}`}>
+          <h2>
+            {dataAllUser[this.resultIndexUser(this.resultClassBox(value))].fullname}
+            <br />
+            Giới tính:{' '}
+            {dataAllUser[this.resultIndexUser(this.resultClassBox(value))].gender === 'male'
+              ? 'Nam'
+              : 'Nữ'}
+          </h2>
+          <p>{dataAllUser[this.resultIndexUser(this.resultClassBox(value))].address}</p>
+        </div>
+        <div
+          style={
+            dataAllUser[this.resultIndexUser(this.resultClassBox(value))].gender === 'male'
+              ? { backgroundImage: 'linear-gradient(to top,blue,transparent)' }
+              : { backgroundImage: 'linear-gradient(to top,#c21833,transparent)' }
+          }
+          className={styles['background-gradient']}
+        />
+      </div>
+    );
+  }
+
   handleClickMenu(value) {
     const { number } = this.state;
     if (value === number) {
@@ -57,18 +98,20 @@ class LandingPage extends PureComponent {
   }
 
   handleClickNextCard() {
-    const { leftCard } = this.state;
-    const prevState = leftCard;
+    const { loaded } = this.state;
+    const prevLoad = loaded;
     this.setState({
-      leftCard: prevState + 1,
+      loaded: prevLoad + 1,
+      nextClicked: true,
     });
   }
 
   handleClickPrevCard() {
-    const { leftCard } = this.state;
-    const prevState = leftCard;
+    const { loaded } = this.state;
+    const prevLoad = loaded;
     this.setState({
-      leftCard: prevState - 1,
+      loaded: prevLoad - 1,
+      nextClicked: true,
     });
   }
 
@@ -80,8 +123,40 @@ class LandingPage extends PureComponent {
     });
   }
 
+  resultClassBox(v) {
+    if (v % 3 === 0) return `${styles['right-box']}`;
+    if (v % 3 === 1) return `${styles['center-box']}`;
+    return `${styles['left-box']}`;
+  }
+
+  resultClassImage(v) {
+    if (v % 3 === 0) return `${styles['right-image']} ${styles['effect-hover']}`;
+    if (v % 3 === 1) return `${styles['center-image']} ${styles['effect-hover']}`;
+    return `${styles['left-image']} ${styles['effect-hover']}`;
+  }
+
+  resultIndexUser(value) {
+    const { nextClicked, loaded, prevClicked } = this.state;
+    if (nextClicked || prevClicked) {
+      if (value === `${styles['left-box']}`) {
+        return loaded;
+      }
+      if (value === `${styles['center-box']}`) {
+        return loaded + 1;
+      }
+      return loaded + 2;
+    }
+    if (value === `${styles['left-box']}`) {
+      return 0;
+    }
+    if (value === `${styles['center-box']}`) {
+      return 1;
+    }
+    return 2;
+  }
+
   render() {
-    const { number, dataAllUser, leftCard, activeMenu } = this.state;
+    const { number, dataAllUser, activeMenu, loaded } = this.state;
     const { loadingPage } = this.props;
     return (
       <div className={styles['landing-page']}>
@@ -182,7 +257,7 @@ class LandingPage extends PureComponent {
           {!loadingPage && dataAllUser.length > 0 ? (
             <div className={styles['slide-bar']}>
               <div className={styles['slide-bar-container']}>
-                {leftCard - 1 >= 0 && (
+                {loaded >= 0 && (
                   <div className={styles['arrow-left']}>
                     <Icon
                       onClick={() => this.handleClickPrevCard()}
@@ -200,92 +275,29 @@ class LandingPage extends PureComponent {
                   </div>
                 )}
                 <div className={styles['main-slide']}>
-                  <div className={styles['left-box']}>
-                    {leftCard !== 0 && (
-                      <div
-                        onClick={() => this.handleClickPrevCard()}
-                        style={{
-                          backgroundImage: `url(/images/ft/${
-                            dataAllUser[leftCard - 1].avatar
-                          }),url()`,
-                        }}
-                        className={`${styles['left-image']} ${styles['effect-hover']}`}
-                      >
-                        <div className={`${styles.content}`}>
-                          <h2>
-                            {dataAllUser[leftCard - 1].fullname}
-                            <br />
-                            Giới tính: {dataAllUser[leftCard - 1].gender === 'male' ? 'Nam' : 'Nữ'}
-                          </h2>
-                          <p>{dataAllUser[leftCard - 1].address}</p>
-                        </div>
-                        <div
-                          style={
-                            dataAllUser[leftCard - 1].gender === 'male'
-                              ? { backgroundImage: 'linear-gradient(to top,blue,transparent)' }
-                              : { backgroundImage: 'linear-gradient(to top,#c21833,transparent)' }
-                          }
-                          className={styles['background-gradient']}
-                        />
-                      </div>
-                    )}
+                  <div className={this.resultClassBox(loaded + 2)}>
+                    {this.resultClassBox(loaded + 2) === `${styles['right-box']}`
+                      ? loaded + 2 < dataAllUser.length && this.renderBox(loaded + 2)
+                      : this.resultClassBox(loaded + 2) === `${styles['left-box']}`
+                      ? loaded >= 0 && this.renderBox(loaded + 2)
+                      : this.renderBox(loaded + 2)}
                   </div>
-                  <Link
-                    to={`/home/other-profile?id=${dataAllUser[leftCard].user_id.replace(/-/g, '')}`}
-                    className={styles['center-box']}
-                  >
-                    <div
-                      style={{ backgroundImage: `url(/images/ft/${dataAllUser[leftCard].avatar})` }}
-                      className={`${styles['center-image']} ${styles['effect-hover']}`}
-                    >
-                      <div style={{ paddingBottom: '100px' }} className={`${styles.content}`}>
-                        <h2>
-                          {dataAllUser[leftCard].fullname}
-                          <br />
-                          Giới tính: {dataAllUser[leftCard].gender === 'male' ? 'Nam' : 'Nữ'}
-                        </h2>
-                        <p>{dataAllUser[leftCard].address}</p>
-                      </div>
-                      <div
-                        style={
-                          dataAllUser[leftCard].gender === 'male'
-                            ? { backgroundImage: 'linear-gradient(to top,blue,transparent)' }
-                            : { backgroundImage: 'linear-gradient(to top,#c21833,transparent)' }
-                        }
-                        className={styles['background-gradient']}
-                      />
-                    </div>
-                  </Link>
-                  <div className={styles['right-box']}>
-                    {leftCard + 1 !== dataAllUser.length && (
-                      <div
-                        onClick={() => this.handleClickNextCard()}
-                        style={{
-                          backgroundImage: `url(/images/ft/${dataAllUser[leftCard + 1].avatar})`,
-                        }}
-                        className={`${styles['right-image']} ${styles['effect-hover']}`}
-                      >
-                        <div className={`${styles.content}`}>
-                          <h2>
-                            {dataAllUser[leftCard + 1].fullname}
-                            <br />
-                            Giới tính: {dataAllUser[leftCard + 1].gender === 'male' ? 'Nam' : 'Nữ'}
-                          </h2>
-                          <p>{dataAllUser[leftCard + 1].address}</p>
-                        </div>
-                        <div
-                          style={
-                            dataAllUser[leftCard + 1].gender === 'male'
-                              ? { backgroundImage: 'linear-gradient(to top,blue,transparent)' }
-                              : { backgroundImage: 'linear-gradient(to top,#c21833,transparent)' }
-                          }
-                          className={styles['background-gradient']}
-                        />
-                      </div>
-                    )}
+                  <div className={this.resultClassBox(loaded + 1)}>
+                    {this.resultClassBox(loaded + 1) === `${styles['right-box']}`
+                      ? loaded + 2 < dataAllUser.length && this.renderBox(loaded + 1)
+                      : this.resultClassBox(loaded + 1) === `${styles['left-box']}`
+                      ? loaded >= 0 && this.renderBox(loaded + 1)
+                      : this.renderBox(loaded + 1)}
+                  </div>
+                  <div className={this.resultClassBox(loaded)}>
+                    {this.resultClassBox(loaded) === `${styles['right-box']}`
+                      ? loaded + 2 < dataAllUser.length && this.renderBox(loaded)
+                      : this.resultClassBox(loaded) === `${styles['left-box']}`
+                      ? loaded >= 0 && this.renderBox(loaded)
+                      : this.renderBox(loaded)}
                   </div>
                 </div>
-                {dataAllUser.length > leftCard + 1 && (
+                {dataAllUser.length > loaded + 2 && (
                   <div className={styles['arrow-right']}>
                     <Icon
                       onClick={() => this.handleClickNextCard()}
