@@ -147,6 +147,7 @@ class LandingPage extends PureComponent {
     this.setState({
       loaded: prevLoad + 1,
       nextClicked: true,
+      activeImage: 0,
     });
   }
 
@@ -156,6 +157,7 @@ class LandingPage extends PureComponent {
     this.setState({
       loaded: prevLoad - 1,
       nextClicked: true,
+      activeImage: 0,
     });
   }
 

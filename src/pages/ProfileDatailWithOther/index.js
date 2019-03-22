@@ -345,7 +345,7 @@ class AdvancedProfile extends Component {
                       }
                 }
               />
-              <div className={styles['account-infomation']}>
+              <div className={`${styles['account-infomation']} ${styles['desktop-infomation']}`}>
                 <div className={styles['name-of-user']}>{dataUser.fullname}</div>
                 <div className={styles['age-address']}>
                   <span className={styles['age-of-user']}>
@@ -370,6 +370,15 @@ class AdvancedProfile extends Component {
         )}
         <div className={styles.container}>
           {editing && <div className={styles.editing} />}
+          {dataUser && (
+            <div className={`${styles['account-infomation']} ${styles['mobile-infomation']}`}>
+              <div className={styles['name-of-user']}>Họ tên: {dataUser.fullname}</div>
+              <div className={styles['age-of-user']}>
+                Tuổi : {new Date().getFullYear() - dataUser.dob_year}
+              </div>
+              Địa chỉ : {dataUser.address}
+            </div>
+          )}
           <div className={styles['edit-form']}>
             <div className={`${styles['edit-form-left']} text-form`}>
               {dataUser ? (
@@ -727,26 +736,6 @@ class AdvancedProfile extends Component {
               </div>
             )}
           </div>
-          {/*
-            dataUser ? (
-            <div>
-              {this.state.question.length === 0 ? (
-                ''
-              ) : (
-                <Table
-                  style={{ marginTop: '30px' }}
-                  columns={this.columns}
-                  dataSource={dataTable}
-                  bordered
-                />
-              )}
-            </div>
-          ) : (
-            <div style={{ background: '#fff', borderRadius: '5px', marginTop: '20px' }}>
-              <Skeleton rows={6} />
-            </div>
-          )
-          */}
         </div>
       </div>
     );
