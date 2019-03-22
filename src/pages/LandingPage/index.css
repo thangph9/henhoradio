@@ -102,6 +102,8 @@ ul {
 .left-box {
   position: relative;
   flex-basis: 30%;
+  transition: all 0.4s;
+  order: 0;
 }
 .left-image {
   position: absolute;
@@ -115,8 +117,8 @@ ul {
   background-size: cover;
   background-position: center;
   background-repeat: no-repeat;
-  transition: transform 0.8s, background-image 0.8s;
   transform: translate(-50%, -45%) perspective(1000px) rotateY(20deg);
+  transition: height 0.4s, width 0.4s, box-shadow 0.4s, transform 0.4s;
 }
 .left-image:hover {
   transform: translate(-55%, -45%) rotateY(0deg);
@@ -152,6 +154,8 @@ ul {
 .center-box {
   position: relative;
   flex-basis: 40%;
+  transition: all 0.4s;
+  order: 1;
 }
 .center-image {
   position: absolute;
@@ -166,18 +170,13 @@ ul {
   background-size: cover;
   background-position: center;
   background-repeat: no-repeat;
-  transition: background-image 0.8s;
-  animation: center 3.5s infinite;
-}
-.center-image:hover {
-  -webkit-animation-play-state: paused;
-  -moz-animation-play-state: paused;
-  -o-animation-play-state: paused;
-  animation-play-state: paused;
+  transition: height 0.4s, width 0.4s, box-shadow 0.4s, transform 0.4s;
 }
 .right-box {
   position: relative;
   flex-basis: 30%;
+  transition: all 0.4s;
+  order: 2;
 }
 .right-image {
   position: absolute;
@@ -191,8 +190,8 @@ ul {
   background-size: cover;
   background-position: center;
   background-repeat: no-repeat;
-  transition: transform 0.8s, background-image 0.8s;
   transform: translate(-50%, -45%) perspective(1000px) rotateY(-20deg);
+  transition: height 0.4s, width 0.4s, box-shadow 0.4s, transform 0.4s;
 }
 .right-image:hover {
   transform: translate(-45%, -45%) rotateY(0deg);
@@ -290,17 +289,41 @@ ul {
   .left-box {
     width: 100%;
     max-width: 153px;
+    transition: all 0.4s;
+    order: 0;
   }
   .center-box {
     width: 100%;
     max-width: 204px;
+    transition: all 0.4s;
+    order: 1;
   }
   .right-box {
     width: 100%;
     max-width: 153px;
+    transition: all 0.4s;
+    order: 2;
   }
   .s-menu a:hover::before {
     opacity: 1;
+  }
+  .arrow-left {
+    position: absolute;
+    z-index: 2;
+    top: 50%;
+    left: -6%;
+    font-size: 35px;
+    transform: translateY(-50%);
+    color: #0652dd;
+  }
+  .arrow-right {
+    position: absolute;
+    z-index: 2;
+    top: 50%;
+    right: -6%;
+    font-size: 35px;
+    transform: translateY(-50%);
+    color: #0652dd;
   }
 }
 @media (min-width: 768px) {
@@ -326,14 +349,38 @@ ul {
   .left-box {
     width: 100%;
     max-width: 165px;
+    transition: all 0.4s;
+    order: 0;
   }
   .center-box {
     width: 100%;
     max-width: 220px;
+    transition: all 0.4s;
+    order: 1;
   }
   .right-box {
     width: 100%;
     max-width: 165px;
+    transition: all 0.4s;
+    order: 2;
+  }
+  .arrow-left {
+    position: absolute;
+    z-index: 2;
+    top: 50%;
+    left: -6%;
+    font-size: 35px;
+    transform: translateY(-50%);
+    color: #0652dd;
+  }
+  .arrow-right {
+    position: absolute;
+    z-index: 2;
+    top: 50%;
+    right: -6%;
+    font-size: 35px;
+    transform: translateY(-50%);
+    color: #0652dd;
   }
 }
 @media (min-width: 992px) {
@@ -359,14 +406,38 @@ ul {
   .left-box {
     width: 100%;
     max-width: 214px;
+    transition: all 0.4s;
+    order: 0;
   }
   .center-box {
     width: 100%;
     max-width: 284px;
+    transition: all 0.4s;
+    order: 1;
   }
   .right-box {
     width: 100%;
     max-width: 214px;
+    transition: all 0.4s;
+    order: 2;
+  }
+  .arrow-left {
+    position: absolute;
+    z-index: 2;
+    top: 50%;
+    left: -5%;
+    font-size: 35px;
+    transform: translateY(-50%);
+    color: #0652dd;
+  }
+  .arrow-right {
+    position: absolute;
+    z-index: 2;
+    top: 50%;
+    right: -5%;
+    font-size: 35px;
+    transform: translateY(-50%);
+    color: #0652dd;
   }
 }
 @media (min-width: 1200px) {
@@ -392,14 +463,38 @@ ul {
   .left-box {
     width: 100%;
     max-width: 258px;
+    transition: all 0.4s;
+    order: 0;
   }
   .center-box {
     width: 100%;
     max-width: 348px;
+    transition: all 0.4s;
+    order: 1;
   }
   .right-box {
     width: 100%;
     max-width: 258px;
+    transition: all 0.4s;
+    order: 2;
+  }
+  .arrow-left {
+    position: absolute;
+    z-index: 2;
+    top: 50%;
+    left: -5%;
+    font-size: 35px;
+    transform: translateY(-50%);
+    color: #0652dd;
+  }
+  .arrow-right {
+    position: absolute;
+    z-index: 2;
+    top: 50%;
+    right: -5%;
+    font-size: 35px;
+    transform: translateY(-50%);
+    color: #0652dd;
   }
 }
 @media (max-width: 575px) {
@@ -416,6 +511,8 @@ ul {
     width: 100%;
     flex-basis: 100%;
     max-width: 100%;
+    transition: all 0.4s;
+    order: 1;
   }
   .menu-hidden {
     display: block;
@@ -431,6 +528,9 @@ ul {
     position: relative;
     box-sizing: border-box;
     transition: all 0.4s;
+  }
+  .center-image {
+    height: calc(-100vh);
   }
   .menu-bar {
     display: none;
@@ -510,12 +610,33 @@ ul {
   .s-menu a:hover::before {
     opacity: 1;
   }
+  .arrow-left {
+    position: absolute;
+    z-index: 2;
+    top: 50%;
+    left: -9%;
+    font-size: 35px;
+    transform: translateY(-50%);
+    color: #0652dd;
+  }
+  .arrow-right {
+    position: absolute;
+    z-index: 2;
+    top: 50%;
+    right: -9%;
+    font-size: 35px;
+    transform: translateY(-50%);
+    color: #0652dd;
+  }
 }
 .active {
   max-height: 200px;
 }
 .active-menu {
   left: 0.000000001px;
+}
+.none {
+  display: none;
 }
 .to-left-icon i {
   left: 85%;
@@ -527,17 +648,6 @@ ul {
   }
   50% {
     transform: translate(-50%, -45%);
-  }
-  100% {
-    transform: translate(-50%, -50%);
-  }
-}
-@keyframes center {
-  0% {
-    transform: translate(-50%, -50%);
-  }
-  50% {
-    transform: translate(-50%, -55%);
   }
   100% {
     transform: translate(-50%, -50%);

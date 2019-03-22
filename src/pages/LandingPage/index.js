@@ -51,6 +51,7 @@ class LandingPage extends PureComponent {
 
   renderBox(value) {
     const { dataAllUser } = this.state;
+    if (value > dataAllUser.length || value < 0) return '';
     return (
       <div
         onClick={() => this.handleClickPrevCard()}
@@ -124,15 +125,17 @@ class LandingPage extends PureComponent {
   }
 
   resultClassBox(v) {
-    if (v % 3 === 0) return `${styles['right-box']}`;
-    if (v % 3 === 1) return `${styles['center-box']}`;
-    return `${styles['left-box']}`;
+    if (v % 5 === 1) return `${styles['right-box']}`;
+    if (v % 5 === 2) return `${styles['center-box']}`;
+    if (v % 5 === 3) return `${styles['left-box']}`;
+    return `${styles.none}`;
   }
 
   resultClassImage(v) {
-    if (v % 3 === 0) return `${styles['right-image']} ${styles['effect-hover']}`;
-    if (v % 3 === 1) return `${styles['center-image']} ${styles['effect-hover']}`;
-    return `${styles['left-image']} ${styles['effect-hover']}`;
+    if (v % 5 === 1) return `${styles['right-image']} ${styles['effect-hover']}`;
+    if (v % 5 === 2) return `${styles['center-image']} ${styles['effect-hover']}`;
+    if (v % 5 === 3) return `${styles['left-image']} ${styles['effect-hover']}`;
+    return '';
   }
 
   resultIndexUser(value) {
@@ -275,6 +278,20 @@ class LandingPage extends PureComponent {
                   </div>
                 )}
                 <div className={styles['main-slide']}>
+                  <div className={this.resultClassBox(loaded + 4)}>
+                    {this.resultClassBox(loaded + 4) === `${styles['right-box']}`
+                      ? loaded + 2 < dataAllUser.length && this.renderBox(loaded + 4)
+                      : this.resultClassBox(loaded + 4) === `${styles['left-box']}`
+                      ? loaded >= 0 && this.renderBox(loaded + 4)
+                      : this.renderBox(loaded + 4)}
+                  </div>
+                  <div className={this.resultClassBox(loaded + 3)}>
+                    {this.resultClassBox(loaded + 3) === `${styles['right-box']}`
+                      ? loaded + 2 < dataAllUser.length && this.renderBox(loaded + 3)
+                      : this.resultClassBox(loaded + 3) === `${styles['left-box']}`
+                      ? loaded >= 0 && this.renderBox(loaded + 3)
+                      : this.renderBox(loaded + 3)}
+                  </div>
                   <div className={this.resultClassBox(loaded + 2)}>
                     {this.resultClassBox(loaded + 2) === `${styles['right-box']}`
                       ? loaded + 2 < dataAllUser.length && this.renderBox(loaded + 2)
