@@ -20,6 +20,11 @@ export default [
     routes: [{ path: '/search-list', component: './SearchList' }],
   },
   {
+    path: '/detail-list',
+    component: '../layouts/EmptyLayout',
+    routes: [{ path: '/detail-list', component: './DetailListRadio' }],
+  },
+  {
     path: '/',
     component: './About',
   },
