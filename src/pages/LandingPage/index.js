@@ -51,14 +51,14 @@ class LandingPage extends PureComponent {
 
   renderBox(value) {
     const { dataAllUser } = this.state;
-    if (value > dataAllUser.length || value < 0) return '';
+    if (value > dataAllUser.length + 5 || value < 0) return '';
     return (
       <div
         onClick={() => this.handleClickPrevCard()}
         style={{
           backgroundImage: `url(/images/ft/${
             dataAllUser[this.resultIndexUser(this.resultClassBox(value))].avatar
-          }),url()`,
+          })`,
         }}
         className={this.resultClassImage(value)}
       >
@@ -283,35 +283,40 @@ class LandingPage extends PureComponent {
                       ? loaded + 2 < dataAllUser.length && this.renderBox(loaded + 4)
                       : this.resultClassBox(loaded + 4) === `${styles['left-box']}`
                       ? loaded >= 0 && this.renderBox(loaded + 4)
-                      : this.renderBox(loaded + 4)}
+                      : this.resultClassBox(loaded + 4) === `${styles['center-box']}` &&
+                        this.renderBox(loaded + 4)}
                   </div>
                   <div className={this.resultClassBox(loaded + 3)}>
                     {this.resultClassBox(loaded + 3) === `${styles['right-box']}`
                       ? loaded + 2 < dataAllUser.length && this.renderBox(loaded + 3)
                       : this.resultClassBox(loaded + 3) === `${styles['left-box']}`
                       ? loaded >= 0 && this.renderBox(loaded + 3)
-                      : this.renderBox(loaded + 3)}
+                      : this.resultClassBox(loaded + 3) === `${styles['center-box']}` &&
+                        this.renderBox(loaded + 3)}
                   </div>
                   <div className={this.resultClassBox(loaded + 2)}>
                     {this.resultClassBox(loaded + 2) === `${styles['right-box']}`
                       ? loaded + 2 < dataAllUser.length && this.renderBox(loaded + 2)
                       : this.resultClassBox(loaded + 2) === `${styles['left-box']}`
                       ? loaded >= 0 && this.renderBox(loaded + 2)
-                      : this.renderBox(loaded + 2)}
+                      : this.resultClassBox(loaded + 2) === `${styles['center-box']}` &&
+                        this.renderBox(loaded + 2)}
                   </div>
                   <div className={this.resultClassBox(loaded + 1)}>
                     {this.resultClassBox(loaded + 1) === `${styles['right-box']}`
                       ? loaded + 2 < dataAllUser.length && this.renderBox(loaded + 1)
                       : this.resultClassBox(loaded + 1) === `${styles['left-box']}`
                       ? loaded >= 0 && this.renderBox(loaded + 1)
-                      : this.renderBox(loaded + 1)}
+                      : this.resultClassBox(loaded + 1) === `${styles['center-box']}` &&
+                        this.renderBox(loaded + 1)}
                   </div>
                   <div className={this.resultClassBox(loaded)}>
                     {this.resultClassBox(loaded) === `${styles['right-box']}`
                       ? loaded + 2 < dataAllUser.length && this.renderBox(loaded)
                       : this.resultClassBox(loaded) === `${styles['left-box']}`
                       ? loaded >= 0 && this.renderBox(loaded)
-                      : this.renderBox(loaded)}
+                      : this.resultClassBox(loaded) === `${styles['center-box']}` &&
+                        this.renderBox(loaded)}
                   </div>
                 </div>
                 {dataAllUser.length > loaded + 2 && (
