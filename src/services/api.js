@@ -71,7 +71,7 @@ export async function queryFakeList(params) {
 }
 export async function trackList(params) {
   return request('/api/tracklist', {
-    method: 'POST',
+    method: 'GET',
     body: params,
   });
 }
