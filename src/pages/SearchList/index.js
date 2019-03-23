@@ -93,7 +93,6 @@ class FilterCardList extends PureComponent {
     const audio = document.getElementById(v2);
     const offset = e.nativeEvent.offsetX;
     if (this.state.audio) {
-      console.log(this.state.audio);
       this.setState(
         {
           [`timming-${v2}`]: (offset / tua.offsetWidth) * v3,
@@ -150,25 +149,25 @@ class FilterCardList extends PureComponent {
   }
 
   handleClickAudio(value, v2) {
-    const audio = new Audio();
-    audio.src = `http://35.192.153.201:8080/upload/audio/local/${value}`;
-    if (this.state.audio && this.state.globalPlay !== value) {
-      this.state.audio.pause();
-    } else if (this.state.globalPlay) {
-      this.setState(
-        {
-          globalPlay: undefined,
-        },
-        () => {
-          audio.pause();
-        }
-      );
+    const audio = this.state[`audio-${value}`] ? this.state[`audio-${value}`] : new Audio();
+    if (!this.state[`audio-${value}`]) {
+      audio.src = `http://35.192.153.201:8080/upload/audio/local/${value}`;
+    }
+    if (this.state.globalPlay === value) {
+      if (this.state[`audio-${value}`].paused) this.state[`audio-${value}`].play();
+      else this.state[`audio-${value}`].pause();
       return;
+    }
+    if (this.state.globalPlay !== value && this.state[`audio-${this.state.globalPlay}`]) {
+      this.state[`audio-${this.state.globalPlay}`].pause();
+      this.setState({
+        globalPlay: value,
+      });
     }
     audio.play();
     this.setState(
       {
-        audio,
+        [`audio-${value}`]: audio,
         [`dot-${value}`]: true,
         [`playing-${value}`]: value,
         globalPlay: value,
@@ -319,7 +318,6 @@ class FilterCardList extends PureComponent {
   }
 
   render() {
-    console.log(this.state.audio);
     const {
       list: { list },
       loading,
@@ -457,11 +455,21 @@ class FilterCardList extends PureComponent {
                       onClick={() =>
                         this.handleClickAudio(item.audio, Math.trunc(dataDuration[`${item.audio}`]))
                       }
-                      title={this.state.globalPlay === `${item.audio}` ? 'Pause' : 'Play'}
+                      title={
+                        !this.state[`audio-${item.audio}`]
+                          ? 'Play'
+                          : this.state[`audio-${item.audio}`].paused
+                          ? 'Play'
+                          : 'Pause'
+                      }
                     >
                       <Icon
                         type={
-                          this.state.globalPlay === `${item.audio}` ? 'pause-circle' : 'play-circle'
+                          !this.state[`audio-${item.audio}`]
+                            ? 'play-circle'
+                            : this.state[`audio-${item.audio}`].paused
+                            ? 'play-circle'
+                            : 'pause-circle'
                         }
                       />
                     </Tooltip>,
