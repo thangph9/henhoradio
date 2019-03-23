@@ -92,31 +92,23 @@ class FilterCardList extends PureComponent {
     const tua = document.getElementById(v);
     const audio = document.getElementById(v2);
     const offset = e.nativeEvent.offsetX;
-    if (this.state.audio) {
-      this.setState(
-        {
-          [`timming-${v2}`]: (offset / tua.offsetWidth) * v3,
-        },
-        () => {
-          if (this.state[`timming-${v2}`] !== 0)
-            this.state.audio.currentTime = this.state[`timming-${v2}`];
-        }
-      );
+    if (this.state[`audio-${v2}`] && this.state.globalPlay === v2) {
+      this.state[`audio-${v2}`].currentTime = (offset / tua.offsetWidth) * v3;
     }
   }
 
   handleMouseUp(e, v, v2) {
     const tua = document.getElementById(v);
-    if (this.state.audio) {
+    if (this.state[`audio-${v2}`]) {
       this.setState({
         width: undefined,
       });
-      this.state.audio.play();
+      this.state[`audio-${v2}`].play();
     }
   }
 
   handleMouseMove(e, v, v2, v3) {
-    if (this.state.audio && this.state.width) {
+    if (this.state[`audio-${v2}`] && this.state.width) {
       const tua = document.getElementById(v);
       const audio = document.getElementById(v2);
       const offset = e.nativeEvent.offsetX;
@@ -128,11 +120,11 @@ class FilterCardList extends PureComponent {
 
   handleMouseDown(e, v, v2) {
     const offset = e.nativeEvent.offsetX;
-    if (this.state.audio) {
+    if (this.state[`audio-${v2}`]) {
       this.setState({
         width: offset,
       });
-      this.state.audio.pause();
+      this.state[`audio-${v2}`].pause();
     }
   }
 
@@ -149,10 +141,9 @@ class FilterCardList extends PureComponent {
   }
 
   handleClickAudio(value, v2) {
-    const audio = this.state[`audio-${value}`] ? this.state[`audio-${value}`] : new Audio();
-    if (!this.state[`audio-${value}`]) {
-      audio.src = `http://35.192.153.201:8080/upload/audio/local/${value}`;
-    }
+    const audio = this.state[`audio-${value}`]
+      ? this.state[`audio-${value}`]
+      : document.getElementById(value);
     if (this.state.globalPlay === value) {
       if (this.state[`audio-${value}`].paused) this.state[`audio-${value}`].play();
       else this.state[`audio-${value}`].pause();
@@ -439,7 +430,7 @@ class FilterCardList extends PureComponent {
                     this.handleMouseMove(
                       e,
                       `tua-${item.audio}`,
-                      `${item.audio}`,
+                      item.audio,
                       Math.trunc(dataDuration[`${item.audio}`])
                     )
                   }
@@ -520,20 +511,18 @@ class FilterCardList extends PureComponent {
                         this.handleClickSlideBarAudio(
                           e,
                           `tua-${item.audio}`,
-                          `${item.audio}`,
+                          item.audio,
                           Math.trunc(dataDuration[`${item.audio}`])
                         )
                       }
-                      onMouseUp={e => this.handleMouseUp(e, `tua-${item.audio}`, `${item.audio}`)}
-                      onMouseDown={e =>
-                        this.handleMouseDown(e, `tua-${item.audio}`, `${item.audio}`)
-                      }
+                      onMouseUp={e => this.handleMouseUp(e, `tua-${item.audio}`, item.audio)}
+                      onMouseDown={e => this.handleMouseDown(e, `tua-${item.audio}`, item.audio)}
                     />
                     <audio
                       controls
                       type="audio/mpeg"
                       style={{ display: 'none' }}
-                      id={`${item.audio}`}
+                      id={item.audio}
                       src={`http://35.192.153.201:8080/upload/audio/local/${item.audio}`}
                     />
                     <div
