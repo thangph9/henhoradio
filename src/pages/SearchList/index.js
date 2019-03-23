@@ -151,7 +151,7 @@ class FilterCardList extends PureComponent {
 
   handleClickAudio(value, v2) {
     const audio = new Audio();
-    audio.src = `http://localhost:8080/upload/audio/local/${value}`;
+    audio.src = `http://35.192.153.201:8080/upload/audio/local/${value}`;
     if (this.state.audio && this.state.globalPlay !== value) {
       this.state.audio.pause();
     } else if (this.state.globalPlay) {
