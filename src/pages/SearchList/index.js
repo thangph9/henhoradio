@@ -306,6 +306,18 @@ class FilterCardList extends PureComponent {
     } else this.props.history.push({ pathname: 'search-list', search: `?page=1&radio=${e}` });
   }
 
+  getTimeInAudio(value) {
+    if (value >= 3600) {
+      const h = value / 3600;
+      const m = (value % 3600) / 60;
+      const s = (value % 3600) % 60;
+      return `${Math.trunc(h)}:${Math.trunc(m)}:${s}`;
+    }
+    const m = value / 60;
+    const s = value % 60;
+    return `${Math.trunc(m)}:${s}`;
+  }
+
   render() {
     console.log(this.state.audio);
     const {
@@ -476,11 +488,11 @@ class FilterCardList extends PureComponent {
                     <div id={`time-${item.audio}`} className={styles['time-audio']}>
                       <div className={styles['time-in-audio']}>
                         {this.state[`timming-${item.audio}`]
-                          ? Math.trunc(this.state[`timming-${item.audio}`])
-                          : 0}
+                          ? this.getTimeInAudio(Math.trunc(this.state[`timming-${item.audio}`]))
+                          : `0:0`}
                       </div>
                       <div className={styles['time-in-audio']}>
-                        {Math.trunc(dataDuration[`${item.audio}`])}
+                        {this.getTimeInAudio(Math.trunc(dataDuration[`${item.audio}`]))}
                       </div>
                     </div>
                     {this.state[`dot-${item.audio}`] && (
