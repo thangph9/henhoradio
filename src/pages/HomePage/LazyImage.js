@@ -1,3 +1,4 @@
+/* eslint-disable react/sort-comp */
 /* eslint-disable no-return-assign */
 /* eslint-disable react/destructuring-assignment */
 /* eslint-disable react/jsx-indent */
@@ -7,6 +8,15 @@
 import React, { PureComponent } from 'react';
 import { connect } from 'dva';
 import styles from './index.less';
+
+function elementInViewport(el) {
+  const rect = el.getBoundingClientRect();
+  return (
+    rect.top >= 0 &&
+    rect.left >= 0 &&
+    rect.top <= (window.innerHeight || document.documentElement.clientHeight)
+  );
+}
 
 @connect(({ list, user, authentication, myprops }) => ({
   list,
@@ -19,19 +29,44 @@ class LazyImage extends PureComponent {
     loaded: false,
   };
 
-  componentDidMount() {
-    const { avatar } = this.props;
-    const imgLoader = new Image();
-    imgLoader.src = `/images/ft/${avatar}`;
-    imgLoader.onload = () => {
-      if (this.imgElm && avatar) {
-        this.imgElm.style.backgroundImage = `url(/images/ft/${avatar})`;
-        this.setState({
-          loaded: true,
-        });
-      }
-    };
+  componentWillUnmount() {
+    window.removeEventListener('scroll', this.handleScroll);
   }
+
+  componentDidMount() {
+    const { avatar, number } = this.props;
+    if (number < 12 && avatar) {
+      const imgLoader = new Image();
+      imgLoader.src = `/images/ft/${avatar}`;
+      imgLoader.onload = () => {
+        if (this.imgElm && avatar) {
+          this.imgElm.style.backgroundImage = `url(/images/ft/${avatar})`;
+          this.setState({
+            loaded: true,
+          });
+        }
+      };
+    }
+    this.handleScroll.bind(this.props);
+    window.addEventListener('scroll', this.handleScroll);
+  }
+
+  handleScroll = () => {
+    const { avatar } = this.props;
+    if (!this.state.loaded && elementInViewport(this.imgElm) && avatar) {
+      // Load real image
+      const imgLoader = new Image();
+      imgLoader.src = `/images/ft/${avatar}`;
+      imgLoader.onload = () => {
+        if (this.imgElm && avatar) {
+          this.imgElm.style.backgroundImage = `url(/images/ft/${avatar})`;
+          this.setState({
+            loaded: true,
+          });
+        }
+      };
+    }
+  };
 
   componentWillReceiveProps(nextprops) {
     const { avatar } = this.props;
@@ -57,6 +92,7 @@ class LazyImage extends PureComponent {
   }
 
   render() {
+    const { avatar } = this.props;
     return (
       <div className={styles['avatar-image']}>
         <div
@@ -64,10 +100,9 @@ class LazyImage extends PureComponent {
           className={styles['background-avatar']}
           style={{
             backgroundImage: `url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAqIAAAGAAQMAAABMQ5IQAAAAA1BMVEX///+nxBvIAAAANklEQVR42u3BAQEAAACCoP6vbojAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAIC8A4EAAAFVQt90AAAAAElFTkSuQmCC)`,
-            opacity: this.state.loaded ? 1 : 0,
           }}
         />
-        {!this.state.loaded && (
+        {!this.state.loaded && avatar && (
           <div className={styles['loading-circle']}>
             <div className={styles['lds-ring']}>
               <div />

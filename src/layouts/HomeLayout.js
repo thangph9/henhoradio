@@ -245,6 +245,7 @@ class HomeLayout extends React.PureComponent {
     const routerConfig = this.matchParamsPath(pathname);
     const layout = (
       <div
+        style={{ background: 'rgb(243, 245, 249)' }}
         className={
           styles['default-layout__container___13v1V'] + ' ' + styles['home__defaultLayout___Q6Udu']
         }
