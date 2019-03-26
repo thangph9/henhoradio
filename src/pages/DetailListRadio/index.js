@@ -69,6 +69,7 @@ class ListRadio extends PureComponent {
       this.setState(
         {
           detailList: nextProps.members.getmembers,
+          loadingPage: false,
         },
         () => {
           if (this.state.arrFilter) {
@@ -253,7 +254,7 @@ class ListRadio extends PureComponent {
             </div>
           </div>
           <div className={styles.row}>
-            {loadingPage && detailList.length > 0
+            {!loadingPage
               ? (dataFilter || detailList)
                   .filter((value, index) => index >= page * 4 - 4 && index < page * 4)
                   .map((v, i) => (
