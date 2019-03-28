@@ -1,3 +1,6 @@
+/* eslint-disable react/no-will-update-set-state */
+/* eslint-disable react/sort-comp */
+/* eslint-disable no-return-assign */
 /* eslint-disable react/jsx-closing-tag-location */
 /* eslint-disable react/jsx-indent */
 /* eslint-disable react/no-access-state-in-setstate */
@@ -119,6 +122,7 @@ class ThongTinCaNhan extends Component {
     super(props);
     this.state = {
       fileListAvatar: [],
+      loadedAvatar: false,
     };
   }
 
@@ -133,9 +137,24 @@ class ThongTinCaNhan extends Component {
         dataUser: authentication.getonlyuser,
       },
       () => {
-        this.setState({
-          avatarImage: this.state.dataUser.avatar,
-        });
+        this.setState(
+          {
+            avatarImage: this.state.dataUser.avatar,
+          },
+          () => {
+            const { avatarImage } = this.state;
+            const imgLoader = new Image();
+            imgLoader.src = `/images/ft/${avatarImage}`;
+            imgLoader.onload = () => {
+              if (this.imgElm && avatarImage) {
+                this.imgElm.style.backgroundImage = `url(/images/ft/${avatarImage})`;
+                this.setState({
+                  loadedAvatar: true,
+                });
+              }
+            };
+          }
+        );
       }
     );
   }
@@ -212,10 +231,33 @@ class ThongTinCaNhan extends Component {
     });
   }
 
+  componentWillUpdate(nextProps, nextStates) {
+    if (this.state.avatarImage !== nextStates.avatarImage) {
+      this.setState(
+        {
+          loadedAvatar: false,
+        },
+        () => {
+          const { avatarImage } = nextStates;
+          const imgLoader = new Image();
+          imgLoader.src = `/images/ft/${avatarImage}`;
+          imgLoader.onload = () => {
+            if (this.imgElm && avatarImage) {
+              this.imgElm.style.backgroundImage = `url(/images/ft/${avatarImage})`;
+              this.setState({
+                loadedAvatar: true,
+              });
+            }
+          };
+        }
+      );
+    }
+  }
+
   render() {
     const { getFieldDecorator } = this.props.form;
     const { loading } = this.props;
-    const { dataUser, avatarImage } = this.state;
+    const { dataUser } = this.state;
     if (dataUser && !loading) {
       return (
         <div className={styles['thong-tin-ca-nhan']}>
@@ -366,16 +408,12 @@ class ThongTinCaNhan extends Component {
           <div className={styles['basic-center']} />
           <div className={styles['avatar-image']}>
             <div
+              ref={imgElm => (this.imgElm = imgElm)}
               className={styles['background-avatar']}
-              style={
-                avatarImage
-                  ? { backgroundImage: `url(/images/ft/${avatarImage})` }
-                  : dataUser.avatar
-                  ? { backgroundImage: `url(/images/ft/${dataUser.avatar})` }
-                  : {
-                      background: '#f2f2f2',
-                    }
-              }
+              style={{
+                backgroundImage: `url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAqIAAAGAAQMAAABMQ5IQAAAAA1BMVEX///+nxBvIAAAANklEQVR42u3BAQEAAACCoP6vbojAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAIC8A4EAAAFVQt90AAAAAElFTkSuQmCC)`,
+                backgroundColor: this.state.loadedAvatar ? 'none' : 'rgb(242, 242, 242)',
+              }}
             >
               {this.state.resetAvatar ? (
                 <Tooltip placement="right" title="Huỷ bỏ">

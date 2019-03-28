@@ -1,3 +1,5 @@
+/* eslint-disable react/destructuring-assignment */
+/* eslint-disable no-return-assign */
 /* eslint-disable camelcase */
 import React, { Component } from 'react';
 import { connect } from 'dva';
@@ -14,22 +16,53 @@ class Info extends Component {
     super(props);
     this.state = {
       dataUser: {},
+      loaded: false,
     };
   }
 
   componentDidMount() {
     const { authentication } = this.props;
-    this.setState({
-      dataUser: authentication.getonlyuser,
-    });
+    this.setState(
+      {
+        dataUser: authentication.getonlyuser,
+      },
+      () => {
+        const { dataUser } = this.state;
+        const imgLoader = new Image();
+        imgLoader.src = `/images/ft/${dataUser.avatar}`;
+        imgLoader.onload = () => {
+          if (this.imgElm && dataUser.avatar) {
+            this.imgElm.style.backgroundImage = `url(/images/ft/${dataUser.avatar})`;
+            this.setState({
+              loaded: true,
+            });
+          }
+        };
+      }
+    );
   }
 
   componentWillReceiveProps(nextProps) {
     const { authentication } = this.props;
     if (authentication.getonlyuser !== nextProps.authentication.getonlyuser) {
-      this.setState({
-        dataUser: nextProps.authentication.getonlyuser,
-      });
+      this.setState(
+        {
+          dataUser: nextProps.authentication.getonlyuser,
+        },
+        () => {
+          const { dataUser } = this.state;
+          const imgLoader = new Image();
+          imgLoader.src = `/images/ft/${dataUser.avatar}`;
+          imgLoader.onload = () => {
+            if (this.imgElm && dataUser.avatar) {
+              this.imgElm.style.backgroundImage = `url(/images/ft/${dataUser.avatar})`;
+              this.setState({
+                loaded: true,
+              });
+            }
+          };
+        }
+      );
     }
   }
 
@@ -48,7 +81,6 @@ class Info extends Component {
     const {
       myprops: { menu_item_profile },
     } = this.props;
-    const { dataUser } = this.state;
     const { children } = this.props;
     return (
       <div className={styles.profile}>
@@ -57,16 +89,12 @@ class Info extends Component {
             <div className={styles['detail-left']}>
               <div className={styles['avatar-cart']}>
                 <div
+                  ref={imgElm => (this.imgElm = imgElm)}
                   className={styles['background-avatar']}
-                  style={
-                    dataUser.avatar
-                      ? {
-                          backgroundImage: `url(/images/ft/${dataUser.avatar})`,
-                        }
-                      : {
-                          background: '#f2f2f2',
-                        }
-                  }
+                  style={{
+                    backgroundImage: `url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAqIAAAGAAQMAAABMQ5IQAAAAA1BMVEX///+nxBvIAAAANklEQVR42u3BAQEAAACCoP6vbojAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAIC8A4EAAAFVQt90AAAAAElFTkSuQmCC)`,
+                    backgroundColor: this.state.loaded ? 'none' : 'rgb(242, 242, 242)',
+                  }}
                 />
               </div>
               <div className={styles.menu}>
