@@ -91,10 +91,11 @@ const query = {
     minWidth: 1600,
   },
 };
-@connect(({ list, myprops, authentication }) => ({
+@connect(({ list, myprops, authentication, user }) => ({
   list,
   myprops,
   authentication,
+  user,
 }))
 class HomeLayout extends React.PureComponent {
   constructor(props) {
@@ -129,6 +130,13 @@ class HomeLayout extends React.PureComponent {
   componentWillUnmount() {
     cancelAnimationFrame(this.renderRef);
     unenquireScreen(this.enquireHandler);
+  }
+
+  componentWillMount() {
+    const { dispatch } = this.props;
+    dispatch({
+      type: 'user/getsetting',
+    });
   }
 
   getContext() {

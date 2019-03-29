@@ -1,3 +1,4 @@
+/* eslint-disable react/no-unused-state */
 /* eslint-disable no-nested-ternary */
 /* eslint-disable react/sort-comp */
 /* eslint-disable no-return-assign */
@@ -28,6 +29,7 @@ function elementInViewport(el) {
 class LazyImage extends PureComponent {
   state = {
     loaded: false,
+    cdn: '',
   };
 
   componentWillUnmount() {
@@ -70,7 +72,7 @@ class LazyImage extends PureComponent {
   };
 
   componentWillReceiveProps(nextprops) {
-    const { avatar } = this.props;
+    const { avatar, cdn } = this.props;
     if (avatar !== nextprops.avatar) {
       this.setState(
         {
@@ -78,10 +80,10 @@ class LazyImage extends PureComponent {
         },
         () => {
           const imgLoader = new Image();
-          imgLoader.src = `/images/ft/${nextprops.avatar}`;
+          imgLoader.src = `${cdn}${nextprops.avatar}`;
           imgLoader.onload = () => {
             if (this.imgElm && nextprops.avatar) {
-              this.imgElm.style.backgroundImage = `url(/images/ft/${nextprops.avatar})`;
+              this.imgElm.style.backgroundImage = `url(${cdn}${nextprops.avatar})`;
               this.setState({
                 loaded: true,
               });
@@ -110,7 +112,15 @@ class LazyImage extends PureComponent {
         />
         {!this.state.loaded && avatar && (
           <div className={styles['loading-circle']}>
-            <div className={styles['lds-ring']}>
+            <div className={styles['lds-spinner']}>
+              <div />
+              <div />
+              <div />
+              <div />
+              <div />
+              <div />
+              <div />
+              <div />
               <div />
               <div />
               <div />

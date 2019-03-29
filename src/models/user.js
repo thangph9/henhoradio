@@ -1,11 +1,13 @@
 import { query as queryUsers, queryCurrent } from '@/services/user';
+import { getSetting } from '@/services/api';
+import { message } from 'antd';
 
 export default {
   namespace: 'user',
-
   state: {
     list: [],
     currentUser: {},
+    getsetting: {},
   },
 
   effects: {
@@ -23,6 +25,17 @@ export default {
         payload: response,
       });
     },
+    *getsetting({ payload }, { call, put }) {
+      const response = yield call(getSetting, payload);
+      if (response && response.status === 'ok') {
+        yield put({
+          type: 'getSetting',
+          payload: response.setting,
+        });
+      } else {
+        message.error('Có lỗi xảy ra !');
+      }
+    },
   },
 
   reducers: {
@@ -36,6 +49,12 @@ export default {
       return {
         ...state,
         currentUser: action.payload || {},
+      };
+    },
+    getSetting(state, action) {
+      return {
+        ...state,
+        getsetting: action.payload,
       };
     },
     changeNotifyCount(state, action) {

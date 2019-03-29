@@ -12,10 +12,11 @@ import styles from './index.less';
 const { TextArea } = Input;
 const RadioGroup = Radio.Group;
 const CheckboxGroup = Checkbox.Group;
-@connect(({ profile, loading, authentication }) => ({
+@connect(({ profile, loading, authentication, user }) => ({
   profile,
   loading: loading.effects['profile/fetchAdvanced'],
   authentication,
+  user,
 }))
 class AdvancedProfile extends Component {
   constructor(props) {
@@ -85,10 +86,12 @@ class AdvancedProfile extends Component {
         () => {
           const { dataUser } = this.state;
           const imgLoader = new Image();
-          imgLoader.src = `/images/ft/${dataUser.avatar}`;
+          imgLoader.src = `${nextProps.user.getsetting.cdn}${dataUser.avatar}`;
           imgLoader.onload = () => {
             if (this.imgElm && dataUser.avatar) {
-              this.imgElm.style.backgroundImage = `url(/images/ft/${dataUser.avatar})`;
+              this.imgElm.style.backgroundImage = `url(${nextProps.user.getsetting.cdn}${
+                dataUser.avatar
+              })`;
               this.setState({
                 loaded: true,
               });

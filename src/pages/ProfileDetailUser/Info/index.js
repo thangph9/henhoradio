@@ -5,11 +5,12 @@ import React, { Component } from 'react';
 import { connect } from 'dva';
 import styles from './MenuLeft.less';
 
-@connect(({ profile, loading, authentication, myprops }) => ({
+@connect(({ profile, loading, authentication, myprops, user }) => ({
   profile,
   loading: loading.effects['profile/fetchAdvanced'],
   authentication,
   myprops,
+  user,
 }))
 class Info extends Component {
   constructor(props) {
@@ -21,7 +22,7 @@ class Info extends Component {
   }
 
   componentDidMount() {
-    const { authentication } = this.props;
+    const { authentication, user } = this.props;
     this.setState(
       {
         dataUser: authentication.getonlyuser,
@@ -29,10 +30,10 @@ class Info extends Component {
       () => {
         const { dataUser } = this.state;
         const imgLoader = new Image();
-        imgLoader.src = `/images/ft/${dataUser.avatar}`;
+        imgLoader.src = `${user.getsetting.cdn}${dataUser.avatar}`;
         imgLoader.onload = () => {
           if (this.imgElm && dataUser.avatar) {
-            this.imgElm.style.backgroundImage = `url(/images/ft/${dataUser.avatar})`;
+            this.imgElm.style.backgroundImage = `url(${user.getsetting.cdn}${dataUser.avatar})`;
             this.setState({
               loaded: true,
             });
@@ -52,10 +53,12 @@ class Info extends Component {
         () => {
           const { dataUser } = this.state;
           const imgLoader = new Image();
-          imgLoader.src = `/images/ft/${dataUser.avatar}`;
+          imgLoader.src = `${nextProps.user.getsetting.cdn}${dataUser.avatar}`;
           imgLoader.onload = () => {
             if (this.imgElm && dataUser.avatar) {
-              this.imgElm.style.backgroundImage = `url(/images/ft/${dataUser.avatar})`;
+              this.imgElm.style.backgroundImage = `url(${nextProps.user.getsetting.cdn}${
+                dataUser.avatar
+              })`;
               this.setState({
                 loaded: true,
               });

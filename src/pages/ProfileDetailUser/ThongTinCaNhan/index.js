@@ -111,10 +111,11 @@ const dayInMonthFull = [
   30,
   31,
 ];
-@connect(({ authentication, myprops, loading }) => ({
+@connect(({ authentication, myprops, loading, user }) => ({
   authentication,
   loading: loading.effects['authentication/getonlyuser'],
   myprops,
+  user,
 }))
 @Form.create()
 class ThongTinCaNhan extends Component {
@@ -127,7 +128,7 @@ class ThongTinCaNhan extends Component {
   }
 
   componentDidMount() {
-    const { dispatch, authentication } = this.props;
+    const { dispatch, authentication, user } = this.props;
     dispatch({
       type: 'myprops/menu_item_profile',
       payload: 0,
@@ -144,10 +145,10 @@ class ThongTinCaNhan extends Component {
           () => {
             const { avatarImage } = this.state;
             const imgLoader = new Image();
-            imgLoader.src = `/images/ft/${avatarImage}`;
+            imgLoader.src = `${user.getsetting.cdn}${avatarImage}`;
             imgLoader.onload = () => {
               if (this.imgElm && avatarImage) {
-                this.imgElm.style.backgroundImage = `url(/images/ft/${avatarImage})`;
+                this.imgElm.style.backgroundImage = `url(${user.getsetting.cdn}${avatarImage})`;
                 this.setState({
                   loadedAvatar: true,
                 });
@@ -175,10 +176,12 @@ class ThongTinCaNhan extends Component {
             () => {
               const { avatarImage } = this.state;
               const imgLoader = new Image();
-              imgLoader.src = `/images/ft/${avatarImage}`;
+              imgLoader.src = `${nextProps.user.getsetting.cdn}${avatarImage}`;
               imgLoader.onload = () => {
                 if (this.imgElm && avatarImage) {
-                  this.imgElm.style.backgroundImage = `url(/images/ft/${avatarImage})`;
+                  this.imgElm.style.backgroundImage = `${
+                    nextProps.user.getsetting.cdn
+                  }${avatarImage})`;
                   this.setState({
                     loadedAvatar: true,
                   });
@@ -255,10 +258,12 @@ class ThongTinCaNhan extends Component {
         () => {
           const { avatarImage } = nextStates;
           const imgLoader = new Image();
-          imgLoader.src = `/images/ft/${avatarImage}`;
+          imgLoader.src = `${nextProps.user.getsetting.cdn}${avatarImage}`;
           imgLoader.onload = () => {
             if (this.imgElm && avatarImage) {
-              this.imgElm.style.backgroundImage = `url(/images/ft/${avatarImage})`;
+              this.imgElm.style.backgroundImage = `url(${
+                nextProps.user.getsetting.cdn
+              }${avatarImage})`;
               this.setState({
                 loadedAvatar: true,
               });

@@ -75,10 +75,12 @@ class GlobalHeader extends PureComponent {
         () => {
           const { dataUser } = this.state;
           const imgLoader = new Image();
-          imgLoader.src = `/images/ft/${dataUser.avatar}`;
+          imgLoader.src = `${nextProps.user.getsetting.cdn}${dataUser.avatar}`;
           imgLoader.onload = () => {
             if (this.imgElm && dataUser.avatar) {
-              this.imgElm.style.backgroundImage = `url(/images/ft/${dataUser.avatar})`;
+              this.imgElm.style.backgroundImage = `url(${nextProps.user.getsetting.cdn}${
+                dataUser.avatar
+              })`;
               this.setState({
                 loaded: true,
               });
