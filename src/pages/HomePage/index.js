@@ -45,7 +45,7 @@ class NewFeed extends PureComponent {
     }
     if (user.getsetting !== nextProps.user.getsetting) {
       this.setState({
-        cdn: nextProps.getsetting.cdn,
+        cdn: nextProps.user.getsetting.cdn,
       });
     }
   }
