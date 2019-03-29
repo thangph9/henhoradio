@@ -37,13 +37,13 @@ class LazyImage extends PureComponent {
   }
 
   componentDidMount() {
-    const { avatar, number } = this.props;
+    const { avatar, number, user } = this.props;
     if (number < 12 && avatar) {
       const imgLoader = new Image();
-      imgLoader.src = `/images/ft/${avatar}`;
+      imgLoader.src = `${user.getsetting.cdn}${avatar}`;
       imgLoader.onload = () => {
         if (this.imgElm && avatar) {
-          this.imgElm.style.backgroundImage = `url(/images/ft/${avatar})`;
+          this.imgElm.style.backgroundImage = `url(${user.getsetting.cdn}${avatar})`;
           this.setState({
             loaded: true,
           });
@@ -55,14 +55,14 @@ class LazyImage extends PureComponent {
   }
 
   handleScroll = () => {
-    const { avatar } = this.props;
+    const { avatar, user } = this.props;
     if (!this.state.loaded && elementInViewport(this.imgElm) && avatar) {
       // Load real image
       const imgLoader = new Image();
-      imgLoader.src = `/images/ft/${avatar}`;
+      imgLoader.src = `${user.getsetting.cdn}${avatar}`;
       imgLoader.onload = () => {
         if (this.imgElm && avatar) {
-          this.imgElm.style.backgroundImage = `url(/images/ft/${avatar})`;
+          this.imgElm.style.backgroundImage = `url(${user.getsetting.cdn}${avatar})`;
           this.setState({
             loaded: true,
           });
@@ -72,7 +72,7 @@ class LazyImage extends PureComponent {
   };
 
   componentWillReceiveProps(nextprops) {
-    const { avatar, cdn } = this.props;
+    const { avatar, user } = this.props;
     if (avatar !== nextprops.avatar) {
       this.setState(
         {
@@ -80,10 +80,10 @@ class LazyImage extends PureComponent {
         },
         () => {
           const imgLoader = new Image();
-          imgLoader.src = `${cdn}${nextprops.avatar}`;
+          imgLoader.src = `${user.getsetting.cdn}${nextprops.avatar}`;
           imgLoader.onload = () => {
             if (this.imgElm && nextprops.avatar) {
-              this.imgElm.style.backgroundImage = `url(${cdn}${nextprops.avatar})`;
+              this.imgElm.style.backgroundImage = `url(${user.getsetting.cdn}${nextprops.avatar})`;
               this.setState({
                 loaded: true,
               });

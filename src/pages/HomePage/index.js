@@ -36,16 +36,11 @@ class NewFeed extends PureComponent {
   }
 
   componentWillReceiveProps(nextProps) {
-    const { authentication, user } = this.props;
+    const { authentication } = this.props;
     if (authentication.getallusers !== nextProps.authentication.getallusers) {
       this.setState({
         allUser: nextProps.authentication.getallusers,
         loadingPage: false,
-      });
-    }
-    if (user.getsetting !== nextProps.user.getsetting) {
-      this.setState({
-        cdn: nextProps.user.getsetting.cdn,
       });
     }
   }
@@ -55,7 +50,7 @@ class NewFeed extends PureComponent {
   }
 
   render() {
-    const { allUser, loadingPage, preLoad, cdn } = this.state;
+    const { allUser, loadingPage, preLoad } = this.state;
     const {
       myprops,
       location: {
@@ -77,12 +72,7 @@ class NewFeed extends PureComponent {
                         className={styles['cart-item']}
                       >
                         <div className={styles['box-cart']}>
-                          <LazyImage
-                            cdn={cdn}
-                            gender={v.gender}
-                            number={i % 20}
-                            avatar={v.avatar}
-                          />
+                          <LazyImage gender={v.gender} number={i % 20} avatar={v.avatar} />
                           <div className={styles['title-cart']}>
                             <span className={styles.detail}>{v.fullname}</span>
                             <span className={styles.detail}>,</span>
