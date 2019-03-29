@@ -1,3 +1,5 @@
+/* eslint-disable no-return-assign */
+/* eslint-disable no-nested-ternary */
 /* eslint-disable react/no-array-index-key */
 /* eslint-disable react/destructuring-assignment */
 /* eslint-disable camelcase */
@@ -33,6 +35,7 @@ class AdvancedProfile extends Component {
       groupQuestion: [],
       listQuestion: undefined,
       validateText: true,
+      loaded: false,
     };
     this.columns = [
       {
@@ -80,6 +83,17 @@ class AdvancedProfile extends Component {
           yourQuestion: nextProps.authentication.getuserbyid.yourQuestion,
         },
         () => {
+          const { dataUser } = this.state;
+          const imgLoader = new Image();
+          imgLoader.src = `/images/ft/${dataUser.avatar}`;
+          imgLoader.onload = () => {
+            if (this.imgElm && dataUser.avatar) {
+              this.imgElm.style.backgroundImage = `url(/images/ft/${dataUser.avatar})`;
+              this.setState({
+                loaded: true,
+              });
+            }
+          };
           const { title, question } = this.state;
           const arrGroup = [];
           title.forEach(element => {
@@ -336,14 +350,17 @@ class AdvancedProfile extends Component {
           <div className={styles['avatar-user']}>
             <div className={styles['container-avatar']}>
               <div
+                ref={imgElm => (this.imgElm = imgElm)}
                 className={styles['background-avatar']}
-                style={
-                  dataUser.avatar
-                    ? { backgroundImage: `url(/images/ft/${dataUser.avatar})` }
-                    : {
-                        backgroundImage: `url('https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRRfrBguCWgYZbzZNuUieTET8xYdUatKh5t1emOHuR3Cjzihd82')`,
-                      }
-                }
+                style={{
+                  backgroundImage:
+                    dataUser.gender === 'male'
+                      ? `url(https://twoo01-a.akamaihd.net/static/1636596845823273814/images/generic/avatar-male.jpg)`
+                      : dataUser.gender === 'female'
+                      ? `url(https://twoo01-a.akamaihd.net/static/1636596845823273814/images/generic/avatar-female.jpg)`
+                      : `url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAqIAAAGAAQMAAABMQ5IQAAAAA1BMVEX///+nxBvIAAAANklEQVR42u3BAQEAAACCoP6vbojAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAIC8A4EAAAFVQt90AAAAAElFTkSuQmCC)`,
+                  backgroundColor: this.state.loadedAvatar ? 'none' : 'rgb(242, 242, 242)',
+                }}
               />
               <div className={`${styles['account-infomation']} ${styles['desktop-infomation']}`}>
                 <div className={styles['name-of-user']}>{dataUser.fullname}</div>
@@ -362,7 +379,7 @@ class AdvancedProfile extends Component {
               <div
                 className={styles['background-avatar']}
                 style={{
-                  backgroundImage: `url(https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRRfrBguCWgYZbzZNuUieTET8xYdUatKh5t1emOHuR3Cjzihd82)`,
+                  backgroundImage: `url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAqIAAAGAAQMAAABMQ5IQAAAAA1BMVEX///+nxBvIAAAANklEQVR42u3BAQEAAACCoP6vbojAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAIC8A4EAAAFVQt90AAAAAElFTkSuQmCC)`,
                 }}
               />
             </div>
