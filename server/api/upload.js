@@ -96,5 +96,5 @@ function uploadFileAvatar(req, res) {
   });
 }
 router.get('/upload/audio/:audioid', loadAudio);
-router.post('/api/upload/avatar', uploadFileAvatar);
+router.post(`/upload/images`, uploadFileAvatar);
 module.exports = router;

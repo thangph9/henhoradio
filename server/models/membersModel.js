@@ -9,6 +9,7 @@ module.exports = {
     year: 'int',
     audio: 'uuid',
     location: 'text',
+    prefix: 'text',
     description: {
       type: 'map',
       typeDef: '<text,text>',

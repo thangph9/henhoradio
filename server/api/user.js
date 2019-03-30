@@ -11,6 +11,8 @@ router.get('/setting', (req, res) => {
     setting: {
       // cdn : '/images/ft/',
       cdn: 'http://cdn.henhoradio.net/images/ft/',
+      // upload: '/upload/images'
+      upload: 'cdn.henhoradio.net/upload/images',
     },
   });
 });
