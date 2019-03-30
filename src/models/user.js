@@ -27,7 +27,6 @@ export default {
     },
     *getsetting({ payload }, { call, put }) {
       const response = yield call(getSetting, payload);
-      console.log('model:', response);
       if (response && response.status === 'ok') {
         yield put({
           type: 'getSetting',

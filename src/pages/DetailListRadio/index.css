@@ -8,14 +8,12 @@
   padding: 5px;
   display: flex;
   margin-bottom: 40px;
-}
-.filter-data .filter-date {
-  flex: 1;
-}
-.filter-data .filter-radio {
-  flex: 1;
+  justify-content: space-between;
 }
 .filter-data .filter-radio > div {
+  width: 175px;
+}
+.filter-data .filter-gender > div {
   width: 175px;
 }
 .row {
@@ -54,7 +52,7 @@
   display: flex;
   flex-direction: column;
   justify-content: center;
-  background: #74b9ff;
+  background: #f2f2f2;
 }
 .member-information li {
   list-style: none;
@@ -62,7 +60,7 @@
   justify-content: space-between;
 }
 .member-information li h4 {
-  color: #d63031;
+  color: black;
 }
 .background-avatar {
   background-position: center;

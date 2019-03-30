@@ -421,60 +421,57 @@ class FilterCardList extends PureComponent {
             pagination={paginationProps}
             renderItem={item => (
               <List.Item key={item.id}>
-                <Link
-                  to={`detail-list?page=1&radio=${item.local}&date=${moment(item.date)
-                    .format('D/M/YYYY')
-                    .replace(/\//g, '_')}`}
-                >
-                  <Card
-                    onMouseMove={e =>
-                      this.handleMouseMove(
-                        e,
-                        `tua-${item.audio}`,
-                        item.audio,
-                        Math.trunc(dataDuration[`${item.audio}`])
-                      )
-                    }
-                    className={styles.abc}
-                    hoverable
-                    bodyStyle={{ paddingBottom: 30 }}
-                    actions={[
-                      <Tooltip title="下载">
-                        <Icon type="download" />
-                      </Tooltip>,
-                      <Tooltip
-                        // onClick={() => this.handleClickAudio(`${item.audio}`,dataDuration[`${item.audio}`])}
-                        onClick={() =>
-                          this.handleClickAudio(
-                            item.audio,
-                            Math.trunc(dataDuration[`${item.audio}`])
-                          )
-                        }
-                        title={
+                <Card
+                  onMouseMove={e =>
+                    this.handleMouseMove(
+                      e,
+                      `tua-${item.audio}`,
+                      item.audio,
+                      Math.trunc(dataDuration[`${item.audio}`])
+                    )
+                  }
+                  className={styles.abc}
+                  hoverable
+                  bodyStyle={{ paddingBottom: 30 }}
+                  actions={[
+                    <Tooltip title="下载">
+                      <Icon type="download" />
+                    </Tooltip>,
+                    <Tooltip
+                      // onClick={() => this.handleClickAudio(`${item.audio}`,dataDuration[`${item.audio}`])}
+                      onClick={() =>
+                        this.handleClickAudio(item.audio, Math.trunc(dataDuration[`${item.audio}`]))
+                      }
+                      title={
+                        !this.state[`audio-${item.audio}`]
+                          ? 'Play'
+                          : this.state[`audio-${item.audio}`].paused
+                          ? 'Play'
+                          : 'Pause'
+                      }
+                    >
+                      <Icon
+                        type={
                           !this.state[`audio-${item.audio}`]
-                            ? 'Play'
+                            ? 'play-circle'
                             : this.state[`audio-${item.audio}`].paused
-                            ? 'Play'
-                            : 'Pause'
+                            ? 'play-circle'
+                            : 'pause-circle'
                         }
-                      >
-                        <Icon
-                          type={
-                            !this.state[`audio-${item.audio}`]
-                              ? 'play-circle'
-                              : this.state[`audio-${item.audio}`].paused
-                              ? 'play-circle'
-                              : 'pause-circle'
-                          }
-                        />
-                      </Tooltip>,
-                      <Tooltip title="分享">
-                        <Icon type="share-alt" />
-                      </Tooltip>,
-                      <Dropdown overlay={itemMenu}>
-                        <Icon type="ellipsis" />
-                      </Dropdown>,
-                    ]}
+                      />
+                    </Tooltip>,
+                    <Tooltip title="分享">
+                      <Icon type="share-alt" />
+                    </Tooltip>,
+                    <Dropdown overlay={itemMenu}>
+                      <Icon type="ellipsis" />
+                    </Dropdown>,
+                  ]}
+                >
+                  <Link
+                    to={`detail-list?page=1&radio=${item.local}&gender=ALL&date=${moment(item.date)
+                      .format('D/M/YYYY')
+                      .replace(/\//g, '_')}`}
                   >
                     <Card.Meta
                       avatar={<Avatar size="small" src={item.avatar} />}
@@ -541,8 +538,8 @@ class FilterCardList extends PureComponent {
                         className={styles['border-audio']}
                       />
                     </div>
-                  </Card>
-                </Link>
+                  </Link>
+                </Card>
               </List.Item>
             )}
           />

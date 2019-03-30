@@ -30,7 +30,7 @@ class ListRadio extends PureComponent {
     loadingPage: true,
     preLoad: [1, 2, 3, 4, 5, 6, 7, 8],
     detailList: [],
-    arrFilter: ['', ''],
+    arrFilter: ['', '', ''],
     number: 0,
   };
 
@@ -45,10 +45,15 @@ class ListRadio extends PureComponent {
         arrFilter[1] = '';
       } else arrFilter[1] = this.props.location.query.radio;
     }
+    if (this.props.location.query.gender) {
+      if (this.props.location.query.gender === 'ALL') {
+        arrFilter[2] = '';
+      } else arrFilter[2] = this.props.location.query.gender;
+    }
     if (this.props.location.query.date)
       arrFilter[0] = this.props.location.query.date.replace(/\_/g, '/');
     if (this.props.location.search === '')
-      this.props.history.push({ pathname: 'detail-list', search: '?page=1&radio=ALL' });
+      this.props.history.push({ pathname: 'detail-list', search: '?page=1&radio=ALL&gender=ALL' });
   }
 
   handleChangePagination(v1, v2) {
@@ -83,7 +88,10 @@ class ListRadio extends PureComponent {
                     1}`}/${timeCreate.getFullYear()}`;
                   return stringTime === this.state.arrFilter[0];
                 }
-                return value.location === this.state.arrFilter[1];
+                if (i === 1) {
+                  return value.location === this.state.arrFilter[1];
+                }
+                return value.gender === this.state.arrFilter[2];
               });
             }
             this.setState({
@@ -156,12 +164,16 @@ class ListRadio extends PureComponent {
       }
     );
     const radio = this.props.location.query.radio;
+    const gender = this.props.location.query.gender;
     if (value2 === '') {
-      this.props.history.push({ pathname: 'detail-list', search: `?page=1&radio=${radio}` });
+      this.props.history.push({
+        pathname: 'detail-list',
+        search: `?page=1&radio=${radio}&gender=${gender}`,
+      });
     } else
       this.props.history.push({
         pathname: 'detail-list',
-        search: `?page=1&radio=${radio}&date=${value2.replace(/\//g, '_')}`,
+        search: `?page=1&radio=${radio}&gender=${gender}&date=${value2.replace(/\//g, '_')}`,
       });
   }
 
@@ -180,14 +192,47 @@ class ListRadio extends PureComponent {
         });
       }
     );
+    const gender = this.props.location.query.gender;
+    const date = this.props.location.query.date;
+    if (date) {
+      this.props.history.push({
+        pathname: 'detail-list',
+        search: `?page=1&radio=${e}&gender=${gender}&date=${date}`,
+      });
+    } else
+      this.props.history.push({
+        pathname: 'detail-list',
+        search: `?page=1&radio=${e}&gender=${gender}`,
+      });
+  }
+
+  handleChangeGender(e) {
+    const arrFilter = this.state.arrFilter;
+    if (e === 'ALL') {
+      arrFilter[2] = '';
+    } else arrFilter[2] = e;
+    this.setState(
+      {
+        arrFilter: undefined,
+      },
+      () => {
+        this.setState({
+          arrFilter,
+        });
+      }
+    );
     const radio = this.props.location.query.radio;
     const date = this.props.location.query.date;
     if (date) {
       this.props.history.push({
         pathname: 'detail-list',
-        search: `?page=1&radio=${e}&date=${date}`,
+        search: `?page=1&radio=${radio}&gender=${e}&date=${date}`,
       });
-    } else this.props.history.push({ pathname: 'detail-list', search: `?page=1&radio=${e}` });
+    } else
+      this.props.history.push({
+        pathname: 'detail-list',
+        search: `?page=1&radio=${radio}&gender=${e}`,
+      });
   }
 
   componentWillUpdate(nextProps, nextState) {
@@ -203,7 +248,10 @@ class ListRadio extends PureComponent {
                 1}`}/${timeCreate.getFullYear()}`;
               return stringTime === nextState.arrFilter[0];
             }
-            return value.location === nextState.arrFilter[1];
+            if (i === 1) {
+              return value.location === nextState.arrFilter[1];
+            }
+            return value.gender === nextState.arrFilter[2];
           });
         }
         this.setState({
@@ -250,6 +298,19 @@ class ListRadio extends PureComponent {
                 <Option value="HN">Hà Nội</Option>
                 <Option value="HCM">Hồ Chí Minh</Option>
                 <Option value="ALL">Cả hai đài</Option>
+              </Select>
+            </div>
+            <div className={styles['filter-gender']}>
+              <Select
+                defaultValue={
+                  this.props.location.query.gender ? `${this.props.location.query.gender}` : 'ALL'
+                }
+                onChange={e => this.handleChangeGender(e)}
+                placeholder="Lựa chọn"
+              >
+                <Option value="MALE">Nam</Option>
+                <Option value="FEMALE">Nữ</Option>
+                <Option value="ALL">Nam {'&'} Nữ</Option>
               </Select>
             </div>
           </div>
