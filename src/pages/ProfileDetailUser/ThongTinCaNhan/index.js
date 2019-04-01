@@ -453,7 +453,7 @@ class ThongTinCaNhan extends Component {
             </div>
             <div className={`${styles['upload-button']} upload-avatar`}>
               <Form.Item>
-                <Upload action="/upload/images" beforeUpload={this.beforeUploadAvatar}>
+                <Upload action="/upload/images" name="file" beforeUpload={this.beforeUploadAvatar}>
                   <Button icon="upload">Chọn ảnh</Button>
                 </Upload>
               </Form.Item>
