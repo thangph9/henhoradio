@@ -454,7 +454,7 @@ class ThongTinCaNhan extends Component {
             <div className={`${styles['upload-button']} upload-avatar`}>
               <Form.Item>
                 <Upload
-                  action={`${this.props.user.getsetting.upload}`}
+                  action="/upload/images"
                   listType="picture"
                   fileList={this.state.fileListAvatar}
                   onChange={e => this.handleChangeAvatar(e)}
