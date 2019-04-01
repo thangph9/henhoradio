@@ -74,11 +74,6 @@ export default {
   },
 
   proxy: {
-    '/api': {
-      target: 'https://henhoradio.net/',
-      changeOrigin: true,
-      pathRewrite: { '^/api': '' },
-    },
     '/upload': {
       target: 'http://cdn.henhoradio.net/',
       changeOrigin: true,

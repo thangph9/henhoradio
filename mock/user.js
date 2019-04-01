@@ -135,4 +135,15 @@ export default {
       path: '/base/category/list',
     });
   },
+  'GET /api/user/setting': (req, res) => {
+    res.send({
+      status: 'ok',
+      setting: {
+        cdn: '/images/ft/',
+        // cdn: 'http://cdn.henhoradio.net/images/ft/',
+        upload: '/upload/images',
+        // upload: 'http://cdn.henhoradio.net/upload/images',
+      },
+    });
+  },
 };
