@@ -72,6 +72,7 @@ export default {
   externals: {
     '@antv/data-set': 'DataSet',
   },
+
   proxy: {
     '/api': {
       target: 'https://henhoradio.net/',
@@ -81,7 +82,7 @@ export default {
     '/upload': {
       target: 'http://cdn.henhoradio.net/',
       changeOrigin: true,
-      pathRewrite: { '^/upload': '' },
+      pathRewrite: { '^/upload': 'upload' },
     },
   },
   ignoreMomentLocale: true,
