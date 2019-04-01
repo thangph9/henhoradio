@@ -279,6 +279,7 @@ class ThongTinCaNhan extends Component {
     if (e.file.response) {
       if (e.file.response.status === 'ok') {
         image = e.file.response.file.imageId;
+        console.log(image);
         this.setState({
           avatarImage: image,
           resetAvatar: true,
