@@ -276,6 +276,7 @@ class ThongTinCaNhan extends Component {
 
   handleChangeUpload(e) {
     let image = '';
+    console.log(e);
     if (e.file.response) {
       if (e.file.response.status === 'ok') {
         image = e.file.response.file.imageId;
