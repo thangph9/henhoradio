@@ -274,6 +274,19 @@ class ThongTinCaNhan extends Component {
     }
   }
 
+  handleChangeUpload(e) {
+    let image = '';
+    if (e.file.response) {
+      if (e.file.response.status === 'ok') {
+        image = e.file.response.file.imageId;
+        this.setState({
+          avatarImage: image,
+          resetAvatar: true,
+        });
+      }
+    }
+  }
+
   render() {
     const { getFieldDecorator } = this.props.form;
     const { loading } = this.props;
@@ -433,9 +446,9 @@ class ThongTinCaNhan extends Component {
               style={{
                 backgroundImage:
                   dataUser.gender === 'male'
-                    ? `url(https://twoo01-a.akamaihd.net/static/1636596845823273814/images/generic/avatar-male.jpg)`
+                    ? `url(http://cdn.henhoradio.net/images/ft/ddc8448a-9c0d-4b70-a4c4-19bc3fb7a04c)`
                     : dataUser.gender === 'female' &&
-                      `url(https://twoo01-a.akamaihd.net/static/1636596845823273814/images/generic/avatar-female.jpg)`,
+                      `url(http://cdn.henhoradio.net/images/ft/3b10bc5e-7741-41e4-88ee-0174e2d6f0cd)`,
                 backgroundColor: this.state.loadedAvatar ? 'none' : 'rgb(242, 242, 242)',
               }}
             >
@@ -453,7 +466,12 @@ class ThongTinCaNhan extends Component {
             </div>
             <div className={`${styles['upload-button']} upload-avatar`}>
               <Form.Item>
-                <Upload action="/upload/images" name="file" beforeUpload={this.beforeUploadAvatar}>
+                <Upload
+                  onChange={e => this.handleChangeUpload(e)}
+                  action="/upload/images"
+                  name="file"
+                  beforeUpload={this.beforeUploadAvatar}
+                >
                   <Button icon="upload">Chọn ảnh</Button>
                 </Upload>
               </Form.Item>
