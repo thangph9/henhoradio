@@ -124,6 +124,7 @@ class ThongTinCaNhan extends Component {
     this.state = {
       fileListAvatar: [],
       loadedAvatar: false,
+      loadingUpdateAvatar: false,
     };
   }
 
@@ -266,6 +267,7 @@ class ThongTinCaNhan extends Component {
               }${avatarImage})`;
               this.setState({
                 loadedAvatar: true,
+                loadingUpdateAvatar: false,
               });
             }
           };
@@ -276,14 +278,13 @@ class ThongTinCaNhan extends Component {
 
   handleChangeUpload(e) {
     let image = '';
-    console.log(e);
     if (e.file.response) {
       if (e.file.response.status === 'ok') {
         image = e.file.response.file.imageId;
-        console.log(image);
         this.setState({
           avatarImage: image,
           resetAvatar: true,
+          loadingUpdateAvatar: true,
         });
       }
     }
@@ -454,7 +455,25 @@ class ThongTinCaNhan extends Component {
                 backgroundColor: this.state.loadedAvatar ? 'none' : 'rgb(242, 242, 242)',
               }}
             >
-              {this.state.resetAvatar ? (
+              {this.state.loadingUpdateAvatar && (
+                <div className={styles['loading-circle']}>
+                  <div className={styles['lds-spinner']}>
+                    <div />
+                    <div />
+                    <div />
+                    <div />
+                    <div />
+                    <div />
+                    <div />
+                    <div />
+                    <div />
+                    <div />
+                    <div />
+                    <div />
+                  </div>
+                </div>
+              )}
+              {this.state.resetAvatar && !this.state.loadingUpdateAvatar ? (
                 <Tooltip placement="right" title="Huỷ bỏ">
                   <Icon
                     style={{ float: 'right', fontSize: '18px' }}
