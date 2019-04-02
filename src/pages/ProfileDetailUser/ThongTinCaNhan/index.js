@@ -122,7 +122,6 @@ class ThongTinCaNhan extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      fileListAvatar: [],
       loadedAvatar: false,
       loadingUpdateAvatar: false,
     };
@@ -167,29 +166,23 @@ class ThongTinCaNhan extends Component {
       this.setState(
         {
           dataUser: nextProps.authentication.getonlyuser,
+          avatarImage: nextProps.authentication.getonlyuser.avatar,
+          resetAvatar: false,
         },
         () => {
-          this.setState(
-            {
-              avatarImage: nextProps.authentication.getonlyuser.avatar,
-              resetAvatar: false,
-            },
-            () => {
-              const { avatarImage } = this.state;
-              const imgLoader = new Image();
-              imgLoader.src = `${nextProps.user.getsetting.cdn}${avatarImage}`;
-              imgLoader.onload = () => {
-                if (this.imgElm && avatarImage) {
-                  this.imgElm.style.backgroundImage = `${
-                    nextProps.user.getsetting.cdn
-                  }${avatarImage})`;
-                  this.setState({
-                    loadedAvatar: true,
-                  });
-                }
-              };
+          const { avatarImage } = this.state;
+          const imgLoader = new Image();
+          imgLoader.src = `${nextProps.user.getsetting.cdn}${avatarImage}`;
+          imgLoader.onload = () => {
+            if (this.imgElm && avatarImage) {
+              this.imgElm.style.backgroundImage = `url(${
+                nextProps.user.getsetting.cdn
+              }${avatarImage})`;
+              this.setState({
+                loadedAvatar: true,
+              });
             }
-          );
+          };
         }
       );
     }
@@ -231,22 +224,6 @@ class ThongTinCaNhan extends Component {
     this.setState({
       resetAvatar: false,
       avatarImage: dataUser.avatar,
-    });
-  }
-
-  handleChangeAvatar(fileListAvatar) {
-    this.setState({ fileListAvatar: fileListAvatar.fileList }, () => {
-      let image = '';
-      if (
-        this.state.fileListAvatar[this.state.fileListAvatar.length - 1] &&
-        this.state.fileListAvatar[this.state.fileListAvatar.length - 1].response
-      )
-        image = this.state.fileListAvatar[this.state.fileListAvatar.length - 1].response.file
-          .imageid;
-      this.setState({
-        avatarImage: image,
-        resetAvatar: true,
-      });
     });
   }
 
