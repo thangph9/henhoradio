@@ -40,10 +40,10 @@ class LazyImage extends PureComponent {
     const { avatar, number, user } = this.props;
     if (number < 12 && avatar) {
       const imgLoader = new Image();
-      imgLoader.src = `${user.getsetting.cdn}${avatar}`;
+      imgLoader.src = `${user.getsetting.newfeed}${avatar}`;
       imgLoader.onload = () => {
         if (this.imgElm && avatar) {
-          this.imgElm.style.backgroundImage = `url(${user.getsetting.cdn}${avatar})`;
+          this.imgElm.style.backgroundImage = `url(${user.getsetting.newfeed}${avatar})`;
           this.setState({
             loaded: true,
           });
@@ -59,10 +59,10 @@ class LazyImage extends PureComponent {
     if (!this.state.loaded && elementInViewport(this.imgElm) && avatar) {
       // Load real image
       const imgLoader = new Image();
-      imgLoader.src = `${user.getsetting.cdn}${avatar}`;
+      imgLoader.src = `${user.getsetting.newfeed}${avatar}`;
       imgLoader.onload = () => {
         if (this.imgElm && avatar) {
-          this.imgElm.style.backgroundImage = `url(${user.getsetting.cdn}${avatar})`;
+          this.imgElm.style.backgroundImage = `url(${user.getsetting.newfeed}${avatar})`;
           this.setState({
             loaded: true,
           });
@@ -80,10 +80,12 @@ class LazyImage extends PureComponent {
         },
         () => {
           const imgLoader = new Image();
-          imgLoader.src = `${user.getsetting.cdn}${nextprops.avatar}`;
+          imgLoader.src = `${user.getsetting.newfeed}${nextprops.avatar}`;
           imgLoader.onload = () => {
             if (this.imgElm && nextprops.avatar) {
-              this.imgElm.style.backgroundImage = `url(${user.getsetting.cdn}${nextprops.avatar})`;
+              this.imgElm.style.backgroundImage = `url(${user.getsetting.newfeed}${
+                nextprops.avatar
+              })`;
               this.setState({
                 loaded: true,
               });

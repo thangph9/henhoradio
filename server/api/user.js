@@ -10,7 +10,8 @@ router.get('/setting', (req, res) => {
     status: 'ok',
     setting: {
       // cdn : '/images/ft/',
-      cdn: 'http://cdn.henhoradio.net/images/normal/',
+      cdn: 'http://cdn.henhoradio.net/images/ft/',
+      newfeed: 'http://cdn.henhoradio.net/images/normal/',
       // upload: '/upload/images'
       // upload: 'http://cdn.henhoradio.net/upload/images',
     },
