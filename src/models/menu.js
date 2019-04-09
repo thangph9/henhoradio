@@ -2,7 +2,9 @@ import memoizeOne from 'memoize-one';
 import isEqual from 'lodash/isEqual';
 import { formatMessage } from 'umi/locale';
 import Authorized from '@/utils/Authorized';
+import { message } from 'antd';
 import { menu } from '../defaultSettings';
+import { getMenu } from '@/services/api';
 
 const { check } = Authorized;
 
@@ -98,6 +100,7 @@ export default {
   state: {
     menuData: [],
     breadcrumbNameMap: {},
+    getmenu: [],
   },
 
   effects: {
@@ -110,6 +113,17 @@ export default {
         payload: { menuData, breadcrumbNameMap },
       });
     },
+    *getmenu({ payload }, { call, put }) {
+      const response = yield call(getMenu, payload);
+      if (response && response.status === 'ok') {
+        yield put({
+          type: 'getMenu',
+          payload: response.data,
+        });
+      } else {
+        message.error('Hệ thống đang xảy ra lỗi !');
+      }
+    },
   },
 
   reducers: {
@@ -117,6 +131,12 @@ export default {
       return {
         ...state,
         ...action.payload,
+      };
+    },
+    getMenu(state, action) {
+      return {
+        ...state,
+        getmenu: action.payload,
       };
     },
   },

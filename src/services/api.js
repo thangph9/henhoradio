@@ -205,6 +205,11 @@ export async function getAllUsers() {
     headers: { 'X-Access-Token': JSON.parse(localStorage.getItem('token')) },
   });
 }
+export async function getMenu(params) {
+  return request(`/api/menu/getmenu/${params}`, {
+    method: 'GET',
+  });
+}
 export async function updateProfileUser(params) {
   return request('/api/authentication/updateprofileuser', {
     method: 'POST',

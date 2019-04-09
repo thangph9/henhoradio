@@ -6,7 +6,7 @@
 
 import React, { PureComponent } from 'react';
 import { connect } from 'dva';
-import { Link } from 'react-router-dom';
+import { Link, Redirect } from 'react-router-dom';
 import { Skeleton, Pagination } from 'antd';
 import LazyImage from './LazyImage';
 import { MenuMobile } from '@/components/GlobalHeader';
@@ -26,13 +26,19 @@ class NewFeed extends PureComponent {
     cdn: '',
   };
 
+  componentWillMount() {
+    const { dispatch } = this.props;
+    dispatch({
+      type: 'menu/getmenu',
+      payload: 'Trang Chủ',
+    });
+  }
+
   componentDidMount() {
     const { dispatch } = this.props;
     dispatch({
       type: 'authentication/getallusers',
     });
-    if (!this.props.location.query.page)
-      this.props.history.push({ pathname: '/home/newfeed', search: '?page=1' });
   }
 
   componentWillReceiveProps(nextProps) {
@@ -57,6 +63,9 @@ class NewFeed extends PureComponent {
         query: { page },
       },
     } = this.props;
+    if (!this.props.location.query.page) {
+      return <Redirect to="/home/newfeed?page=1" />;
+    }
     if (!myprops.menu_header_mobile) {
       return (
         <div style={{ paddingTop: '32px', background: '#f3f5f9' }}>

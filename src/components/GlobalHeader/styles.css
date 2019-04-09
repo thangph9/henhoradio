@@ -333,6 +333,8 @@
   text-align: left;
   margin-top: 3px;
   margin-left: 16px;
+  height: 40px;
+  box-sizing: border-box;
 }
 .header__navbar-left___25OFe .header__nav-item___MQLXP {
   display: inline-block;
@@ -930,4 +932,13 @@
   margin: 0.0000000000001px;
   padding: 0.0000000000001px;
   height: auto;
+}
+.background-avatar {
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: cover;
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  margin: 0 auto;
 }

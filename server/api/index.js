@@ -9,5 +9,6 @@ router.use('/upload', require('./upload'));
 router.use('/fake_list', require('./fake_list'));
 router.use('/tracklist', require('./track'));
 router.use('/members', require('./members'));
+router.use('/menu', require('./menu'));
 
 module.exports = router;

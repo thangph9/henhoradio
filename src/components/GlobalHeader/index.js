@@ -1,7 +1,7 @@
 import React, { PureComponent } from 'react';
 import { Link } from 'react-router-dom';
 import Debounce from 'lodash-decorators/debounce';
-import { Icon, Button } from 'antd';
+import { Icon } from 'antd';
 import styles from './styles.less';
 
 // eslint-disable-next-line no-undef
@@ -10,6 +10,7 @@ class GlobalHeader extends PureComponent {
   state = {
     dataUser: {},
     loaded: false,
+    menu: [],
   };
 
   componentWillUnmount() {
@@ -89,6 +90,11 @@ class GlobalHeader extends PureComponent {
         }
       );
     }
+    if (this.props.getmenu !== nextProps.getmenu) {
+      this.setState({
+        menu: nextProps.getmenu,
+      });
+    }
   }
   toggleMenuMobile() {
     this.props.dispatch({
@@ -141,88 +147,34 @@ class GlobalHeader extends PureComponent {
                 <img src="https://twoo-a.akamaihd.net/static/7156520574362430695506/images/logos/logo-twoo-flat@2x.png" />
               </Link>
               <ul
+                style={{ flexBasis: '80%', justifyContent: 'center' }}
                 className={`${styles['hidden-md-down']} ${styles['header__navbar-nav___9cfBy']} ${
                   styles['header__navbar-left___25OFe']
                 }`}
               >
-                <li className={`${styles['header__nav-item___MQLXP']}`}>
-                  <Link
-                    style={{ textDecoration: 'none' }}
-                    to={`/Amazon`}
-                    className={`${styles['header__nav-link___3W4sc']}`}
-                  >
-                    <Icon
-                      style={{ display: 'block', fontSize: '20px', marginBottom: '2px' }}
-                      type="like"
-                    />
-                    Khám phá
-                  </Link>
-                </li>
-                <li className={`${styles['header__nav-item___MQLXP']}`}>
-                  <Link
-                    style={{ textDecoration: 'none' }}
-                    to={`/ebay`}
-                    className={`${styles['header__nav-link___3W4sc']}`}
-                  >
-                    <Icon
-                      style={{ display: 'block', fontSize: '20px', marginBottom: '2px' }}
-                      type="search"
-                    />
-                    Tìm kiếm
-                  </Link>
-                </li>
-                <li className={`${styles['header__nav-item___MQLXP']}`}>
-                  <Link
-                    style={{ textDecoration: 'none' }}
-                    to={`/adidas`}
-                    className={`${styles['header__nav-link___3W4sc']}`}
-                  >
-                    <Icon
-                      style={{ display: 'block', fontSize: '20px', marginBottom: '2px' }}
-                      type="message"
-                    />
-                    Chat
-                  </Link>
-                </li>
-                <li className={`${styles['header__nav-item___MQLXP']}`}>
-                  <Link
-                    style={{ textDecoration: 'none' }}
-                    to={`/nike`}
-                    className={`${styles['header__nav-link___3W4sc']}`}
-                  >
-                    <Icon
-                      style={{ display: 'block', fontSize: '20px', marginBottom: '2px' }}
-                      type="heart"
-                    />
-                    Người thích bạn
-                  </Link>
-                </li>
-                <li className={`${styles['header__nav-item___MQLXP']}`}>
-                  <Link
-                    style={{ textDecoration: 'none' }}
-                    to={`/nike`}
-                    className={`${styles['header__nav-link___3W4sc']}`}
-                  >
-                    <Icon
-                      style={{ display: 'block', fontSize: '20px', marginBottom: '2px' }}
-                      type="eye"
-                    />
-                    Khách thăm
-                  </Link>
-                </li>
-                <li className={`${styles['header__nav-item___MQLXP']}`}>
-                  <Link
-                    style={{ textDecoration: 'none' }}
-                    to={`/nike`}
-                    className={`${styles['header__nav-link___3W4sc']}`}
-                  >
-                    <Icon
-                      style={{ display: 'block', fontSize: '20px', marginBottom: '2px' }}
-                      type="team"
-                    />
-                    Bạn bè
-                  </Link>
-                </li>
+                {this.state.menu.length > 0 ? (
+                  this.state.menu.map((v, i) => {
+                    return (
+                      <li key={i} className={`${styles['header__nav-item___MQLXP']}`}>
+                        <Link
+                          style={{ textDecoration: 'none' }}
+                          to={v.path}
+                          className={`${styles['header__nav-link___3W4sc']}`}
+                        >
+                          <Icon
+                            style={{ display: 'block', fontSize: '20px', marginBottom: '2px' }}
+                            type={v.icon}
+                          />
+                          {v.name}
+                        </Link>
+                      </li>
+                    );
+                  })
+                ) : (
+                  <li className={`${styles['header__nav-item___MQLXP']}`}>
+                    <div className={`${styles['header__nav-link___3W4sc']}`} />
+                  </li>
+                )}
               </ul>
               <ul
                 style={{ top: '-5px' }}
@@ -230,63 +182,6 @@ class GlobalHeader extends PureComponent {
                   styles['header__navbar-right___2_zf5']
                 }`}
               >
-                <li
-                  style={{ marginLeft: '10px' }}
-                  className={`${styles['header__nav-item___MQLXP']}`}
-                >
-                  <div className={`${styles['auth-buttons__auth___33bfZ']}`}>
-                    <span
-                      style={{ cursor: 'pointer', paddingTop: '10px' }}
-                      className={`${styles['auth-buttons__nav-link___1DCMU']} ${
-                        styles['auth-buttons__btn-sign-in___1nV-O']
-                      } ${styles['hiden-md']}`}
-                      href="/auth/signin?redirect=/"
-                    >
-                      <Button
-                        type="primary"
-                        style={{
-                          background: '#4CAF50',
-                          borderColor: '#4CAF50',
-                          color: '#fff',
-                          borderRadius: '20px',
-                          fontSize: '12px',
-                        }}
-                        block
-                      >
-                        Gói cao cấp
-                      </Button>
-                    </span>
-                  </div>
-                </li>
-                <li
-                  style={{ marginLeft: '10px' }}
-                  className={`${styles['header__nav-item___MQLXP']}`}
-                >
-                  <div className={`${styles['auth-buttons__auth___33bfZ']}`}>
-                    <span
-                      style={{ cursor: 'pointer', paddingTop: '10px', marginRight: '20px' }}
-                      className={`${styles['auth-buttons__nav-link___1DCMU']} ${
-                        styles['auth-buttons__btn-sign-in___1nV-O']
-                      } ${styles['hiden-md']} color-thunder`}
-                      href="/auth/signin?redirect=/"
-                    >
-                      <Button
-                        icon="thunderbolt"
-                        type="primary"
-                        style={{
-                          background: '#fff',
-                          borderColor: '#6d7c85',
-                          color: '#6d7c85',
-                          borderRadius: '20px',
-                          fontSize: '12px',
-                        }}
-                        block
-                      >
-                        Tín dụng
-                      </Button>
-                    </span>
-                  </div>
-                </li>
                 <li className={`${styles['header__nav-item___MQLXP']}`}>
                   <div className={`${styles['auth-buttons__auth___33bfZ']}`}>
                     <Link

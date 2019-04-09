@@ -16,6 +16,7 @@
 import React, { PureComponent } from 'react';
 import { connect } from 'dva';
 import { Skeleton, Icon, DatePicker, Select, Pagination } from 'antd';
+import { Redirect } from 'react-router-dom';
 import moment from 'moment';
 import styles from './index.less';
 
@@ -52,8 +53,6 @@ class ListRadio extends PureComponent {
     }
     if (this.props.location.query.date)
       arrFilter[0] = this.props.location.query.date.replace(/\_/g, '/');
-    if (this.props.location.search === '')
-      this.props.history.push({ pathname: 'detail-list', search: '?page=1&radio=ALL&gender=ALL' });
   }
 
   handleChangePagination(v1, v2) {
@@ -262,6 +261,9 @@ class ListRadio extends PureComponent {
   }
 
   render() {
+    if (this.props.location.search === '') {
+      return <Redirect to="detail-list?page=1&radio=ALL&gender=ALL" />;
+    }
     const { loadingPage, preLoad, detailList, dataFilter } = this.state;
     const { page } = this.props.location.query;
     return (
@@ -317,7 +319,7 @@ class ListRadio extends PureComponent {
           <div className={styles.row}>
             {!loadingPage
               ? (dataFilter || detailList)
-                  .filter((value, index) => index >= page * 4 - 4 && index < page * 4)
+                  .filter((value, index) => index >= page * 20 - 20 && index < page * 20)
                   .map((v, i) => (
                     <div key={i} className={styles['cart-item']}>
                       <div className={styles['box-cart']}>
@@ -419,7 +421,7 @@ class ListRadio extends PureComponent {
             onChange={(v1, v2) => this.handleChangePagination(v1, v2)}
             current={Number(this.props.location.query.page)}
             hideOnSinglePage
-            pageSize={4}
+            pageSize={20}
             total={dataFilter ? dataFilter.length : detailList.length}
           />
         </div>

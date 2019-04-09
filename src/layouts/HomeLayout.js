@@ -91,11 +91,12 @@ const query = {
     minWidth: 1600,
   },
 };
-@connect(({ list, myprops, authentication, user }) => ({
+@connect(({ list, myprops, authentication, user, menu }) => ({
   list,
   myprops,
   authentication,
   user,
+  getmenu: menu.getmenu,
 }))
 class HomeLayout extends React.PureComponent {
   constructor(props) {
