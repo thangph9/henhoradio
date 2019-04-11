@@ -200,6 +200,7 @@ function login(req, res) {
   let userInfo = [];
   let hashPassword = '';
   let token = '';
+  let rule = [];
   let verificationUrl = '';
   const tasks = [
     function validParams(callback) {
@@ -262,6 +263,7 @@ function login(req, res) {
           if (Array.isArray(_user)) {
             if (_user !== undefined && _user.length > 0) {
               hashPassword = _user[0].password;
+              rule = _user[0].rule;
             } else {
               msg = MESSAGE.USER_NOT_FOUND;
             }
@@ -312,6 +314,7 @@ function login(req, res) {
       res.json({
         status: 'ok',
         token,
+        rule,
         timeline: new Date().getTime(),
       });
     }
@@ -1196,6 +1199,7 @@ function getOnlyUser(req, res) {
     }
   );
 }
+
 router.post('/register', register);
 router.post('/login', login);
 router.get('/sendanswer', sendAnswer);

@@ -47,7 +47,7 @@ export default {
       const response = yield call(loginAccount, payload);
       if (response.status === 'ok') {
         localStorage.token = JSON.stringify(response.token);
-        setAuthority(['member']);
+        setAuthority(response.rule);
         reloadAuthorized();
         yield put({
           type: 'loginAuthentication',

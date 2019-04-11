@@ -202,6 +202,7 @@ function login(req, res) {
   const PARAM_IS_VALID = {};
   let msg = '';
   let userInfo = [];
+  let rule = [];
   let hashPassword = '';
   let token = '';
   const tasks = [
@@ -237,6 +238,7 @@ function login(req, res) {
           if (Array.isArray(_user)) {
             if (_user !== undefined && _user.length > 0) {
               hashPassword = _user[0].password;
+              rule = _user[0].rule;
             } else {
               msg = MESSAGE.USER_NOT_FOUND;
             }
@@ -288,6 +290,7 @@ function login(req, res) {
       res.json({
         status: 'ok',
         token,
+        rule,
         timeline: new Date().getTime(),
       });
     }
