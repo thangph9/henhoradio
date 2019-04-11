@@ -1,7 +1,7 @@
 import React, { PureComponent } from 'react';
 import { Link } from 'react-router-dom';
 import Debounce from 'lodash-decorators/debounce';
-import { Icon } from 'antd';
+import { Icon, Button } from 'antd';
 import styles from './styles.less';
 
 // eslint-disable-next-line no-undef
@@ -57,9 +57,11 @@ class GlobalHeader extends PureComponent {
   }
 
   componentDidMount() {
-    this.props.dispatch({
-      type: 'authentication/getonlyuser',
-    });
+    if (localStorage.token) {
+      this.props.dispatch({
+        type: 'authentication/getonlyuser',
+      });
+    }
   }
 
   componentWillReceiveProps(nextProps) {
@@ -136,6 +138,7 @@ class GlobalHeader extends PureComponent {
               />
             </Link>
             <div
+              style={{ alignItems: 'center' }}
               className={`${styles['clearfix']} ${styles['collapse']} ${
                 styles['header__navbar-collapse___2AK1h']
               }`}
@@ -176,165 +179,180 @@ class GlobalHeader extends PureComponent {
                   </li>
                 )}
               </ul>
-              <ul
-                style={{ top: '-5px' }}
-                className={`${styles['header__navbar-nav___9cfBy']} ${
-                  styles['header__navbar-right___2_zf5']
-                }`}
-              >
-                <li className={`${styles['header__nav-item___MQLXP']}`}>
-                  <div className={`${styles['auth-buttons__auth___33bfZ']}`}>
-                    <Link
-                      style={{ cursor: 'pointer', paddingTop: '13px' }}
-                      className={`${styles['auth-buttons__nav-link___1DCMU']} ${
-                        styles['auth-buttons__btn-sign-in___1nV-O']
-                      }`}
-                      to="/home/profile-user"
-                    >
-                      <div
-                        ref={imgElm => (this.imgElm = imgElm)}
-                        className={styles['background-avatar']}
-                        style={{
-                          backgroundImage:
-                            dataUser.gender === 'male'
-                              ? `url(http://cdn.henhoradio.net/images/ft/ddc8448a-9c0d-4b70-a4c4-19bc3fb7a04c)`
-                              : dataUser.gender === 'female' &&
-                                `url(http://cdn.henhoradio.net/images/ft/3b10bc5e-7741-41e4-88ee-0174e2d6f0cd)`,
-                          backgroundColor: this.state.loaded ? 'none' : 'rgb(242, 242, 242)',
-                        }}
-                      />
-                    </Link>
-                  </div>
-                </li>
-                <li
-                  style={{ marginLeft: '10px' }}
-                  className={`${styles['header__nav-item___MQLXP']}`}
+              {localStorage.token ? (
+                <ul
+                  style={{ top: '-5px' }}
+                  className={`${styles['header__navbar-nav___9cfBy']} ${
+                    styles['header__navbar-right___2_zf5']
+                  }`}
                 >
-                  <div className={`${styles['auth-buttons__auth___33bfZ']}`}>
-                    <span
-                      style={{ cursor: 'pointer', paddingTop: '13px' }}
-                      className={`${styles['auth-buttons__nav-link___1DCMU']} ${
-                        styles['auth-buttons__btn-sign-in___1nV-O']
-                      }`}
-                      href="/auth/signin?redirect=/"
-                    >
-                      <Icon style={{ display: 'block', fontSize: '25px' }} type="bell" />
-                    </span>
-                  </div>
-                </li>
-                <li
-                  style={{ marginLeft: '10px' }}
-                  className={`${styles['header__nav-item___MQLXP']}`}
-                >
-                  <div className={`${styles['auth-buttons__auth___33bfZ']}`}>
-                    <span
-                      style={{ cursor: 'pointer', paddingTop: '14px' }}
-                      className={`${styles['auth-buttons__nav-link___1DCMU']} ${
-                        styles['auth-buttons__btn-sign-in___1nV-O']
-                      }`}
-                      href="/auth/signin?redirect=/"
-                    >
-                      <Icon
-                        onClick={() => this.toggleMenu()}
-                        type="ellipsis"
-                        style={
-                          this.props.myprops.menu_header
-                            ? { display: 'block', fontSize: '25px', color: '#FFA229' }
-                            : { display: 'block', fontSize: '25px' }
-                        }
-                      />
-                    </span>
-                  </div>
-                  {this.props.myprops.menu_header ? (
-                    <div className={styles['toggle-menu']}>
-                      <Link className={styles['li-link']} to={`/account/accountinformation`}>
-                        <div className={styles['row']}>
-                          <div className={styles['col-9']}>
-                            <div className={styles['row-child']}>
-                              <div className={styles['col-2']}>
-                                <Icon type="check-circle" />
-                              </div>
-                              <div className={styles['col-10']}>Nguời bạn thích</div>
-                            </div>
-                          </div>
-                          <div className={styles['col-3']} />
-                        </div>
-                      </Link>
-                      <Link className={styles['li-link']} to={`/account/accountinformation`}>
-                        <div className={styles['row']}>
-                          <div className={styles['col-9']}>
-                            <div className={styles['row-child']}>
-                              <div className={styles['col-2']}>
-                                <Icon type="heart" />
-                              </div>
-                              <div className={styles['col-10']}>Người phù hợp</div>
-                            </div>
-                          </div>
-                          <div className={styles['col-3']} />
-                        </div>
-                      </Link>
-                      <Link className={styles['li-link']} to={`/account/accountinformation`}>
-                        <div className={styles['row']}>
-                          <div className={styles['col-9']}>
-                            <div className={styles['row-child']}>
-                              <div className={styles['col-2']}>
-                                <Icon type="thunderbolt" />
-                              </div>
-                              <div className={styles['col-10']}>Tín dụng</div>
-                            </div>
-                          </div>
-                          <div className={styles['col-3']} />
-                        </div>
-                      </Link>
-                      <Link className={styles['li-link']} to={`/account/accountinformation`}>
-                        <div className={styles['row']}>
-                          <div className={styles['col-9']}>
-                            <div className={styles['row-child']}>
-                              <div className={styles['col-2']}>
-                                <Icon type="smile" />
-                              </div>
-                              <div className={styles['col-10']}>Gây chú ý</div>
-                            </div>
-                          </div>
-                          <div className={styles['col-3']} />
-                        </div>
-                      </Link>
-                      <Link className={styles['li-link']} to={`/account/accountinformation`}>
-                        <div className={styles['row']}>
-                          <div className={styles['col-9']}>
-                            <div className={styles['row-child']}>
-                              <div className={styles['col-2']}>
-                                <Icon type="plus" />
-                              </div>
-                              <div className={styles['col-10']}>Mua gói cao cấp</div>
-                            </div>
-                          </div>
-                          <div className={styles['col-3']} />
-                        </div>
-                      </Link>
-                      <span
-                        className={styles['li-link']}
-                        onClick={() => this.handleClickLogout()}
-                        to={`/account/accountinformation`}
+                  <li className={`${styles['header__nav-item___MQLXP']}`}>
+                    <div className={`${styles['auth-buttons__auth___33bfZ']}`}>
+                      <Link
+                        style={{ cursor: 'pointer', paddingTop: '13px' }}
+                        className={`${styles['auth-buttons__nav-link___1DCMU']} ${
+                          styles['auth-buttons__btn-sign-in___1nV-O']
+                        }`}
+                        to="/home/profile-user"
                       >
-                        <div className={styles['row']}>
-                          <div className={styles['col-9']}>
-                            <div className={styles['row-child']}>
-                              <div className={styles['col-2']}>
-                                <Icon type="poweroff" />
-                              </div>
-                              <div className={styles['col-10']}>Đăng xuất</div>
-                            </div>
-                          </div>
-                          <div className={styles['col-3']} />
-                        </div>
+                        <div
+                          ref={imgElm => (this.imgElm = imgElm)}
+                          className={styles['background-avatar']}
+                          style={{
+                            backgroundImage:
+                              dataUser.gender === 'male'
+                                ? `url(http://cdn.henhoradio.net/images/ft/ddc8448a-9c0d-4b70-a4c4-19bc3fb7a04c)`
+                                : dataUser.gender === 'female' &&
+                                  `url(http://cdn.henhoradio.net/images/ft/3b10bc5e-7741-41e4-88ee-0174e2d6f0cd)`,
+                            backgroundColor: this.state.loaded ? 'none' : 'rgb(242, 242, 242)',
+                          }}
+                        />
+                      </Link>
+                    </div>
+                  </li>
+                  <li
+                    style={{ marginLeft: '10px' }}
+                    className={`${styles['header__nav-item___MQLXP']}`}
+                  >
+                    <div className={`${styles['auth-buttons__auth___33bfZ']}`}>
+                      <span
+                        style={{ cursor: 'pointer', paddingTop: '13px' }}
+                        className={`${styles['auth-buttons__nav-link___1DCMU']} ${
+                          styles['auth-buttons__btn-sign-in___1nV-O']
+                        }`}
+                        href="/auth/signin?redirect=/"
+                      >
+                        <Icon style={{ display: 'block', fontSize: '25px' }} type="bell" />
                       </span>
                     </div>
-                  ) : (
-                    ''
-                  )}
-                </li>
-              </ul>
+                  </li>
+                  <li
+                    style={{ marginLeft: '10px' }}
+                    className={`${styles['header__nav-item___MQLXP']}`}
+                  >
+                    <div className={`${styles['auth-buttons__auth___33bfZ']}`}>
+                      <span
+                        style={{ cursor: 'pointer', paddingTop: '14px' }}
+                        className={`${styles['auth-buttons__nav-link___1DCMU']} ${
+                          styles['auth-buttons__btn-sign-in___1nV-O']
+                        }`}
+                        href="/auth/signin?redirect=/"
+                      >
+                        <Icon
+                          onClick={() => this.toggleMenu()}
+                          type="ellipsis"
+                          style={
+                            this.props.myprops.menu_header
+                              ? { display: 'block', fontSize: '25px', color: '#FFA229' }
+                              : { display: 'block', fontSize: '25px' }
+                          }
+                        />
+                      </span>
+                    </div>
+                    {this.props.myprops.menu_header ? (
+                      <div className={styles['toggle-menu']}>
+                        <Link className={styles['li-link']} to={`/account/accountinformation`}>
+                          <div className={styles['row']}>
+                            <div className={styles['col-9']}>
+                              <div className={styles['row-child']}>
+                                <div className={styles['col-2']}>
+                                  <Icon type="check-circle" />
+                                </div>
+                                <div className={styles['col-10']}>Nguời bạn thích</div>
+                              </div>
+                            </div>
+                            <div className={styles['col-3']} />
+                          </div>
+                        </Link>
+                        <Link className={styles['li-link']} to={`/account/accountinformation`}>
+                          <div className={styles['row']}>
+                            <div className={styles['col-9']}>
+                              <div className={styles['row-child']}>
+                                <div className={styles['col-2']}>
+                                  <Icon type="heart" />
+                                </div>
+                                <div className={styles['col-10']}>Người phù hợp</div>
+                              </div>
+                            </div>
+                            <div className={styles['col-3']} />
+                          </div>
+                        </Link>
+                        <Link className={styles['li-link']} to={`/account/accountinformation`}>
+                          <div className={styles['row']}>
+                            <div className={styles['col-9']}>
+                              <div className={styles['row-child']}>
+                                <div className={styles['col-2']}>
+                                  <Icon type="thunderbolt" />
+                                </div>
+                                <div className={styles['col-10']}>Tín dụng</div>
+                              </div>
+                            </div>
+                            <div className={styles['col-3']} />
+                          </div>
+                        </Link>
+                        <Link className={styles['li-link']} to={`/account/accountinformation`}>
+                          <div className={styles['row']}>
+                            <div className={styles['col-9']}>
+                              <div className={styles['row-child']}>
+                                <div className={styles['col-2']}>
+                                  <Icon type="smile" />
+                                </div>
+                                <div className={styles['col-10']}>Gây chú ý</div>
+                              </div>
+                            </div>
+                            <div className={styles['col-3']} />
+                          </div>
+                        </Link>
+                        <Link className={styles['li-link']} to={`/account/accountinformation`}>
+                          <div className={styles['row']}>
+                            <div className={styles['col-9']}>
+                              <div className={styles['row-child']}>
+                                <div className={styles['col-2']}>
+                                  <Icon type="plus" />
+                                </div>
+                                <div className={styles['col-10']}>Mua gói cao cấp</div>
+                              </div>
+                            </div>
+                            <div className={styles['col-3']} />
+                          </div>
+                        </Link>
+                        <span
+                          className={styles['li-link']}
+                          onClick={() => this.handleClickLogout()}
+                          to={`/account/accountinformation`}
+                        >
+                          <div className={styles['row']}>
+                            <div className={styles['col-9']}>
+                              <div className={styles['row-child']}>
+                                <div className={styles['col-2']}>
+                                  <Icon type="poweroff" />
+                                </div>
+                                <div className={styles['col-10']}>Đăng xuất</div>
+                              </div>
+                            </div>
+                            <div className={styles['col-3']} />
+                          </div>
+                        </span>
+                      </div>
+                    ) : (
+                      ''
+                    )}
+                  </li>
+                </ul>
+              ) : (
+                <Link to="/login?ref=0">
+                  <Button
+                    style={{
+                      background: '#FF7102',
+                      borderRadius: '30px',
+                      color: '#fff',
+                      border: 'none',
+                    }}
+                  >
+                    Đăng nhập
+                  </Button>
+                </Link>
+              )}
             </div>
           </div>
         </nav>

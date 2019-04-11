@@ -118,7 +118,6 @@ export default {
     *getmenu({ payload }, { call, put }) {
       const response = yield call(getMenu, payload);
       if (response && response.status === 'ok') {
-        console.log(getMenuItem(response.data));
         yield put({
           type: 'getMenu',
           payload: getMenuItem(response.data),

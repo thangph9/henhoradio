@@ -30,7 +30,7 @@ class NewFeed extends PureComponent {
     const { dispatch } = this.props;
     dispatch({
       type: 'menu/getmenu',
-      payload: 'Trang Chủ',
+      payload: 'HomePage',
     });
   }
 
