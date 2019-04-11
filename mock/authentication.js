@@ -131,6 +131,7 @@ function register(req, res) {
         const loginObject = {
           phone: PARAM_IS_VALID.phone,
           password: hash,
+          rule: ['member'],
           password_hash_algorithm: 'bcrypt',
           password_salt: salt,
           user_id: PARAM_IS_VALID.user_id,

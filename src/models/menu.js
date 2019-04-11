@@ -94,6 +94,8 @@ const getBreadcrumbNameMap = menuData => {
 
 const memoizeOneGetBreadcrumbNameMap = memoizeOne(getBreadcrumbNameMap, isEqual);
 
+const getMenuItem = data => data.map(item => check(item.authority, item)).filter(item => item);
+
 export default {
   namespace: 'menu',
 
@@ -116,9 +118,10 @@ export default {
     *getmenu({ payload }, { call, put }) {
       const response = yield call(getMenu, payload);
       if (response && response.status === 'ok') {
+        console.log(getMenuItem(response.data));
         yield put({
           type: 'getMenu',
-          payload: response.data,
+          payload: getMenuItem(response.data),
         });
       } else {
         message.error('Hệ thống đang xảy ra lỗi !');

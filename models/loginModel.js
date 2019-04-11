@@ -8,6 +8,10 @@ module.exports = {
     password: 'text',
     password_hash_algorithm: 'text',
     password_salt: 'text',
+    rule: {
+      type: 'set',
+      typeDef: '<text>',
+    },
   },
   key: ['phone', 'user_id'],
 };
