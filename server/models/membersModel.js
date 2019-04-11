@@ -13,6 +13,7 @@ module.exports = {
       type: 'map',
       typeDef: '<text,text>',
     },
+    prefix: 'text',
     job: 'text',
     relationship: 'text',
     address: 'text',
