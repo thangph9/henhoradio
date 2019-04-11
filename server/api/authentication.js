@@ -133,7 +133,7 @@ function register(req, res) {
           password: hash,
           password_hash_algorithm: 'bcrypt',
           password_salt: salt,
-          rule: ['member'],
+          rule: ['Member'],
           user_id: PARAM_IS_VALID.user_id,
         };
         /* eslint-disable new-cap */

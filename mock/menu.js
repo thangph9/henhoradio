@@ -24,7 +24,7 @@ const jwtprivate = fs.readFileSync('./ssl/jwtprivate.pem', 'utf8');
 const menu = [
   {
     menuid: '1c24cf55-9ecc-4660-b6f3-5748d1b552af',
-    name: 'Trang Chủ',
+    name: 'HomePage',
   },
 ];
 const menuItem = [
@@ -39,7 +39,7 @@ const menuItem = [
   {
     menuitemid: '8942413b-c54b-4d08-a347-f4b25ea5fb04',
     activeicon: 'team',
-    authority: ['diamond', 'gold', 'platium', 'premium', 'silver'],
+    authority: ['diamond', 'gold', 'platium', 'premium', 'silver', 'member'],
     icon: 'team',
     name: 'Quan tâm',
     path: '/home/newfeed',
@@ -96,7 +96,7 @@ const menugroup = [
     orderby: 1,
   },
 ];
-function getMenu(req, res) {
+function getMenu1(req, res) {
   const params = req.params;
   const menuReq = menu.find(element => element.name === params.menu);
   const menugroupReq = menugroup.filter(element => element.menuid === menuReq.menuid);
@@ -107,7 +107,79 @@ function getMenu(req, res) {
   });
   return res.json({ status: 'ok', data: menuItemReq });
 }
+function getMenu(req, res) {
+  const params = req.params;
+  let menuReq = {};
+  let menugroupReq = [];
+  let menuItemReq = [];
 
+  async.series(
+    [
+      callback => {
+        try {
+          models.instance.menu.find({}, {}, function(err, menu) {
+            if (menu && menu.length > 0) {
+              menuReq = menu.find(element => element.name === params.menu);
+            } else {
+              return res.json({
+                status: 'error',
+              });
+            }
+            callback(err, null);
+          });
+        } catch (e) {
+          console.log(e);
+        }
+      },
+      callback => {
+        try {
+          models.instance.menuGroup.find({}, {}, function(err, menugroup) {
+            if (menugroup && menugroup.length > 0) {
+              menugroupReq = menugroup.filter(
+                element => element.menuid.toString() === menuReq.menuid.toString()
+              );
+            } else {
+              return res.json({
+                status: 'error',
+              });
+            }
+            callback(err, null);
+          });
+        } catch (e) {
+          console.log(e);
+        }
+      },
+      callback => {
+        try {
+          models.instance.menuItem.find({}, {}, function(err, menuitem) {
+            if (menuitem && menuitem.length > 0) {
+              menugroupReq.forEach((element, index) => {
+                let obj = menuitem.find(
+                  value => value.menuitemid.toString() === element.menuitemid.toString()
+                );
+                menuItemReq.push(obj);
+              });
+              callback(err, null);
+            } else {
+              return res.json({
+                status: 'error',
+              });
+            }
+          });
+        } catch (e) {
+          console.log(e);
+        }
+      },
+    ],
+    err => {
+      if (err) return res.json({ status: 'error' });
+      return res.json({
+        status: 'ok',
+        data: menuItemReq,
+      });
+    }
+  );
+}
 export default {
   'GET /api/menu/getmenu/:menu': getMenu,
 };

@@ -31,8 +31,8 @@ export default [
   {
     path: '/home',
     component: '../layouts/HomeLayout',
-    Routes: ['src/pages/Authorized'],
-    authority: ['member'],
+    // Routes: ['src/pages/Authorized'],
+    // authority: ['member'],
     routes: [
       { path: '/home', redirect: './newfeed' },
       { path: '/home/newfeed', component: './HomePage' },
