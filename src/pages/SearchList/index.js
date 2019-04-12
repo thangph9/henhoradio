@@ -23,7 +23,7 @@
 /* eslint-disable jsx-a11y/media-has-caption */
 /* eslint-disable class-methods-use-this */
 import React, { PureComponent } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, Redirect } from 'react-router-dom';
 import { connect } from 'dva';
 import moment from 'moment';
 import {
@@ -79,8 +79,6 @@ class FilterCardList extends PureComponent {
     }
     if (this.props.location.query.date)
       arrFilter[0] = this.props.location.query.date.replace(/\_/g, '/');
-    if (this.props.location.search === '')
-      this.props.history.push({ pathname: 'search-list', search: '?page=1&radio=ALL' });
   }
 
   componentWillUnmount() {}
@@ -351,7 +349,7 @@ class FilterCardList extends PureComponent {
       </Menu>
     );
     let paginationProps = {
-      pageSize: 4,
+      pageSize: 20,
       hideOnSinglePage: true,
       total: dataFilter ? dataFilter.length : dataList.length,
       current: Number(this.props.location.query.page),
@@ -360,6 +358,9 @@ class FilterCardList extends PureComponent {
     const timeCreate = new Date(new Date().getTime());
     const stringTime = `${`${timeCreate.getDate()}`}/${`${timeCreate.getMonth() +
       1}`}/${timeCreate.getFullYear()}`;
+    if (this.props.location.search === '') {
+      return <Redirect to="search-list?page=1&radio=ALL" />;
+    }
     return (
       <div style={{ marginTop: '20px' }} className={`${styles.filterCardList} ${styles.container}`}>
         <div className={styles.search} style={{ textAlign: 'center' }}>
@@ -524,7 +525,7 @@ class FilterCardList extends PureComponent {
                         type="audio/mpeg"
                         style={{ display: 'none' }}
                         id={item.audio}
-                        src={`http://35.192.153.201:8080/upload/audio/local/${item.audio}`}
+                        src={`http://cdn.henhoradio.net/upload/audio/local/${item.audio}`}
                       />
                       <div
                         style={
