@@ -26,7 +26,7 @@ function getTrackList(req, res) {
       function(callback) {
         try {
           result.forEach(element => {
-            getAudioDurationInSeconds(`.././cms_hhr/public/files/${element.audio}.MP3`).then(
+            getAudioDurationInSeconds(`.././cdn/static/data/audio/${element.audio}.MP3`).then(
               duration => {
                 obj[`${element.audio}`] = duration;
                 if (Object.keys(obj).length === result.length) {
