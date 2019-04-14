@@ -152,12 +152,16 @@
   position: absolute;
   bottom: 0.00000001px;
   width: 100%;
+  -webkit-appearance: none;
   &::-webkit-slider-thumb {
+    -webkit-appearance: none;
     height: 12px;
     width: 12px;
     border-radius: 50%;
     background: red;
     border: none;
+    position: relative;
+    top: -4px;
   }
   &::-moz-range-thumb {
     height: 12px;
