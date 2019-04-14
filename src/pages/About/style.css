@@ -85,19 +85,10 @@
   left: 0;
   bottom: 0;
   right: 0;
-}
-.splashdtf-hero-image-hands {
-  background-position: calc(425%) calc(110%);
   background-repeat: no-repeat;
-  background-image: url('https://cdn.okccdn.com/media/img/dtf/photos/hands.jpg');
 }
 .static {
   position: static !important;
-}
-.splashdtf-hero-image-facepaint {
-  background-position: calc(350%) calc(110%);
-  background-repeat: no-repeat;
-  background-image: url('https://cdn.okccdn.com/media/img/dtf/photos/facepaint.jpg');
 }
 .active {
   opacity: 1;
@@ -243,6 +234,7 @@
   display: flex;
   text-align: left;
   flex-wrap: wrap;
+  justify-content: center;
 }
 .splashdtf-footer-nav-item {
   text-transform: uppercase;
@@ -334,6 +326,9 @@
   .container {
     padding-left: 10px;
     padding-right: 10px;
+  }
+  .splashdtf-hero {
+    display: none;
   }
   .conent-item {
     padding-bottom: 0.000000001px;

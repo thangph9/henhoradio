@@ -26,14 +26,6 @@ class NewFeed extends PureComponent {
     cdn: '',
   };
 
-  componentWillMount() {
-    const { dispatch } = this.props;
-    dispatch({
-      type: 'menu/getmenu',
-      payload: 'HomePage',
-    });
-  }
-
   componentDidMount() {
     const { dispatch } = this.props;
     dispatch({

@@ -1,3 +1,4 @@
+/* eslint-disable no-return-assign */
 /* eslint-disable react/no-will-update-set-state */
 /* eslint-disable no-continue */
 /* eslint-disable react/sort-comp */
@@ -17,6 +18,7 @@ import React, { PureComponent } from 'react';
 import { connect } from 'dva';
 import { Skeleton, Icon, DatePicker, Select, Pagination } from 'antd';
 import { Redirect } from 'react-router-dom';
+import ReactPlayer from 'react-player';
 import moment from 'moment';
 import styles from './index.less';
 
@@ -33,6 +35,8 @@ class ListRadio extends PureComponent {
     detailList: [],
     arrFilter: ['', '', ''],
     number: 0,
+    played: 0,
+    loaded: 0,
   };
 
   componentDidMount() {
@@ -234,6 +238,14 @@ class ListRadio extends PureComponent {
       });
   }
 
+  componentWillMount() {
+    const { dispatch } = this.props;
+    dispatch({
+      type: 'menu/getmenu',
+      payload: 'HomePage',
+    });
+  }
+
   componentWillUpdate(nextProps, nextState) {
     if (this.state.arrFilter !== nextState.arrFilter) {
       if (nextState.arrFilter) {
@@ -260,11 +272,72 @@ class ListRadio extends PureComponent {
     }
   }
 
+  //---------------------------------
+
+  playAudioReact(value) {
+    const { globalPlaying } = this.state;
+    if (!globalPlaying || globalPlaying === value) {
+      this.setState(prevState => ({
+        globalPlaying: value,
+        [value]: !prevState[value],
+      }));
+    } else {
+      this.setState(prevState => ({
+        [globalPlaying]: false,
+        [value]: !prevState[value],
+        globalPlaying: value,
+      }));
+    }
+  }
+
+  onProgress(state, audio) {
+    if (this.state[audio]) {
+      this.setState(
+        {
+          [audio]: state.playedSeconds,
+        },
+        () => {
+          this[`input-played-${audio}`].value = this.state[audio];
+        }
+      );
+    }
+  }
+
+  onSeekMouseDown(e, v) {}
+
+  onSeekChange(e, v) {
+    this.setState({ played: parseFloat(e.target.value) });
+  }
+
+  onSeekMouseUp(e, v) {
+    if (e.target.value < this.state[`duration-${v}`]) {
+      this[`player-${v}`].seekTo(e.target.value);
+    }
+  }
+
+  onSeek(e) {
+    // console.log('onSeek', e)
+  }
+
+  onDuration(duration, audio) {
+    this.setState({
+      [`duration-${audio}`]: duration,
+    });
+  }
+
+  onEnded(audio) {
+    console.log('ended');
+    this.setState({
+      globalPlaying: undefined,
+      [audio]: false,
+    });
+  }
+
   render() {
     if (this.props.location.search === '') {
       return <Redirect to="detail-list?page=1&radio=ALL&gender=ALL" />;
     }
-    const { loadingPage, preLoad, detailList, dataFilter } = this.state;
+    const { loadingPage, preLoad, detailList, dataFilter, globalPlaying, played } = this.state;
     const { page } = this.props.location.query;
     return (
       <div style={{ paddingTop: '32px', background: '#f3f5f9' }}>
@@ -345,7 +418,8 @@ class ListRadio extends PureComponent {
                             <h4>{moment(v.timeup).format('DD/MM/YYYY')}</h4>
                           </li>
                         </div>
-                        <div
+                        {/*
+                          <div
                           id={`slide-${v.audio}`}
                           onClick={e => this.handleClickSlidePlay(e, v.audio, v.duration)}
                           className={styles['slide-play']}
@@ -364,10 +438,30 @@ class ListRadio extends PureComponent {
                             <div className={styles.dots} />
                           </div>
                         </div>
+                        */}
+                        <div className={styles.range}>
+                          <input
+                            className={styles['input-played']}
+                            ref={input => (this[`input-played-${v.audio}`] = input)}
+                            type="range"
+                            min={0}
+                            max={
+                              this.state[`duration-${v.audio}`]
+                                ? this.state[`duration-${v.audio}`]
+                                : 0
+                            }
+                            step="any"
+                            // value={this.state[`played-${v.audio}`]?this.state[`played-${v.audio}`]:0}
+                            onMouseDown={e => this.onSeekMouseDown(e, `player-${v.audio}`)}
+                            onChange={e => this.onSeekChange(e, `player-${v.audio}`)}
+                            onMouseUp={e => this.onSeekMouseUp(e, v.audio)}
+                          />
+                        </div>
                         <div className={styles['title-cart']}>
                           <div className={styles['play-icon']}>
                             <Icon
-                              onClick={() => this.handleClickPlay(v.audio)}
+                              // onClick={() => this.handleClickPlay(v.audio)}
+                              onClick={() => this.playAudioReact(v.audio)}
                               type={
                                 !this.state[`${v.audio}`]
                                   ? 'play-circle'
@@ -378,12 +472,20 @@ class ListRadio extends PureComponent {
                             />
                           </div>
                         </div>
-                        <audio
-                          controls
-                          type="audio/mpeg"
-                          style={{ display: 'none' }}
-                          id={v.audio}
-                          src={v.audio}
+                        <ReactPlayer
+                          playing={this.state[v.audio]}
+                          ref={player => (this[`player-${v.audio}`] = player)}
+                          width="0%"
+                          height="0%"
+                          loop={false}
+                          onSeek={e => this.onSeek(e)}
+                          url={`http://cdn.henhoradio.net/upload/audio/local/${v.audio}`}
+                          onProgress={e => this.onProgress(e, v.audio)}
+                          config={{
+                            file: { forceAudio: true },
+                          }}
+                          onDuration={e => this.onDuration(e, v.audio)}
+                          onEnded={() => this.onEnded(v.audio)}
                         />
                       </div>
                     </div>
@@ -397,6 +499,16 @@ class ListRadio extends PureComponent {
                         <li className={styles['li-skeleton']} />
                         <li className={styles['li-skeleton']} />
                         <li className={styles['li-skeleton']} />
+                      </div>
+                      <div className={styles.range}>
+                        <input
+                          className={styles['input-played']}
+                          type="range"
+                          min={0}
+                          max={100}
+                          step="any"
+                          value={0}
+                        />
                       </div>
                       <div
                         style={{ borderTop: '1px solid #95a5a6' }}

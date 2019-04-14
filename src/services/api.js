@@ -238,3 +238,9 @@ export async function getFakeCaptcha(mobile) {
 export async function getSetting() {
   return request(`/api/user/setting`);
 }
+export async function getConfigAbout() {
+  return request(`/api/about/getabout`);
+}
+export async function getConfigLogin() {
+  return request(`/api/about/getlogin`);
+}

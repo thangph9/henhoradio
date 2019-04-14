@@ -81,7 +81,13 @@ class FilterCardList extends PureComponent {
       arrFilter[0] = this.props.location.query.date.replace(/\_/g, '/');
   }
 
-  componentWillUnmount() {}
+  componentWillMount() {
+    const { dispatch } = this.props;
+    dispatch({
+      type: 'menu/getmenu',
+      payload: 'HomePage',
+    });
+  }
 
   handleClickSlideBarAudio(e, v, v2, v3) {
     const tua = document.getElementById(v);

@@ -16,12 +16,12 @@ export default [
   },
   {
     path: '/search-list',
-    component: '../layouts/EmptyLayout',
+    component: '../layouts/HomeLayout',
     routes: [{ path: '/search-list', component: './SearchList' }],
   },
   {
     path: '/detail-list',
-    component: '../layouts/EmptyLayout',
+    component: '../layouts/HomeLayout',
     routes: [{ path: '/detail-list', component: './DetailListRadio' }],
   },
   {
