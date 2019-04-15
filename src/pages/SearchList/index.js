@@ -232,7 +232,7 @@ class ListRadio extends PureComponent {
 
   render() {
     if (this.props.location.search === '') {
-      return <Redirect to="detail-list?page=1&radio=ALL" />;
+      return <Redirect to="search-list?page=1&radio=ALL" />;
     }
     const { loadingPage, preLoad, detailList, dataFilter, globalPlaying, played } = this.state;
     const { page } = this.props.location.query;
