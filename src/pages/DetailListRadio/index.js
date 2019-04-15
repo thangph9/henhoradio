@@ -1,3 +1,5 @@
+/* eslint-disable react/jsx-closing-tag-location */
+/* eslint-disable react/jsx-closing-bracket-location */
 /* eslint-disable no-return-assign */
 /* eslint-disable react/no-will-update-set-state */
 /* eslint-disable no-continue */
@@ -439,19 +441,21 @@ class ListRadio extends PureComponent {
                           </li>
                           <li>
                             <h4>Thời lượng:</h4>
-                            <h4>
-                              {this.getTimeInAudio(
-                                this[`input-played-${v.audio}`]
-                                  ? this[`input-played-${v.audio}`].value
-                                  : 0
-                              )}
-                              /
-                              {this.getTimeInAudio(
-                                this.state[`duration-${v.audio}`]
-                                  ? this.state[`duration-${v.audio}`]
-                                  : 0
-                              )}
-                            </h4>
+                            {this.state[`duration-${v.audio}`] && (
+                              <h4>
+                                {this.getTimeInAudio(
+                                  this[`input-played-${v.audio}`]
+                                    ? this[`input-played-${v.audio}`].value
+                                    : 0
+                                )}
+                                /
+                                {this.getTimeInAudio(
+                                  this.state[`duration-${v.audio}`]
+                                    ? this.state[`duration-${v.audio}`]
+                                    : 0
+                                )}
+                              </h4>
+                            )}
                           </li>
                         </div>
                         <div className={styles.range}>
@@ -476,17 +480,20 @@ class ListRadio extends PureComponent {
                         </div>
                         <div className={styles['title-cart']}>
                           <div className={styles['play-icon']}>
-                            <Icon
-                              // onClick={() => this.handleClickPlay(v.audio)}
-                              onClick={() => this.playAudioReact(v.audio)}
-                              type={
-                                !this.state[`${v.audio}`]
-                                  ? 'play-circle'
-                                  : this.state[`${v.audio}`].paused
-                                  ? 'play-circle'
-                                  : 'pause-circle'
-                              }
-                            />
+                            {this.state[`duration-${v.audio}`] ? (
+                              <Icon
+                                onClick={() => this.playAudioReact(v.audio)}
+                                type={
+                                  !this.state[`${v.audio}`]
+                                    ? 'play-circle'
+                                    : this.state[`${v.audio}`].paused
+                                    ? 'play-circle'
+                                    : 'pause-circle'
+                                }
+                              />
+                            ) : (
+                              <Icon type="loading" />
+                            )}
                           </div>
                         </div>
                         <ReactPlayer
