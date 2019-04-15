@@ -341,6 +341,18 @@ class ListRadio extends PureComponent {
     );
   }
 
+  getTimeInAudio(value) {
+    if (value >= 3600) {
+      const h = value / 3600;
+      const m = (value % 3600) / 60;
+      const s = (value % 3600) % 60;
+      return `${Math.trunc(h)}:${Math.trunc(m)}:${Math.trunc(s)}`;
+    }
+    const m = value / 60;
+    const s = value % 60;
+    return `${Math.trunc(m)}:${Math.trunc(s)}`;
+  }
+
   render() {
     if (this.props.location.search === '') {
       return <Redirect to="detail-list?page=1&radio=ALL&gender=ALL" />;
@@ -422,14 +434,30 @@ class ListRadio extends PureComponent {
                             <h4>{v.location === 'HN' ? 'Hà Nội' : 'Hồ Chí Minh'}</h4>
                           </li>
                           <li>
-                            <h4>Thời gian:</h4>
+                            <h4>Ngày lên sóng:</h4>
                             <h4>{moment(v.timeup).format('DD/MM/YYYY')}</h4>
                           </li>
+                          <li>
+                            <h4>Thời lượng:</h4>
+                            <h4>
+                              {this.getTimeInAudio(
+                                this[`input-played-${v.audio}`]
+                                  ? this[`input-played-${v.audio}`].value
+                                  : 0
+                              )}
+                              /
+                              {this.getTimeInAudio(
+                                this.state[`duration-${v.audio}`]
+                                  ? this.state[`duration-${v.audio}`]
+                                  : 0
+                              )}
+                            </h4>
+                          </li>
                         </div>
-
                         <div className={styles.range}>
                           <input
                             className={styles['input-played']}
+                            name={`name-${v.audio}`}
                             ref={input => (this[`input-played-${v.audio}`] = input)}
                             type="range"
                             min={0}

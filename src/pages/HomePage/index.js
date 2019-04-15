@@ -109,6 +109,7 @@ class NewFeed extends PureComponent {
               }}
               onChange={(v1, v2) => this.handleChangePagination(v1, v2)}
               current={Number(page)}
+              hideOnSinglePage
               pageSize={20}
               total={allUser.length}
             />
