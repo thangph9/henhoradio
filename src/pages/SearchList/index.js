@@ -232,15 +232,11 @@ class ListRadio extends PureComponent {
   }
 
   onEnded(audio) {
-    this.setState(
-      {
-        globalPlaying: undefined,
-        [audio]: false,
-      },
-      () => {
-        this[`input-played-${audio}`].value = 0;
-      }
-    );
+    this[`input-played-${audio}`].value = 0;
+    this.setState({
+      globalPlaying: undefined,
+      [audio]: false,
+    });
   }
 
   render() {
