@@ -11,7 +11,7 @@ export default {
 
   state: {
     list: [],
-    tracklist: {},
+    tracklist: [],
   },
 
   effects: {
@@ -46,7 +46,7 @@ export default {
       const response = yield call(trackList, payload);
       yield put({
         type: 'trackList',
-        payload: response || {},
+        payload: response.data || [],
       });
     },
   },

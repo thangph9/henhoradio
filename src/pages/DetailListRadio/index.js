@@ -62,13 +62,17 @@ class ListRadio extends PureComponent {
   handleChangePagination(v1, v2) {
     const radio = this.props.location.query.radio;
     const date = this.props.location.query.date;
+    const gender = this.props.location.query.gender;
     if (date) {
       this.props.history.push({
         pathname: `detail-list`,
-        search: `?page=${v1}&radio=${radio}&date=${date}`,
+        search: `?page=${v1}&radio=${radio}&gender=${gender}&date=${date}`,
       });
     } else
-      this.props.history.push({ pathname: `detail-list`, search: `?page=${v1}&radio=${radio}` });
+      this.props.history.push({
+        pathname: `detail-list`,
+        search: `?page=${v1}&radio=${radio}&gender=${gender}`,
+      });
   }
 
   componentWillReceiveProps(nextProps) {
@@ -326,11 +330,15 @@ class ListRadio extends PureComponent {
   }
 
   onEnded(audio) {
-    console.log('ended');
-    this.setState({
-      globalPlaying: undefined,
-      [audio]: false,
-    });
+    this.setState(
+      {
+        globalPlaying: undefined,
+        [audio]: false,
+      },
+      () => {
+        this[`input-played-${audio}`].value = 0;
+      }
+    );
   }
 
   render() {
@@ -406,8 +414,8 @@ class ListRadio extends PureComponent {
                             <h4>{v.gender === 'MALE' ? 'Nam' : 'Nữ'}</h4>
                           </li>
                           <li>
-                            <h4>MC:</h4>
-                            <h4>Như Ngọc</h4>
+                            <h4>Hôn nhân:</h4>
+                            <h4>{v.relationship}</h4>
                           </li>
                           <li>
                             <h4>Đài phát:</h4>
@@ -418,27 +426,7 @@ class ListRadio extends PureComponent {
                             <h4>{moment(v.timeup).format('DD/MM/YYYY')}</h4>
                           </li>
                         </div>
-                        {/*
-                          <div
-                          id={`slide-${v.audio}`}
-                          onClick={e => this.handleClickSlidePlay(e, v.audio, v.duration)}
-                          className={styles['slide-play']}
-                        >
-                          <div
-                            style={
-                              this.state[`current-time-${v.audio}`]
-                                ? {
-                                    width: `${(this.state[`current-time-${v.audio}`] * 100) /
-                                      v.duration}%`,
-                                  }
-                                : { width: '0%' }
-                            }
-                            className={styles.played}
-                          >
-                            <div className={styles.dots} />
-                          </div>
-                        </div>
-                        */}
+
                         <div className={styles.range}>
                           <input
                             className={styles['input-played']}
@@ -451,8 +439,9 @@ class ListRadio extends PureComponent {
                                 : 0
                             }
                             step="any"
-                            // value={this.state[`played-${v.audio}`]?this.state[`played-${v.audio}`]:0}
                             onMouseDown={e => this.onSeekMouseDown(e, `player-${v.audio}`)}
+                            onPointerDown={e => this.onSeekMouseDown(e, `player-${v.audio}`)}
+                            onPointerUp={e => this.onSeekMouseUp(e, v.audio)}
                             onChange={e => this.onSeekChange(e, `player-${v.audio}`)}
                             onMouseUp={e => this.onSeekMouseUp(e, v.audio)}
                           />
