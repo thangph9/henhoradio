@@ -535,20 +535,16 @@ class ListRadio extends PureComponent {
                         </div>
                         <div className={styles['title-cart']}>
                           <div className={styles['play-icon']}>
-                            {this.state[`duration-${v.audio}`] ? (
-                              <Icon
-                                onClick={() => this.playAudioReact(v.audio)}
-                                type={
-                                  !this.state[`${v.audio}`]
-                                    ? 'play-circle'
-                                    : this.state[`${v.audio}`].paused
-                                    ? 'play-circle'
-                                    : 'pause-circle'
-                                }
-                              />
-                            ) : (
-                              <Icon type="loading" />
-                            )}
+                            <Icon
+                              onClick={() => this.playAudioReact(v.audio)}
+                              type={
+                                !this.state[`${v.audio}`]
+                                  ? 'play-circle'
+                                  : this.state[`${v.audio}`].paused
+                                  ? 'play-circle'
+                                  : 'pause-circle'
+                              }
+                            />
                           </div>
                         </div>
                         <ReactPlayer
