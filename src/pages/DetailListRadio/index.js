@@ -415,27 +415,27 @@ class ListRadio extends PureComponent {
                     <div key={i} className={styles['cart-item']}>
                       <div className={styles['box-cart']}>
                         <ul className={styles['member-information']}>
-                          <li>
+                          <div className={styles['list-menu']}>
                             <h4>Lên sóng:</h4>
                             <h4>{v.name}</h4>
-                          </li>
-                          <li>
+                          </div>
+                          <div className={styles['list-menu']}>
                             <h4>Giới tính:</h4>
                             <h4>{v.gender === 'MALE' ? 'Nam' : 'Nữ'}</h4>
-                          </li>
-                          <li>
+                          </div>
+                          <div className={styles['list-menu']}>
                             <h4>Hôn nhân:</h4>
                             <h4>{v.relationship}</h4>
-                          </li>
-                          <li>
+                          </div>
+                          <div className={styles['list-menu']}>
                             <h4>Đài phát:</h4>
                             <h4>{v.location === 'HN' ? 'Hà Nội' : 'Hồ Chí Minh'}</h4>
-                          </li>
-                          <li>
+                          </div>
+                          <div className={styles['list-menu']}>
                             <h4>Ngày lên sóng:</h4>
                             <h4>{moment(v.timeup).format('DD/MM/YYYY')}</h4>
-                          </li>
-                          <li>
+                          </div>
+                          <div className={styles['list-menu']}>
                             <h4>Thời lượng:</h4>
                             {this.state[`duration-${v.audio}`] && (
                               <h4>
@@ -452,7 +452,7 @@ class ListRadio extends PureComponent {
                                 )}
                               </h4>
                             )}
-                          </li>
+                          </div>
                         </ul>
                         <div className={styles.range}>
                           <input

@@ -4,6 +4,9 @@
   margin-right: auto;
   background-color: #f3f5f9;
 }
+li {
+  list-style: none;
+}
 .filter-data {
   padding: 5px;
   display: flex;
@@ -65,12 +68,11 @@
   flex-direction: column;
   justify-content: center;
 }
-.member-information li {
-  list-style: none;
+.member-information .list-menu {
   display: flex;
   justify-content: space-between;
 }
-.member-information li h4 {
+.member-information .list-menu h4 {
   color: black;
 }
 .background-avatar {
