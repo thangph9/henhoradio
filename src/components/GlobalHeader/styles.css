@@ -555,6 +555,7 @@
   .item-align {
     display: flex;
     align-items: center;
+    justify-content: center;
   }
   .header__my-navbar___2Cghd {
     padding: 9px 5px;

@@ -382,27 +382,25 @@ class GlobalHeader extends PureComponent {
               style={{ height: '100%' }}
               className={`${styles['header__mobile-nav-cat___1wJ9O']} ${styles['item-align']}`}
             >
-              <li className={`${styles['header__nav-item___MQLXP']}`}>
-                <Icon
-                  style={{ display: 'block', fontSize: '27px', marginBottom: '2px' }}
-                  type="like"
-                />
-              </li>
-              <li className={`${styles['header__nav-item___MQLXP']}`}>
-                <Icon
-                  style={{ display: 'block', fontSize: '27px', marginBottom: '2px' }}
-                  type="search"
-                />
-              </li>
-              <li className={`${styles['header__nav-item___MQLXP']}`}>
-                <Icon
-                  style={{ display: 'block', fontSize: '27px', marginBottom: '2px' }}
-                  type="message"
-                />
-              </li>
-              <li className={`${styles['header__nav-item___MQLXP']}`}>
-                <Icon style={{ display: 'block', fontSize: '27px' }} type="bell" />
-              </li>
+              {this.state.menu.length > 0
+                ? this.state.menu.map((v, i) => {
+                    return (
+                      <li key={i} className={`${styles['header__nav-item___MQLXP']}`}>
+                        <Link to={v.path}>
+                          <Icon
+                            style={{
+                              display: 'block',
+                              fontSize: '27px',
+                              marginBottom: '2px',
+                              color: '#333',
+                            }}
+                            type={v.icon}
+                          />
+                        </Link>
+                      </li>
+                    );
+                  })
+                : ''}
               <li className={`${styles['header__nav-item___MQLXP']}`}>
                 <Icon
                   onClick={() => this.toggleMenuMobile()}
@@ -410,7 +408,7 @@ class GlobalHeader extends PureComponent {
                   style={
                     this.props.myprops.menu_header_mobile
                       ? { display: 'block', fontSize: '25px', color: '#FFA229' }
-                      : { display: 'block', fontSize: '25px' }
+                      : { display: 'block', fontSize: '25px', color: '#333' }
                   }
                 />
               </li>

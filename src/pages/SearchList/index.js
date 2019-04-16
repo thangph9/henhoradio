@@ -408,16 +408,16 @@ class ListRadio extends PureComponent {
                             <h4>Thời lượng:</h4>
                             <h4>
                               {this.getTimeInAudio(
-                                this[`input-played-${v.audio}`]
-                                  ? this[`input-played-${v.audio}`].value
+                                this[`input-played-${v.track_id}`]
+                                  ? this[`input-played-${v.track_id}`].value
                                   : 0
                               )}
                               /
-                              {this.state[`duration-${v.audio}`] ? (
+                              {this.state[`duration-${v.track_id}`] ? (
                                 <span>
                                   {this.getTimeInAudio(
-                                    this.state[`duration-${v.audio}`]
-                                      ? this.state[`duration-${v.audio}`]
+                                    this.state[`duration-${v.track_id}`]
+                                      ? this.state[`duration-${v.track_id}`]
                                       : 0
                                   )}
                                 </span>
@@ -430,31 +430,31 @@ class ListRadio extends PureComponent {
                         <div className={styles.range}>
                           <input
                             className={styles['input-played']}
-                            ref={input => (this[`input-played-${v.audio}`] = input)}
+                            ref={input => (this[`input-played-${v.track_id}`] = input)}
                             type="range"
                             value={0}
                             min={0}
                             max={
-                              this.state[`duration-${v.audio}`]
-                                ? this.state[`duration-${v.audio}`]
+                              this.state[`duration-${v.track_id}`]
+                                ? this.state[`duration-${v.track_id}`]
                                 : 0
                             }
                             step="any"
-                            onMouseDown={e => this.onSeekMouseDown(e, `player-${v.audio}`)}
-                            onPointerDown={e => this.onSeekMouseDown(e, `player-${v.audio}`)}
-                            onPointerUp={e => this.onSeekMouseUp(e, v.audio)}
-                            onChange={e => this.onSeekChange(e, `player-${v.audio}`)}
-                            onMouseUp={e => this.onSeekMouseUp(e, v.audio)}
+                            onMouseDown={e => this.onSeekMouseDown(e, `player-${v.track_id}`)}
+                            onPointerDown={e => this.onSeekMouseDown(e, `player-${v.track_id}`)}
+                            onPointerUp={e => this.onSeekMouseUp(e, v.track_id)}
+                            onChange={e => this.onSeekChange(e, `player-${v.track_id}`)}
+                            onMouseUp={e => this.onSeekMouseUp(e, v.track_id)}
                           />
                         </div>
                         <div className={styles['title-cart']}>
                           <div className={styles['play-icon']}>
                             <Icon
-                              onClick={() => this.playAudioReact(v.audio)}
+                              onClick={() => this.playAudioReact(v.track_id)}
                               type={
-                                !this.state[`${v.audio}`]
+                                !this.state[`${v.track_id}`]
                                   ? 'play-circle'
-                                  : this.state[`${v.audio}`].paused
+                                  : this.state[`${v.track_id}`].paused
                                   ? 'play-circle'
                                   : 'pause-circle'
                               }
@@ -462,19 +462,19 @@ class ListRadio extends PureComponent {
                           </div>
                         </div>
                         <ReactPlayer
-                          playing={this.state[v.audio]}
-                          ref={player => (this[`player-${v.audio}`] = player)}
+                          playing={this.state[v.track_id]}
+                          ref={player => (this[`player-${v.track_id}`] = player)}
                           width="0%"
                           height="0%"
                           loop={false}
                           onSeek={e => this.onSeek(e)}
                           url={`http://cdn.henhoradio.net/upload/audio/local/${v.audio}`}
-                          onProgress={e => this.onProgress(e, v.audio)}
+                          onProgress={e => this.onProgress(e, v.track_id)}
                           config={{
                             file: { forceAudio: true },
                           }}
-                          onDuration={e => this.onDuration(e, v.audio)}
-                          onEnded={() => this.onEnded(v.audio)}
+                          onDuration={e => this.onDuration(e, v.track_id)}
+                          onEnded={() => this.onEnded(v.track_id)}
                         />
                       </div>
                     </div>
