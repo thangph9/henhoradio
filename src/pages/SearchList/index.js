@@ -54,13 +54,27 @@ class ListRadio extends PureComponent {
   handleChangePagination(v1, v2) {
     const radio = this.props.location.query.radio;
     const date = this.props.location.query.date;
+    const sort = this.props.location.query.sort;
     if (date) {
+      if (sort) {
+        this.props.history.push({
+          pathname: `search-list`,
+          search: `?page=${v1}&radio=${radio}&sort=${sort}&date=${date}`,
+        });
+      } else {
+        this.props.history.push({
+          pathname: `search-list`,
+          search: `?page=${v1}&radio=${radio}&date=${date}`,
+        });
+      }
+    } else if (sort) {
       this.props.history.push({
         pathname: `search-list`,
-        search: `?page=${v1}&radio=${radio}&date=${date}`,
+        search: `?page=${v1}&radio=${radio}&sort=${sort}`,
       });
-    } else
+    } else {
       this.props.history.push({ pathname: `search-list`, search: `?page=${v1}&radio=${radio}` });
+    }
   }
 
   componentWillReceiveProps(nextProps) {
@@ -109,13 +123,25 @@ class ListRadio extends PureComponent {
       }
     );
     const radio = this.props.location.query.radio;
+    const sort = this.props.location.query.sort;
     if (value2 === '') {
-      this.props.history.push({ pathname: 'search-list', search: `?page=1&radio=${radio}` });
-    } else
+      if (sort)
+        this.props.history.push({
+          pathname: 'search-list',
+          search: `?page=1&radio=${radio}&sort=${sort}`,
+        });
+      else this.props.history.push({ pathname: 'search-list', search: `?page=1&radio=${radio}` });
+    } else if (sort) {
+      this.props.history.push({
+        pathname: 'search-list',
+        search: `?page=1&radio=${radio}&sort=${sort}&date=${value2.replace(/\//g, '_')}`,
+      });
+    } else {
       this.props.history.push({
         pathname: 'search-list',
         search: `?page=1&radio=${radio}&date=${value2.replace(/\//g, '_')}`,
       });
+    }
   }
 
   handleChangeRadio(e) {
@@ -135,12 +161,25 @@ class ListRadio extends PureComponent {
     );
     const radio = this.props.location.query.radio;
     const date = this.props.location.query.date;
+    const sort = this.props.location.query.sort;
     if (date) {
+      if (sort) {
+        this.props.history.push({
+          pathname: 'search-list',
+          search: `?page=1&radio=${e}&sort=${sort}&date=${date}`,
+        });
+      } else {
+        this.props.history.push({
+          pathname: 'search-list',
+          search: `?page=1&radio=${e}&date=${date}`,
+        });
+      }
+    } else if (sort)
       this.props.history.push({
         pathname: 'search-list',
-        search: `?page=1&radio=${e}&date=${date}`,
+        search: `?page=1&radio=${e}&sort=${sort}`,
       });
-    } else this.props.history.push({ pathname: 'search-list', search: `?page=1&radio=${e}` });
+    else this.props.history.push({ pathname: 'search-list', search: `?page=1&radio=${e}` });
   }
 
   componentWillUpdate(nextProps, nextState) {
@@ -163,6 +202,34 @@ class ListRadio extends PureComponent {
           dataFilter: dataArr,
         });
       }
+    }
+  }
+
+  handleChangeSort(e) {
+    const radio = this.props.location.query.radio;
+    const date = this.props.location.query.date;
+    if (date) {
+      if (e !== 'default') {
+        this.props.history.push({
+          pathname: 'search-list',
+          search: `?page=1&radio=${radio}&sort=${e}&date=${date}`,
+        });
+      } else {
+        this.props.history.push({
+          pathname: 'search-list',
+          search: `?page=1&radio=${radio}&date=${date}`,
+        });
+      }
+    } else if (e !== 'default') {
+      this.props.history.push({
+        pathname: 'search-list',
+        search: `?page=1&radio=${radio}&sort=${e}`,
+      });
+    } else {
+      this.props.history.push({
+        pathname: 'search-list',
+        search: `?page=1&radio=${radio}`,
+      });
     }
   }
 
@@ -258,13 +325,13 @@ class ListRadio extends PureComponent {
                   )}
                   format="D/M/YYYY"
                   onChange={(e, v) => this.onChangeDate(e, v)}
-                  placeholder="Lựa chọn"
+                  placeholder="Chọn ngày"
                 />
               ) : (
                 <DatePicker
                   format="D/M/YYYY"
                   onChange={(e, v) => this.onChangeDate(e, v)}
-                  placeholder="Lựa chọn"
+                  placeholder="Chọn ngày"
                 />
               )}
             </div>
@@ -281,11 +348,28 @@ class ListRadio extends PureComponent {
                 <Option value="ALL">Cả hai đài</Option>
               </Select>
             </div>
+            <div className={styles['filter-sort']}>
+              <Select
+                defaultValue={this.props.location.query.sort && `${this.props.location.query.sort}`}
+                onChange={e => this.handleChangeSort(e)}
+                placeholder="Sắp xếp"
+              >
+                <Option value="default">Mặc định</Option>
+                <Option value="newest">Mới nhất</Option>
+                <Option value="special">Đặc biệt nhất</Option>
+              </Select>
+            </div>
           </div>
           <div className={styles.row}>
             {!loadingPage
               ? (dataFilter || detailList)
                   .filter((value, index) => index >= page * 20 - 20 && index < page * 20)
+                  .sort((a, b) => {
+                    if (this.props.location.query.sort === 'newest') {
+                      return new Date(b.date) - new Date(a.date);
+                    }
+                    return null;
+                  })
                   .map((v, i) => (
                     <div key={i} className={styles['cart-item']}>
                       <div className={styles['box-cart']}>
@@ -344,6 +428,7 @@ class ListRadio extends PureComponent {
                             className={styles['input-played']}
                             ref={input => (this[`input-played-${v.audio}`] = input)}
                             type="range"
+                            value={0}
                             min={0}
                             max={
                               this.state[`duration-${v.audio}`]

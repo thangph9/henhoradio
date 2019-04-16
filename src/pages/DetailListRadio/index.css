@@ -19,7 +19,13 @@ li {
 .filter-data .filter-radio > div {
   width: 175px;
 }
+.filter-data .filter-gender {
+  margin-right: 10px;
+}
 .filter-data .filter-gender > div {
+  width: 175px;
+}
+.filter-data .filter-sort > div {
   width: 175px;
 }
 .row {
@@ -246,6 +252,14 @@ li {
   .filter-data .filter-radio i {
     position: absolute;
     right: 0.00000001px !important;
+  }
+  .filter-data .filter-sort i {
+    position: absolute;
+    right: 0.00000001px !important;
+  }
+  .filter-data .filter-gender {
+    margin: 0.0000000001px;
+    margin-bottom: 10px !important;
   }
   .filter-data .filter-gender i {
     position: absolute;

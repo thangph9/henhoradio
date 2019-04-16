@@ -65,16 +65,30 @@ class ListRadio extends PureComponent {
     const radio = this.props.location.query.radio;
     const date = this.props.location.query.date;
     const gender = this.props.location.query.gender;
+    const sort = this.props.location.query.sort;
     if (date) {
+      if (sort) {
+        this.props.history.push({
+          pathname: `detail-list`,
+          search: `?page=${v1}&radio=${radio}&gender=${gender}&sort=${sort}&date=${date}`,
+        });
+      } else {
+        this.props.history.push({
+          pathname: `detail-list`,
+          search: `?page=${v1}&radio=${radio}&gender=${gender}&date=${date}`,
+        });
+      }
+    } else if (sort) {
       this.props.history.push({
         pathname: `detail-list`,
-        search: `?page=${v1}&radio=${radio}&gender=${gender}&date=${date}`,
+        search: `?page=${v1}&radio=${radio}&gender=${gender}&sort=${sort}`,
       });
-    } else
+    } else {
       this.props.history.push({
         pathname: `detail-list`,
         search: `?page=${v1}&radio=${radio}&gender=${gender}`,
       });
+    }
   }
 
   componentWillReceiveProps(nextProps) {
@@ -112,53 +126,6 @@ class ListRadio extends PureComponent {
     }
   }
 
-  handleClickPlay(audio) {
-    const audioElement = document.getElementById(audio);
-    if (this.state[`${audio}`] && this.state.globalPlay === audio) {
-      if (this.state[`${audio}`].paused) this.state[`${audio}`].play();
-      else this.state[`${audio}`].pause();
-      return;
-    }
-    if (this.state.globalPlay !== audio && this.state[`${this.state.globalPlay}`]) {
-      this.state[`${this.state.globalPlay}`].pause();
-    }
-    this.setState(
-      {
-        [audio]: audioElement,
-        globalPlay: audio,
-      },
-      () => {
-        this.state[audio].play();
-        const settime = setInterval(() => {
-          if (this.state[audio].currentTime !== 0) {
-            this.setState({
-              [`current-time-${audio}`]: this.state[audio].currentTime,
-            });
-          }
-          if (this.state[audio].ended) {
-            this.setState(
-              {
-                [audio]: undefined,
-                [`current-time-${audio}`]: undefined,
-              },
-              () => {
-                clearInterval(settime);
-              }
-            );
-          }
-        }, 100);
-      }
-    );
-  }
-
-  handleClickSlidePlay(e, v, v2) {
-    const slide = document.getElementById(`slide-${v}`);
-    const offset = e.nativeEvent.offsetX;
-    if (this.state[`${v}`]) {
-      this.state[`${v}`].currentTime = (offset / slide.offsetWidth) * v2;
-    }
-  }
-
   onChangeDate(value1, value2) {
     const arrFilter = this.state.arrFilter;
     arrFilter[0] = value2;
@@ -174,16 +141,33 @@ class ListRadio extends PureComponent {
     );
     const radio = this.props.location.query.radio;
     const gender = this.props.location.query.gender;
+    const sort = this.props.location.query.sort;
     if (value2 === '') {
+      if (sort) {
+        this.props.history.push({
+          pathname: 'detail-list',
+          search: `?page=1&radio=${radio}&gender=${gender}&sort=${sort}`,
+        });
+      } else {
+        this.props.history.push({
+          pathname: 'detail-list',
+          search: `?page=1&radio=${radio}&gender=${gender}`,
+        });
+      }
+    } else if (sort) {
       this.props.history.push({
         pathname: 'detail-list',
-        search: `?page=1&radio=${radio}&gender=${gender}`,
+        search: `?page=1&radio=${radio}&gender=${gender}&sort=${sort}&date=${value2.replace(
+          /\//g,
+          '_'
+        )}`,
       });
-    } else
+    } else {
       this.props.history.push({
         pathname: 'detail-list',
         search: `?page=1&radio=${radio}&gender=${gender}&date=${value2.replace(/\//g, '_')}`,
       });
+    }
   }
 
   handleChangeRadio(e) {
@@ -203,16 +187,30 @@ class ListRadio extends PureComponent {
     );
     const gender = this.props.location.query.gender;
     const date = this.props.location.query.date;
+    const sort = this.props.location.query.sort;
     if (date) {
+      if (sort) {
+        this.props.history.push({
+          pathname: 'detail-list',
+          search: `?page=1&radio=${e}&gender=${gender}&sort=${sort}&date=${date}`,
+        });
+      } else {
+        this.props.history.push({
+          pathname: 'detail-list',
+          search: `?page=1&radio=${e}&gender=${gender}&date=${date}`,
+        });
+      }
+    } else if (sort) {
       this.props.history.push({
         pathname: 'detail-list',
-        search: `?page=1&radio=${e}&gender=${gender}&date=${date}`,
+        search: `?page=1&radio=${e}&gender=${gender}&sort=${sort}`,
       });
-    } else
+    } else {
       this.props.history.push({
         pathname: 'detail-list',
         search: `?page=1&radio=${e}&gender=${gender}`,
       });
+    }
   }
 
   handleChangeGender(e) {
@@ -232,16 +230,30 @@ class ListRadio extends PureComponent {
     );
     const radio = this.props.location.query.radio;
     const date = this.props.location.query.date;
+    const sort = this.props.location.query.sort;
     if (date) {
+      if (sort) {
+        this.props.history.push({
+          pathname: 'detail-list',
+          search: `?page=1&radio=${radio}&gender=${e}&sort=${sort}&date=${date}`,
+        });
+      } else {
+        this.props.history.push({
+          pathname: 'detail-list',
+          search: `?page=1&radio=${radio}&gender=${e}&date=${date}`,
+        });
+      }
+    } else if (sort) {
       this.props.history.push({
         pathname: 'detail-list',
-        search: `?page=1&radio=${radio}&gender=${e}&date=${date}`,
+        search: `?page=1&radio=${radio}&gender=${e}&sort=${sort}`,
       });
-    } else
+    } else {
       this.props.history.push({
         pathname: 'detail-list',
         search: `?page=1&radio=${radio}&gender=${e}`,
       });
+    }
   }
 
   componentWillMount() {
@@ -275,6 +287,35 @@ class ListRadio extends PureComponent {
           dataFilter: dataArr,
         });
       }
+    }
+  }
+
+  handleChangeSort(e) {
+    const radio = this.props.location.query.radio;
+    const date = this.props.location.query.date;
+    const gender = this.props.location.query.gender;
+    if (date) {
+      if (e !== 'default') {
+        this.props.history.push({
+          pathname: 'detail-list',
+          search: `?page=1&radio=${radio}&gender=${gender}&sort=${e}&date=${date}`,
+        });
+      } else {
+        this.props.history.push({
+          pathname: 'detail-list',
+          search: `?page=1&radio=${radio}&gender=${gender}&date=${date}`,
+        });
+      }
+    } else if (e !== 'default') {
+      this.props.history.push({
+        pathname: 'detail-list',
+        search: `?page=1&radio=${radio}&gender=${gender}&sort=${e}`,
+      });
+    } else {
+      this.props.history.push({
+        pathname: 'detail-list',
+        search: `?page=1&radio=${radio}&gender=${gender}`,
+      });
     }
   }
 
@@ -406,11 +447,28 @@ class ListRadio extends PureComponent {
                 <Option value="ALL">Nam {'&'} Nữ</Option>
               </Select>
             </div>
+            <div className={styles['filter-sort']}>
+              <Select
+                defaultValue={this.props.location.query.sort && `${this.props.location.query.sort}`}
+                onChange={e => this.handleChangeSort(e)}
+                placeholder="Sắp xếp"
+              >
+                <Option value="default">Mặc định</Option>
+                <Option value="newest">Mới nhất</Option>
+                <Option value="special">Đặc biệt nhất</Option>
+              </Select>
+            </div>
           </div>
           <div className={styles.row}>
             {!loadingPage
               ? (dataFilter || detailList)
                   .filter((value, index) => index >= page * 20 - 20 && index < page * 20)
+                  .sort((a, b) => {
+                    if (this.props.location.query.sort === 'newest') {
+                      return new Date(b.timeup) - new Date(a.timeup);
+                    }
+                    return null;
+                  })
                   .map((v, i) => (
                     <div key={i} className={styles['cart-item']}>
                       <div className={styles['box-cart']}>
