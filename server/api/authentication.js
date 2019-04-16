@@ -663,7 +663,7 @@ function getAllUsers(req, res) {
                 obj.age = new Date().getFullYear() - element.dob_year;
                 obj.address = element.address;
                 obj.avatar = element.avatar;
-                arr.push(obj);
+                if (element.public === 'active') arr.push(obj);
               });
               if (legit.userid) arr = arr.filter(element => element.user_id !== legit.userid);
               result = arr;
@@ -678,31 +678,6 @@ function getAllUsers(req, res) {
         } catch (error) {
           console.log(error);
           res.send({ status: 'error' });
-        }
-      },
-      callback => {
-        try {
-          models.instance.login.find({}, { select: ['phone', 'status', 'user_id'] }, function(
-            err,
-            _user
-          ) {
-            if (_user && _user.length > 0) {
-              let userActive = _user.filter(element => element.status === 'active');
-              let arr = [];
-              result.forEach(element => {
-                let obj = userActive.find(
-                  value =>
-                    value.user_id.toString() === element.user_id.toString() &&
-                    value.status === 'active'
-                );
-                if (obj) arr.push(element);
-              });
-              result = arr;
-            }
-            callback(err, null);
-          });
-        } catch (error) {
-          console.log(error);
         }
       },
     ],

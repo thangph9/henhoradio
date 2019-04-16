@@ -8,6 +8,7 @@ module.exports = {
     distance: 'float',
     dob_day: 'int',
     dob_month: 'int',
+    public: 'text',
     dob_year: 'int',
     email: 'text',
     fullname: 'text',
