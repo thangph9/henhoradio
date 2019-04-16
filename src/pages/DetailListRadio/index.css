@@ -67,6 +67,7 @@ li {
   background: #f2f2f2;
   flex-direction: column;
   justify-content: center;
+  margin-bottom: 0.0000000000001px;
 }
 .member-information .list-menu {
   display: flex;
@@ -74,6 +75,7 @@ li {
 }
 .member-information .list-menu h4 {
   color: black;
+  margin-bottom: 0.5em;
 }
 .background-avatar {
   background-position: center;
