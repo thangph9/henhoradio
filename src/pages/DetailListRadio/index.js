@@ -495,21 +495,25 @@ class ListRadio extends PureComponent {
                           </div>
                           <div className={styles['list-menu']}>
                             <h4>Thời lượng:</h4>
-                            {this.state[`duration-${v.audio}`] && (
-                              <h4>
-                                {this.getTimeInAudio(
-                                  this[`input-played-${v.audio}`]
-                                    ? this[`input-played-${v.audio}`].value
-                                    : 0
-                                )}
-                                /
-                                {this.getTimeInAudio(
-                                  this.state[`duration-${v.audio}`]
-                                    ? this.state[`duration-${v.audio}`]
-                                    : 0
-                                )}
-                              </h4>
-                            )}
+                            <h4>
+                              {this.getTimeInAudio(
+                                this[`input-played-${v.audio}`]
+                                  ? this[`input-played-${v.audio}`].value
+                                  : 0
+                              )}
+                              /
+                              {this.state[`duration-${v.audio}`] ? (
+                                <span>
+                                  {this.getTimeInAudio(
+                                    this.state[`duration-${v.audio}`]
+                                      ? this.state[`duration-${v.audio}`]
+                                      : 0
+                                  )}
+                                </span>
+                              ) : (
+                                '0:0'
+                              )}
+                            </h4>
                           </div>
                         </ul>
                         <div className={styles.range}>
