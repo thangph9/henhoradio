@@ -414,7 +414,7 @@ class ListRadio extends PureComponent {
                   .map((v, i) => (
                     <div key={i} className={styles['cart-item']}>
                       <div className={styles['box-cart']}>
-                        <div className={styles['member-information']}>
+                        <ul className={styles['member-information']}>
                           <li>
                             <h4>Lên sóng:</h4>
                             <h4>{v.name}</h4>
@@ -453,13 +453,14 @@ class ListRadio extends PureComponent {
                               </h4>
                             )}
                           </li>
-                        </div>
+                        </ul>
                         <div className={styles.range}>
                           <input
                             className={styles['input-played']}
                             name={`name-${v.audio}`}
                             ref={input => (this[`input-played-${v.audio}`] = input)}
                             type="range"
+                            value={0}
                             min={0}
                             max={
                               this.state[`duration-${v.audio}`]
