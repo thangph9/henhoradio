@@ -432,7 +432,7 @@ class ListRadio extends PureComponent {
                             className={styles['input-played']}
                             ref={input => (this[`input-played-${v.track_id}`] = input)}
                             type="range"
-                            value={0}
+                            defaultValue={0}
                             min={0}
                             max={
                               this.state[`duration-${v.track_id}`]

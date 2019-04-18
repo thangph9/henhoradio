@@ -402,7 +402,7 @@ class ListRadio extends PureComponent {
       <div style={{ paddingTop: '32px', background: '#f3f5f9' }}>
         <div className={styles.container}>
           <div className={styles['filter-data']}>
-            <div className={styles['filter-date']}>
+            <div className={`${styles['filter-date']} ${styles['item-filter']}`}>
               {this.props.location.query.date ? (
                 <DatePicker
                   defaultValue={moment(
@@ -421,7 +421,7 @@ class ListRadio extends PureComponent {
                 />
               )}
             </div>
-            <div className={styles['filter-radio']}>
+            <div className={`${styles['filter-radio']} ${styles['item-filter']}`}>
               <Select
                 defaultValue={
                   this.props.location.query.radio ? `${this.props.location.query.radio}` : 'ALL'
@@ -434,7 +434,7 @@ class ListRadio extends PureComponent {
                 <Option value="ALL">Cả hai đài</Option>
               </Select>
             </div>
-            <div className={styles['filter-gender']}>
+            <div className={`${styles['filter-gender']} ${styles['item-filter']}`}>
               <Select
                 defaultValue={
                   this.props.location.query.gender ? `${this.props.location.query.gender}` : 'ALL'
@@ -447,7 +447,7 @@ class ListRadio extends PureComponent {
                 <Option value="ALL">Nam {'&'} Nữ</Option>
               </Select>
             </div>
-            <div className={styles['filter-sort']}>
+            <div className={`${styles['filter-sort']} ${styles['item-filter']}`}>
               <Select
                 defaultValue={this.props.location.query.sort && `${this.props.location.query.sort}`}
                 onChange={e => this.handleChangeSort(e)}
@@ -497,16 +497,16 @@ class ListRadio extends PureComponent {
                             <h4>Thời lượng:</h4>
                             <h4>
                               {this.getTimeInAudio(
-                                this[`input-played-${v.membersid}`]
-                                  ? this[`input-played-${v.membersid}`].value
+                                this[`input-played-${v.audio}`]
+                                  ? this[`input-played-${v.audio}`].value
                                   : 0
                               )}
                               /
-                              {this.state[`duration-${v.membersid}`] ? (
+                              {this.state[`duration-${v.audio}`] ? (
                                 <span>
                                   {this.getTimeInAudio(
-                                    this.state[`duration-${v.membersid}`]
-                                      ? this.state[`duration-${v.membersid}`]
+                                    this.state[`duration-${v.audio}`]
+                                      ? this.state[`duration-${v.audio}`]
                                       : 0
                                   )}
                                 </span>
@@ -519,32 +519,32 @@ class ListRadio extends PureComponent {
                         <div className={styles.range}>
                           <input
                             className={styles['input-played']}
-                            name={`name-${v.membersid}`}
-                            ref={input => (this[`input-played-${v.membersid}`] = input)}
+                            name={`name-${v.audio}`}
+                            ref={input => (this[`input-played-${v.audio}`] = input)}
                             type="range"
-                            value={0}
+                            defaultValue={0}
                             min={0}
                             max={
-                              this.state[`duration-${v.membersid}`]
-                                ? this.state[`duration-${v.membersid}`]
+                              this.state[`duration-${v.audio}`]
+                                ? this.state[`duration-${v.audio}`]
                                 : 0
                             }
                             step="any"
-                            onMouseDown={e => this.onSeekMouseDown(e, `player-${v.membersid}`)}
-                            onPointerDown={e => this.onSeekMouseDown(e, `player-${v.membersid}`)}
-                            onPointerUp={e => this.onSeekMouseUp(e, v.membersid)}
-                            onChange={e => this.onSeekChange(e, `player-${v.membersid}`)}
-                            onMouseUp={e => this.onSeekMouseUp(e, v.membersid)}
+                            onMouseDown={e => this.onSeekMouseDown(e, `player-${v.audio}`)}
+                            onPointerDown={e => this.onSeekMouseDown(e, `player-${v.audio}`)}
+                            onPointerUp={e => this.onSeekMouseUp(e, v.audio)}
+                            onChange={e => this.onSeekChange(e, `player-${v.audio}`)}
+                            onMouseUp={e => this.onSeekMouseUp(e, v.audio)}
                           />
                         </div>
                         <div className={styles['title-cart']}>
                           <div className={styles['play-icon']}>
                             <Icon
-                              onClick={() => this.playAudioReact(v.membersid)}
+                              onClick={() => this.playAudioReact(v.audio)}
                               type={
-                                !this.state[`${v.membersid}`]
+                                !this.state[`${v.audio}`]
                                   ? 'play-circle'
-                                  : this.state[`${v.membersid}`].paused
+                                  : this.state[`${v.audio}`].paused
                                   ? 'play-circle'
                                   : 'pause-circle'
                               }
@@ -552,19 +552,19 @@ class ListRadio extends PureComponent {
                           </div>
                         </div>
                         <ReactPlayer
-                          playing={this.state[v.membersid]}
-                          ref={player => (this[`player-${v.membersid}`] = player)}
+                          playing={this.state[v.audio]}
+                          ref={player => (this[`player-${v.audio}`] = player)}
                           width="0%"
                           height="0%"
                           loop={false}
                           onSeek={e => this.onSeek(e)}
                           url={`http://cdn.henhoradio.net/upload/audio/local/${v.audio}`}
-                          onProgress={e => this.onProgress(e, v.membersid)}
+                          onProgress={e => this.onProgress(e, v.audio)}
                           config={{
                             file: { forceAudio: true },
                           }}
-                          onDuration={e => this.onDuration(e, v.membersid)}
-                          onEnded={() => this.onEnded(v.membersid)}
+                          onDuration={e => this.onDuration(e, v.audio)}
+                          onEnded={() => this.onEnded(v.audio)}
                         />
                       </div>
                     </div>

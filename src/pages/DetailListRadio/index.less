@@ -218,6 +218,14 @@ li {
     max-width: 50%;
   }
 }
+@media (min-width: 576px) and (max-width: 767px) {
+  .filter-data {
+    flex-wrap: wrap;
+    .item-filter {
+      margin: 10px 5px;
+    }
+  }
+}
 @media (min-width: 768px) {
   .container {
     max-width: 720px;
@@ -242,10 +250,14 @@ li {
   }
   .cart-item {
     flex-basis: 100%;
-    max-width: 100%;
+    max-width: 320px;
+    margin: 0 auto;
   }
   .filter-data {
     flex-direction: column;
+    margin: 0 auto;
+    margin-bottom: 20px;
+    max-width: 320px;
     .filter-radio {
       margin: 10px 0 !important;
       i {
