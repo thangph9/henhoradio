@@ -42,6 +42,7 @@ class ListRadio extends PureComponent {
   };
 
   componentDidMount() {
+    // console.log('abc')
     const { dispatch } = this.props;
     dispatch({
       type: 'members/getmembers',
@@ -394,7 +395,10 @@ class ListRadio extends PureComponent {
 
   render() {
     if (this.props.location.search === '') {
-      return <Redirect to="detail-list?page=1&radio=ALL&gender=ALL" />;
+      this.setState({
+        arrFilter: ['', '', ''],
+      });
+      return <Redirect to={{ pathname: 'detail-list', search: '?page=1&radio=ALL&gender=ALL' }} />;
     }
     const { loadingPage, preLoad, detailList, dataFilter, globalPlaying, played } = this.state;
     const { page } = this.props.location.query;
@@ -423,7 +427,7 @@ class ListRadio extends PureComponent {
             </div>
             <div className={`${styles['filter-radio']} ${styles['item-filter']}`}>
               <Select
-                defaultValue={
+                value={
                   this.props.location.query.radio ? `${this.props.location.query.radio}` : 'ALL'
                 }
                 onChange={e => this.handleChangeRadio(e)}
@@ -436,7 +440,7 @@ class ListRadio extends PureComponent {
             </div>
             <div className={`${styles['filter-gender']} ${styles['item-filter']}`}>
               <Select
-                defaultValue={
+                value={
                   this.props.location.query.gender ? `${this.props.location.query.gender}` : 'ALL'
                 }
                 onChange={e => this.handleChangeGender(e)}
@@ -449,7 +453,7 @@ class ListRadio extends PureComponent {
             </div>
             <div className={`${styles['filter-sort']} ${styles['item-filter']}`}>
               <Select
-                defaultValue={this.props.location.query.sort && `${this.props.location.query.sort}`}
+                value={this.props.location.query.sort && `${this.props.location.query.sort}`}
                 onChange={e => this.handleChangeSort(e)}
                 placeholder="Sắp xếp"
               >
@@ -472,7 +476,7 @@ class ListRadio extends PureComponent {
                   .map((v, i) => (
                     <div key={i} className={styles['cart-item']}>
                       <div className={styles['box-cart']}>
-                        <ul className={styles['member-information']}>
+                        <div className={styles['member-information']}>
                           <div className={styles['list-menu']}>
                             <h4>Lên sóng:</h4>
                             <h4>{v.name}</h4>
@@ -515,7 +519,7 @@ class ListRadio extends PureComponent {
                               )}
                             </h4>
                           </div>
-                        </ul>
+                        </div>
                         <div className={styles.range}>
                           <input
                             className={styles['input-played']}

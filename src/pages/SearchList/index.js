@@ -82,12 +82,12 @@ class ListRadio extends PureComponent {
       this.setState(
         {
           loaded: true,
-          dataList: nextProps.list.tracklist,
+          detailList: nextProps.list.tracklist,
           loadingPage: false,
         },
         () => {
           if (this.state.arrFilter) {
-            let dataArr = this.state.dataList;
+            let dataArr = this.state.detailList;
             for (let i = 0; i < this.state.arrFilter.length; i++) {
               if (this.state.arrFilter[i] === '') continue;
               dataArr = dataArr.filter((value, index) => {
@@ -185,7 +185,7 @@ class ListRadio extends PureComponent {
   componentWillUpdate(nextProps, nextState) {
     if (this.state.arrFilter !== nextState.arrFilter) {
       if (nextState.arrFilter) {
-        let dataArr = this.state.dataList;
+        let dataArr = this.state.detailList;
         for (let i = 0; i < nextState.arrFilter.length; i++) {
           if (nextState.arrFilter[i] === '') continue;
           dataArr = dataArr.filter((value, index) => {
@@ -308,6 +308,9 @@ class ListRadio extends PureComponent {
 
   render() {
     if (this.props.location.search === '') {
+      this.setState({
+        arrFilter: ['', '', ''],
+      });
       return <Redirect to="search-list?page=1&radio=ALL" />;
     }
     const { loadingPage, preLoad, detailList, dataFilter, globalPlaying, played } = this.state;

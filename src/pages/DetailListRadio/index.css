@@ -28,6 +28,9 @@ li {
 .filter-data .filter-sort > div {
   width: 175px;
 }
+.filter-data .filter-date > span {
+  width: 175px;
+}
 .row {
   display: flex;
   flex-wrap: wrap;
