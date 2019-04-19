@@ -18,7 +18,7 @@
 
 import React, { PureComponent } from 'react';
 import { connect } from 'dva';
-import { Skeleton, Icon, DatePicker, Select, Pagination } from 'antd';
+import { Skeleton, Icon, DatePicker, Select, Pagination, Row } from 'antd';
 import { Redirect } from 'react-router-dom';
 import ReactPlayer from 'react-player';
 import moment from 'moment';
@@ -520,39 +520,42 @@ class ListRadio extends PureComponent {
                             </h4>
                           </div>
                         </div>
+
                         <div className={styles.range}>
-                          <input
-                            className={styles['input-played']}
-                            name={`name-${v.audio}`}
-                            ref={input => (this[`input-played-${v.audio}`] = input)}
-                            type="range"
-                            defaultValue={0}
-                            min={0}
-                            max={
-                              this.state[`duration-${v.audio}`]
-                                ? this.state[`duration-${v.audio}`]
-                                : 0
-                            }
-                            step="any"
-                            onMouseDown={e => this.onSeekMouseDown(e, `player-${v.audio}`)}
-                            onPointerDown={e => this.onSeekMouseDown(e, `player-${v.audio}`)}
-                            onPointerUp={e => this.onSeekMouseUp(e, v.audio)}
-                            onChange={e => this.onSeekChange(e, `player-${v.audio}`)}
-                            onMouseUp={e => this.onSeekMouseUp(e, v.audio)}
-                          />
-                        </div>
-                        <div className={styles['title-cart']}>
-                          <div className={styles['play-icon']}>
-                            <Icon
-                              onClick={() => this.playAudioReact(v.audio)}
-                              type={
-                                !this.state[`${v.audio}`]
-                                  ? 'play-circle'
-                                  : this.state[`${v.audio}`].paused
-                                  ? 'play-circle'
-                                  : 'pause-circle'
+                          <div className={styles['range-item']}>
+                            <input
+                              className={styles['input-played']}
+                              name={`name-${v.audio}`}
+                              ref={input => (this[`input-played-${v.audio}`] = input)}
+                              type="range"
+                              defaultValue={0}
+                              min={0}
+                              max={
+                                this.state[`duration-${v.audio}`]
+                                  ? this.state[`duration-${v.audio}`]
+                                  : 0
                               }
+                              step="any"
+                              onMouseDown={e => this.onSeekMouseDown(e, `player-${v.audio}`)}
+                              onPointerDown={e => this.onSeekMouseDown(e, `player-${v.audio}`)}
+                              onPointerUp={e => this.onSeekMouseUp(e, v.audio)}
+                              onChange={e => this.onSeekChange(e, `player-${v.audio}`)}
+                              onMouseUp={e => this.onSeekMouseUp(e, v.audio)}
                             />
+                            <div className={styles['title-cart']}>
+                              <div className={styles['play-icon']}>
+                                <Icon
+                                  onClick={() => this.playAudioReact(v.audio)}
+                                  type={
+                                    !this.state[`${v.audio}`]
+                                      ? 'play-circle'
+                                      : this.state[`${v.audio}`].paused
+                                      ? 'play-circle'
+                                      : 'pause-circle'
+                                  }
+                                />
+                              </div>
+                            </div>
                           </div>
                         </div>
                         <ReactPlayer

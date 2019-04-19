@@ -377,22 +377,22 @@ class ListRadio extends PureComponent {
                     <div key={i} className={styles['cart-item']}>
                       <div className={styles['box-cart']}>
                         <div className={styles['member-information']}>
-                          <li>
+                          <div className={styles['list-menu']}>
                             <h4>{v.title}</h4>
-                          </li>
-                          <li>
+                          </div>
+                          <div className={styles['list-menu']}>
                             <h4>MC:</h4>
                             <h4>{v.mc}</h4>
-                          </li>
-                          <li>
+                          </div>
+                          <div className={styles['list-menu']}>
                             <h4>Đài phát:</h4>
                             <h4>{v.local === 'HN' ? 'Hà Nội' : 'Hồ Chí Minh'}</h4>
-                          </li>
-                          <li>
+                          </div>
+                          <div className={styles['list-menu']}>
                             <h4>Thời gian:</h4>
                             <h4>{moment(v.date).format('DD/MM/YYYY')}</h4>
-                          </li>
-                          <li>
+                          </div>
+                          <div className={styles['list-menu']}>
                             <h4>Chi tiết:</h4>
                             <h4>
                               <Link
@@ -406,8 +406,8 @@ class ListRadio extends PureComponent {
                                 TV lên sóng...
                               </Link>
                             </h4>
-                          </li>
-                          <li>
+                          </div>
+                          <div className={styles['list-menu']}>
                             <h4>Thời lượng:</h4>
                             <h4>
                               {this.getTimeInAudio(
@@ -428,40 +428,43 @@ class ListRadio extends PureComponent {
                                 '0:0'
                               )}
                             </h4>
-                          </li>
+                          </div>
                         </div>
                         <div className={styles.range}>
-                          <input
-                            className={styles['input-played']}
-                            ref={input => (this[`input-played-${v.track_id}`] = input)}
-                            type="range"
-                            defaultValue={0}
-                            min={0}
-                            max={
-                              this.state[`duration-${v.track_id}`]
-                                ? this.state[`duration-${v.track_id}`]
-                                : 0
-                            }
-                            step="any"
-                            onMouseDown={e => this.onSeekMouseDown(e, `player-${v.track_id}`)}
-                            onPointerDown={e => this.onSeekMouseDown(e, `player-${v.track_id}`)}
-                            onPointerUp={e => this.onSeekMouseUp(e, v.track_id)}
-                            onChange={e => this.onSeekChange(e, `player-${v.track_id}`)}
-                            onMouseUp={e => this.onSeekMouseUp(e, v.track_id)}
-                          />
-                        </div>
-                        <div className={styles['title-cart']}>
-                          <div className={styles['play-icon']}>
-                            <Icon
-                              onClick={() => this.playAudioReact(v.track_id)}
-                              type={
-                                !this.state[`${v.track_id}`]
-                                  ? 'play-circle'
-                                  : this.state[`${v.track_id}`].paused
-                                  ? 'play-circle'
-                                  : 'pause-circle'
+                          <div className={styles['range-item']}>
+                            <input
+                              className={styles['input-played']}
+                              name={`name-${v.track_id}`}
+                              ref={input => (this[`input-played-${v.track_id}`] = input)}
+                              type="range"
+                              defaultValue={0}
+                              min={0}
+                              max={
+                                this.state[`duration-${v.track_id}`]
+                                  ? this.state[`duration-${v.track_id}`]
+                                  : 0
                               }
+                              step="any"
+                              onMouseDown={e => this.onSeekMouseDown(e, `player-${v.track_id}`)}
+                              onPointerDown={e => this.onSeekMouseDown(e, `player-${v.track_id}`)}
+                              onPointerUp={e => this.onSeekMouseUp(e, v.track_id)}
+                              onChange={e => this.onSeekChange(e, `player-${v.track_id}`)}
+                              onMouseUp={e => this.onSeekMouseUp(e, v.track_id)}
                             />
+                            <div className={styles['title-cart']}>
+                              <div className={styles['play-icon']}>
+                                <Icon
+                                  onClick={() => this.playAudioReact(v.track_id)}
+                                  type={
+                                    !this.state[`${v.track_id}`]
+                                      ? 'play-circle'
+                                      : this.state[`${v.track_id}`].paused
+                                      ? 'play-circle'
+                                      : 'pause-circle'
+                                  }
+                                />
+                              </div>
+                            </div>
                           </div>
                         </div>
                         <ReactPlayer
