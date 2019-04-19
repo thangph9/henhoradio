@@ -234,7 +234,8 @@ class GlobalHeader extends PureComponent {
                       </span>
                     </div>
                   </li>
-                  <li
+                  {/*
+                    <li
                     style={{ marginLeft: '10px' }}
                     className={`${styles['header__nav-item___MQLXP']}`}
                   >
@@ -346,6 +347,7 @@ class GlobalHeader extends PureComponent {
                       ''
                     )}
                   </li>
+                  */}
                 </ul>
               ) : (
                 <Link to="/login?ref=0">
@@ -401,6 +403,7 @@ class GlobalHeader extends PureComponent {
                     );
                   })
                 : ''}
+              {/*
               <li className={`${styles['header__nav-item___MQLXP']}`}>
                 <Icon
                   onClick={() => this.toggleMenuMobile()}
@@ -412,6 +415,7 @@ class GlobalHeader extends PureComponent {
                   }
                 />
               </li>
+              */}
             </ul>
           </div>
         </nav>
