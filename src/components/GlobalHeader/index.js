@@ -234,8 +234,7 @@ class GlobalHeader extends PureComponent {
                       </span>
                     </div>
                   </li>
-                  {/*
-                    <li
+                  <li
                     style={{ marginLeft: '10px' }}
                     className={`${styles['header__nav-item___MQLXP']}`}
                   >
@@ -347,7 +346,6 @@ class GlobalHeader extends PureComponent {
                       ''
                     )}
                   </li>
-                  */}
                 </ul>
               ) : (
                 <Link to="/login?ref=0">
