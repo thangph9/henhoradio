@@ -595,7 +595,6 @@ function updateProfileQuestion(req, res) {
           legit = jwt.verify(token, jwtpublic, verifyOptions);
           callback(null, null);
         } catch (e) {
-          callback(e, null);
           return res.send({
             status: 'error',
             message: 'Sai ma token',
@@ -709,10 +708,13 @@ function getUserById(req, res) {
           legit = jwt.verify(token, jwtpublic, verifyOptions);
           callback(null, null);
         } catch (e) {
-          return res.send({
+          /*
+            return res.send({
             status: 'error',
             message: 'Sai ma token',
           });
+          */
+          callback(null, null);
         }
       },
       function(callback) {
@@ -771,27 +773,31 @@ function getUserById(req, res) {
         }
       },
       callback => {
-        try {
-          models.instance.profile.find(
-            { user_id: models.uuidFromString(legit.userid) },
-            { select: ['question_id', 'answer'] },
-            function(err, results) {
-              if (results && results.length > 0) {
-                let arr = [];
-                results.forEach(element => {
-                  let a = JSON.stringify(element);
-                  let obj = JSON.parse(a);
-                  arr.push(obj);
-                });
-                yourQuestion = arr;
-              } else {
-                message = 'Chưa trả lời câu hỏi';
+        if (legit.userid) {
+          try {
+            models.instance.profile.find(
+              { user_id: models.uuidFromString(legit.userid) },
+              { select: ['question_id', 'answer'] },
+              function(err, results) {
+                if (results && results.length > 0) {
+                  let arr = [];
+                  results.forEach(element => {
+                    let a = JSON.stringify(element);
+                    let obj = JSON.parse(a);
+                    arr.push(obj);
+                  });
+                  yourQuestion = arr;
+                } else {
+                  message = 'Chưa trả lời câu hỏi';
+                }
+                callback(err, null);
               }
-              callback(err, null);
-            }
-          );
-        } catch (error) {
-          callback(error, null);
+            );
+          } catch (error) {
+            callback(error, null);
+          }
+        } else {
+          callback(null, null);
         }
       },
       callback => {
@@ -828,10 +834,7 @@ function getUserById(req, res) {
       },
     ],
     err => {
-      if (err) {
-        console.log(err);
-        return res.json({ status: 'error' });
-      }
+      if (err) return res.json({ status: 'error' });
       return res.json({
         status: 'ok',
         data: {
