@@ -7,6 +7,7 @@
 import React, { Component } from 'react';
 import { connect } from 'dva';
 import { Icon, Input, Button, Skeleton, Radio, Checkbox, message } from 'antd';
+import { Link } from 'react-router-dom';
 import styles from './index.less';
 
 const { TextArea } = Input;
@@ -579,67 +580,87 @@ class AdvancedProfile extends Component {
                         ) : (
                           <div className={`${styles['answer-item']} answer-item`}>
                             <span className={styles['answer-title']}>
-                              {(this.checkYourQuestion(
-                                !this.state[`question-number-${element}`]
-                                  ? this.state.title.filter(e => e.group_id === element)[0]
-                                      .question_id
-                                  : this.state[`question-number-${element}`]
-                              ) ||
-                                !this.checkQuestionAnswered(
-                                  !this.state[`question-number-${element}`]
-                                    ? this.state.title.filter(e => e.group_id === element)[0]
-                                        .question_id
-                                    : this.state[`question-number-${element}`]
-                                )) && <span> Trả lời: </span>}
-                              <i
-                                style={{
-                                  display: 'inline',
-                                  fontSize: '16px',
-                                  color: '#aeb4bf',
-                                  fontWeight: '600',
-                                }}
-                              >
-                                {this.checkYourQuestion(
+                              {!localStorage.token ? (
+                                <i
+                                  style={{
+                                    display: 'inline',
+                                    fontSize: '16px',
+                                    color: '#aeb4bf',
+                                    fontWeight: '600',
+                                  }}
+                                >
+                                  Bạn cần{' '}
+                                  <Link className={styles['answer-span']} to="/login">
+                                    đăng nhập
+                                  </Link>{' '}
+                                  để sử dụng chức năng này
+                                </i>
+                              ) : (
+                                (this.checkYourQuestion(
                                   !this.state[`question-number-${element}`]
                                     ? this.state.title.filter(e => e.group_id === element)[0]
                                         .question_id
                                     : this.state[`question-number-${element}`]
                                 ) ||
-                                !this.checkQuestionAnswered(
-                                  !this.state[`question-number-${element}`]
-                                    ? this.state.title.filter(e => e.group_id === element)[0]
-                                        .question_id
-                                    : this.state[`question-number-${element}`]
-                                ) ? (
-                                  this.state.title.filter(e => e.group_id === element).length > 0 &&
-                                  this.getAnswerQuestion(
+                                  !this.checkQuestionAnswered(
                                     !this.state[`question-number-${element}`]
                                       ? this.state.title.filter(e => e.group_id === element)[0]
                                           .question_id
                                       : this.state[`question-number-${element}`]
-                                  )
-                                ) : (
-                                  <span>
-                                    Bạn cần{' '}
-                                    <span
-                                      className={styles['answer-span']}
-                                      onClick={() =>
-                                        this.handleClickEdit(
-                                          element,
-                                          !this.state[`question-number-${element}`]
-                                            ? this.state.title.filter(
-                                                e => e.group_id === element
-                                              )[0].question_id
-                                            : this.state[`question-number-${element}`]
-                                        )
-                                      }
-                                    >
-                                      trả lời
-                                    </span>{' '}
-                                    câu hỏi này để xem câu trả lời của đối phương
-                                  </span>
-                                )}
-                              </i>
+                                  )) && <span> Trả lời: </span>
+                              )}
+                              {localStorage.token && (
+                                <i
+                                  style={{
+                                    display: 'inline',
+                                    fontSize: '16px',
+                                    color: '#aeb4bf',
+                                    fontWeight: '600',
+                                  }}
+                                >
+                                  {this.checkYourQuestion(
+                                    !this.state[`question-number-${element}`]
+                                      ? this.state.title.filter(e => e.group_id === element)[0]
+                                          .question_id
+                                      : this.state[`question-number-${element}`]
+                                  ) ||
+                                  !this.checkQuestionAnswered(
+                                    !this.state[`question-number-${element}`]
+                                      ? this.state.title.filter(e => e.group_id === element)[0]
+                                          .question_id
+                                      : this.state[`question-number-${element}`]
+                                  ) ? (
+                                    this.state.title.filter(e => e.group_id === element).length >
+                                      0 &&
+                                    this.getAnswerQuestion(
+                                      !this.state[`question-number-${element}`]
+                                        ? this.state.title.filter(e => e.group_id === element)[0]
+                                            .question_id
+                                        : this.state[`question-number-${element}`]
+                                    )
+                                  ) : (
+                                    <span>
+                                      Bạn cần{' '}
+                                      <span
+                                        className={styles['answer-span']}
+                                        onClick={() =>
+                                          this.handleClickEdit(
+                                            element,
+                                            !this.state[`question-number-${element}`]
+                                              ? this.state.title.filter(
+                                                  e => e.group_id === element
+                                                )[0].question_id
+                                              : this.state[`question-number-${element}`]
+                                          )
+                                        }
+                                      >
+                                        trả lời
+                                      </span>{' '}
+                                      câu hỏi này để xem câu trả lời của đối phương
+                                    </span>
+                                  )}
+                                </i>
+                              )}
                             </span>
                           </div>
                         )}
