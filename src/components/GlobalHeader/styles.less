@@ -778,7 +778,8 @@
     padding-left: 0;
     padding-right: 0;
     right: 0;
-    transition: right 0.5s;
+    opacity: 1;
+    transition: all 0.5s;
     display: flex;
     flex-direction: row;
     align-items: center;
@@ -895,7 +896,7 @@
     width: 100%;
     z-index: 1;
     right: -100%;
-    transition: right 0.4s;
+    transition: all 0.5s;
   }
   .nav ul {
     padding: 0.00000001px;
@@ -922,15 +923,19 @@
   .nav ul li {
     list-style: none;
     width: 100%;
+    opacity: 1;
+    transition: all 0.5s;
     text-align: center;
     position: relative;
     overflow: hidden;
     border-top: 1px solid #333;
+    i {
+      transition: all 0.5s;
+    }
   }
   .list-item-menu-mobile {
     padding: 20px;
     color: #333;
-    width: 50%;
     margin: 0 auto;
     display: flex;
     align-items: center;
@@ -961,9 +966,12 @@
     margin-top: 0;
     padding-left: 0;
     padding-right: 20px;
+    transition: all 0.5s;
     .header__nav-item___MQLXP {
       width: 100%;
       margin-left: 0;
+      opacity: 1;
+      transition: all 0.5s;
       .header__nav-link___3W4sc {
         display: block;
         padding: 15px 16px;
@@ -990,9 +998,10 @@
     }
   }
   .to-right-icon {
-    right: 88%;
-    i {
-      transform: rotateY(180deg);
+    ul {
+      li:nth-child(3) {
+        transform: rotateY(180deg);
+      }
     }
   }
 }
@@ -1077,6 +1086,7 @@
       .header__nav-link___3W4sc {
         padding-left: 24px;
         padding-right: 24px;
+        transform: rotateY(0deg);
         &:active {
           color: @color_4;
         }

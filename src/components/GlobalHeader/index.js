@@ -16,6 +16,7 @@ class GlobalHeader extends PureComponent {
 
   componentWillUnmount() {
     this.triggerResizeEvent.cancel();
+    window.removeEventListener('resize', this.updateDimensions.bind(this));
   }
   /* eslint-disable*/
   @Debounce(600)
@@ -65,15 +66,41 @@ class GlobalHeader extends PureComponent {
     });
   }
 
+  updateDimensions() {
+    const { dataUser } = this.state;
+    const imgLoader = new Image();
+    imgLoader.src = `${this.props.user.getsetting.cdn}${dataUser.avatar}`;
+    imgLoader.onload = () => {
+      if (this.imgElm && dataUser.avatar) {
+        this.imgElm.style.backgroundImage = `url(${this.props.user.getsetting.cdn}${
+          dataUser.avatar
+        })`;
+        this.setState({
+          loaded: true,
+        });
+      }
+      if (this.imgElmM && dataUser.avatar) {
+        this.imgElmM.style.backgroundImage = `url(${this.props.user.getsetting.cdn}${
+          dataUser.avatar
+        })`;
+        this.setState({
+          loaded: true,
+        });
+      }
+    };
+    this.setState({
+      sizeHeader: window.innerWidth,
+    });
+  }
+
   componentDidMount() {
     if (localStorage.token) {
       this.props.dispatch({
         type: 'authentication/getonlyuser',
       });
     }
-    this.setState({
-      sizeHeader: this.header.clientWidth,
-    });
+    this.updateDimensions();
+    window.addEventListener('resize', this.updateDimensions.bind(this));
   }
 
   componentWillReceiveProps(nextProps) {
@@ -94,6 +121,14 @@ class GlobalHeader extends PureComponent {
           imgLoader.onload = () => {
             if (this.imgElm && dataUser.avatar) {
               this.imgElm.style.backgroundImage = `url(${nextProps.user.getsetting.cdn}${
+                dataUser.avatar
+              })`;
+              this.setState({
+                loaded: true,
+              });
+            }
+            if (this.imgElmM && dataUser.avatar) {
+              this.imgElmM.style.backgroundImage = `url(${nextProps.user.getsetting.cdn}${
                 dataUser.avatar
               })`;
               this.setState({
@@ -197,7 +232,7 @@ class GlobalHeader extends PureComponent {
                 </ul>
                 {localStorage.token ? (
                   <ul
-                    style={{ top: '-5px' }}
+                    style={{ top: '-10px' }}
                     className={`${styles['header__navbar-nav___9cfBy']} ${
                       styles['header__navbar-right___2_zf5']
                     }`}
@@ -412,7 +447,7 @@ class GlobalHeader extends PureComponent {
                         to="/home/profile-user"
                       >
                         <div
-                          ref={imgElm => (this.imgElm = imgElm)}
+                          ref={imgElm => (this.imgElmM = imgElm)}
                           className={styles['background-avatar']}
                           style={{
                             backgroundImage:
