@@ -531,12 +531,9 @@ class GlobalHeader extends PureComponent {
                   </Link>
                   <Icon
                     onClick={() => this.handleClickActiveMenu()}
+                    className={activeMenu && styles['active-menu-login']}
                     type="menu-fold"
-                    style={
-                      this.props.myprops.menu_header
-                        ? { display: 'block', fontSize: '25px', color: '#FFA229' }
-                        : { display: 'block', fontSize: '25px' }
-                    }
+                    style={{ display: 'block', fontSize: '25px', transition: 'all 0.5s' }}
                   />
                 </div>
               )}
