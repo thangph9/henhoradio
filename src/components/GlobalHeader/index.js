@@ -163,6 +163,14 @@ class GlobalHeader extends PureComponent {
       activeMenu: newState,
     });
   }
+  handleClickLink() {
+    const { activeMenu } = this.state;
+    if (activeMenu) {
+      this.setState({
+        activeMenu: false,
+      });
+    }
+  }
   render() {
     const { dataUser, activeMenu, sizeHeader } = this.state;
     return (
@@ -427,7 +435,11 @@ class GlobalHeader extends PureComponent {
                     }`
               }
             >
-              <Link to={`/home`} className={`${styles['header__navbar-brand___SzzgD']} `}>
+              <Link
+                onClick={() => this.handleClickLink()}
+                to={`/home`}
+                className={`${styles['header__navbar-brand___SzzgD']} `}
+              >
                 <img src="https://twoo-a.akamaihd.net/static/7156520574362430695506/images/logos/logo-twoo-flat@2x.png" />
               </Link>
               {localStorage.token ? (
@@ -440,6 +452,7 @@ class GlobalHeader extends PureComponent {
                   <li className={`${styles['header__nav-item___MQLXP']}`}>
                     <div className={`${styles['auth-buttons__auth___33bfZ']}`}>
                       <Link
+                        onClick={() => this.handleClickLink()}
                         style={{ cursor: 'pointer' }}
                         className={`${styles['auth-buttons__nav-link___1DCMU']} ${
                           styles['auth-buttons__btn-sign-in___1nV-O']
@@ -503,59 +516,30 @@ class GlobalHeader extends PureComponent {
                   </li>
                 </ul>
               ) : (
-                <Link to="/login?ref=0" style={{ paddingRight: '20px' }}>
-                  <Button
-                    style={{
-                      background: '#FF7102',
-                      borderRadius: '30px',
-                      color: '#fff',
-                      border: 'none',
-                    }}
-                  >
-                    Đăng nhập
-                  </Button>
-                </Link>
+                <div className={styles['login-menu']}>
+                  <Link to="/login?ref=0" style={{ marginRight: '20px' }}>
+                    <Button
+                      style={{
+                        background: '#FF7102',
+                        borderRadius: '30px',
+                        color: '#fff',
+                        border: 'none',
+                      }}
+                    >
+                      Đăng nhập
+                    </Button>
+                  </Link>
+                  <Icon
+                    onClick={() => this.handleClickActiveMenu()}
+                    type="menu-fold"
+                    style={
+                      this.props.myprops.menu_header
+                        ? { display: 'block', fontSize: '25px', color: '#FFA229' }
+                        : { display: 'block', fontSize: '25px' }
+                    }
+                  />
+                </div>
               )}
-              {/*
-
-            <ul
-              style={{ height: '100%' }}
-              className={`${styles['header__mobile-nav-cat___1wJ9O']} ${styles['item-align']}`}
-            >
-              {this.state.menu.length > 0
-                ? this.state.menu.map((v, i) => {
-                    return (
-                      <li key={i} className={`${styles['header__nav-item___MQLXP']}`}>
-                        <Link to={v.path}>
-                          <Icon
-                            style={{
-                              display: 'block',
-                              fontSize: '27px',
-                              marginBottom: '2px',
-                              color: '#333',
-                            }}
-                            type={v.icon}
-                          />
-                        </Link>
-                      </li>
-                    );
-                  })
-                : ''}
-              {
-              <li className={`${styles['header__nav-item___MQLXP']}`}>
-                <Icon
-                  onClick={() => this.toggleMenuMobile()}
-                  type="ellipsis"
-                  style={
-                    this.props.myprops.menu_header_mobile
-                      ? { display: 'block', fontSize: '25px', color: '#FFA229' }
-                      : { display: 'block', fontSize: '25px', color: '#333' }
-                  }
-                />
-              </li>
-              }
-            </ul>
-            */}
             </div>
             <div className={activeMenu ? `${styles['active-menu']} ${styles.nav}` : styles.nav}>
               <ul>
@@ -564,22 +548,24 @@ class GlobalHeader extends PureComponent {
                       return (
                         <li key={i}>
                           <Link className={styles['list-item-menu-mobile']} to={v.path}>
-                            <Icon style={{ paddingRight: '10px' }} type={v.icon} />
+                            <Icon style={{ marginRight: '10px' }} type={v.icon} />
                             {v.name}
                           </Link>
                         </li>
                       );
                     })
                   : ''}
-                <li
-                  style={{ borderBottom: '1px solid #333' }}
-                  onClick={() => this.handleClickLogout()}
-                >
-                  <div className={styles['list-item-menu-mobile']}>
-                    <Icon style={{ paddingRight: '10px' }} type="poweroff" />
-                    Đăng xuất
-                  </div>
-                </li>
+                {localStorage.token && (
+                  <li
+                    style={{ borderBottom: '1px solid #333' }}
+                    onClick={() => this.handleClickLogout()}
+                  >
+                    <div className={styles['list-item-menu-mobile']}>
+                      <Icon style={{ marginRight: '10px' }} type="poweroff" />
+                      Đăng xuất
+                    </div>
+                  </li>
+                )}
               </ul>
             </div>
           </nav>

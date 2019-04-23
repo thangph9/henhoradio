@@ -552,6 +552,11 @@
   .screen-header {
     display: none;
   }
+  .login-menu {
+    display: flex;
+    align-items: center;
+    margin-right: 10px;
+  }
   .item-align {
     display: flex;
     align-items: center;
@@ -710,6 +715,9 @@
   }
   .nav ul li i {
     transition: all 0.5s;
+  }
+  .nav ul li:last-child {
+    border-bottom: 1px solid #333;
   }
   .list-item-menu-mobile {
     padding: 20px;
