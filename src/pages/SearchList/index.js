@@ -272,6 +272,7 @@ class ListRadio extends PureComponent {
       this.setState(
         {
           [audio]: state.playedSeconds,
+          [`loaded-${audio}`]: state.loadedSeconds,
         },
         () => {
           this[`input-played-${audio}`].value = this.state[audio];
@@ -436,6 +437,22 @@ class ListRadio extends PureComponent {
                         </div>
                         <div className={styles.range}>
                           <div className={styles['range-item']}>
+                            <input
+                              className={styles['input-loaded']}
+                              name={`name-${v.track_id}`}
+                              ref={input => (this[`input-played-loaded-${v.track_id}`] = input)}
+                              type="range"
+                              defaultValue={0}
+                              step="any"
+                              style={{
+                                width: `${
+                                  this.state[`loaded-${v.track_id}`]
+                                    ? (this.state[`loaded-${v.track_id}`] * 100) /
+                                      this.state[`duration-${v.track_id}`]
+                                    : 0
+                                }%`,
+                              }}
+                            />
                             <input
                               className={styles['input-played']}
                               name={`name-${v.track_id}`}

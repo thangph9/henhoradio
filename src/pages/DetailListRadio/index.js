@@ -42,7 +42,6 @@ class ListRadio extends PureComponent {
   };
 
   componentDidMount() {
-    // console.log('abc')
     const { dispatch } = this.props;
     dispatch({
       type: 'members/getmembers',
@@ -343,6 +342,7 @@ class ListRadio extends PureComponent {
       this.setState(
         {
           [audio]: state.playedSeconds,
+          [`loaded-${audio}`]: state.loadedSeconds,
         },
         () => {
           this[`input-played-${audio}`].value = this.state[audio];
@@ -525,8 +525,23 @@ class ListRadio extends PureComponent {
                         <div className={styles.range}>
                           <div className={styles['range-item']}>
                             <input
-                              className={styles['input-played']}
+                              className={styles['input-loaded']}
                               name={`name-${v.audio}`}
+                              ref={input => (this[`input-played-loaded-${v.audio}`] = input)}
+                              type="range"
+                              defaultValue={0}
+                              step="any"
+                              style={{
+                                width: `${
+                                  this.state[`loaded-${v.audio}`]
+                                    ? (this.state[`loaded-${v.audio}`] * 100) /
+                                      this.state[`duration-${v.audio}`]
+                                    : 0
+                                }%`,
+                              }}
+                            />
+                            <input
+                              className={styles['input-played']}
                               ref={input => (this[`input-played-${v.audio}`] = input)}
                               type="range"
                               defaultValue={0}
@@ -586,16 +601,6 @@ class ListRadio extends PureComponent {
                         <li className={styles['li-skeleton']} />
                         <li className={styles['li-skeleton']} />
                         <li className={styles['li-skeleton']} />
-                      </div>
-                      <div className={styles.range}>
-                        <input
-                          className={styles['input-played']}
-                          type="range"
-                          min={0}
-                          max={100}
-                          step="any"
-                          value={0}
-                        />
                       </div>
                       <div
                         style={{ borderTop: '1px solid #95a5a6' }}
