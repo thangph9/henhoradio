@@ -14,7 +14,8 @@ export default [
     path: '/question',
     component: './Question',
   },
-  {
+  /*
+    {
     path: '/search-list',
     component: '../layouts/HomeLayout',
     routes: [{ path: '/search-list', component: './SearchList' }],
@@ -24,6 +25,7 @@ export default [
     component: '../layouts/HomeLayout',
     routes: [{ path: '/detail-list', component: './DetailListRadio' }],
   },
+  */
   {
     path: '/',
     component: './About',
@@ -37,6 +39,8 @@ export default [
       { path: '/home', redirect: './newfeed' },
       { path: '/home/newfeed', component: './HomePage' },
       { path: '/home/profile', component: './ProfileDetail' },
+      { path: '/home/search-list', component: './SearchList' },
+      { path: '/home/detail-list', component: './DetailListRadio' },
       { path: '/home/profile-user', redirect: '/home/profile-user/information' },
       {
         path: '/home/profile-user',

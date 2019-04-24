@@ -58,22 +58,25 @@ class ListRadio extends PureComponent {
     if (date) {
       if (sort) {
         this.props.history.push({
-          pathname: `search-list`,
+          pathname: `home/search-list`,
           search: `?page=${v1}&radio=${radio}&sort=${sort}&date=${date}`,
         });
       } else {
         this.props.history.push({
-          pathname: `search-list`,
+          pathname: `home/search-list`,
           search: `?page=${v1}&radio=${radio}&date=${date}`,
         });
       }
     } else if (sort) {
       this.props.history.push({
-        pathname: `search-list`,
+        pathname: `home/search-list`,
         search: `?page=${v1}&radio=${radio}&sort=${sort}`,
       });
     } else {
-      this.props.history.push({ pathname: `search-list`, search: `?page=${v1}&radio=${radio}` });
+      this.props.history.push({
+        pathname: `home/search-list`,
+        search: `?page=${v1}&radio=${radio}`,
+      });
     }
   }
 
@@ -127,18 +130,19 @@ class ListRadio extends PureComponent {
     if (value2 === '') {
       if (sort)
         this.props.history.push({
-          pathname: 'search-list',
+          pathname: 'home/search-list',
           search: `?page=1&radio=${radio}&sort=${sort}`,
         });
-      else this.props.history.push({ pathname: 'search-list', search: `?page=1&radio=${radio}` });
+      else
+        this.props.history.push({ pathname: 'home/search-list', search: `?page=1&radio=${radio}` });
     } else if (sort) {
       this.props.history.push({
-        pathname: 'search-list',
+        pathname: 'home/search-list',
         search: `?page=1&radio=${radio}&sort=${sort}&date=${value2.replace(/\//g, '_')}`,
       });
     } else {
       this.props.history.push({
-        pathname: 'search-list',
+        pathname: 'home/search-list',
         search: `?page=1&radio=${radio}&date=${value2.replace(/\//g, '_')}`,
       });
     }
@@ -165,21 +169,21 @@ class ListRadio extends PureComponent {
     if (date) {
       if (sort) {
         this.props.history.push({
-          pathname: 'search-list',
+          pathname: 'home/search-list',
           search: `?page=1&radio=${e}&sort=${sort}&date=${date}`,
         });
       } else {
         this.props.history.push({
-          pathname: 'search-list',
+          pathname: 'home/search-list',
           search: `?page=1&radio=${e}&date=${date}`,
         });
       }
     } else if (sort)
       this.props.history.push({
-        pathname: 'search-list',
+        pathname: 'home/search-list',
         search: `?page=1&radio=${e}&sort=${sort}`,
       });
-    else this.props.history.push({ pathname: 'search-list', search: `?page=1&radio=${e}` });
+    else this.props.history.push({ pathname: 'home/search-list', search: `?page=1&radio=${e}` });
   }
 
   componentWillUpdate(nextProps, nextState) {
@@ -211,23 +215,23 @@ class ListRadio extends PureComponent {
     if (date) {
       if (e !== 'default') {
         this.props.history.push({
-          pathname: 'search-list',
+          pathname: 'home/search-list',
           search: `?page=1&radio=${radio}&sort=${e}&date=${date}`,
         });
       } else {
         this.props.history.push({
-          pathname: 'search-list',
+          pathname: 'home/search-list',
           search: `?page=1&radio=${radio}&date=${date}`,
         });
       }
     } else if (e !== 'default') {
       this.props.history.push({
-        pathname: 'search-list',
+        pathname: 'home/search-list',
         search: `?page=1&radio=${radio}&sort=${e}`,
       });
     } else {
       this.props.history.push({
-        pathname: 'search-list',
+        pathname: 'home/search-list',
         search: `?page=1&radio=${radio}`,
       });
     }
@@ -311,7 +315,7 @@ class ListRadio extends PureComponent {
       this.setState({
         arrFilter: ['', '', ''],
       });
-      return <Redirect to="search-list?page=1&radio=ALL" />;
+      return <Redirect to="/home/search-list?page=1&radio=ALL" />;
     }
     const { loadingPage, preLoad, detailList, dataFilter, globalPlaying, played } = this.state;
     const { page } = this.props.location.query;

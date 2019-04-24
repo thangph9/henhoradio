@@ -108,7 +108,7 @@ class About extends PureComponent {
             style={{ background: this.background(number) }}
           >
             <div className={`${styles.container} ${styles['header-item']}`}>
-              <div className={styles['splashdtf-logo']} />
+              <Link to="/home/newfeed?page=1" className={styles['splashdtf-logo']} />
               <div className={styles['splashdtf-header-signin']}>
                 <span className={styles['splashdtf-header-signin-text']}>Have an account?</span>
                 <Link to="/login?ref=0">
@@ -237,6 +237,7 @@ class About extends PureComponent {
             >
               {about.iconFooter.map((value, index) => (
                 <Icon
+                  key={index}
                   type={value.type}
                   theme={value.theme}
                   style={{ fontSize: value.fontSize, marginRight: '7px', color: value.color }}

@@ -58,14 +58,6 @@ class GlobalHeader extends PureComponent {
     );
   }
 
-  componentWillMount() {
-    const { dispatch } = this.props;
-    dispatch({
-      type: 'menu/getmenu',
-      payload: 'HomePage',
-    });
-  }
-
   updateDimensions() {
     const { dataUser } = this.state;
     const imgLoader = new Image();

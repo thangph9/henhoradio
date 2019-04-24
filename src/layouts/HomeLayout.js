@@ -138,6 +138,10 @@ class HomeLayout extends React.PureComponent {
     dispatch({
       type: 'user/getsetting',
     });
+    dispatch({
+      type: 'menu/getmenu',
+      payload: 'HomePage',
+    });
   }
 
   getContext() {

@@ -70,23 +70,23 @@ class ListRadio extends PureComponent {
     if (date) {
       if (sort) {
         this.props.history.push({
-          pathname: `detail-list`,
+          pathname: `home/detail-list`,
           search: `?page=${v1}&radio=${radio}&gender=${gender}&sort=${sort}&date=${date}`,
         });
       } else {
         this.props.history.push({
-          pathname: `detail-list`,
+          pathname: `home/detail-list`,
           search: `?page=${v1}&radio=${radio}&gender=${gender}&date=${date}`,
         });
       }
     } else if (sort) {
       this.props.history.push({
-        pathname: `detail-list`,
+        pathname: `home/detail-list`,
         search: `?page=${v1}&radio=${radio}&gender=${gender}&sort=${sort}`,
       });
     } else {
       this.props.history.push({
-        pathname: `detail-list`,
+        pathname: `home/detail-list`,
         search: `?page=${v1}&radio=${radio}&gender=${gender}`,
       });
     }
@@ -146,18 +146,18 @@ class ListRadio extends PureComponent {
     if (value2 === '') {
       if (sort) {
         this.props.history.push({
-          pathname: 'detail-list',
+          pathname: 'home/detail-list',
           search: `?page=1&radio=${radio}&gender=${gender}&sort=${sort}`,
         });
       } else {
         this.props.history.push({
-          pathname: 'detail-list',
+          pathname: 'home/detail-list',
           search: `?page=1&radio=${radio}&gender=${gender}`,
         });
       }
     } else if (sort) {
       this.props.history.push({
-        pathname: 'detail-list',
+        pathname: 'home/detail-list',
         search: `?page=1&radio=${radio}&gender=${gender}&sort=${sort}&date=${value2.replace(
           /\//g,
           '_'
@@ -165,7 +165,7 @@ class ListRadio extends PureComponent {
       });
     } else {
       this.props.history.push({
-        pathname: 'detail-list',
+        pathname: 'home/detail-list',
         search: `?page=1&radio=${radio}&gender=${gender}&date=${value2.replace(/\//g, '_')}`,
       });
     }
@@ -192,23 +192,23 @@ class ListRadio extends PureComponent {
     if (date) {
       if (sort) {
         this.props.history.push({
-          pathname: 'detail-list',
+          pathname: 'home/detail-list',
           search: `?page=1&radio=${e}&gender=${gender}&sort=${sort}&date=${date}`,
         });
       } else {
         this.props.history.push({
-          pathname: 'detail-list',
+          pathname: 'home/detail-list',
           search: `?page=1&radio=${e}&gender=${gender}&date=${date}`,
         });
       }
     } else if (sort) {
       this.props.history.push({
-        pathname: 'detail-list',
+        pathname: 'home/detail-list',
         search: `?page=1&radio=${e}&gender=${gender}&sort=${sort}`,
       });
     } else {
       this.props.history.push({
-        pathname: 'detail-list',
+        pathname: 'home/detail-list',
         search: `?page=1&radio=${e}&gender=${gender}`,
       });
     }
@@ -235,23 +235,23 @@ class ListRadio extends PureComponent {
     if (date) {
       if (sort) {
         this.props.history.push({
-          pathname: 'detail-list',
+          pathname: 'home/detail-list',
           search: `?page=1&radio=${radio}&gender=${e}&sort=${sort}&date=${date}`,
         });
       } else {
         this.props.history.push({
-          pathname: 'detail-list',
+          pathname: 'home/detail-list',
           search: `?page=1&radio=${radio}&gender=${e}&date=${date}`,
         });
       }
     } else if (sort) {
       this.props.history.push({
-        pathname: 'detail-list',
+        pathname: 'home/detail-list',
         search: `?page=1&radio=${radio}&gender=${e}&sort=${sort}`,
       });
     } else {
       this.props.history.push({
-        pathname: 'detail-list',
+        pathname: 'home/detail-list',
         search: `?page=1&radio=${radio}&gender=${e}`,
       });
     }
@@ -298,23 +298,23 @@ class ListRadio extends PureComponent {
     if (date) {
       if (e !== 'default') {
         this.props.history.push({
-          pathname: 'detail-list',
+          pathname: 'home/detail-list',
           search: `?page=1&radio=${radio}&gender=${gender}&sort=${e}&date=${date}`,
         });
       } else {
         this.props.history.push({
-          pathname: 'detail-list',
+          pathname: 'home/detail-list',
           search: `?page=1&radio=${radio}&gender=${gender}&date=${date}`,
         });
       }
     } else if (e !== 'default') {
       this.props.history.push({
-        pathname: 'detail-list',
+        pathname: 'home/detail-list',
         search: `?page=1&radio=${radio}&gender=${gender}&sort=${e}`,
       });
     } else {
       this.props.history.push({
-        pathname: 'detail-list',
+        pathname: 'home/detail-list',
         search: `?page=1&radio=${radio}&gender=${gender}`,
       });
     }
@@ -398,7 +398,9 @@ class ListRadio extends PureComponent {
       this.setState({
         arrFilter: ['', '', ''],
       });
-      return <Redirect to={{ pathname: 'detail-list', search: '?page=1&radio=ALL&gender=ALL' }} />;
+      return (
+        <Redirect to={{ pathname: '/home/detail-list', search: '?page=1&radio=ALL&gender=ALL' }} />
+      );
     }
     const { loadingPage, preLoad, detailList, dataFilter, globalPlaying, played } = this.state;
     const { page } = this.props.location.query;
@@ -520,7 +522,6 @@ class ListRadio extends PureComponent {
                             </h4>
                           </div>
                         </div>
-
                         <div className={styles.range}>
                           <div className={styles['range-item']}>
                             <input
