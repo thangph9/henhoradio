@@ -93,6 +93,7 @@ class GlobalHeader extends PureComponent {
     }
     this.updateDimensions();
     window.addEventListener('resize', this.updateDimensions.bind(this));
+    console.log(this.props.history.location.pathname);
   }
 
   componentWillReceiveProps(nextProps) {
@@ -214,6 +215,11 @@ class GlobalHeader extends PureComponent {
                             style={{ textDecoration: 'none' }}
                             to={v.path}
                             className={`${styles['header__nav-link___3W4sc']}`}
+                            style={
+                              this.props.history.location.pathname === v.path
+                                ? { color: '#ff7102' }
+                                : {}
+                            }
                           >
                             <Icon
                               style={{ display: 'block', fontSize: '20px', marginBottom: '2px' }}
