@@ -18,6 +18,7 @@ import { connect } from 'dva';
 import { ContainerQuery } from 'react-container-query';
 import classNames from 'classnames';
 import pathToRegexp from 'path-to-regexp';
+import PageLoading from '@/components/PageLoading';
 import { enquireScreen, unenquireScreen } from 'enquire-js';
 import { formatMessage } from 'umi/locale';
 // eslint-disable-next-line no-unused-vars
@@ -144,6 +145,15 @@ class HomeLayout extends React.PureComponent {
     });
   }
 
+  componentWillReceiveProps(nextProps) {
+    if (this.props.getmenu !== nextProps.getmenu) {
+      this.setState({
+        loadedMenu: true,
+        menu: nextProps.getmenu,
+      });
+    }
+  }
+
   getContext() {
     const { location } = this.props;
     return {
@@ -252,10 +262,13 @@ class HomeLayout extends React.PureComponent {
       children,
       location: { pathname },
     } = this.props;
-    const { isMobile, menuData } = this.state;
+    const { isMobile, menuData, loadedMenu, menu } = this.state;
     // eslint-disable-next-line no-unused-vars
     const isTop = PropsLayout === 'topmenu';
     const routerConfig = this.matchParamsPath(pathname);
+    if (!loadedMenu) {
+      return <PageLoading />;
+    }
     const layout = (
       <div
         style={{ background: 'rgb(243, 245, 249)' }}
@@ -264,6 +277,7 @@ class HomeLayout extends React.PureComponent {
         }
       >
         <Header
+          getmenu={menu}
           menuData={menuData}
           handleMenuCollapse={this.handleMenuCollapse}
           logo={logo}
@@ -273,6 +287,7 @@ class HomeLayout extends React.PureComponent {
         {children}
       </div>
     );
+
     return (
       <React.Fragment>
         <DocumentTitle title={this.getPageTitle(pathname)}>

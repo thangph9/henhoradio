@@ -10,7 +10,6 @@ class GlobalHeader extends PureComponent {
   state = {
     dataUser: {},
     loaded: false,
-    menu: [],
     activeMenu: false,
   };
 
@@ -93,15 +92,10 @@ class GlobalHeader extends PureComponent {
     }
     this.updateDimensions();
     window.addEventListener('resize', this.updateDimensions.bind(this));
-    console.log(this.props.history.location.pathname);
+    console.log(this.props.getmenu);
   }
 
   componentWillReceiveProps(nextProps) {
-    if (nextProps.myprops.menu_header !== this.props.myprops.menu_header) {
-      this.setState({
-        open: nextProps.myprops.menu_header,
-      });
-    }
     if (this.props.authentication.getonlyuser !== nextProps.authentication.getonlyuser) {
       this.setState(
         {
@@ -207,8 +201,8 @@ class GlobalHeader extends PureComponent {
                     styles['header__navbar-left___25OFe']
                   }`}
                 >
-                  {this.state.menu.length > 0 ? (
-                    this.state.menu.map((v, i) => {
+                  {this.props.getmenu.length > 0 ? (
+                    this.props.getmenu.map((v, i) => {
                       return (
                         <li key={i} className={`${styles['header__nav-item___MQLXP']}`}>
                           <Link
@@ -538,8 +532,8 @@ class GlobalHeader extends PureComponent {
             </div>
             <div className={activeMenu ? `${styles['active-menu']} ${styles.nav}` : styles.nav}>
               <ul>
-                {this.state.menu.length > 0
-                  ? this.state.menu.map((v, i) => {
+                {this.props.getmenu.length > 0
+                  ? this.props.getmenu.map((v, i) => {
                       return (
                         <li key={i}>
                           <Link className={styles['list-item-menu-mobile']} to={v.path}>
