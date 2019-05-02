@@ -457,7 +457,6 @@ class ListRadio extends PureComponent {
                                 : `${styles['info']} ${styles['active']}`
                             }
                           >
-                            <span className="artist">Playing</span>
                             <span style={{ position: 'absolute', right: '10px' }}>
                               {this.getTimeInAudio(
                                 this[`input-played-${v.track_id}`]
@@ -477,7 +476,7 @@ class ListRadio extends PureComponent {
                                 '0:0'
                               )}
                             </span>
-                            <div style={{ position: 'relative', top: '8px' }}>
+                            <div style={{ position: 'relative', top: '30px' }}>
                               <input
                                 className={styles['input-loaded']}
                                 name={`name-${v.track_id}`}
