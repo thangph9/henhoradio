@@ -59,27 +59,6 @@ li {
   margin-bottom: 10px !important;
   height: 270px;
 }
-.cart-item:hover {
-  text-decoration: none;
-}
-.cart-item:hover .input-played {
-  height: 5px;
-}
-.cart-item:hover .input-played::-webkit-slider-runnable-track {
-  height: 5px;
-}
-.cart-item:hover .input-played::-moz-range-track {
-  height: 5px;
-}
-.cart-item:hover .input-loaded {
-  height: 5px;
-}
-.cart-item:hover .input-loaded::-webkit-slider-runnable-track {
-  height: 5px;
-}
-.cart-item:hover .input-loaded::-moz-range-track {
-  height: 5px;
-}
 .member-information {
   font-size: 14px;
   padding: 15px;
@@ -178,11 +157,12 @@ li {
 }
 .input-played {
   cursor: pointer;
-  height: 3px;
+  height: 5px;
   position: absolute;
   top: 0;
   width: 100%;
   -webkit-appearance: none;
+  background: #7f8c8d;
 }
 .input-played:focus {
   outline: none;
@@ -192,14 +172,14 @@ li {
 }
 .input-played::-webkit-slider-thumb {
   -webkit-appearance: none;
-  height: 12px;
-  width: 12px;
-  border-radius: 50%;
-  background: red;
+  height: 5px;
+  width: 8px;
+  background: #fff;
   border: none;
   position: relative;
-  top: -4px;
+  top: 0;
   z-index: 2;
+  box-shadow: -100vw 0 0 100vw red;
 }
 .input-played::-moz-range-thumb {
   z-index: 2;
@@ -216,22 +196,20 @@ li {
   background: #fff;
 }
 .input-played::-webkit-slider-runnable-track {
-  width: 100%;
-  height: 3px;
-  background: #7f8c8d;
-  border-radius: 1.3px;
+  -webkit-appearance: none;
+  height: 5px;
+  overflow: hidden;
 }
 .input-played::-moz-range-track {
   width: 100%;
-  height: 3px;
+  height: 5px;
   background: #7f8c8d;
-  border-radius: 1.3px;
 }
 .input-loaded {
   cursor: pointer;
   z-index: 1;
   pointer-events: none;
-  height: 3px;
+  height: 5px;
   position: absolute;
   top: 0;
   -webkit-appearance: none;
@@ -257,15 +235,13 @@ li {
 }
 .input-loaded::-webkit-slider-runnable-track {
   width: 100%;
-  height: 3px;
+  height: 5px;
   background: #bdc3c7;
-  border-radius: 1.3px;
 }
 .input-loaded::-moz-range-track {
   width: 100%;
-  height: 3px;
+  height: 5px;
   background: #bdc3c7;
-  border-radius: 1.3px;
 }
 @media (min-width: 576px) {
   .container {

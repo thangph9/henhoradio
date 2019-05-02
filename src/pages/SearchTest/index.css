@@ -34,9 +34,9 @@ li {
   height: 100%;
   display: flex;
   flex-direction: column;
-  background: #f2f2f2;
-  border: 1px solid #95a5a6;
+  background: #fff0f5;
   justify-content: space-between;
+  box-shadow: 0 20px 20px 5px rgba(132, 132, 132, 0.3);
 }
 .box-cart:hover {
   box-shadow: 0 0 11px rgba(33, 33, 33, 0.2);
@@ -55,7 +55,7 @@ li {
   padding: 15px;
   display: flex;
   line-height: 1;
-  background: #f2f2f2;
+  background: #fff0f5;
   flex-direction: column;
   justify-content: center;
   margin-bottom: 0;
@@ -67,6 +67,7 @@ li {
 .member-information .list-menu h4 {
   color: black;
   display: inline-block;
+  z-index: 2;
   margin-bottom: 15px;
 }
 .background-avatar {
@@ -92,6 +93,7 @@ li {
 .title-cart {
   background: #fff;
   padding: 20px;
+  z-index: 2;
 }
 .slide-play {
   width: 100%;
@@ -141,10 +143,64 @@ li {
   background: #bdc3c7;
 }
 .range {
-  background: #f2f2f2;
+  background: #fff0f5;
   position: absolute;
   width: 100%;
   bottom: 0;
+}
+.range .info {
+  pointer-events: none;
+  font-size: 15px;
+  font-weight: 500;
+  color: black;
+  position: absolute;
+  height: 70px;
+  top: 0;
+  opacity: 0;
+  left: 10px;
+  right: 10px;
+  background-color: rgba(255, 255, 255, 0.5);
+  padding: 5px 15px 5px 65px;
+  border-radius: 15px;
+  transition: all 0.5s ease;
+}
+.range .album-art {
+  position: absolute;
+  left: 15px;
+  top: -20px;
+  z-index: 0;
+  height: 60px;
+  width: 60px;
+  border-radius: 50%;
+  box-shadow: 0 0 20px 5px rgba(0, 0, 0, 0);
+  transform: scale(1);
+  transition: all 0.5s ease;
+}
+.range .album-art::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  border-radius: 50%;
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: 60px;
+  background-image: url('https://i.scdn.co/image/9dcbd30dbe0c621cbaeae427cf80eff9877b4fcd');
+}
+.range .album-art::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 15px;
+  height: 15px;
+  background-color: #fff;
+  border-radius: 50%;
+  z-index: 5;
+  transform: translate(-50%, -50%);
+  -webkit-transform: translate(-50%, -50%);
 }
 .input-played {
   cursor: pointer;
@@ -152,6 +208,7 @@ li {
   position: absolute;
   top: 0;
   width: 100%;
+  pointer-events: auto;
   -webkit-appearance: none;
   background: #7f8c8d;
 }
@@ -165,7 +222,7 @@ li {
   -webkit-appearance: none;
   height: 5px;
   width: 8px;
-  background: #fff;
+  background: blueviolet;
   border: none;
   position: relative;
   top: 0;
@@ -292,5 +349,22 @@ li {
   }
   .filter-data span {
     width: 100% !important;
+  }
+}
+.active {
+  top: -50px !important;
+  opacity: 1 !important;
+}
+.active-play .album-art::before {
+  animation: rotation 3s infinite linear;
+  -webkit-animation: rotation 3s infinite linear;
+  animation-fill-mode: forwards;
+}
+@keyframes rotation {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
   }
 }

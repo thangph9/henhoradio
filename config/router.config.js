@@ -40,6 +40,7 @@ export default [
       { path: '/home/newfeed', component: './HomePage' },
       { path: '/home/profile', component: './ProfileDetail' },
       { path: '/home/search-list', component: './SearchList' },
+      { path: '/home/search-test', component: './SearchTest' },
       { path: '/home/detail-list', component: './DetailListRadio' },
       { path: '/home/profile-user', redirect: '/home/profile-user/information' },
       {

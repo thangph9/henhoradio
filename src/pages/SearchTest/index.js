@@ -1,3 +1,4 @@
+/* eslint-disable dot-notation */
 /* eslint-disable no-dupe-class-members */
 /* eslint-disable no-return-assign */
 /* eslint-disable react/no-will-update-set-state */
@@ -316,7 +317,7 @@ class ListRadio extends PureComponent {
       this.setState({
         arrFilter: ['', '', ''],
       });
-      return <Redirect to="/home/search-list?page=1&radio=ALL" />;
+      return <Redirect to="/home/search-test?page=1&radio=ALL" />;
     }
     const { loadingPage, preLoad, detailList, dataFilter, globalPlaying, played } = this.state;
     const { page } = this.props.location.query;
@@ -412,7 +413,14 @@ class ListRadio extends PureComponent {
                               </Link>
                             </h4>
                           </div>
-                          <div className={styles['list-menu']}>
+                          <div
+                            style={
+                              !this.state[`${v.track_id}`]
+                                ? { display: 'flex' }
+                                : { display: 'none' }
+                            }
+                            className={styles['list-menu']}
+                          >
                             <h4>Thời lượng:</h4>
                             <h4>
                               {this.getTimeInAudio(
@@ -435,56 +443,92 @@ class ListRadio extends PureComponent {
                             </h4>
                           </div>
                         </div>
-                        <div className={styles.range}>
-                          <div className={styles['range-item']}>
-                            <input
-                              className={styles['input-loaded']}
-                              name={`name-${v.track_id}`}
-                              ref={input => (this[`input-played-loaded-${v.track_id}`] = input)}
-                              type="range"
-                              defaultValue={0}
-                              step="any"
-                              style={{
-                                width: `${
-                                  this.state[`loaded-${v.track_id}`]
-                                    ? (this.state[`loaded-${v.track_id}`] * 100) /
-                                      this.state[`duration-${v.track_id}`]
-                                    : 0
-                                }%`,
-                              }}
-                            />
-                            <input
-                              className={styles['input-played']}
-                              name={`name-${v.track_id}`}
-                              ref={input => (this[`input-played-${v.track_id}`] = input)}
-                              type="range"
-                              defaultValue={0}
-                              min={0}
-                              max={
-                                this.state[`duration-${v.track_id}`]
-                                  ? this.state[`duration-${v.track_id}`]
+                        <div
+                          className={
+                            !this.state[`${v.track_id}`]
+                              ? `${styles.range}`
+                              : `${styles.range} ${styles['active-play']}`
+                          }
+                        >
+                          <div
+                            className={
+                              !this.state[`${v.track_id}`]
+                                ? `${styles['info']}`
+                                : `${styles['info']} ${styles['active']}`
+                            }
+                          >
+                            <span className="artist">Playing</span>
+                            <span style={{ position: 'absolute', right: '10px' }}>
+                              {this.getTimeInAudio(
+                                this[`input-played-${v.track_id}`]
+                                  ? this[`input-played-${v.track_id}`].value
                                   : 0
-                              }
-                              step="any"
-                              onMouseDown={e => this.onSeekMouseDown(e, `player-${v.track_id}`)}
-                              onPointerDown={e => this.onSeekMouseDown(e, `player-${v.track_id}`)}
-                              onPointerUp={e => this.onSeekMouseUp(e, v.track_id)}
-                              onChange={e => this.onSeekChange(e, `player-${v.track_id}`)}
-                              onMouseUp={e => this.onSeekMouseUp(e, v.track_id)}
-                            />
-                            <div className={styles['title-cart']}>
-                              <div className={styles['play-icon']}>
-                                <Icon
-                                  onClick={() => this.playAudioReact(v.track_id)}
-                                  type={
-                                    !this.state[`${v.track_id}`]
-                                      ? 'play-circle'
-                                      : this.state[`${v.track_id}`].paused
-                                      ? 'play-circle'
-                                      : 'pause-circle'
-                                  }
-                                />
-                              </div>
+                              )}
+                              /
+                              {this.state[`duration-${v.track_id}`] ? (
+                                <span>
+                                  {this.getTimeInAudio(
+                                    this.state[`duration-${v.track_id}`]
+                                      ? this.state[`duration-${v.track_id}`]
+                                      : 0
+                                  )}
+                                </span>
+                              ) : (
+                                '0:0'
+                              )}
+                            </span>
+                            <div style={{ position: 'relative', top: '8px' }}>
+                              <input
+                                className={styles['input-loaded']}
+                                name={`name-${v.track_id}`}
+                                ref={input => (this[`input-played-loaded-${v.track_id}`] = input)}
+                                type="range"
+                                defaultValue={0}
+                                step="any"
+                                style={{
+                                  width: `${
+                                    this.state[`loaded-${v.track_id}`]
+                                      ? (this.state[`loaded-${v.track_id}`] * 100) /
+                                        this.state[`duration-${v.track_id}`]
+                                      : 0
+                                  }%`,
+                                }}
+                              />
+                              <input
+                                className={styles['input-played']}
+                                name={`name-${v.track_id}`}
+                                ref={input => (this[`input-played-${v.track_id}`] = input)}
+                                type="range"
+                                defaultValue={0}
+                                min={0}
+                                max={
+                                  this.state[`duration-${v.track_id}`]
+                                    ? this.state[`duration-${v.track_id}`]
+                                    : 0
+                                }
+                                step="any"
+                                onMouseDown={e => this.onSeekMouseDown(e, `player-${v.track_id}`)}
+                                onPointerDown={e => this.onSeekMouseDown(e, `player-${v.track_id}`)}
+                                onPointerUp={e => this.onSeekMouseUp(e, v.track_id)}
+                                onChange={e => this.onSeekChange(e, `player-${v.track_id}`)}
+                                onMouseUp={e => this.onSeekMouseUp(e, v.track_id)}
+                              />
+                            </div>
+                          </div>
+                          <div className={styles['album-art']} />
+
+                          <div className={styles['title-cart']}>
+                            <div className={styles['play-icon']}>
+                              <Icon
+                                onClick={() => this.playAudioReact(v.track_id)}
+                                type={
+                                  !this.state[`${v.track_id}`]
+                                    ? 'play-circle'
+                                    : this.state[`${v.track_id}`].paused
+                                    ? 'play-circle'
+                                    : 'pause-circle'
+                                }
+                              />
                             </div>
                           </div>
                         </div>

@@ -58,27 +58,6 @@ li {
   padding-left: 5px !important;
   margin-bottom: 10px !important;
   height: 270px;
-  &:hover {
-    text-decoration: none;
-    .input-played {
-      height: 5px;
-      &::-webkit-slider-runnable-track {
-        height: 5px;
-      }
-      &::-moz-range-track {
-        height: 5px;
-      }
-    }
-    .input-loaded {
-      height: 5px;
-      &::-webkit-slider-runnable-track {
-        height: 5px;
-      }
-      &::-moz-range-track {
-        height: 5px;
-      }
-    }
-  }
 }
 .member-information {
   font-size: 14px;
@@ -178,11 +157,12 @@ li {
 }
 .input-played {
   cursor: pointer;
-  height: 3px;
+  height: 5px;
   position: absolute;
   top: 0;
   width: 100%;
   -webkit-appearance: none;
+  background: #7f8c8d;
   &:focus {
     outline: none;
   }
@@ -192,14 +172,14 @@ li {
 
   &::-webkit-slider-thumb {
     -webkit-appearance: none;
-    height: 12px;
-    width: 12px;
-    border-radius: 50%;
-    background: red;
+    height: 5px;
+    width: 8px;
+    background: #fff;
     border: none;
     position: relative;
-    top: -4px;
+    top: 0;
     z-index: 2;
+    box-shadow: -100vw 0 0 100vw red;
   }
   &::-moz-range-thumb {
     z-index: 2;
@@ -216,23 +196,21 @@ li {
     background: #fff;
   }
   &::-webkit-slider-runnable-track {
-    width: 100%;
-    height: 3px;
-    background: #7f8c8d;
-    border-radius: 1.3px;
+    -webkit-appearance: none;
+    height: 5px;
+    overflow: hidden;
   }
   &::-moz-range-track {
     width: 100%;
-    height: 3px;
+    height: 5px;
     background: #7f8c8d;
-    border-radius: 1.3px;
   }
 }
 .input-loaded {
   cursor: pointer;
   z-index: 1;
   pointer-events: none;
-  height: 3px;
+  height: 5px;
   position: absolute;
   top: 0;
   -webkit-appearance: none;
@@ -258,15 +236,13 @@ li {
   }
   &::-webkit-slider-runnable-track {
     width: 100%;
-    height: 3px;
+    height: 5px;
     background: #bdc3c7;
-    border-radius: 1.3px;
   }
   &::-moz-range-track {
     width: 100%;
-    height: 3px;
+    height: 5px;
     background: #bdc3c7;
-    border-radius: 1.3px;
   }
 }
 @media (min-width: 576px) {

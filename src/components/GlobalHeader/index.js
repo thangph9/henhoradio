@@ -92,7 +92,6 @@ class GlobalHeader extends PureComponent {
     }
     this.updateDimensions();
     window.addEventListener('resize', this.updateDimensions.bind(this));
-    console.log(this.props.getmenu);
   }
 
   componentWillReceiveProps(nextProps) {
