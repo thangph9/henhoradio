@@ -1,3 +1,5 @@
+/* eslint-disable no-param-reassign */
+/* eslint-disable react/destructuring-assignment */
 /* eslint-disable no-unused-vars */
 /* eslint-disable react/no-unused-state */
 
@@ -44,10 +46,11 @@ class FormLogin extends PureComponent {
 
   componentWillUpdate(nextProps, nextState) {
     const { dispatch } = this.props;
-    const { data, value } = this.state;
+    const { data, value, useCaptcha } = this.state;
     const dataCaptcha = data;
     if (value !== nextState.value && nextState.value.length > 0) {
       dataCaptcha.captcha = nextState.value;
+      dataCaptcha.useCaptcha = useCaptcha;
       dispatch({
         type: 'authentication/login',
         payload: dataCaptcha,
@@ -57,19 +60,24 @@ class FormLogin extends PureComponent {
 
   handleSubmit = e => {
     e.preventDefault();
-    const { form, dispatch } = this.props;
+    const { form, dispatch, useCaptcha } = this.props;
     form.validateFields((err, values) => {
       if (!err) {
-        recaptchaRef.current.execute();
-        this.setState({
-          data: values,
-        });
-        /*
-        dispatch({
-          type: 'authentication/login',
-          payload: values,
-        });
-        */
+        if (this.props.useCaptcha) {
+          recaptchaRef.current.execute();
+          this.setState({
+            data: values,
+          });
+        } else {
+          this.setState({
+            data: values,
+          });
+          values.useCaptcha = useCaptcha;
+          dispatch({
+            type: 'authentication/login',
+            payload: values,
+          });
+        }
       }
     });
   };
@@ -117,16 +125,18 @@ class FormLogin extends PureComponent {
                 message: 'Vui lòng nhập mật khẩu!',
               },
             ],
-          })(<Input autocomplete="password" type="password" />)}
+          })(<Input autoComplete="password" type="password" />)}
         </Form.Item>
-        <Form.Item>
-          <ReCAPTCHA
-            ref={recaptchaRef}
-            onChange={e => this.handleChangeCaptcha(e)}
-            sitekey="6LfUm5AUAAAAAB6eXtNTPWLUZT5hCbDabBBmLK23"
-            size="invisible"
-          />
-        </Form.Item>
+        {this.props.useCaptcha && (
+          <Form.Item>
+            <ReCAPTCHA
+              ref={recaptchaRef}
+              onChange={e => this.handleChangeCaptcha(e)}
+              sitekey="6LfUm5AUAAAAAB6eXtNTPWLUZT5hCbDabBBmLK23"
+              size="invisible"
+            />
+          </Form.Item>
+        )}
         <Form.Item>
           <Button
             size="large"

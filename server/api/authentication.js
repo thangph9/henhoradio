@@ -208,35 +208,44 @@ function login(req, res) {
       PARAM_IS_VALID.phone = params.phone;
       PARAM_IS_VALID.password = params.password;
       PARAM_IS_VALID.captcha = params.captcha;
+      PARAM_IS_VALID.useCaptcha = params.useCaptcha;
       callback(null, null);
     },
     function checkCaptcha(callback) {
-      if (!params.captcha) {
-        return res.json({
-          status: 'error',
-          message: 'Chưa nhập captcha',
-          timeline: new Date().getTime(),
-        });
-      }
-      verificationUrl = 'https://www.google.com/recaptcha/api/siteverify?secret=6LfUm5AUAAAAAC8xSPAt0pRUzUd4ZaK-1rZs-Aqm&response='.concat(
-        params.captcha,
-        '&remoteip=',
-        req.connection.remoteAddress
-      );
-      callback(null, verificationUrl);
-    },
-    function verifyCaptcha(callback) {
-      request(verificationUrl, (error, response, b) => {
-        const body = JSON.parse(b);
-        if (body.success === false) {
+      if (PARAM_IS_VALID.useCaptcha) {
+        if (!params.captcha) {
           return res.json({
             status: 'error',
-            message: 'Sai captcha',
+            message: 'Chưa nhập captcha',
             timeline: new Date().getTime(),
           });
         }
-        callback(error, null);
-      });
+        verificationUrl = 'https://www.google.com/recaptcha/api/siteverify?secret=6LfUm5AUAAAAAC8xSPAt0pRUzUd4ZaK-1rZs-Aqm&response='.concat(
+          params.captcha,
+          '&remoteip=',
+          req.connection.remoteAddress
+        );
+        callback(null, verificationUrl);
+      } else {
+        callback(null, null);
+      }
+    },
+    function verifyCaptcha(callback) {
+      if (PARAM_IS_VALID.useCaptcha) {
+        request(verificationUrl, (error, response, b) => {
+          const body = JSON.parse(b);
+          if (body.success === false) {
+            return res.json({
+              status: 'error',
+              message: 'Sai captcha',
+              timeline: new Date().getTime(),
+            });
+          }
+          callback(error, null);
+        });
+      } else {
+        callback(null, null);
+      }
     },
     function fetchUsers(callback) {
       models.instance.users.find(

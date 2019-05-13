@@ -63,6 +63,7 @@ const about = {
     menuId: '775f5da7-cff2-4336-8221-71455ac6c9a7',
   },
   LoginPage: {
+    useCaptcha: false,
     iconHeader: [
       {
         type: 'facebook',

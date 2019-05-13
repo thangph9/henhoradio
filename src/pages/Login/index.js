@@ -199,12 +199,13 @@ class Login extends PureComponent {
                     </div>
                     {statusPage === false ? (
                       <FormLogin
+                        useCaptcha={this.state.login.useCaptcha}
                         {...this.props}
                         help={this.state.help}
                         validateStatus={this.state.validateStatus}
                       />
                     ) : (
-                      <FormRegister {...this.props} />
+                      <FormRegister {...this.props} useCaptcha={this.state.login.useCaptcha} />
                     )}
                   </div>
                 </div>
@@ -286,9 +287,9 @@ class Login extends PureComponent {
                       </span>
                     </div>
                     {statusPage === false ? (
-                      <FormLogin {...this.props} />
+                      <FormLogin {...this.props} useCaptcha={this.state.login.useCaptcha} />
                     ) : (
-                      <FormRegister {...this.props} />
+                      <FormRegister {...this.props} useCaptcha={this.state.login.useCaptcha} />
                     )}
                   </div>
                 </div>
