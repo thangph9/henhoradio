@@ -1,3 +1,4 @@
+/* eslint-disable react/destructuring-assignment */
 /* eslint-disable no-unused-vars */
 /* eslint-disable camelcase */
 
@@ -174,11 +175,12 @@ class FormRegister extends PureComponent {
   }
 
   componentWillUpdate(nextProps, nextState) {
-    const { data, value } = this.state;
+    const { data, value, useCaptcha } = this.state;
     const { dispatch } = this.props;
     const dataCaptcha = data;
     if (value !== nextState.value && nextState.value.length > 0) {
       dataCaptcha.captcha = nextState.value;
+      dataCaptcha.useCaptcha = useCaptcha;
       dispatch({
         type: 'authentication/register',
         payload: dataCaptcha,
@@ -266,18 +268,20 @@ class FormRegister extends PureComponent {
       }
       if (values.password === values.repassword) {
         if (!err && dob_day && dob_month && dob_year && gender) {
-          recaptchaRef.current.execute();
-
-          /*
+          if (this.props.useCaptcha) {
+            recaptchaRef.current.execute();
+            this.setState({
+              data: values,
+            });
+          } else {
             dispatch({
-            type: 'authentication/register',
-            payload: values,
-          });
-          */
-
-          this.setState({
-            data: values,
-          });
+              type: 'authentication/register',
+              payload: values,
+            });
+            this.setState({
+              data: values,
+            });
+          }
         }
       }
     });
@@ -711,12 +715,14 @@ class FormRegister extends PureComponent {
             />
           )}
         </Form.Item>
-        <ReCAPTCHA
-          ref={recaptchaRef}
-          onChange={e => this.handleChangeCaptcha(e)}
-          sitekey="6LfUm5AUAAAAAB6eXtNTPWLUZT5hCbDabBBmLK23"
-          size="invisible"
-        />
+        {this.props.useCaptcha && (
+          <ReCAPTCHA
+            ref={recaptchaRef}
+            onChange={e => this.handleChangeCaptcha(e)}
+            sitekey="6LfUm5AUAAAAAB6eXtNTPWLUZT5hCbDabBBmLK23"
+            size="invisible"
+          />
+        )}
         <Form.Item>
           <Button
             size="large"
