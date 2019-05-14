@@ -123,8 +123,8 @@ class NewFeed extends PureComponent {
       },
     } = this.props;
     if (
-      !this.props.location.query.page &&
-      !this.props.location.query.gender &&
+      !this.props.location.query.page ||
+      !this.props.location.query.gender ||
       !this.props.location.query.age
     ) {
       return <Redirect to="/home/newfeed?page=1&gender=all&age=18_24" />;
