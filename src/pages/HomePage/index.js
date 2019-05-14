@@ -36,6 +36,10 @@ class NewFeed extends PureComponent {
     dispatch({
       type: 'authentication/getallusers',
     });
+    this.setState({
+      ageValue: this.props.location.query.age,
+      genderValue: this.props.location.query.gender,
+    });
   }
 
   componentWillReceiveProps(nextProps) {
@@ -88,11 +92,16 @@ class NewFeed extends PureComponent {
   }
 
   handeClickSubGender(e) {
-    const age = this.props.location.query.age;
-    this.props.history.push({
+    // const age = this.props.location.query.age;
+    this.setState({
+      genderValue: e,
+    });
+    /*
+      this.props.history.push({
       pathname: '/home/newfeed',
       search: `?page=1&gender=${e}&age=${age}`,
     });
+    */
   }
 
   getValueGender(value) {
@@ -108,10 +117,24 @@ class NewFeed extends PureComponent {
   }
 
   handeClickSubAge(e) {
-    const gender = this.props.location.query.gender;
+    this.setState({
+      ageValue: e,
+    });
+    /*
+      const gender = this.props.location.query.gender;
+      this.props.history.push({
+        pathname: '/home/newfeed',
+        search: `?page=1&gender=${gender}&age=${e}`,
+      });
+    */
+  }
+
+  handleClickSearch() {
+    const gender = this.state.genderValue;
+    const age = this.state.ageValue;
     this.props.history.push({
       pathname: '/home/newfeed',
-      search: `?page=1&gender=${gender}&age=${e}`,
+      search: `?page=1&gender=${gender}&age=${age}`,
     });
   }
 
@@ -138,7 +161,7 @@ class NewFeed extends PureComponent {
                 <Icon type="search" />
                 <input
                   type="text"
-                  placeholder="Tìm kiếm người bạn ..."
+                  placeholder="Tìm kiếm (không bắt buộc)..."
                   className={styles['input-search']}
                 />
               </div>
@@ -147,7 +170,7 @@ class NewFeed extends PureComponent {
                   &#9792;
                 </div>
                 <div style={{ color: '#34495e' }}>
-                  {this.getValueGender(this.props.location.query.gender)}
+                  {this.getValueGender(this.state.genderValue)}
                 </div>
                 <div
                   className={
@@ -179,9 +202,7 @@ class NewFeed extends PureComponent {
               </div>
               <div onClick={() => this.ToggleAge()} className={styles['filter-age1']}>
                 <Icon style={{ paddingRight: '10px' }} type="user" />
-                <div style={{ color: '#34495e' }}>
-                  {this.getValueAge(this.props.location.query.age)}
-                </div>
+                <div style={{ color: '#34495e' }}>{this.getValueAge(this.state.ageValue)}</div>
                 <div
                   className={
                     filterAge
@@ -202,7 +223,11 @@ class NewFeed extends PureComponent {
                 <Icon type="caret-down" style={{ paddingLeft: '10px' }} theme="filled" />
               </div>
               <div className={styles['filter-button']}>
-                <button className={styles['btn-search']} type="button">
+                <button
+                  onClick={() => this.handleClickSearch()}
+                  className={styles['btn-search']}
+                  type="button"
+                >
                   Tìm kiếm
                 </button>
               </div>
