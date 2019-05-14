@@ -680,7 +680,8 @@ function getAllUsers(req, res) {
                 obj.age = new Date().getFullYear() - element.dob_year;
                 obj.address = element.address;
                 obj.avatar = element.avatar;
-                if (element.public === 'active') arr.push(obj);
+                arr.push(obj);
+                // if (element.public === 'active') arr.push(obj);
               });
               if (legit.userid) arr = arr.filter(element => element.user_id !== legit.userid);
               result = arr;
