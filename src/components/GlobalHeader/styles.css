@@ -891,7 +891,7 @@
 .logo-icon {
   width: 100px;
   height: 50px;
-  transform: translateY(10px);
+  transform: translateY(5px);
   background-position: center;
   background-size: 90px auto;
   background-repeat: no-repeat;
