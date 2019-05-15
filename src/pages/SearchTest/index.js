@@ -312,6 +312,21 @@ class ListRadio extends PureComponent {
     });
   }
 
+  handleClickAction(value) {
+    this.setState({
+      [`action-${value}`]: !this.state[`action-${value}`],
+    });
+  }
+
+  handleClickTua(id, value) {
+    if (this.state[`${id}`]) {
+      const v = Number(this[`input-played-${id}`].value);
+      if (v + value < 0 || v + value > this.state[`duration-${id}`]) {
+        this[`player-${id}`].seekTo(0);
+      } else this[`player-${id}`].seekTo(v + value);
+    }
+  }
+
   render() {
     if (this.props.location.search === '') {
       this.setState({
@@ -381,7 +396,173 @@ class ListRadio extends PureComponent {
                   })
                   .map((v, i) => (
                     <div key={i} className={styles['cart-item']}>
-                      <div className={styles['box-cart']}>
+                      <article
+                        className={
+                          this.state[`action-${i}`]
+                            ? `${styles['material-card']} ${styles['mc-active']}`
+                            : styles['material-card']
+                        }
+                      >
+                        <h2>
+                          <span className={styles['span-title']}>{v.title}</span>
+                          <strong>
+                            <Icon
+                              style={{ paddingRight: '5px' }}
+                              type="clock-circle"
+                              theme="filled"
+                            />
+                            {moment(v.date).format('DD/MM/YYYY')}
+                          </strong>
+                        </h2>
+                        <div className={styles['mc-content']}>
+                          <div className={styles['img-container']}>
+                            <img
+                              className={
+                                !this.state[`${v.track_id}`]
+                                  ? styles['img-responsive']
+                                  : `${styles['img-responsive']} ${styles['active-play-audio']}`
+                              }
+                              src="https://i.scdn.co/image/9dcbd30dbe0c621cbaeae427cf80eff9877b4fcd"
+                              alt="img"
+                            />
+                          </div>
+                          <div className={styles['mc-description']}>
+                            <div>
+                              <Icon style={{ paddingRight: '8px' }} type="home" />
+                              <span className={styles['span-discription']}>
+                                Đài phát: {v.local === 'HN' ? 'Hà Nội' : 'Hồ Chí Minh'}
+                              </span>
+                            </div>
+                            <div>
+                              <Icon style={{ paddingRight: '8px' }} type="user" />
+                              <span className={styles['span-discription']}>MC: {v.mc}</span>
+                            </div>
+                            <div>
+                              <Icon style={{ paddingRight: '8px' }} type="clock-circle" />
+                              <span className={styles['span-discription']}>
+                                {this.getTimeInAudio(
+                                  this[`input-played-${v.track_id}`]
+                                    ? this[`input-played-${v.track_id}`].value
+                                    : 0
+                                )}
+                              </span>
+                              /
+                              {this.state[`duration-${v.track_id}`] ? (
+                                <span className={styles['span-discription']}>
+                                  {this.getTimeInAudio(
+                                    this.state[`duration-${v.track_id}`]
+                                      ? this.state[`duration-${v.track_id}`]
+                                      : 0
+                                  )}
+                                </span>
+                              ) : (
+                                '0:0'
+                              )}
+                            </div>
+                            <div>
+                              <Icon style={{ paddingRight: '8px' }} type="usergroup-add" />
+                              <span className={styles['span-discription']}>
+                                <Link
+                                  style={{ color: '#e74c3c', textDecoration: 'underline' }}
+                                  to={`detail-list?page=1&radio=${v.local}&gender=ALL&date=${moment(
+                                    v.date
+                                  )
+                                    .format('D/M/YYYY')
+                                    .replace(/\//g, '_')}`}
+                                >
+                                  Chi tiết TV lên sóng...
+                                </Link>
+                              </span>
+                            </div>
+                          </div>
+                        </div>
+                        <a
+                          onClick={() => this.handleClickAction(i)}
+                          className={styles['mc-btn-action']}
+                        >
+                          <Icon type="bars" />
+                        </a>
+                        <div className={styles['mc-footer']}>
+                          <div className={styles.range}>
+                            <div className={styles['range-item']}>
+                              <input
+                                className={styles['input-loaded']}
+                                name={`name-${v.track_id}`}
+                                ref={input => (this[`input-played-loaded-${v.track_id}`] = input)}
+                                type="range"
+                                defaultValue={0}
+                                step="any"
+                                style={{
+                                  width: `${
+                                    this.state[`loaded-${v.track_id}`]
+                                      ? (this.state[`loaded-${v.track_id}`] * 100) /
+                                        this.state[`duration-${v.track_id}`]
+                                      : 0
+                                  }%`,
+                                }}
+                              />
+                              <input
+                                className={styles['input-played']}
+                                name={`name-${v.track_id}`}
+                                ref={input => (this[`input-played-${v.track_id}`] = input)}
+                                type="range"
+                                defaultValue={0}
+                                min={0}
+                                max={
+                                  this.state[`duration-${v.track_id}`]
+                                    ? this.state[`duration-${v.track_id}`]
+                                    : 0
+                                }
+                                step="any"
+                                onMouseDown={e => this.onSeekMouseDown(e, `player-${v.track_id}`)}
+                                onPointerDown={e => this.onSeekMouseDown(e, `player-${v.track_id}`)}
+                                onPointerUp={e => this.onSeekMouseUp(e, v.track_id)}
+                                onChange={e => this.onSeekChange(e, `player-${v.track_id}`)}
+                                onMouseUp={e => this.onSeekMouseUp(e, v.track_id)}
+                              />
+                            </div>
+                            <Icon
+                              onClick={() => this.handleClickTua(v.track_id, -15)}
+                              type="backward"
+                              theme="filled"
+                            />
+                            <Icon
+                              onClick={() => this.playAudioReact(v.track_id)}
+                              theme="filled"
+                              type={
+                                !this.state[`${v.track_id}`]
+                                  ? 'play-circle'
+                                  : this.state[`${v.track_id}`].paused
+                                  ? 'play-circle'
+                                  : 'pause-circle'
+                              }
+                            />
+                            <Icon
+                              onClick={() => this.handleClickTua(v.track_id, 15)}
+                              type="forward"
+                              theme="filled"
+                            />
+                          </div>
+                          <ReactPlayer
+                            playing={this.state[v.track_id]}
+                            ref={player => (this[`player-${v.track_id}`] = player)}
+                            width="0%"
+                            height="0%"
+                            loop={false}
+                            onSeek={e => this.onSeek(e)}
+                            url={`http://cdn.henhoradio.net/upload/audio/local/${v.audio}`}
+                            onProgress={e => this.onProgress(e, v.track_id)}
+                            config={{
+                              file: { forceAudio: true },
+                            }}
+                            onDuration={e => this.onDuration(e, v.track_id)}
+                            onEnded={() => this.onEnded(v.track_id)}
+                          />
+                        </div>
+                      </article>
+
+                      {/*
+                        <div className={styles['box-cart']}>
                         <div className={styles['member-information']}>
                           <div className={styles['list-menu']}>
                             <h4>{v.title}</h4>
@@ -547,6 +728,7 @@ class ListRadio extends PureComponent {
                           onEnded={() => this.onEnded(v.track_id)}
                         />
                       </div>
+                      */}
                     </div>
                   ))
               : preLoad.map((v, i) => (
