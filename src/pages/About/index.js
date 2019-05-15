@@ -162,7 +162,6 @@ class About extends PureComponent {
             <div className={styles.container}>
               <Link className={styles['splashdtf-signup-button']} type="button" to="/login?ref=1">
                 <span>Tham gia</span>
-                <span className={styles['splashdtf-signup-button-logo']} />
               </Link>
             </div>
             <div className={`${styles.container} ${styles['mobile-logo']}`}>
