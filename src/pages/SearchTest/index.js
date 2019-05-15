@@ -245,11 +245,15 @@ class ListRadio extends PureComponent {
       const h = value / 3600;
       const m = (value % 3600) / 60;
       const s = (value % 3600) % 60;
-      return `${Math.trunc(h)}:${Math.trunc(m)}:${Math.trunc(s)}`;
+      return `${Math.trunc(h) <= 9 ? `0${Math.trunc(h)}` : Math.trunc(h)}:${
+        Math.trunc(m) <= 9 ? `0${Math.trunc(m)}` : Math.trunc(s)
+      }:${Math.trunc(s) <= 9 ? `0${Math.trunc(s)}` : Math.trunc(s)}`;
     }
     const m = value / 60;
     const s = value % 60;
-    return `${Math.trunc(m)}:${Math.trunc(s)}`;
+    return `${Math.trunc(m) <= 9 ? `0${Math.trunc(m)}` : Math.trunc(m)}:${
+      Math.trunc(s) <= 9 ? `0${Math.trunc(s)}` : Math.trunc(s)
+    }`;
   }
 
   playAudioReact(value) {
@@ -445,8 +449,8 @@ class ListRadio extends PureComponent {
                                     ? this[`input-played-${v.track_id}`].value
                                     : 0
                                 )}
-                              </span>
-                              /
+                              </span>{' '}
+                              /{' '}
                               {this.state[`duration-${v.track_id}`] ? (
                                 <span className={styles['span-discription']}>
                                   {this.getTimeInAudio(
