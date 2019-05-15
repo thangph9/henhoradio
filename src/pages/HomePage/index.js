@@ -36,10 +36,20 @@ class NewFeed extends PureComponent {
     dispatch({
       type: 'authentication/getallusers',
     });
-    this.setState({
-      ageValue: this.props.location.query.age,
-      genderValue: this.props.location.query.gender,
-    });
+    if (
+      !this.props.location.query.page ||
+      !this.props.location.query.gender ||
+      !this.props.location.query.age
+    ) {
+      this.setState({
+        ageValue: '18_24',
+        genderValue: 'all',
+      });
+      this.props.history.push({
+        pathname: `/home/newfeed`,
+        search: `?page=1&gender=all&age=18_24`,
+      });
+    }
   }
 
   componentWillReceiveProps(nextProps) {

@@ -123,14 +123,15 @@ class Login extends PureComponent {
               >
                 <div className={styles['tw3-pane'].concat(' ', styles['tw3-pane--left'])}>
                   <div className={styles['tw3-pane__content']}>
-                    <div className={styles.logo}>
-                      <img
-                        alt="img"
-                        src="https://twoo-a.akamaihd.net/static/682503600911326952191/images/logos/logo-twoo-flat-white@2x.png"
-                        height={42}
-                      />
-                    </div>
-
+                    {/*
+                      <div className={styles.logo}>
+                          <img
+                            alt="img"
+                            src="https://twoo-a.akamaihd.net/static/682503600911326952191/images/logos/logo-twoo-flat-white@2x.png"
+                            height={42}
+                          />
+                        </div>
+                    */}
                     <h1
                       style={{ color: '#fff' }}
                       className={styles['h1--step1'].concat(' ', styles.fw500)}
@@ -255,9 +256,12 @@ class Login extends PureComponent {
               >
                 <div className={styles['tw3-pane'].concat(' ', styles['tw3-pane--left'])}>
                   <div className={styles['tw3-pane__content']}>
-                    <div className={styles.logo}>
+                    {/*
+
+                      <div className={styles.logo}>
                       <img alt="img" src={login.logo} height={42} />
                     </div>
+                    */}
 
                     <h1
                       style={{ color: '#fff' }}

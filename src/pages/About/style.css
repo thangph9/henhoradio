@@ -29,11 +29,12 @@
 }
 .splashdtf-logo {
   display: inline-block;
-  width: 90px;
-  height: 30px;
+  width: 95px;
+  height: 40px;
+  background-position: center;
   background-size: 90px auto;
   background-repeat: no-repeat;
-  background-image: url('https://cdn.okccdn.com/media/img/dtf/logo.png');
+  background-image: url('http://cdn.henhoradio.net/images/ft/2d5ad80d-68d4-4207-8075-2d7e24e00e89');
 }
 .splashdtf-header-signin-text {
   margin-right: 17px;

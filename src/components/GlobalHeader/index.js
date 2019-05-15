@@ -182,12 +182,10 @@ class GlobalHeader extends PureComponent {
                   <Icon style={{ display: 'block', fontSize: '20px' }} type="user" />
                 </button>
               </div>
-              <Link to={`/home`} className={`${styles['header__navbar-brand___SzzgD']} `}>
-                <img
-                  style={{ position: 'relative', width: '82px', height: '23px' }}
-                  src="https://twoo-a.akamaihd.net/static/7156520574362430695506/images/logos/logo-twoo-flat@2x.png"
-                />
-              </Link>
+              <Link
+                to={`/home`}
+                className={`${styles['header__navbar-brand___SzzgD'] + ' ' + styles['logo-icon']} `}
+              />
               <div
                 style={{ alignItems: 'center' }}
                 className={`${styles['clearfix']} ${styles['collapse']} ${
@@ -431,7 +429,7 @@ class GlobalHeader extends PureComponent {
                 to={`/home`}
                 className={`${styles['header__navbar-brand___SzzgD']} `}
               >
-                <img src="https://twoo-a.akamaihd.net/static/7156520574362430695506/images/logos/logo-twoo-flat@2x.png" />
+                <img src="/public/icons/logoradio.png" />
               </Link>
               {localStorage.token ? (
                 <ul
