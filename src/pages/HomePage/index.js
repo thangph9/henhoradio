@@ -49,6 +49,14 @@ class NewFeed extends PureComponent {
         pathname: `/home/newfeed`,
         search: `?page=1&gender=all&age=18_24`,
       });
+    } else {
+      console.log('vao day');
+      const gender = this.props.location.query.gender;
+      const age = this.props.location.query.age;
+      this.setState({
+        ageValue: age,
+        genderValue: gender,
+      });
     }
   }
 
@@ -146,6 +154,26 @@ class NewFeed extends PureComponent {
       pathname: '/home/newfeed',
       search: `?page=1&gender=${gender}&age=${age}`,
     });
+  }
+
+  getDataFilter(data) {
+    const arr = data.filter(value => {
+      if (this.props.location.query.gender === 'all') {
+        if (this.props.location.query.age === '18_24') return value.age >= 18 && value.age <= 24;
+        if (this.props.location.query.age === '25_35') return value.age >= 25 && value.age <= 35;
+        return value.age >= 36;
+      }
+      if (this.props.location.query.age === '18_24')
+        return (
+          value.age >= 18 && value.age <= 24 && value.gender === this.props.location.query.gender
+        );
+      if (this.props.location.query.age === '25_35')
+        return (
+          value.age >= 25 && value.age <= 35 && value.gender === this.props.location.query.gender
+        );
+      return value.age >= 36 && value.gender === this.props.location.query.gender;
+    });
+    return arr;
   }
 
   render() {
@@ -269,29 +297,7 @@ class NewFeed extends PureComponent {
           */}
           <div className={styles.row}>
             {!loadingPage
-              ? allUser
-                  .filter(value => {
-                    if (this.props.location.query.gender === 'all') {
-                      if (this.props.location.query.age === '18_24')
-                        return value.age >= 18 && value.age <= 24;
-                      if (this.props.location.query.age === '25_35')
-                        return value.age >= 25 && value.age <= 35;
-                      return value.age >= 36;
-                    }
-                    if (this.props.location.query.age === '18_24')
-                      return (
-                        value.age >= 18 &&
-                        value.age <= 24 &&
-                        value.gender === this.props.location.query.gender
-                      );
-                    if (this.props.location.query.age === '25_35')
-                      return (
-                        value.age >= 25 &&
-                        value.age <= 35 &&
-                        value.gender === this.props.location.query.gender
-                      );
-                    return value.age >= 36 && value.gender === this.props.location.query.gender;
-                  })
+              ? this.getDataFilter(allUser)
                   .filter((value, index) => index >= page * 20 - 20 && index < page * 20)
                   .map((v, i) => (
                     <Link
@@ -337,7 +343,7 @@ class NewFeed extends PureComponent {
             onChange={(v1, v2) => this.handleChangePagination(v1, v2)}
             current={Number(page)}
             pageSize={20}
-            total={allUser.length}
+            total={this.getDataFilter(allUser).length}
           />
         </div>
       </div>
