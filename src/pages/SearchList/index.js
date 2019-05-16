@@ -569,29 +569,26 @@ class ListRadio extends PureComponent {
                   ))
               : preLoad.map((v, i) => (
                   <div key={i} className={styles['cart-item']}>
-                    <div className={styles['box-cart']}>
-                      <div className={styles['member-information']}>
+                    <article className={styles['material-card']}>
+                      <h2>
                         <li className={styles['li-skeleton']} />
                         <li className={styles['li-skeleton']} />
-                        <li className={styles['li-skeleton']} />
-                        <li className={styles['li-skeleton']} />
-                        <li className={styles['li-skeleton']} />
+                      </h2>
+                      <div className={styles['mc-content']}>
+                        <div className={styles['img-container']}>
+                          <img
+                            className={styles['img-responsive']}
+                            src="https://i.scdn.co/image/9dcbd30dbe0c621cbaeae427cf80eff9877b4fcd"
+                            alt="img"
+                          />
+                        </div>
                       </div>
-                      <div
-                        style={{ borderTop: '1px solid #95a5a6' }}
-                        className={`${styles['title-cart']} home-page-preload`}
-                      >
-                        <Icon
-                          style={{
-                            cursor: 'pointer',
-                            margin: '0 auto',
-                            display: 'table',
-                            fontSize: '20px',
-                          }}
-                          type="play-circle"
-                        />
+                      <div className={styles['mc-footer']}>
+                        <div className={styles.range}>
+                          <div className={styles['range-item']} />
+                        </div>
                       </div>
-                    </div>
+                    </article>
                   </div>
                 ))}
           </div>

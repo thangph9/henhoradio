@@ -449,6 +449,17 @@ li {
 .material-card h2 span {
   display: block;
 }
+.material-card h2 li {
+  height: 7px;
+  margin: 12px 0;
+  background: #fff !important;
+}
+.material-card h2 li:nth-child(1) {
+  width: 80%;
+}
+.material-card h2 li:nth-child(2) {
+  width: 40%;
+}
 .material-card h2 strong {
   font-weight: 400;
   display: block;
