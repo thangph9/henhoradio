@@ -393,6 +393,22 @@ class ListRadio extends PureComponent {
     return `${Math.trunc(m)}:${Math.trunc(s)}`;
   }
 
+  handleClickAction(value, id) {
+    this.setState({
+      [`action-${value}`]: !this.state[`action-${value}`],
+      [id]: undefined,
+    });
+  }
+
+  handleClickTua(id, value) {
+    if (this.state[`${id}`]) {
+      const v = Number(this[`input-played-${id}`].value);
+      if (v + value < 0 || v + value > this.state[`duration-${id}`]) {
+        this[`player-${id}`].seekTo(0);
+      } else this[`player-${id}`].seekTo(v + value);
+    }
+  }
+
   render() {
     if (this.props.location.search === '') {
       this.setState({
@@ -477,119 +493,174 @@ class ListRadio extends PureComponent {
                   })
                   .map((v, i) => (
                     <div key={i} className={styles['cart-item']}>
-                      <div className={styles['box-cart']}>
-                        <div className={styles['member-information']}>
-                          <div className={styles['list-menu']}>
-                            <h4>Lên sóng:</h4>
-                            <h4>{v.name}</h4>
-                          </div>
-                          <div className={styles['list-menu']}>
-                            <h4>Giới tính:</h4>
-                            <h4>{v.gender === 'MALE' ? 'Nam' : 'Nữ'}</h4>
-                          </div>
-                          <div className={styles['list-menu']}>
-                            <h4>Hôn nhân:</h4>
-                            <h4>{v.relationship}</h4>
-                          </div>
-                          <div className={styles['list-menu']}>
-                            <h4>Đài phát:</h4>
-                            <h4>{v.location === 'HN' ? 'Hà Nội' : 'Hồ Chí Minh'}</h4>
-                          </div>
-                          <div className={styles['list-menu']}>
-                            <h4>Ngày lên sóng:</h4>
-                            <h4>{moment(v.timeup).format('DD/MM/YYYY')}</h4>
-                          </div>
-                          <div className={styles['list-menu']}>
-                            <h4>Thời lượng:</h4>
-                            <h4>
-                              {this.getTimeInAudio(
-                                this[`input-played-${v.audio}`]
-                                  ? this[`input-played-${v.audio}`].value
-                                  : 0
-                              )}
-                              /
-                              {this.state[`duration-${v.audio}`] ? (
-                                <span>
-                                  {this.getTimeInAudio(
-                                    this.state[`duration-${v.audio}`]
-                                      ? this.state[`duration-${v.audio}`]
-                                      : 0
-                                  )}
-                                </span>
-                              ) : (
-                                '0:0'
-                              )}
-                            </h4>
-                          </div>
-                        </div>
-                        <div className={styles.range}>
-                          <div className={styles['range-item']}>
-                            <input
-                              className={styles['input-loaded']}
-                              name={`name-${v.audio}`}
-                              ref={input => (this[`input-played-loaded-${v.audio}`] = input)}
-                              type="range"
-                              defaultValue={0}
-                              step="any"
-                              style={{
-                                width: `${
-                                  this.state[`loaded-${v.audio}`]
-                                    ? (this.state[`loaded-${v.audio}`] * 100) /
-                                      this.state[`duration-${v.audio}`]
-                                    : 0
-                                }%`,
-                              }}
+                      <article
+                        className={
+                          this.state[`action-${i}`]
+                            ? `${styles['material-card']} ${styles['mc-active']}`
+                            : styles['material-card']
+                        }
+                      >
+                        <h2>
+                          <span className={styles['span-title']}>{v.name}</span>
+                          <strong>
+                            <Icon
+                              style={{ paddingRight: '5px' }}
+                              type="clock-circle"
+                              theme="filled"
                             />
-                            <input
-                              className={styles['input-played']}
-                              ref={input => (this[`input-played-${v.audio}`] = input)}
-                              type="range"
-                              defaultValue={0}
-                              min={0}
-                              max={
-                                this.state[`duration-${v.audio}`]
-                                  ? this.state[`duration-${v.audio}`]
-                                  : 0
+                            {moment(v.timeup).format('DD/MM/YYYY')}
+                          </strong>
+                        </h2>
+                        <div className={styles['mc-content']}>
+                          <div className={styles['img-container']}>
+                            <img
+                              className={
+                                !this.state[`${v.audio}`]
+                                  ? styles['img-responsive']
+                                  : `${styles['img-responsive']} ${styles['active-play-audio']}`
                               }
-                              step="any"
-                              onMouseDown={e => this.onSeekMouseDown(e, `player-${v.audio}`)}
-                              onPointerDown={e => this.onSeekMouseDown(e, `player-${v.audio}`)}
-                              onPointerUp={e => this.onSeekMouseUp(e, v.audio)}
-                              onChange={e => this.onSeekChange(e, `player-${v.audio}`)}
-                              onMouseUp={e => this.onSeekMouseUp(e, v.audio)}
+                              src="https://i.scdn.co/image/9dcbd30dbe0c621cbaeae427cf80eff9877b4fcd"
+                              alt="img"
                             />
-                            <div className={styles['title-cart']}>
-                              <div className={styles['play-icon']}>
-                                <Icon
-                                  onClick={() => this.playAudioReact(v.audio)}
-                                  type={
-                                    !this.state[`${v.audio}`]
-                                      ? 'play-circle'
-                                      : this.state[`${v.audio}`].paused
-                                      ? 'play-circle'
-                                      : 'pause-circle'
-                                  }
-                                />
+                          </div>
+                          <div className={styles['mc-description']}>
+                            <div>
+                              <Icon style={{ paddingRight: '8px' }} type="home" />
+                              <span className={styles['span-discription']}>
+                                Đài phát: {v.location === 'HN' ? 'Hà Nội' : 'Hồ Chí Minh'}
+                              </span>
+                            </div>
+                            <div>
+                              <Icon style={{ paddingRight: '8px' }} type="user" />
+                              <span className={styles['span-discription']}>
+                                Giới tính: {v.gender === 'MALE' ? 'Nam' : 'Nữ'}
+                              </span>
+                            </div>
+                            <div>
+                              <Icon style={{ paddingRight: '8px' }} type="global" />
+                              <span className={styles['span-discription']}>
+                                Địa chỉ: {v.address}
+                              </span>
+                            </div>
+                            <div>
+                              <div>
+                                <Icon style={{ paddingRight: '8px' }} type="smile" />
+                                <span className={styles['span-discription']}>
+                                  TT hôn nhân:{' '}
+                                  {v.relationship === 'SINGLE' ? 'Độc thân' : 'Đã ly hôn'}
+                                </span>
+                              </div>
+                              <div>
+                                <div>
+                                  <Icon style={{ paddingRight: '8px' }} type="clock-circle" />
+                                  <span className={styles['span-discription']}>
+                                    {this.getTimeInAudio(
+                                      this[`input-played-${v.audio}`]
+                                        ? this[`input-played-${v.audio}`].value
+                                        : 0
+                                    )}
+                                  </span>{' '}
+                                  /{' '}
+                                  {this.state[`duration-${v.audio}`] ? (
+                                    <span className={styles['span-discription']}>
+                                      {this.getTimeInAudio(
+                                        this.state[`duration-${v.audio}`]
+                                          ? this.state[`duration-${v.audio}`]
+                                          : 0
+                                      )}
+                                    </span>
+                                  ) : (
+                                    '0:0'
+                                  )}
+                                </div>
                               </div>
                             </div>
                           </div>
+                          <a
+                            onClick={() => this.handleClickAction(i, v.audio)}
+                            className={styles['mc-btn-action']}
+                          >
+                            <Icon type="bars" />
+                          </a>
                         </div>
-                        <ReactPlayer
-                          playing={this.state[v.audio]}
-                          ref={player => (this[`player-${v.audio}`] = player)}
-                          width="0%"
-                          height="0%"
-                          loop={false}
-                          onSeek={e => this.onSeek(e)}
-                          url={`http://cdn.henhoradio.net/upload/audio/local/${v.audio}`}
-                          onProgress={e => this.onProgress(e, v.audio)}
-                          config={{
-                            file: { forceAudio: true },
-                          }}
-                          onDuration={e => this.onDuration(e, v.audio)}
-                          onEnded={() => this.onEnded(v.audio)}
-                        />
-                      </div>
+                        <div className={styles['mc-footer']}>
+                          <div className={styles.range}>
+                            <div className={styles['range-item']}>
+                              <input
+                                className={styles['input-loaded']}
+                                name={`name-${v.audio}`}
+                                ref={input => (this[`input-played-loaded-${v.audio}`] = input)}
+                                type="range"
+                                defaultValue={0}
+                                step="any"
+                                style={{
+                                  width: `${
+                                    this.state[`loaded-${v.audio}`]
+                                      ? (this.state[`loaded-${v.audio}`] * 100) /
+                                        this.state[`duration-${v.audio}`]
+                                      : 0
+                                  }%`,
+                                }}
+                              />
+                              <input
+                                className={styles['input-played']}
+                                name={`name-${v.audio}`}
+                                ref={input => (this[`input-played-${v.audio}`] = input)}
+                                type="range"
+                                defaultValue={0}
+                                min={0}
+                                max={
+                                  this.state[`duration-${v.audio}`]
+                                    ? this.state[`duration-${v.audio}`]
+                                    : 0
+                                }
+                                step="any"
+                                onMouseDown={e => this.onSeekMouseDown(e, `player-${v.audio}`)}
+                                onPointerDown={e => this.onSeekMouseDown(e, `player-${v.audio}`)}
+                                onPointerUp={e => this.onSeekMouseUp(e, v.audio)}
+                                onChange={e => this.onSeekChange(e, `player-${v.audio}`)}
+                                onMouseUp={e => this.onSeekMouseUp(e, v.audio)}
+                              />
+                            </div>
+                            <Icon
+                              onClick={() => this.handleClickTua(v.audio, -15)}
+                              type="backward"
+                              theme="filled"
+                            />
+                            <Icon
+                              onClick={() => this.playAudioReact(v.audio)}
+                              theme="filled"
+                              type={
+                                !this.state[`${v.audio}`]
+                                  ? 'play-circle'
+                                  : this.state[`${v.audio}`].paused
+                                  ? 'play-circle'
+                                  : 'pause-circle'
+                              }
+                            />
+                            <Icon
+                              onClick={() => this.handleClickTua(v.audio, 15)}
+                              type="forward"
+                              theme="filled"
+                            />
+                          </div>
+                          <ReactPlayer
+                            playing={this.state[v.audio]}
+                            ref={player => (this[`player-${v.audio}`] = player)}
+                            width="0%"
+                            height="0%"
+                            loop={false}
+                            onSeek={e => this.onSeek(e)}
+                            url={`http://cdn.henhoradio.net/upload/audio/local/${v.audio}`}
+                            onProgress={e => this.onProgress(e, v.audio)}
+                            config={{
+                              file: { forceAudio: true },
+                            }}
+                            onDuration={e => this.onDuration(e, v.audio)}
+                            onEnded={() => this.onEnded(v.audio)}
+                          />
+                        </div>
+                      </article>
                     </div>
                   ))
               : preLoad.map((v, i) => (
