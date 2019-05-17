@@ -155,16 +155,18 @@ class NewFeed extends PureComponent {
       pathname: '/home/newfeed',
       search: `?page=1&gender=${gender}&age=${age}`,
     });
-    this.setState(
-      {
-        loadingPage: !this.state.loadingPage,
-      },
-      () => {
-        this.setState({
+    if (gender !== this.props.location.query.gender || age !== this.props.location.query.age) {
+      this.setState(
+        {
           loadingPage: !this.state.loadingPage,
-        });
-      }
-    );
+        },
+        () => {
+          this.setState({
+            loadingPage: !this.state.loadingPage,
+          });
+        }
+      );
+    }
   }
 
   getDataFilter(data) {

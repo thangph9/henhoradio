@@ -163,7 +163,7 @@
   opacity: 0;
   transform: translateY(300px);
   animation-name: loadpage;
-  animation-duration: 0.45s;
+  animation-duration: 0.3s;
   animation-timing-function: linear;
   animation-iteration-count: 1;
   animation-fill-mode: forwards;
