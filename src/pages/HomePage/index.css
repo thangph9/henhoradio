@@ -159,6 +159,14 @@
   padding-right: 5px !important;
   padding-left: 5px !important;
   margin-bottom: 10px !important;
+  transition: all 0.3s;
+  opacity: 0;
+  transform: translateY(300px);
+  animation-name: loadpage;
+  animation-duration: 0.45s;
+  animation-timing-function: linear;
+  animation-iteration-count: 1;
+  animation-fill-mode: forwards;
 }
 .cart-item:hover {
   text-decoration: none;
@@ -267,6 +275,13 @@
   transform: rotate(330deg);
   animation-delay: 0s;
 }
+.hide-cart {
+  max-width: 0 !important;
+  opacity: 0;
+  padding: 0 !important;
+  pointer-events: none;
+  transform: translateY(400px);
+}
 .image-cart {
   width: 100%;
   overflow: hidden;
@@ -293,6 +308,12 @@
   .cart-item {
     flex-basis: 50%;
     max-width: 50%;
+  }
+  .cart-item:nth-child(4n + 1) {
+    animation-delay: 0s;
+  }
+  .cart-item:nth-child(4n + 2) {
+    animation-delay: 0.05s;
   }
   .filter-search {
     flex-wrap: wrap;
@@ -330,6 +351,15 @@
     flex-basis: 33.33333%;
     max-width: 33.33333%;
   }
+  .cart-item:nth-child(4n + 1) {
+    animation-delay: 0s;
+  }
+  .cart-item:nth-child(4n + 2) {
+    animation-delay: 0.05s;
+  }
+  .cart-item:nth-child(4n + 3) {
+    animation-delay: 0.1s;
+  }
   .filter-search {
     flex-wrap: wrap;
     justify-content: space-between;
@@ -364,6 +394,18 @@
   .cart-item {
     flex-basis: 25%;
     max-width: 25%;
+  }
+  .cart-item:nth-child(4n + 1) {
+    animation-delay: 0s;
+  }
+  .cart-item:nth-child(4n + 2) {
+    animation-delay: 0.05s;
+  }
+  .cart-item:nth-child(4n + 3) {
+    animation-delay: 0.1s;
+  }
+  .cart-item:nth-child(4n + 4) {
+    animation-delay: 0.15s;
   }
   .search-box {
     margin-bottom: 0;
@@ -436,5 +478,19 @@
   }
   100% {
     opacity: 0;
+  }
+}
+@keyframes loadpage {
+  0% {
+    opacity: 0;
+    transform: translateY(300px);
+  }
+  50% {
+    opacity: 0.5;
+    transform: translateY(150px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
   }
 }

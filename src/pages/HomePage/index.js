@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 /* eslint-disable react/sort-comp */
 /* eslint-disable class-methods-use-this */
 /* eslint-disable react/no-access-state-in-setstate */
@@ -13,6 +14,7 @@ import { connect } from 'dva';
 import { Link, Redirect } from 'react-router-dom';
 import { Skeleton, Pagination, Icon } from 'antd';
 import LazyImage from './LazyImage';
+import PageLoading from '@/components/PageLoading';
 import styles from './index.less';
 
 @connect(({ list, user, authentication, myprops }) => ({
@@ -50,7 +52,6 @@ class NewFeed extends PureComponent {
         search: `?page=1&gender=all&age=18_24`,
       });
     } else {
-      console.log('vao day');
       const gender = this.props.location.query.gender;
       const age = this.props.location.query.age;
       this.setState({
@@ -176,6 +177,19 @@ class NewFeed extends PureComponent {
     return arr;
   }
 
+  checkFilter(gender, age) {
+    let ageString = '36';
+    if (age >= 18 && age <= 24) ageString = '18_24';
+    if (age >= 25 && age <= 35) ageString = '25_35';
+    if (this.props.location.query.gender === 'all') {
+      if (this.props.location.query.age === ageString) return true;
+      return false;
+    }
+    if (this.props.location.query.age === ageString && this.props.location.query.gender === gender)
+      return true;
+    return false;
+  }
+
   render() {
     const { allUser, loadingPage, preLoad, filterAge, filterGender } = this.state;
     const {
@@ -296,27 +310,34 @@ class NewFeed extends PureComponent {
           </div>
           */}
           <div className={styles.row}>
-            {!loadingPage
-              ? this.getDataFilter(allUser)
-                  .filter((value, index) => index >= page * 20 - 20 && index < page * 20)
-                  .map((v, i) => (
-                    <Link
-                      to={`/home/other-profile?id=${v.user_id.replace(/-/g, '')}`}
-                      key={i}
-                      className={styles['cart-item']}
-                    >
-                      <div className={styles['box-cart']}>
-                        <LazyImage gender={v.gender} number={i % 20} avatar={v.avatar} />
-                        <div className={styles['title-cart']}>
-                          <span className={styles.detail}>{v.fullname}</span>
-                          <span className={styles.detail}>,</span>
-                          <span className={styles.detail}>{v.age}</span>
-                          <span className={styles.detail}>{v.address}</span>
-                        </div>
+            {!loadingPage ? (
+              this.getDataFilter(allUser)
+                .filter((value, index) => index >= page * 20 - 20 && index < page * 20)
+                .map((v, i) => (
+                  <Link
+                    to={`/home/other-profile?id=${v.user_id.replace(/-/g, '')}`}
+                    key={i}
+                    className={styles['cart-item']}
+                  >
+                    <div className={styles['box-cart']}>
+                      <LazyImage gender={v.gender} number={i % 20} avatar={v.avatar} />
+                      <div className={styles['title-cart']}>
+                        <span className={styles.detail}>{v.fullname}</span>
+                        <span className={styles.detail}>,</span>
+                        <span className={styles.detail}>{v.age}</span>
+                        <span className={styles.detail}>{v.address}</span>
                       </div>
-                    </Link>
-                  ))
-              : preLoad.map((v, i) => (
+                    </div>
+                  </Link>
+                ))
+            ) : (
+              <div style={{ width: '100%' }}>
+                <PageLoading />
+              </div>
+            )
+            /*
+
+                  preLoad.map((v, i) => (
                   <div key={i} className={styles['cart-item']}>
                     <div className={styles['box-cart']}>
                       <div style={{ overflow: 'hidden' }}>
@@ -330,9 +351,12 @@ class NewFeed extends PureComponent {
                       </div>
                     </div>
                   </div>
-                ))}
+                ))
+              */
+            }
           </div>
           <Pagination
+            hideOnSinglePage
             style={{
               padding: '5px',
               display: 'table',
