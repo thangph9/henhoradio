@@ -36,7 +36,7 @@ class FormLogin extends PureComponent {
           validateStatus: 'error',
           value: '',
         });
-        recaptchaRef.current.reset();
+        if (this.props.useCaptcha) recaptchaRef.current.reset();
       }
       if (nextProps.authentication.login.status === 'ok') {
         nextProps.history.push({ pathname: '/home' });

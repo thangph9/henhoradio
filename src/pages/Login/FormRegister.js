@@ -156,7 +156,7 @@ class FormRegister extends PureComponent {
           helpPhone: nextProps.authentication.register.message,
           value: '',
         });
-        recaptchaRef.current.reset();
+        if (this.props.useCaptcha) recaptchaRef.current.reset();
       }
     }
     if (authentication.checkuser !== nextProps.authentication.checkuser) {

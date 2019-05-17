@@ -427,10 +427,8 @@ class GlobalHeader extends PureComponent {
               <Link
                 onClick={() => this.handleClickLink()}
                 to={`/home`}
-                className={`${styles['header__navbar-brand___SzzgD']} `}
-              >
-                <img src="/public/icons/logoradio.png" />
-              </Link>
+                className={`${styles['header__navbar-brand___SzzgD'] + ' ' + styles['logo-icon']} `}
+              />
               {localStorage.token ? (
                 <ul
                   style={{ top: '-5px' }}
@@ -533,7 +531,11 @@ class GlobalHeader extends PureComponent {
                   ? this.props.getmenu.map((v, i) => {
                       return (
                         <li key={i}>
-                          <Link className={styles['list-item-menu-mobile']} to={v.path}>
+                          <Link
+                            onClick={() => this.handleClickActiveMenu()}
+                            className={styles['list-item-menu-mobile']}
+                            to={v.path}
+                          >
                             <Icon style={{ marginRight: '10px' }} type={v.icon} />
                             {v.name}
                           </Link>
