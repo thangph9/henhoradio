@@ -274,10 +274,10 @@ class NewFeed extends PureComponent {
       return <Redirect to="/home/newfeed?page=1&gender=all&age=18_24" />;
     }
     return (
-      <div style={{ paddingTop: '19px', background: '#f3f5f9' }}>
+      <div className={styles['home-newfeed']}>
         <div style={{ background: '#fff' }}>
           <div className={styles['list-menu']}>
-            <div style={{ flexBasis: '70%' }}>
+            <div className={styles['tab-list']}>
               <ul className={styles['tab-ul']}>
                 <li
                   onClick={() => this.handleClickTab(0)}
@@ -312,20 +312,35 @@ class NewFeed extends PureComponent {
                 </li>
               </ul>
             </div>
-            <div style={{ flexBasis: '30%', position: 'relative' }}>
-              <Button
-                style={{
-                  position: 'absolute',
-                  bottom: '15px',
-                  display: 'flex',
-                  alignItems: 'center',
-                }}
-                type="primary"
-                icon="filter"
-                onClick={this.showDrawer}
-              >
-                Lọc dữ liệu
-              </Button>
+            <div className={styles['filter-button']}>
+              <div className={styles['desktop-icon']}>
+                <Button
+                  style={{
+                    position: 'absolute',
+                    bottom: '15px',
+                    display: 'flex',
+                    alignItems: 'center',
+                  }}
+                  type="primary"
+                  icon="filter"
+                  onClick={this.showDrawer}
+                >
+                  Lọc dữ liệu
+                </Button>
+              </div>
+              <div className={styles['moblie-icon']}>
+                <Icon
+                  style={{
+                    position: 'absolute',
+                    bottom: '15px',
+                    display: 'flex',
+                    alignItems: 'center',
+                    fontSize: '25px',
+                  }}
+                  type="filter"
+                  onClick={this.showDrawer}
+                />
+              </div>
               <Drawer
                 title="Lựa chọn"
                 placement="right"

@@ -108,11 +108,19 @@
     .form-search-list .ant-form-item-control-wrapper{
         display: block !important;
 
+    }
+    @media (min-width:576px){
+      .ant-drawer-content-wrapper{
+        width: 50% !important
       }
-      @media (min-width: 768px) {
+    }
+    @media (min-width: 768px) {
+      .ant-drawer-content-wrapper{
+        width: 300px !important
+      }
       .form-search-list .ant-form-item-control-wrapper{
 
-        width: 50%
+      width: 50%
       }
     }
     .ant-table table{
@@ -224,6 +232,9 @@
 
         width: 50%
       }
+      .ant-drawer-content-wrapper{
+        width: 325px !important
+      }
     }
     @media (min-width: 1200px) {
       .form-search-list .ant-form-item-control-wrapper{
@@ -231,7 +242,11 @@
         width: 30%
       }
     }
-
+    @media (max-width: 575px) {
+      .ant-drawer-content-wrapper{
+        width: 100% !important
+      }
+    }
 
 
   </style>

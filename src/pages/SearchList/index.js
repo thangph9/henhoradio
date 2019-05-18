@@ -342,7 +342,7 @@ class ListRadio extends PureComponent {
     const { loadingPage, preLoad, detailList, dataFilter, globalPlaying, played } = this.state;
     const { page } = this.props.location.query;
     return (
-      <div style={{ paddingTop: '32px', background: '#f3f5f9' }}>
+      <div className={styles['search-list-page']} style={{ background: '#f3f5f9' }}>
         <div className={styles.container}>
           <div className={styles['filter-data']}>
             <div className={styles['filter-date']}>
