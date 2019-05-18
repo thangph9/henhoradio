@@ -16,7 +16,8 @@ body {
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  overflow-y: scroll;
+  overflow-y: scroll !important;
+  width: 100% !important;
 }
 .globalSpin {
   width: 100%;

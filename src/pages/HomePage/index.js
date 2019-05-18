@@ -1,3 +1,4 @@
+/* eslint-disable react/button-has-type */
 /* eslint-disable no-unused-vars */
 /* eslint-disable react/sort-comp */
 /* eslint-disable class-methods-use-this */
@@ -12,11 +13,12 @@
 import React, { PureComponent } from 'react';
 import { connect } from 'dva';
 import { Link, Redirect } from 'react-router-dom';
-import { Skeleton, Pagination, Icon } from 'antd';
+import { Skeleton, Pagination, Icon, Drawer, Button, Radio } from 'antd';
 import LazyImage from './LazyImage';
 import PageLoading from '@/components/PageLoading';
 import styles from './index.less';
 
+const RadioGroup = Radio.Group;
 @connect(({ list, user, authentication, myprops }) => ({
   list,
   user,
@@ -31,6 +33,8 @@ class NewFeed extends PureComponent {
     cdn: '',
     filterGender: false,
     filterAge: false,
+    visible: false,
+    leftTab: 0,
   };
 
   componentDidMount() {
@@ -155,6 +159,7 @@ class NewFeed extends PureComponent {
       pathname: '/home/newfeed',
       search: `?page=1&gender=${gender}&age=${age}`,
     });
+    /*
     if (gender !== this.props.location.query.gender || age !== this.props.location.query.age) {
       this.setState(
         {
@@ -167,6 +172,7 @@ class NewFeed extends PureComponent {
         }
       );
     }
+    */
   }
 
   getDataFilter(data) {
@@ -189,17 +195,68 @@ class NewFeed extends PureComponent {
     return arr;
   }
 
-  checkFilter(gender, age) {
-    let ageString = '36';
-    if (age >= 18 && age <= 24) ageString = '18_24';
-    if (age >= 25 && age <= 35) ageString = '25_35';
-    if (this.props.location.query.gender === 'all') {
-      if (this.props.location.query.age === ageString) return true;
-      return false;
-    }
-    if (this.props.location.query.age === ageString && this.props.location.query.gender === gender)
-      return true;
-    return false;
+  showDrawer = () => {
+    this.setState({
+      visible: true,
+    });
+  };
+
+  onClose = () => {
+    this.setState({
+      visible: false,
+    });
+  };
+
+  handleFinishButton() {
+    this.setState({
+      visible: false,
+    });
+  }
+
+  callback(key) {
+    console.log(key);
+  }
+
+  handleClickTab(value) {
+    this.setState({
+      leftTab: value,
+    });
+  }
+
+  onChangeRadioGender(e) {
+    const age = this.props.location.query.age;
+    this.setState(
+      {
+        loadingPage: !this.state.loadingPage,
+      },
+      () => {
+        this.setState({
+          loadingPage: !this.state.loadingPage,
+        });
+      }
+    );
+    this.props.history.push({
+      pathname: '/home/newfeed',
+      search: `?page=1&gender=${e.target.value}&age=${age}`,
+    });
+  }
+
+  onChangeRadioAge(e) {
+    const gender = this.props.location.query.gender;
+    this.setState(
+      {
+        loadingPage: !this.state.loadingPage,
+      },
+      () => {
+        this.setState({
+          loadingPage: !this.state.loadingPage,
+        });
+      }
+    );
+    this.props.history.push({
+      pathname: '/home/newfeed',
+      search: `?page=1&gender=${gender}&age=${e.target.value}`,
+    });
   }
 
   render() {
@@ -217,171 +274,310 @@ class NewFeed extends PureComponent {
       return <Redirect to="/home/newfeed?page=1&gender=all&age=18_24" />;
     }
     return (
-      <div style={{ paddingTop: '32px', background: '#f3f5f9' }}>
-        <div className={styles.container}>
-          <div style={{ padding: '5px', marginBottom: '20px' }}>
-            <div className={styles['filter-search']}>
-              <div className={styles['search-box']}>
-                <Icon type="search" />
-                <input
-                  type="text"
-                  placeholder="Tìm kiếm (không bắt buộc)..."
-                  className={styles['input-search']}
-                />
-              </div>
-              <div onClick={() => this.ToggleGender()} className={styles['filter-gender1']}>
-                <div style={{ fontSize: '15px', color: '#2d3436', paddingRight: '5px' }}>
-                  &#9792;
-                </div>
-                <div style={{ color: '#34495e' }}>
-                  {this.getValueGender(this.state.genderValue)}
-                </div>
-                <div
+      <div style={{ paddingTop: '19px', background: '#f3f5f9' }}>
+        <div style={{ background: '#fff' }}>
+          <div className={styles['list-menu']}>
+            <div style={{ flexBasis: '70%' }}>
+              <ul className={styles['tab-ul']}>
+                <li
+                  onClick={() => this.handleClickTab(0)}
                   className={
-                    filterGender
-                      ? `${styles['sub-gender']} ${styles['active-filter']}`
-                      : styles['sub-gender']
+                    this.state.leftTab === 0
+                      ? `${styles['tab-li']} ${styles['active-tab']}`
+                      : styles['tab-li']
                   }
                 >
-                  <div
-                    className={styles['li-gender']}
-                    onClick={() => this.handeClickSubGender('male')}
-                  >
-                    Nam
-                  </div>
-                  <div
-                    className={styles['li-gender']}
-                    onClick={() => this.handeClickSubGender('female')}
-                  >
-                    Nữ
-                  </div>
-                  <div
-                    className={styles['li-gender']}
-                    onClick={() => this.handeClickSubGender('all')}
-                  >
-                    Nam và Nữ
-                  </div>
-                </div>
-                <Icon type="caret-down" style={{ paddingLeft: '10px' }} theme="filled" />
-              </div>
-              <div onClick={() => this.ToggleAge()} className={styles['filter-age1']}>
-                <Icon style={{ paddingRight: '10px' }} type="user" />
-                <div style={{ color: '#34495e' }}>{this.getValueAge(this.state.ageValue)}</div>
-                <div
+                  Menu tab 1
+                  <span style={{ left: `${this.state.leftTab * 100}%` }} />
+                </li>
+                <li
+                  onClick={() => this.handleClickTab(1)}
                   className={
-                    filterAge
-                      ? `${styles['sub-age']} ${styles['active-filter']}`
-                      : styles['sub-age']
+                    this.state.leftTab === 1
+                      ? `${styles['tab-li']} ${styles['active-tab']}`
+                      : styles['tab-li']
                   }
                 >
-                  <div className={styles['li-age']} onClick={() => this.handeClickSubAge('18_24')}>
-                    Từ 18-24 tuổi
+                  Menu tab 2
+                </li>
+                <li
+                  onClick={() => this.handleClickTab(2)}
+                  className={
+                    this.state.leftTab === 2
+                      ? `${styles['tab-li']} ${styles['active-tab']}`
+                      : styles['tab-li']
+                  }
+                >
+                  Menu tab 3
+                </li>
+              </ul>
+            </div>
+            <div style={{ flexBasis: '30%', position: 'relative' }}>
+              <Button
+                style={{
+                  position: 'absolute',
+                  bottom: '15px',
+                  display: 'flex',
+                  alignItems: 'center',
+                }}
+                type="primary"
+                icon="filter"
+                onClick={this.showDrawer}
+              >
+                Lọc dữ liệu
+              </Button>
+              <Drawer
+                title="Lựa chọn"
+                placement="right"
+                closable={false}
+                onClose={this.onClose}
+                visible={this.state.visible}
+              >
+                <div style={{ padding: '20px' }}>
+                  <div>
+                    <h3 style={{ color: 'gray' }}>Giới tính</h3>
+                    <hr />
+                    <RadioGroup
+                      onChange={e => this.onChangeRadioGender(e)}
+                      value={this.props.location.query.gender}
+                    >
+                      <Radio
+                        style={{ display: 'block', marginBottom: '10px', marginLeft: '15px' }}
+                        value="male"
+                      >
+                        Nam
+                      </Radio>
+                      <Radio
+                        style={{ display: 'block', marginBottom: '10px', marginLeft: '15px' }}
+                        value="female"
+                      >
+                        Nữ
+                      </Radio>
+                      <Radio
+                        style={{ display: 'block', marginBottom: '10px', marginLeft: '15px' }}
+                        value="all"
+                      >
+                        Cả nam và nữ
+                      </Radio>
+                    </RadioGroup>
                   </div>
-                  <div className={styles['li-age']} onClick={() => this.handeClickSubAge('25_35')}>
-                    Từ 25-35 tuổi
-                  </div>
-                  <div className={styles['li-age']} onClick={() => this.handeClickSubAge('36')}>
-                    Ngoài 35 tuổi
+                  <div style={{ marginTop: '20px' }}>
+                    <h3 style={{ color: 'gray' }}>Độ tuổi</h3>
+                    <hr />
+                    <RadioGroup
+                      onChange={e => this.onChangeRadioAge(e)}
+                      value={this.props.location.query.age}
+                    >
+                      <Radio
+                        style={{ display: 'block', marginBottom: '10px', marginLeft: '15px' }}
+                        value="18_24"
+                      >
+                        Từ 18 - 24 tuổi
+                      </Radio>
+                      <Radio
+                        style={{ display: 'block', marginBottom: '10px', marginLeft: '15px' }}
+                        value="25_35"
+                      >
+                        Từ 25 - 35 tuổi
+                      </Radio>
+                      <Radio
+                        style={{ display: 'block', marginBottom: '10px', marginLeft: '15px' }}
+                        value="36"
+                      >
+                        Ngoài 35 tuổi
+                      </Radio>
+                    </RadioGroup>
                   </div>
                 </div>
-                <Icon type="caret-down" style={{ paddingLeft: '10px' }} theme="filled" />
-              </div>
-              <div className={styles['filter-button']}>
                 <button
-                  onClick={() => this.handleClickSearch()}
-                  className={styles['btn-search']}
-                  type="button"
+                  onClick={() => this.handleFinishButton()}
+                  className={styles['button-finish']}
                 >
-                  Tìm kiếm
+                  Hoàn tất
                 </button>
-              </div>
+              </Drawer>
             </div>
           </div>
-          {/*
-            <div className={styles.filter}>
-            <div className={styles['filter-gender']}>
-            <Select style={{width:'150px'}} defaultValue={this.props.location.query.gender ? `${this.props.location.query.gender}` : 'all'} onChange={(e)=>this.handleChangeGender(e)}>
-              <Option value="male">Nam</Option>
-              <Option value="female">Nữ</Option>
-              <Option value="all">
-                Cả Nam {'&'} Nữ
+        </div>
+        {this.state.leftTab === 0 && (
+          <div className={styles.container}>
+            {/*
+           <div style={{ padding: '5px', marginBottom: '20px' }}>
+            <div className={styles['filter-search']}>
+            <div className={styles['search-box']}>
+              <Icon type="search" />
+              <input
+                type="text"
+                placeholder="Tìm kiếm (không bắt buộc)..."
+                className={styles['input-search']}
+              />
+            </div>
+            <div onClick={() => this.ToggleGender()} className={styles['filter-gender1']}>
+              <div style={{ fontSize: '15px', color: '#2d3436', paddingRight: '5px' }}>
+                &#9792;
+              </div>
+              <div style={{ color: '#34495e' }}>
+                {this.getValueGender(this.state.genderValue)}
+              </div>
+              <div
+                className={
+                  filterGender
+                    ? `${styles['sub-gender']} ${styles['active-filter']}`
+                    : styles['sub-gender']
+                }
+              >
+                <div
+                  className={styles['li-gender']}
+                  onClick={() => this.handeClickSubGender('male')}
+                >
+                  Nam
+                </div>
+                <div
+                  className={styles['li-gender']}
+                  onClick={() => this.handeClickSubGender('female')}
+                >
+                  Nữ
+                </div>
+                <div
+                  className={styles['li-gender']}
+                  onClick={() => this.handeClickSubGender('all')}
+                >
+                  Nam và Nữ
+                </div>
+              </div>
+              <Icon type="caret-down" style={{ paddingLeft: '10px' }} theme="filled" />
+            </div>
+            <div onClick={() => this.ToggleAge()} className={styles['filter-age1']}>
+              <Icon style={{ paddingRight: '10px' }} type="user" />
+              <div style={{ color: '#34495e' }}>{this.getValueAge(this.state.ageValue)}</div>
+              <div
+                className={
+                  filterAge
+                    ? `${styles['sub-age']} ${styles['active-filter']}`
+                    : styles['sub-age']
+                }
+              >
+                <div className={styles['li-age']} onClick={() => this.handeClickSubAge('18_24')}>
+                  Từ 18-24 tuổi
+                </div>
+                <div className={styles['li-age']} onClick={() => this.handeClickSubAge('25_35')}>
+                  Từ 25-35 tuổi
+                </div>
+                <div className={styles['li-age']} onClick={() => this.handeClickSubAge('36')}>
+                  Ngoài 35 tuổi
+                </div>
+              </div>
+              <Icon type="caret-down" style={{ paddingLeft: '10px' }} theme="filled" />
+            </div>
+            <div className={styles['filter-button']}>
+              <button
+                onClick={() => this.handleClickSearch()}
+                className={styles['btn-search']}
+                type="button"
+              >
+                Tìm kiếm
+              </button>
+            </div>
+          </div>
+           </div>
+          */}
+
+            {/*
+          <div className={styles.filter}>
+          <div className={styles['filter-gender']}>
+          <Select style={{width:'150px'}} defaultValue={this.props.location.query.gender ? `${this.props.location.query.gender}` : 'all'} onChange={(e)=>this.handleChangeGender(e)}>
+            <Option value="male">Nam</Option>
+            <Option value="female">Nữ</Option>
+            <Option value="all">
+              Cả Nam {'&'} Nữ
+            </Option>
+
+          </Select>
+          </div>
+          <div className={styles['filter-age']}>
+            <Select style={{width:'150px'}} defaultValue={this.props.location.query.age ? `${this.props.location.query.age}` : '18_24'} onChange={(e)=>this.handleChangeAge(e)}>
+              <Option value='18_24'>Từ 18 - 24 tuổi</Option>
+              <Option value='25_35'>Từ 25 - 35 tuổi</Option>
+              <Option value='36'>
+                Ngoài 35 tuổi
               </Option>
 
             </Select>
-            </div>
-            <div className={styles['filter-age']}>
-              <Select style={{width:'150px'}} defaultValue={this.props.location.query.age ? `${this.props.location.query.age}` : '18_24'} onChange={(e)=>this.handleChangeAge(e)}>
-                <Option value='18_24'>Từ 18 - 24 tuổi</Option>
-                <Option value='25_35'>Từ 25 - 35 tuổi</Option>
-                <Option value='36'>
-                  Ngoài 35 tuổi
-                </Option>
-
-              </Select>
-            </div>
           </div>
-          */}
-          <div className={styles.row}>
-            {!loadingPage ? (
-              this.getDataFilter(allUser)
-                .filter((value, index) => index >= page * 20 - 20 && index < page * 20)
-                .map((v, i) => (
-                  <Link
-                    to={`/home/other-profile?id=${v.user_id.replace(/-/g, '')}`}
-                    key={i}
-                    className={styles['cart-item']}
-                  >
-                    <div className={styles['box-cart']}>
-                      <LazyImage gender={v.gender} number={i % 20} avatar={v.avatar} />
-                      <div className={styles['title-cart']}>
-                        <span className={styles.detail}>{v.fullname}</span>
-                        <span className={styles.detail}>,</span>
-                        <span className={styles.detail}>{v.age}</span>
-                        <span className={styles.detail}>{v.address}</span>
+        </div>
+        */}
+            <div className={styles.row}>
+              {!loadingPage ? (
+                this.getDataFilter(allUser)
+                  .filter((value, index) => index >= page * 20 - 20 && index < page * 20)
+                  .map((v, i) => (
+                    <Link
+                      to={`/home/other-profile?id=${v.user_id.replace(/-/g, '')}`}
+                      key={i}
+                      className={styles['cart-item']}
+                    >
+                      <div className={styles['box-cart']}>
+                        <LazyImage gender={v.gender} number={i % 20} avatar={v.avatar} />
+                        <div className={styles['title-cart']}>
+                          <span className={styles.detail}>{v.fullname}</span>
+                          <span className={styles.detail}>,</span>
+                          <span className={styles.detail}>{v.age}</span>
+                          <span className={styles.detail}>{v.address}</span>
+                        </div>
                       </div>
-                    </div>
-                  </Link>
-                ))
-            ) : (
-              <div style={{ width: '100%' }}>
-                <PageLoading />
-              </div>
-            )
-            /*
+                    </Link>
+                  ))
+              ) : (
+                <div style={{ width: '100%' }}>
+                  <PageLoading />
+                </div>
+              )
+              /*
 
-                  preLoad.map((v, i) => (
-                  <div key={i} className={styles['cart-item']}>
-                    <div className={styles['box-cart']}>
-                      <div style={{ overflow: 'hidden' }}>
-                        <div
-                          className={styles['background-avatar']}
-                          style={{ background: '#fff' }}
-                        />
-                      </div>
-                      <div className={`${styles['title-cart']} home-page-preload`}>
-                        <Skeleton title={false} paragraph={{ rows: 2 }} active />
-                      </div>
+                preLoad.map((v, i) => (
+                <div key={i} className={styles['cart-item']}>
+                  <div className={styles['box-cart']}>
+                    <div style={{ overflow: 'hidden' }}>
+                      <div
+                        className={styles['background-avatar']}
+                        style={{ background: '#fff' }}
+                      />
+                    </div>
+                    <div className={`${styles['title-cart']} home-page-preload`}>
+                      <Skeleton title={false} paragraph={{ rows: 2 }} active />
                     </div>
                   </div>
-                ))
-              */
-            }
+                </div>
+              ))
+            */
+              }
+            </div>
+            <Pagination
+              hideOnSinglePage
+              style={{
+                padding: '5px',
+                display: 'table',
+                margin: '0 auto',
+                marginTop: '30px',
+                marginBottom: '20px',
+              }}
+              onChange={(v1, v2) => this.handleChangePagination(v1, v2)}
+              current={Number(page)}
+              pageSize={20}
+              total={this.getDataFilter(allUser).length}
+            />
           </div>
-          <Pagination
-            hideOnSinglePage
-            style={{
-              padding: '5px',
-              display: 'table',
-              margin: '0 auto',
-              marginTop: '30px',
-              marginBottom: '20px',
-            }}
-            onChange={(v1, v2) => this.handleChangePagination(v1, v2)}
-            current={Number(page)}
-            pageSize={20}
-            total={this.getDataFilter(allUser).length}
-          />
-        </div>
+        )}
+        {this.state.leftTab === 1 && (
+          <div className={styles.container}>
+            <span>Day la menu 2</span>
+          </div>
+        )}
+        {this.state.leftTab === 2 && (
+          <div className={styles.container}>
+            <span>Day la menu 3</span>
+          </div>
+        )}
       </div>
     );
   }
