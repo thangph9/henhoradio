@@ -185,7 +185,9 @@ class GlobalHeader extends PureComponent {
               <Link
                 to={`/home`}
                 className={`${styles['header__navbar-brand___SzzgD'] + ' ' + styles['logo-icon']} `}
-              />
+              >
+                <img id="logo" src="/henhoradioicon.png" />
+              </Link>
               <div
                 style={{ alignItems: 'center' }}
                 className={`${styles['clearfix']} ${styles['collapse']} ${
@@ -229,7 +231,7 @@ class GlobalHeader extends PureComponent {
                 </ul>
                 {localStorage.token ? (
                   <ul
-                    style={{ top: '-10px' }}
+                    style={{ top: '-5px' }}
                     className={`${styles['header__navbar-nav___9cfBy']} ${
                       styles['header__navbar-right___2_zf5']
                     }`}
@@ -428,7 +430,9 @@ class GlobalHeader extends PureComponent {
                 onClick={() => this.handleClickLink()}
                 to={`/home`}
                 className={`${styles['header__navbar-brand___SzzgD'] + ' ' + styles['logo-icon']} `}
-              />
+              >
+                <img id="logo" alt="Twoo" width="82" height="23" src="/henhoradioicon.png" />
+              </Link>
               {localStorage.token ? (
                 <ul
                   style={{ top: '-5px' }}
@@ -530,12 +534,8 @@ class GlobalHeader extends PureComponent {
                 {this.props.getmenu.length > 0
                   ? this.props.getmenu.map((v, i) => {
                       return (
-                        <li key={i}>
-                          <Link
-                            onClick={() => this.handleClickActiveMenu()}
-                            className={styles['list-item-menu-mobile']}
-                            to={v.path}
-                          >
+                        <li onClick={() => this.handleClickActiveMenu()} key={i}>
+                          <Link className={styles['list-item-menu-mobile']} to={v.path}>
                             <Icon style={{ marginRight: '10px' }} type={v.icon} />
                             {v.name}
                           </Link>

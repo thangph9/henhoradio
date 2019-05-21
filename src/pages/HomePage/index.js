@@ -1,3 +1,4 @@
+/* eslint-disable camelcase */
 /* eslint-disable react/button-has-type */
 /* eslint-disable no-unused-vars */
 /* eslint-disable react/sort-comp */
@@ -13,12 +14,13 @@
 import React, { PureComponent } from 'react';
 import { connect } from 'dva';
 import { Link, Redirect } from 'react-router-dom';
-import { Skeleton, Pagination, Icon, Drawer, Button, Radio } from 'antd';
+import { Skeleton, Pagination, Icon, Drawer, Button, Radio, Select, Tag } from 'antd';
 import LazyImage from './LazyImage';
 import PageLoading from '@/components/PageLoading';
 import styles from './index.less';
 
 const RadioGroup = Radio.Group;
+const Option = Select.Option;
 @connect(({ list, user, authentication, myprops }) => ({
   list,
   user,
@@ -35,6 +37,7 @@ class NewFeed extends PureComponent {
     filterAge: false,
     visible: false,
     leftTab: 0,
+    tag_item: [],
   };
 
   componentDidMount() {
@@ -42,25 +45,32 @@ class NewFeed extends PureComponent {
     dispatch({
       type: 'authentication/getallusers',
     });
-    if (
-      !this.props.location.query.page ||
-      !this.props.location.query.gender ||
-      !this.props.location.query.age
-    ) {
+    const gender = this.props.location.query.gender;
+    const age = this.props.location.query.age;
+    const sort = this.props.location.query.sortby;
+    let objGender = {};
+    let objSort = {};
+    let objAge = {};
+    if (gender && age && sort) {
+      if (gender === 'male') objGender = { type: 'gender', value: '#nam' };
+      if (gender === 'female') objGender = { type: 'gender', value: '#nu' };
+      if (gender === 'all') objGender = { type: 'gender', value: '#namvanu' };
+      if (age === '18_24') objAge = { type: 'age', value: '#tu18den24tuoi' };
+      if (age === '25_35') objAge = { type: 'age', value: '#tu25den35tuoi' };
+      if (age === '36') objAge = { type: 'age', value: '#tren35tuoi' };
+      if (sort === 'age_descending') objSort = { type: 'sort', value: '#tuoigiamdan' };
+      if (sort === 'age_ascending') objSort = { type: 'sort', value: '#tuoitangdan' };
+      if (sort === 'newest_member') objSort = { type: 'sort', value: '#thanhvienmoinhat' };
       this.setState({
-        ageValue: '18_24',
-        genderValue: 'all',
-      });
-      this.props.history.push({
-        pathname: `/home/newfeed`,
-        search: `?page=1&gender=all&age=18_24`,
+        tag_item: [objGender, objAge, objSort],
       });
     } else {
-      const gender = this.props.location.query.gender;
-      const age = this.props.location.query.age;
       this.setState({
-        ageValue: age,
-        genderValue: gender,
+        tag_item: [
+          { type: 'gender', value: '#namvanu' },
+          { type: 'age', value: '#tu18den24tuoi' },
+          { type: 'sort', value: '#thanhvienmoinhat' },
+        ],
       });
     }
   }
@@ -78,101 +88,11 @@ class NewFeed extends PureComponent {
   handleChangePagination(v1) {
     const age = this.props.location.query.age;
     const gender = this.props.location.query.gender;
+    const sort = this.props.location.query.sortby;
     this.props.history.push({
       pathname: `/home/newfeed`,
-      search: `?page=${v1}&gender=${gender}&age=${age}`,
+      search: `?page=${v1}&gender=${gender}&age=${age}&sort=${sort}`,
     });
-  }
-
-  handleChangeGender(e) {
-    const age = this.props.location.query.age;
-    this.props.history.push({
-      pathname: '/home/newfeed',
-      search: `?page=1&gender=${e}&age=${age}`,
-    });
-  }
-
-  handleChangeAge(e) {
-    const gender = this.props.location.query.gender;
-    this.props.history.push({
-      pathname: '/home/newfeed',
-      search: `?page=1&gender=${gender}&age=${e}`,
-    });
-  }
-
-  ToggleGender() {
-    this.setState({
-      filterAge: false,
-      filterGender: !this.state.filterGender,
-    });
-  }
-
-  ToggleAge() {
-    this.setState({
-      filterGender: false,
-      filterAge: !this.state.filterAge,
-    });
-  }
-
-  handeClickSubGender(e) {
-    // const age = this.props.location.query.age;
-    this.setState({
-      genderValue: e,
-    });
-    /*
-      this.props.history.push({
-      pathname: '/home/newfeed',
-      search: `?page=1&gender=${e}&age=${age}`,
-    });
-    */
-  }
-
-  getValueGender(value) {
-    if (value === 'male') return 'Nam';
-    if (value === 'female') return 'Nữ';
-    return 'Nam và Nữ';
-  }
-
-  getValueAge(value) {
-    if (value === '18_24') return 'Từ 18-24 tuổi';
-    if (value === '25_35') return 'Từ 25-35 tuổi';
-    return 'Ngoài 35 tuổi';
-  }
-
-  handeClickSubAge(e) {
-    this.setState({
-      ageValue: e,
-    });
-    /*
-      const gender = this.props.location.query.gender;
-      this.props.history.push({
-        pathname: '/home/newfeed',
-        search: `?page=1&gender=${gender}&age=${e}`,
-      });
-    */
-  }
-
-  handleClickSearch() {
-    const gender = this.state.genderValue;
-    const age = this.state.ageValue;
-    this.props.history.push({
-      pathname: '/home/newfeed',
-      search: `?page=1&gender=${gender}&age=${age}`,
-    });
-    /*
-    if (gender !== this.props.location.query.gender || age !== this.props.location.query.age) {
-      this.setState(
-        {
-          loadingPage: !this.state.loadingPage,
-        },
-        () => {
-          this.setState({
-            loadingPage: !this.state.loadingPage,
-          });
-        }
-      );
-    }
-    */
   }
 
   getDataFilter(data) {
@@ -192,7 +112,13 @@ class NewFeed extends PureComponent {
         );
       return value.age >= 36 && value.gender === this.props.location.query.gender;
     });
-    return arr;
+    if (this.props.location.query.sortby === 'age_ascending') {
+      return arr.sort((a, b) => a.age - b.age);
+    }
+    if (this.props.location.query.sortby === 'age_descending') {
+      return arr.sort((a, b) => b.age - a.age);
+    }
+    return arr.sort((a, b) => new Date(b.createat) - new Date(a.createat));
   }
 
   showDrawer = () => {
@@ -225,9 +151,20 @@ class NewFeed extends PureComponent {
 
   onChangeRadioGender(e) {
     const age = this.props.location.query.age;
+    const sort = this.props.location.query.sortby;
+    const tag = this.state.tag_item;
+    let tag_value = {};
+    if (e.target.value === 'male') tag_value = { type: 'gender', value: '#nam' };
+    if (e.target.value === 'female') tag_value = { type: 'gender', value: '#nu' };
+    if (e.target.value === 'all') tag_value = { type: 'gender', value: '#namvanu' };
+    const index = tag.findIndex(ele => ele.type === 'gender');
+    if (index !== -1) {
+      tag[index] = tag_value;
+    } else tag.push(tag_value);
     this.setState(
       {
         loadingPage: !this.state.loadingPage,
+        tag_item: tag,
       },
       () => {
         this.setState({
@@ -237,12 +174,51 @@ class NewFeed extends PureComponent {
     );
     this.props.history.push({
       pathname: '/home/newfeed',
-      search: `?page=1&gender=${e.target.value}&age=${age}`,
+      search: `?page=1&gender=${e.target.value}&age=${age}&sortby=${sort}`,
     });
   }
 
   onChangeRadioAge(e) {
     const gender = this.props.location.query.gender;
+    const sort = this.props.location.query.sortby;
+    const tag = this.state.tag_item;
+    let tag_value = {};
+    if (e.target.value === '18_24') tag_value = { type: 'age', value: '#tu18den24tuoi' };
+    if (e.target.value === '25_35') tag_value = { type: 'age', value: '#tu25den35tuoi' };
+    if (e.target.value === '36') tag_value = { type: 'age', value: '#tren35tuoi' };
+    const index = tag.findIndex(ele => ele.type === 'age');
+    if (index !== -1) {
+      tag[index] = tag_value;
+    } else tag.push(tag_value);
+    this.setState(
+      {
+        loadingPage: !this.state.loadingPage,
+        tag_item: tag,
+      },
+      () => {
+        this.setState({
+          loadingPage: !this.state.loadingPage,
+        });
+      }
+    );
+    this.props.history.push({
+      pathname: '/home/newfeed',
+      search: `?page=1&gender=${gender}&age=${e.target.value}&sortby=${sort}`,
+    });
+  }
+
+  handleChangeSort(e) {
+    const gender = this.props.location.query.gender;
+    const age = this.props.location.query.age;
+    const tag = this.state.tag_item;
+    let tag_value = {};
+    if (e === 'age_descending') tag_value = { type: 'sort', value: '#tuoigiamdan' };
+    if (e === 'age_ascending') tag_value = { type: 'sort', value: '#tuoitangdan' };
+    if (e === 'newest_member') tag_value = { type: 'sort', value: '#thanhvienmoinhat' };
+    const index = tag.findIndex(ele => ele.type === 'sort');
+    if (index !== -1) {
+      tag[index] = tag_value;
+    } else tag.push(tag_value);
     this.setState(
       {
         loadingPage: !this.state.loadingPage,
@@ -255,7 +231,7 @@ class NewFeed extends PureComponent {
     );
     this.props.history.push({
       pathname: '/home/newfeed',
-      search: `?page=1&gender=${gender}&age=${e.target.value}`,
+      search: `?page=1&gender=${gender}&age=${age}&sortby=${e}`,
     });
   }
 
@@ -269,9 +245,10 @@ class NewFeed extends PureComponent {
     if (
       !this.props.location.query.page ||
       !this.props.location.query.gender ||
-      !this.props.location.query.age
+      !this.props.location.query.age ||
+      !this.props.location.query.sortby
     ) {
-      return <Redirect to="/home/newfeed?page=1&gender=all&age=18_24" />;
+      return <Redirect to="/home/newfeed?page=1&gender=all&age=18_24&sortby=newest_member" />;
     }
     return (
       <div className={styles['home-newfeed']}>
@@ -281,32 +258,20 @@ class NewFeed extends PureComponent {
               <ul className={styles['tab-ul']}>
                 <li
                   onClick={() => this.handleClickTab(0)}
-                  className={
-                    this.state.leftTab === 0
-                      ? `${styles['tab-li']} ${styles['active-tab']}`
-                      : styles['tab-li']
-                  }
+                  className={this.state.leftTab === 0 ? `${styles['active-tab']}` : ''}
                 >
                   Menu tab 1
                   <span style={{ left: `${this.state.leftTab * 100}%` }} />
                 </li>
                 <li
                   onClick={() => this.handleClickTab(1)}
-                  className={
-                    this.state.leftTab === 1
-                      ? `${styles['tab-li']} ${styles['active-tab']}`
-                      : styles['tab-li']
-                  }
+                  className={this.state.leftTab === 1 ? `${styles['active-tab']}` : ''}
                 >
                   Menu tab 2
                 </li>
                 <li
                   onClick={() => this.handleClickTab(2)}
-                  className={
-                    this.state.leftTab === 2
-                      ? `${styles['tab-li']} ${styles['active-tab']}`
-                      : styles['tab-li']
-                  }
+                  className={this.state.leftTab === 2 ? `${styles['active-tab']}` : ''}
                 >
                   Menu tab 3
                 </li>
@@ -327,6 +292,20 @@ class NewFeed extends PureComponent {
                 >
                   Lọc dữ liệu
                 </Button>
+                <Select
+                  defaultValue="newest_member"
+                  style={{
+                    width: '160px',
+                    position: 'absolute',
+                    right: 0,
+                    bottom: '15px',
+                  }}
+                  onChange={e => this.handleChangeSort(e)}
+                >
+                  <Option value="age_descending">Tuổi giảm dần</Option>
+                  <Option value="age_ascending">Tuổi tăng dần</Option>
+                  <Option value="newest_member">Thành viên mới nhất</Option>
+                </Select>
               </div>
               <div className={styles['moblie-icon']}>
                 <Icon
@@ -416,111 +395,13 @@ class NewFeed extends PureComponent {
         </div>
         {this.state.leftTab === 0 && (
           <div className={styles.container}>
-            {/*
-           <div style={{ padding: '5px', marginBottom: '20px' }}>
-            <div className={styles['filter-search']}>
-            <div className={styles['search-box']}>
-              <Icon type="search" />
-              <input
-                type="text"
-                placeholder="Tìm kiếm (không bắt buộc)..."
-                className={styles['input-search']}
-              />
-            </div>
-            <div onClick={() => this.ToggleGender()} className={styles['filter-gender1']}>
-              <div style={{ fontSize: '15px', color: '#2d3436', paddingRight: '5px' }}>
-                &#9792;
+            {this.state.tag_item.length > 0 && (
+              <div className={styles['tag-item']}>
+                {this.state.tag_item.map((v, i) => (
+                  <Tag key={i}>{v.value}</Tag>
+                ))}
               </div>
-              <div style={{ color: '#34495e' }}>
-                {this.getValueGender(this.state.genderValue)}
-              </div>
-              <div
-                className={
-                  filterGender
-                    ? `${styles['sub-gender']} ${styles['active-filter']}`
-                    : styles['sub-gender']
-                }
-              >
-                <div
-                  className={styles['li-gender']}
-                  onClick={() => this.handeClickSubGender('male')}
-                >
-                  Nam
-                </div>
-                <div
-                  className={styles['li-gender']}
-                  onClick={() => this.handeClickSubGender('female')}
-                >
-                  Nữ
-                </div>
-                <div
-                  className={styles['li-gender']}
-                  onClick={() => this.handeClickSubGender('all')}
-                >
-                  Nam và Nữ
-                </div>
-              </div>
-              <Icon type="caret-down" style={{ paddingLeft: '10px' }} theme="filled" />
-            </div>
-            <div onClick={() => this.ToggleAge()} className={styles['filter-age1']}>
-              <Icon style={{ paddingRight: '10px' }} type="user" />
-              <div style={{ color: '#34495e' }}>{this.getValueAge(this.state.ageValue)}</div>
-              <div
-                className={
-                  filterAge
-                    ? `${styles['sub-age']} ${styles['active-filter']}`
-                    : styles['sub-age']
-                }
-              >
-                <div className={styles['li-age']} onClick={() => this.handeClickSubAge('18_24')}>
-                  Từ 18-24 tuổi
-                </div>
-                <div className={styles['li-age']} onClick={() => this.handeClickSubAge('25_35')}>
-                  Từ 25-35 tuổi
-                </div>
-                <div className={styles['li-age']} onClick={() => this.handeClickSubAge('36')}>
-                  Ngoài 35 tuổi
-                </div>
-              </div>
-              <Icon type="caret-down" style={{ paddingLeft: '10px' }} theme="filled" />
-            </div>
-            <div className={styles['filter-button']}>
-              <button
-                onClick={() => this.handleClickSearch()}
-                className={styles['btn-search']}
-                type="button"
-              >
-                Tìm kiếm
-              </button>
-            </div>
-          </div>
-           </div>
-          */}
-
-            {/*
-          <div className={styles.filter}>
-          <div className={styles['filter-gender']}>
-          <Select style={{width:'150px'}} defaultValue={this.props.location.query.gender ? `${this.props.location.query.gender}` : 'all'} onChange={(e)=>this.handleChangeGender(e)}>
-            <Option value="male">Nam</Option>
-            <Option value="female">Nữ</Option>
-            <Option value="all">
-              Cả Nam {'&'} Nữ
-            </Option>
-
-          </Select>
-          </div>
-          <div className={styles['filter-age']}>
-            <Select style={{width:'150px'}} defaultValue={this.props.location.query.age ? `${this.props.location.query.age}` : '18_24'} onChange={(e)=>this.handleChangeAge(e)}>
-              <Option value='18_24'>Từ 18 - 24 tuổi</Option>
-              <Option value='25_35'>Từ 25 - 35 tuổi</Option>
-              <Option value='36'>
-                Ngoài 35 tuổi
-              </Option>
-
-            </Select>
-          </div>
-        </div>
-        */}
+            )}
             <div className={styles.row}>
               {!loadingPage ? (
                 this.getDataFilter(allUser)

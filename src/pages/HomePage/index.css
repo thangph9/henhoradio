@@ -149,6 +149,10 @@
 .box-cart:hover {
   box-shadow: 0 0 11px rgba(33, 33, 33, 0.2);
 }
+.tag-item {
+  margin-bottom: 20px;
+  padding: 5px;
+}
 .cart-item {
   position: relative;
   width: 100%;
@@ -480,10 +484,10 @@
     display: none;
   }
   .tab-list {
-    flex-basis: 70%;
+    flex-basis: 60%;
   }
   .filter-button {
-    flex-basis: 30%;
+    flex-basis: 40%;
   }
   .container {
     max-width: 960px;

@@ -162,7 +162,7 @@
   display: block;
   padding-top: 0.125rem;
   padding-bottom: 0.125rem;
-  margin-top: 2px;
+  margin-top: 15px;
 }
 .header__navbar-brand___SzzgD:focus {
   text-decoration: none;
@@ -172,7 +172,7 @@
 }
 .header__navbar-brand___SzzgD img {
   width: auto;
-  height: 32px;
+  height: 28px;
 }
 .item-login {
   cursor: pointer;
@@ -333,7 +333,7 @@
   float: left;
   padding-left: 0;
   text-align: left;
-  margin-top: 3px;
+  margin-top: 8px;
   margin-left: 16px;
   height: 40px;
   box-sizing: border-box;
@@ -481,7 +481,7 @@
   list-style: none;
   margin-bottom: 0;
   align-items: center;
-  padding-top: 5px;
+  padding-top: 7px;
 }
 .header__navbar-nav___9cfBy .header__nav-link___3W4sc {
   padding-right: 0;
@@ -888,15 +888,6 @@
     right: 0.1px !important;
   }
 }
-.logo-icon {
-  width: 100px;
-  height: 50px;
-  transform: translateY(5px);
-  background-position: center;
-  background-size: 90px auto;
-  background-repeat: no-repeat;
-  background-image: url('http://cdn.henhoradio.net/images/ft/2d5ad80d-68d4-4207-8075-2d7e24e00e89');
-}
 @media (min-width: 992px) {
   .container__container___1fvX0 {
     padding-right: 12px;
@@ -913,6 +904,9 @@
     position: absolute;
     right: 0.1px;
     top: -12px;
+  }
+  .header__navbar-brand___SzzgD {
+    display: none;
   }
 }
 @media only screen and (max-width: 480px) {
