@@ -570,7 +570,7 @@ class ListRadio extends PureComponent {
                                       )}
                                     </span>
                                   ) : (
-                                    '0:0'
+                                    <span className={styles['span-discription']}>00:00</span>
                                   )}
                                 </div>
                               </div>
