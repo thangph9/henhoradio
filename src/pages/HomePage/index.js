@@ -38,6 +38,7 @@ class NewFeed extends PureComponent {
     visible: false,
     leftTab: 0,
     tag_item: [],
+    testAtb: false,
   };
 
   componentDidMount() {
@@ -306,7 +307,7 @@ class NewFeed extends PureComponent {
                 <div style={{ padding: '20px' }}>
                   <div>
                     <h3 style={{ color: 'gray' }}>Giới tính</h3>
-                    <hr />
+                    <hr style={{ marginBottom: '15px' }} />
                     <RadioGroup
                       onChange={e => this.onChangeRadioGender(e)}
                       value={this.props.location.query.gender}
@@ -333,7 +334,7 @@ class NewFeed extends PureComponent {
                   </div>
                   <div style={{ marginTop: '20px' }}>
                     <h3 style={{ color: 'gray' }}>Độ tuổi</h3>
-                    <hr />
+                    <hr style={{ marginBottom: '15px' }} />
                     <RadioGroup
                       onChange={e => this.onChangeRadioAge(e)}
                       value={this.props.location.query.age}

@@ -201,28 +201,30 @@ class GlobalHeader extends PureComponent {
                   }`}
                 >
                   {this.props.getmenu.length > 0 ? (
-                    this.props.getmenu.map((v, i) => {
-                      return (
-                        <li key={i} className={`${styles['header__nav-item___MQLXP']}`}>
-                          <Link
-                            style={{ textDecoration: 'none' }}
-                            to={v.path}
-                            className={`${styles['header__nav-link___3W4sc']}`}
-                            style={
-                              this.props.history.location.pathname === v.path
-                                ? { color: '#ff7102' }
-                                : {}
-                            }
-                          >
-                            <Icon
-                              style={{ display: 'block', fontSize: '20px', marginBottom: '2px' }}
-                              type={v.icon}
-                            />
-                            {v.name}
-                          </Link>
-                        </li>
-                      );
-                    })
+                    this.props.getmenu
+                      .sort((a, b) => a.orderby - b.orderby)
+                      .map((v, i) => {
+                        return (
+                          <li key={i} className={`${styles['header__nav-item___MQLXP']}`}>
+                            <Link
+                              style={{ textDecoration: 'none' }}
+                              to={v.path}
+                              className={`${styles['header__nav-link___3W4sc']}`}
+                              style={
+                                this.props.history.location.pathname === v.path
+                                  ? { color: '#ff7102' }
+                                  : {}
+                              }
+                            >
+                              <Icon
+                                style={{ display: 'block', fontSize: '20px', marginBottom: '2px' }}
+                                type={v.icon}
+                              />
+                              {v.name}
+                            </Link>
+                          </li>
+                        );
+                      })
                   ) : (
                     <li className={`${styles['header__nav-item___MQLXP']}`}>
                       <div className={`${styles['header__nav-link___3W4sc']}`} />
@@ -532,16 +534,18 @@ class GlobalHeader extends PureComponent {
             <div className={activeMenu ? `${styles['active-menu']} ${styles.nav}` : styles.nav}>
               <ul>
                 {this.props.getmenu.length > 0
-                  ? this.props.getmenu.map((v, i) => {
-                      return (
-                        <li onClick={() => this.handleClickActiveMenu()} key={i}>
-                          <Link className={styles['list-item-menu-mobile']} to={v.path}>
-                            <Icon style={{ marginRight: '10px' }} type={v.icon} />
-                            {v.name}
-                          </Link>
-                        </li>
-                      );
-                    })
+                  ? this.props.getmenu
+                      .sort((a, b) => a.orderby - b.orderby)
+                      .map((v, i) => {
+                        return (
+                          <li onClick={() => this.handleClickActiveMenu()} key={i}>
+                            <Link className={styles['list-item-menu-mobile']} to={v.path}>
+                              <Icon style={{ marginRight: '10px' }} type={v.icon} />
+                              {v.name}
+                            </Link>
+                          </li>
+                        );
+                      })
                   : ''}
                 {localStorage.token && (
                   <li

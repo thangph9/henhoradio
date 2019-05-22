@@ -69,11 +69,16 @@ function getMenu(req, res) {
         try {
           models.instance.menuItem.find({}, {}, function(err, menuitem) {
             if (menuitem && menuitem.length > 0) {
-              menugroupReq.forEach((element, index) => {
+              menugroupReq.forEach((element, index, sefl) => {
                 let obj = menuitem.find(
                   value => value.menuitemid.toString() === element.menuitemid.toString()
                 );
-                menuItemReq.push(obj);
+                if (obj) {
+                  let a = JSON.stringify(obj);
+                  let b = JSON.parse(a);
+                  b.orderby = element.orderby;
+                  menuItemReq.push(b);
+                }
               });
               callback(err, null);
             } else {
