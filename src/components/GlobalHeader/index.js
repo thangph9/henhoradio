@@ -390,7 +390,7 @@ class GlobalHeader extends PureComponent {
                     </li>
                   </ul>
                 ) : (
-                  <Link to="/login?ref=0">
+                  <Link style={{ position: 'absolute', bottom: 0, right: 0 }} to="/login?ref=0">
                     <Button
                       style={{
                         background: '#FF7102',

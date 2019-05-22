@@ -29,12 +29,12 @@
 }
 .splashdtf-logo {
   display: inline-block;
-  width: 95px;
+  width: 100px;
   height: 40px;
   background-position: center;
-  background-size: 90px auto;
+  background-size: 100px auto;
   background-repeat: no-repeat;
-  background-image: url('http://cdn.henhoradio.net/images/ft/2d5ad80d-68d4-4207-8075-2d7e24e00e89');
+  background-image: url('/henhoradioicon.png');
 }
 .splashdtf-header-signin-text {
   margin-right: 17px;
