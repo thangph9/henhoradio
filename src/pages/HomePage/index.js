@@ -278,48 +278,24 @@ class NewFeed extends PureComponent {
               </ul>
             </div>
             <div className={styles['filter-button']}>
-              <div className={styles['desktop-icon']}>
-                <Button
-                  style={{
-                    position: 'absolute',
-                    bottom: '15px',
-                    display: 'flex',
-                    alignItems: 'center',
-                  }}
-                  type="primary"
-                  icon="filter"
-                  onClick={this.showDrawer}
-                >
-                  Lọc dữ liệu
-                </Button>
-                <Select
-                  defaultValue="newest_member"
-                  style={{
-                    width: '160px',
-                    position: 'absolute',
-                    right: 0,
-                    bottom: '15px',
-                  }}
-                  onChange={e => this.handleChangeSort(e)}
-                >
-                  <Option value="age_descending">Tuổi giảm dần</Option>
-                  <Option value="age_ascending">Tuổi tăng dần</Option>
-                  <Option value="newest_member">Thành viên mới nhất</Option>
-                </Select>
-              </div>
-              <div className={styles['moblie-icon']}>
-                <Icon
-                  style={{
-                    position: 'absolute',
-                    bottom: '15px',
-                    display: 'flex',
-                    alignItems: 'center',
-                    fontSize: '25px',
-                  }}
-                  type="filter"
-                  onClick={this.showDrawer}
-                />
-              </div>
+              <Button
+                id={styles['button-filter']}
+                type="primary"
+                icon="filter"
+                onClick={this.showDrawer}
+              >
+                Lọc dữ liệu
+              </Button>
+              <Select
+                id={styles['desktop-sort']}
+                defaultValue={this.props.location.query.sortby}
+                onChange={e => this.handleChangeSort(e)}
+              >
+                <Option value="age_descending">Tuổi giảm dần</Option>
+                <Option value="age_ascending">Tuổi tăng dần</Option>
+                <Option value="newest_member">Thành viên mới nhất</Option>
+              </Select>
+              <Icon id={styles['icon-filter']} type="filter" onClick={this.showDrawer} />
               <Drawer
                 title="Lựa chọn"
                 placement="right"
@@ -395,13 +371,32 @@ class NewFeed extends PureComponent {
         </div>
         {this.state.leftTab === 0 && (
           <div className={styles.container}>
-            {this.state.tag_item.length > 0 && (
-              <div className={styles['tag-item']}>
-                {this.state.tag_item.map((v, i) => (
-                  <Tag key={i}>{v.value}</Tag>
-                ))}
+            <div className={styles['mobile-filter']}>
+              {this.state.tag_item.length > 0 && (
+                <div className={styles['tag-item']}>
+                  {this.state.tag_item.map((v, i) => (
+                    <Tag style={{ marginBottom: '5px' }} key={i}>
+                      {v.value}
+                    </Tag>
+                  ))}
+                </div>
+              )}
+              <div className={styles['mobile-sort']}>
+                <Select
+                  defaultValue={this.props.location.query.sortby}
+                  style={{
+                    width: '160px',
+                    right: 0,
+                    paddingRight: '5px',
+                  }}
+                  onChange={e => this.handleChangeSort(e)}
+                >
+                  <Option value="age_descending">Tuổi giảm dần</Option>
+                  <Option value="age_ascending">Tuổi tăng dần</Option>
+                  <Option value="newest_member">Thành viên mới nhất</Option>
+                </Select>
               </div>
-            )}
+            </div>
             <div className={styles.row}>
               {!loadingPage ? (
                 this.getDataFilter(allUser)

@@ -127,6 +127,9 @@
     color: #bdc3c7;
   }
 }
+#desktop-sort {
+  display: none;
+}
 .btn-search {
   height: 50px;
   width: 100%;
@@ -152,6 +155,10 @@
 .tag-item {
   margin-bottom: 20px;
   padding: 5px;
+  flex: 1;
+}
+#icon-filter {
+  display: none;
 }
 .cart-item {
   position: relative;
@@ -289,6 +296,9 @@
   background: #fff;
   padding: 20px;
 }
+.mobile-filter {
+  display: flex;
+}
 .detail {
   color: black;
   font-size: 16px;
@@ -306,11 +316,10 @@
   display: flex;
   .tab-list {
     ul {
-      padding: 0;
       margin: 0;
       display: flex;
       align-items: center;
-      max-width: 390px;
+      padding: 0 20px;
       li {
         position: relative;
         cursor: pointer;
@@ -364,14 +373,29 @@
   .desktop-icon {
     display: none;
   }
-  .moblie-icon {
+  .mobile-sort {
     display: block;
   }
+  #button-filter {
+    display: none;
+  }
+  #icon-filter {
+    display: block;
+  }
+  .moblie-icon {
+    display: block;
+    i {
+      right: 15px;
+    }
+  }
   .tab-list {
-    flex-basis: 80%;
+    flex: 1;
   }
   .filter-button {
-    flex-basis: 20%;
+    font-size: 25px;
+    display: flex;
+    align-items: center;
+    padding-right: 15px;
   }
   .container {
     max-width: 540px;
@@ -421,14 +445,32 @@
   .desktop-icon {
     display: block;
   }
+  #button-filter {
+    position: absolute;
+    bottom: 15px;
+    display: flex;
+    align-items: center;
+    right: 0;
+    width: 155px;
+  }
   .moblie-icon {
     display: none;
+  }
+  .mobile-sort {
+    display: block;
   }
   .tab-list {
     flex-basis: 70%;
   }
   .filter-button {
     flex-basis: 30%;
+    font-size: 25px;
+    display: flex;
+    align-items: center;
+    padding-right: 0;
+  }
+  #icon-filter {
+    display: none;
   }
   .container {
     max-width: 720px;
@@ -477,14 +519,35 @@
     padding-top: 70px;
     background: #f3f5f9;
   }
+  .tab-list {
+    flex-basis: 60%;
+    ul {
+      max-width: 390px;
+    }
+  }
   .desktop-icon {
     display: block;
+  }
+  #button-filter {
+    position: absolute;
+    bottom: 15px;
+    display: flex;
+    align-items: center;
+    left: 0;
+    width: 155px;
+  }
+  #desktop-sort {
+    display: block;
+    width: 160px;
+    position: absolute;
+    right: 0;
+    bottom: 15px;
   }
   .moblie-icon {
     display: none;
   }
-  .tab-list {
-    flex-basis: 60%;
+  .mobile-sort {
+    display: none;
   }
   .filter-button {
     flex-basis: 40%;
@@ -543,18 +606,30 @@
   .moblie-icon {
     display: block;
   }
+  .mobile-sort {
+    display: block;
+  }
   .list-menu {
     max-width: 90%;
   }
   .filter-button {
-    flex-basis: 10%;
+    font-size: 25px;
+    display: flex;
+    align-items: center;
+    padding-right: 0;
   }
   .tab-list {
-    flex-basis: 90%;
+    flex: 1;
+  }
+  #button-filter {
+    display: none;
   }
   .home-newfeed {
     padding-top: 52px;
     background: #f3f5f9;
+  }
+  #icon-filter {
+    display: block;
   }
   .cart-item {
     flex-basis: 100%;
