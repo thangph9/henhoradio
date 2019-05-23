@@ -38,7 +38,7 @@ class NewFeed extends PureComponent {
     visible: false,
     leftTab: 0,
     tag_item: [],
-    testAtb: false,
+    activeSort: false,
   };
 
   componentDidMount() {
@@ -223,6 +223,7 @@ class NewFeed extends PureComponent {
     this.setState(
       {
         loadingPage: !this.state.loadingPage,
+        activeSort: !this.state.activeSort,
       },
       () => {
         this.setState({
@@ -233,6 +234,12 @@ class NewFeed extends PureComponent {
     this.props.history.push({
       pathname: '/home/newfeed',
       search: `?page=1&gender=${gender}&age=${age}&sortby=${e}`,
+    });
+  }
+
+  handleClickButtonSort() {
+    this.setState({
+      activeSort: !this.state.activeSort,
     });
   }
 
@@ -261,10 +268,11 @@ class NewFeed extends PureComponent {
                   onClick={() => this.handleClickTab(0)}
                   className={this.state.leftTab === 0 ? `${styles['active-tab']}` : ''}
                 >
-                  Menu tab 1
+                  Tất cả
                   <span style={{ left: `${this.state.leftTab * 100}%` }} />
                 </li>
-                <li
+                {/*
+                  <li
                   onClick={() => this.handleClickTab(1)}
                   className={this.state.leftTab === 1 ? `${styles['active-tab']}` : ''}
                 >
@@ -276,18 +284,20 @@ class NewFeed extends PureComponent {
                 >
                   Menu tab 3
                 </li>
+                */}
               </ul>
             </div>
             <div className={styles['filter-button']}>
               <Button
                 id={styles['button-filter']}
                 type="primary"
-                icon="filter"
+                icon="control"
                 onClick={this.showDrawer}
               >
                 Lọc dữ liệu
               </Button>
-              <Select
+              {/*
+                <Select
                 id={styles['desktop-sort']}
                 defaultValue={this.props.location.query.sortby}
                 onChange={e => this.handleChangeSort(e)}
@@ -296,7 +306,8 @@ class NewFeed extends PureComponent {
                 <Option value="age_ascending">Tuổi tăng dần</Option>
                 <Option value="newest_member">Thành viên mới nhất</Option>
               </Select>
-              <Icon id={styles['icon-filter']} type="filter" onClick={this.showDrawer} />
+              */}
+              <Icon id={styles['icon-filter']} type="control" onClick={this.showDrawer} />
               <Drawer
                 title="Lựa chọn"
                 placement="right"
@@ -383,8 +394,8 @@ class NewFeed extends PureComponent {
                 </div>
               )}
               <div className={styles['mobile-sort']}>
-                <Select
-                  defaultValue={this.props.location.query.sortby}
+                {/*
+                  <Select
                   style={{
                     width: '160px',
                     right: 0,
@@ -396,6 +407,41 @@ class NewFeed extends PureComponent {
                   <Option value="age_ascending">Tuổi tăng dần</Option>
                   <Option value="newest_member">Thành viên mới nhất</Option>
                 </Select>
+                */}
+
+                <div
+                  onClick={() => this.handleClickButtonSort()}
+                  data-v-03b85949={this.state.activeSort}
+                  className={styles['copy-bar']}
+                >
+                  <span data-v-03b85949>Sắp xếp </span>
+                  <Icon type="caret-down" />
+                </div>
+                {this.state.activeSort && (
+                  <ul data-v-03b85949 className={styles['format-dd']}>
+                    <li
+                      onClick={() => this.handleChangeSort('age_descending')}
+                      data-v-03b85949
+                      className={styles['format-option']}
+                    >
+                      Tuổi giảm dần
+                    </li>
+                    <li
+                      onClick={() => this.handleChangeSort('age_ascending')}
+                      data-v-03b85949
+                      className={styles['format-option']}
+                    >
+                      Tuổi tăng dần
+                    </li>
+                    <li
+                      onClick={() => this.handleChangeSort('newest_member')}
+                      data-v-03b85949
+                      className={styles['format-option']}
+                    >
+                      Thành viên mới
+                    </li>
+                  </ul>
+                )}
               </div>
             </div>
             <div className={styles.row}>
@@ -460,7 +506,8 @@ class NewFeed extends PureComponent {
             />
           </div>
         )}
-        {this.state.leftTab === 1 && (
+        {/*
+           {this.state.leftTab === 1 && (
           <div className={styles.container}>
             <span>Day la menu 2</span>
           </div>
@@ -470,6 +517,7 @@ class NewFeed extends PureComponent {
             <span>Day la menu 3</span>
           </div>
         )}
+        */}
       </div>
     );
   }
