@@ -43,6 +43,9 @@ export default [
       { path: '/home/search-test', component: './SearchTest' },
       { path: '/home/detail-list', component: './DetailListRadio' },
       { path: '/home/profile-user', redirect: '/home/profile-user/information' },
+      { path: '/home/care', component: './Care' },
+      { path: '/home/whocare', component: './WhoCare' },
+      { path: '/home/suggestion', component: './Suggestion' },
       {
         path: '/home/profile-user',
         component: './ProfileDetailUser/Info',

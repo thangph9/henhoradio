@@ -2,6 +2,7 @@ import React, { PureComponent } from 'react';
 import { Link } from 'react-router-dom';
 import Debounce from 'lodash-decorators/debounce';
 import { Icon, Button } from 'antd';
+import { reloadAuthorized } from '@/utils/Authorized';
 import styles from './styles.less';
 
 // eslint-disable-next-line no-undef
@@ -140,6 +141,7 @@ class GlobalHeader extends PureComponent {
   handleClickLogout() {
     localStorage.removeItem('antd-pro-authority');
     localStorage.removeItem('token');
+    reloadAuthorized();
     this.props.history.push({ pathname: '/' });
   }
   handleClickActiveMenu() {
