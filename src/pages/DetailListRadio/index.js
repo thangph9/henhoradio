@@ -393,9 +393,9 @@ class ListRadio extends PureComponent {
     return `${Math.trunc(m)}:${Math.trunc(s)}`;
   }
 
-  handleClickAction(id) {
+  handleClickAction(value, id) {
     this.setState({
-      [`action-${id}`]: !this.state[`action-${id}`],
+      [`action-${value}`]: !this.state[`action-${value}`],
       [id]: undefined,
     });
   }
@@ -495,7 +495,7 @@ class ListRadio extends PureComponent {
                     <div key={i} className={styles['cart-item']}>
                       <article
                         className={
-                          this.state[`action-${v.audio}`]
+                          this.state[`action-${v.membersid}`]
                             ? `${styles['material-card']} ${styles['mc-active']}`
                             : styles['material-card']
                         }
@@ -577,7 +577,7 @@ class ListRadio extends PureComponent {
                             </div>
                           </div>
                           <a
-                            onClick={() => this.handleClickAction(v.audio)}
+                            onClick={() => this.handleClickAction(v.membersid, v.audio)}
                             className={styles['mc-btn-action']}
                           >
                             <Icon type="bars" />
