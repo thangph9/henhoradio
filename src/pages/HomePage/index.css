@@ -149,6 +149,10 @@
   font-weight: 400;
   font-family: 'Poppins', sans-serif;
 }
+.filter-button span {
+  font-weight: 600;
+  font-size: 15px;
+}
 .box-cart {
   border-radius: 8px;
   overflow: hidden;
@@ -161,8 +165,8 @@
   background: #1890ff;
   border-radius: 4px;
   width: 155px;
-  height: 36px;
-  line-height: 34px;
+  height: 32px;
+  line-height: 30px;
   text-align: center;
   color: #fff;
   font-size: 15px;
