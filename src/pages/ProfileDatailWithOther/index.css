@@ -26,6 +26,12 @@
   background: #1e1e1e;
   opacity: 0.75;
 }
+.answer-span {
+  color: #104da1;
+  font-size: 18px;
+  font-weight: 600;
+  cursor: pointer;
+}
 .essay-editing {
   position: relative;
   z-index: 3;
@@ -43,6 +49,16 @@
 .profile-user-left {
   flex-grow: 1;
   padding-left: 30px;
+}
+.desktop-infomation {
+  display: block;
+  display: inline-block;
+  position: absolute;
+  width: auto;
+  color: #fff;
+}
+.mobile-infomation {
+  display: none !important;
 }
 .edit-form {
   display: flex;
@@ -198,7 +214,8 @@
   font-weight: 500;
 }
 .avatar-user {
-  padding: 25px;
+  padding-top: 70px;
+  padding-bottom: 25px;
   background: #104da1;
   position: relative;
 }
@@ -206,19 +223,12 @@
   overflow: auto;
 }
 .account-infomation {
-  display: inline-block;
   padding: 8px;
-  position: absolute;
   bottom: 5px;
   margin-left: 15px;
   font-size: 18px;
   font-weight: 600;
-  color: #fff;
   cursor: pointer;
-  width: auto;
-}
-.account-infomation:hover {
-  background: rgba(255, 255, 255, 0.1);
 }
 .name-of-user {
   font-size: 22px;
@@ -295,7 +305,7 @@
 }
 @media (max-width: 767px) {
   .edit-form {
-    flex-direction: column;
+    flex-direction: column-reverse;
   }
 }
 @media (max-width: 575px) {
@@ -306,7 +316,21 @@
     padding-left: 5px;
   }
   .detail-profile {
-    flex-direction: column;
+    flex-direction: column-reverse;
+  }
+  .mobile-infomation {
+    display: block !important;
+    color: black;
+    padding: 20px;
+    margin: 30px 0.000000000001px;
+    border-radius: 8px;
+    background: #fff;
+  }
+  .desktop-infomation {
+    display: none;
+  }
+  .container-avatar {
+    display: flex;
   }
 }
 @keyframes editItem {
