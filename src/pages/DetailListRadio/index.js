@@ -577,7 +577,7 @@ class ListRadio extends PureComponent {
                             </div>
                           </div>
                           <a
-                            onClick={() => this.handleClickAction(i, v.audio)}
+                            onClick={() => this.handleClickAction(v.audio)}
                             className={styles['mc-btn-action']}
                           >
                             <Icon type="bars" />
