@@ -68,7 +68,6 @@
 }
 .question-item {
   padding: 20px;
-  border-bottom: 1px solid #f3f5f9;
   cursor: pointer;
 }
 .theme-question {
@@ -92,6 +91,12 @@
   margin-bottom: 50px;
   z-index: 3;
   border-radius: 5px;
+  overflow: hidden;
+  max-height: 0;
+  animation-name: loadquestion;
+  animation-duration: 1.5s;
+  animation-fill-mode: forwards;
+  animation-iteration-count: 1;
 }
 .list-question-hidden::-webkit-scrollbar {
   width: 0 !important;
@@ -111,6 +116,13 @@
 .item-question:hover {
   background: #f3f5f9;
 }
+.item-question:first-child {
+  border-top: 1px solid #f3f5f9;
+}
+.item-question:last-child {
+  border-bottom-left-radius: 10px;
+  border-bottom-right-radius: 10px;
+}
 .chua-hoan-thien {
   font-size: 10px;
   padding: 2px 8px;
@@ -129,7 +141,7 @@
   padding-left: 20px;
   display: flex;
   justify-content: center;
-  background: #4C7BD9;
+  background: #4c7bd9;
   animation: editItem 0.4s ease-out 1;
   -moz-animation: editItem 0.4s ease-out 1;
   -webkit-animation: editItem 0.4s ease-out 1;
@@ -283,5 +295,15 @@
   to {
     max-height: 1000px;
     padding-top: 20px;
+  }
+}
+@keyframes loadquestion {
+  0% {
+    opacity: 0;
+    max-height: 0;
+  }
+  100% {
+    opacity: 1;
+    max-height: 1000px;
   }
 }
