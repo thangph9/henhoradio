@@ -1,3 +1,101 @@
-a {
-  text-decoration: underline;
+.who-care-page {
+  margin-top: 100px;
+  .container {
+    margin-left: auto;
+    margin-right: auto;
+    background-color: #fff;
+    min-height: calc(100vh - 100px);
+    .user-care-item {
+      margin: 0 15px;
+      .title-care {
+        padding-top: 20px;
+        display: flex;
+        .title {
+          &:first-child {
+            flex-basis: 10%;
+          }
+          color: rgba(0, 0, 0, 0.65);
+          font-size: 17px;
+          font-weight: 600;
+          &:nth-child(2) {
+            flex: 1;
+          }
+          &:nth-child(3) {
+            flex: 1;
+          }
+          &:nth-child(4) {
+            flex: 1;
+          }
+          &:last-child {
+            flex: 1;
+            text-align: center;
+          }
+        }
+      }
+      .content-info-item {
+        padding: 15px 0 15px 0;
+        display: flex;
+        border-bottom: 1px solid #f3f3f3;
+        &:first-child {
+          padding: 5px 0 15px 0;
+        }
+        .avatar {
+          flex-basis: 10%;
+          .avatar-user {
+            background-position: center;
+            background-repeat: no-repeat;
+            background-size: cover;
+            position: relative;
+            display: block;
+            width: 60px;
+            height: 60px;
+            border-radius: 10px;
+            margin-right: 15px;
+          }
+        }
+        .info-user {
+          display: flex;
+          flex-direction: column;
+          justify-content: center;
+          flex: 1;
+          .more-info {
+            font-size: 14px;
+            font-weight: 500;
+            color: rgba(0, 0, 0, 0.45);
+            .name-of-user {
+              &::after {
+                content: ', ';
+              }
+            }
+            a {
+              text-decoration: underline;
+            }
+            .delete-care {
+              color: #1890ff;
+              cursor: pointer;
+              text-decoration: underline;
+            }
+          }
+          &:last-child {
+            align-items: center;
+          }
+        }
+      }
+    }
+  }
+}
+@media (min-width: 576px) {
+  .container {
+    max-width: 540px;
+  }
+}
+@media (min-width: 768px) {
+  .container {
+    max-width: 720px;
+  }
+}
+@media (min-width: 992px) {
+  .container {
+    max-width: 960px;
+  }
 }

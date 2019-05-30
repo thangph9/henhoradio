@@ -217,6 +217,13 @@ export async function updateProfileUser(params) {
     headers: { 'X-Access-Token': JSON.parse(localStorage.getItem('token')) },
   });
 }
+export async function changeCare(params) {
+  return request('/api/authentication/changecare', {
+    method: 'POST',
+    body: params,
+    headers: { 'X-Access-Token': JSON.parse(localStorage.getItem('token')) },
+  });
+}
 export async function updateProfileQuestion(params) {
   return request('/api/authentication/updateprofilequestion', {
     method: 'POST',

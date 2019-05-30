@@ -16,6 +16,7 @@ import {
   updateEmail,
   getOnlyUser,
   getDetailList,
+  changeCare,
 } from '@/services/api';
 import { message } from 'antd';
 import { setAuthority } from '@/utils/authority';
@@ -41,6 +42,7 @@ export default {
     updateemail: {},
     getonlyuser: {},
     getdetaillist: [],
+    changecare: {},
   },
   effects: {
     *login({ payload }, { call, put }) {
@@ -194,6 +196,17 @@ export default {
         message.error('Thay đổi thất bại !');
       }
     },
+    *changecare({ payload }, { call, put }) {
+      const response = yield call(changeCare, payload);
+      if (response && response.status === 'ok') {
+        yield put({
+          type: 'changeCare',
+          payload,
+        });
+      } else {
+        message.error('Thay đổi thất bại !');
+      }
+    },
     *updateprofileuser({ payload }, { call, put }) {
       const response = yield call(updateProfileUser, payload);
       if (response && response.status === 'ok') {
@@ -286,6 +299,16 @@ export default {
         getuserbyid: JSON.parse(b),
       };
     },
+    changeCare(state, action) {
+      const oldGetUserById = state.getuserbyid;
+      const a = JSON.stringify(oldGetUserById);
+      const b = JSON.parse(a);
+      b.care = action.payload.care;
+      return {
+        ...state,
+        getuserbyid: b,
+      };
+    },
     getAllUsers(state, action) {
       return {
         ...state,
@@ -317,6 +340,7 @@ export default {
         getonlyuser: JSON.parse(newProps),
       };
     },
+
     changePass(state) {
       return {
         ...state,

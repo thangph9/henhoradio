@@ -1,3 +1,4 @@
+/* eslint-disable class-methods-use-this */
 /* eslint-disable no-return-assign */
 /* eslint-disable no-nested-ternary */
 /* eslint-disable react/no-array-index-key */
@@ -38,6 +39,7 @@ class AdvancedProfile extends Component {
       listQuestion: undefined,
       validateText: true,
       loaded: false,
+      care: false,
     };
     this.columns = [
       {
@@ -83,6 +85,7 @@ class AdvancedProfile extends Component {
           title: nextProps.authentication.getuserbyid.title,
           group: nextProps.authentication.getuserbyid.group,
           yourQuestion: nextProps.authentication.getuserbyid.yourQuestion,
+          care: nextProps.authentication.getuserbyid.care,
         },
         () => {
           const { dataUser } = this.state;
@@ -298,6 +301,18 @@ class AdvancedProfile extends Component {
     });
   }
 
+  handleClickChangeCare() {
+    const { id } = this.props.location.query;
+    this.props.dispatch({
+      type: 'authentication/changecare',
+      payload: {
+        userid: id,
+        care: !this.state.care,
+        type: 'user',
+      },
+    });
+  }
+
   handleClickEdit(v, e) {
     const { title } = this.state;
     const type = title.find(element => element.question_id === e);
@@ -374,6 +389,13 @@ class AdvancedProfile extends Component {
                   </span>
                   <span className={styles['address-of-user']}>{dataUser.address}</span>
                 </div>
+              </div>
+              <div
+                onClick={() => this.handleClickChangeCare()}
+                data-care-star={this.state.care}
+                className={styles['care-star']}
+              >
+                <Icon type="star" theme="filled" /> Quan tâm
               </div>
             </div>
           </div>

@@ -710,6 +710,7 @@ function getUserById(req, res) {
   let legit = {};
   let question = [];
   let title = [];
+  let care = false;
   let group = [];
   let message = '';
   let userid = undefined;
@@ -851,6 +852,21 @@ function getUserById(req, res) {
           callback(error);
         }
       },
+      callback => {
+        try {
+          models.instance.userCare.find(
+            { user_id1: models.uuidFromString(legit.userid), user_id2: userid },
+            function(err, results) {
+              if (results && results.length > 0) {
+                care = true;
+              }
+              callback(err, null);
+            }
+          );
+        } catch (error) {
+          callback(error);
+        }
+      },
     ],
     err => {
       if (err) return res.json({ status: 'error' });
@@ -864,6 +880,7 @@ function getUserById(req, res) {
           group,
           yourQuestion,
           timeline: new Date().getTime(),
+          care,
         },
       });
     }
@@ -1219,7 +1236,107 @@ function getOnlyUser(req, res) {
     }
   );
 }
-
+function changeCare(req, res) {
+  let legit = {};
+  const token = req.headers['x-access-token'];
+  let userid = undefined;
+  let params = req.body;
+  const verifyOptions = {
+    expiresIn: '30d',
+    algorithm: ['RS256'],
+  };
+  async.series(
+    [
+      callback => {
+        try {
+          legit = jwt.verify(token, jwtpublic, verifyOptions);
+          callback(null, null);
+        } catch (e) {
+          return res.send({
+            status: 'error',
+            message: 'Sai ma token',
+          });
+        }
+      },
+      function(callback) {
+        try {
+          let id = params.userid;
+          let uuid = `${id.substring(0, 8)}-${id.substring(8, 12)}-${id.substring(
+            12,
+            16
+          )}-${id.substring(16, 20)}-${id.substring(20, 32)}`;
+          userid = models.uuidFromString(uuid);
+        } catch (e) {
+          return res.json({ status: 'error1' });
+        }
+        callback(null, null);
+      },
+      callback => {
+        try {
+          if (params.care) {
+            let object = {
+              user_id1: models.uuidFromString(legit.userid),
+              user_id2: userid,
+              created: new Date().getTime(),
+              type: params.type,
+            };
+            let instance = new models.instance.userCare(object);
+            let save = instance.save(function(err) {
+              if (err) callback(err, null);
+              else callback(null, null);
+            });
+          } else {
+            let query_object = {
+              user_id1: models.uuidFromString(legit.userid),
+              user_id2: userid,
+            };
+            models.instance.userCare.delete(query_object, function(err) {
+              if (err) callback(err, null);
+              else callback(null, null);
+            });
+          }
+        } catch (error) {
+          console.log(error);
+          res.send({ status: 'error' });
+        }
+      },
+      callback => {
+        try {
+          if (params.care) {
+            let object = {
+              user_id1: models.uuidFromString(legit.userid),
+              user_id2: userid,
+              created: new Date().getTime(),
+            };
+            let instance = new models.instance.userWhoCare(object);
+            let save = instance.save(function(err) {
+              if (err) callback(err, null);
+              else callback(null, null);
+            });
+          } else {
+            let query_object = {
+              user_id1: models.uuidFromString(legit.userid),
+              user_id2: userid,
+            };
+            models.instance.userWhoCare.delete(query_object, function(err) {
+              if (err) callback(err, null);
+              else callback(null, null);
+            });
+          }
+        } catch (error) {
+          console.log(error);
+          res.send({ status: 'error' });
+        }
+      },
+    ],
+    err => {
+      if (err) return res.json({ status: 'error' });
+      return res.json({
+        status: 'ok',
+      });
+    }
+  );
+}
 router.post('/register', register);
 router.post('/login', login);
 router.get('/sendanswer', sendAnswer);
@@ -1234,4 +1351,5 @@ router.post('/updateprofileuser', updateProfileUser);
 router.post('/changepass', changePass);
 router.post('/updateemail', updateEmail);
 router.post('/updatephone', updatePhone);
+router.post('/changecare', changeCare);
 module.exports = router;
