@@ -45,6 +45,7 @@
 }
 .who-care-page .container .user-care-item .content-info-item .avatar {
   flex-basis: 10%;
+  cursor: pointer;
 }
 .who-care-page .container .user-care-item .content-info-item .avatar .avatar-user {
   background-position: center;

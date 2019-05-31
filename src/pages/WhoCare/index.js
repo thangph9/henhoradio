@@ -1,3 +1,4 @@
+/* eslint-disable no-nested-ternary */
 /* eslint-disable class-methods-use-this */
 /* eslint-disable react/no-array-index-key */
 /* eslint-disable react/no-unused-state */
@@ -55,17 +56,42 @@ class WhoCare extends PureComponent {
     this.props.dispatch({
       type: 'authentication/changecare',
       payload: {
-        userid: value,
+        userid: value.user_id.replace(/-/g, ''),
         care: !careItem,
         type: 'user',
+        address: value.address,
+        age: value.age,
+        created: value.created,
+        name: value.name,
+        gender: value.gender,
+        user_id: value.user_id,
       },
     });
+    /*
     this.props.dispatch({
       type: 'authentication/getusercare',
     });
+    */
     this.setState({
       [click]: true,
     });
+  }
+
+  background(avatar, gender) {
+    if (avatar) {
+      return {
+        backgroundImage: `url(http://cdn.henhoradio.net/images/ft/${avatar})`,
+      };
+    }
+    if (gender === 'male')
+      return {
+        backgroundImage:
+          'url(http://cdn.henhoradio.net/images/ft/0bfed19c-071d-4a16-90d5-037fd22ed912)',
+      };
+    return {
+      backgroundImage:
+        'url(http://cdn.henhoradio.net/images/ft/73cb3725-aa00-4f91-b6eb-8bff157fd714)',
+    };
   }
 
   render() {
@@ -87,10 +113,7 @@ class WhoCare extends PureComponent {
                   <div className={styles.avatar}>
                     <div
                       className={styles['avatar-user']}
-                      style={{
-                        backgroundImage:
-                          'url(http://cdn.henhoradio.net/images/ft/0bfed19c-071d-4a16-90d5-037fd22ed912)',
-                      }}
+                      style={this.background(v.avatar, v.gender)}
                     />
                   </div>
                   <div className={styles['info-user']}>
@@ -117,11 +140,7 @@ class WhoCare extends PureComponent {
                       <span
                         className={this.checkCare(v.user_id) ? styles.cared : styles['not-care']}
                         onClick={() =>
-                          this.handleClickChangeCare(
-                            v.user_id.replace(/-/g, ''),
-                            `click-${i}`,
-                            this.checkCare(v.user_id)
-                          )
+                          this.handleClickChangeCare(v, `click-${i}`, this.checkCare(v.user_id))
                         }
                       >
                         <Icon

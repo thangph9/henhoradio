@@ -335,7 +335,19 @@ export default {
       const d = JSON.parse(c);
       let arr = [];
       if (d.length > 0) {
-        arr = d.filter(v => v.user_id.replace(/-/g, '') !== action.payload.userid);
+        const temp = d.find(v => v.user_id === action.payload.user_id);
+        if (temp) arr = d.filter(v => v.user_id !== action.payload.user_id);
+        else {
+          const obj = {};
+          obj.address = action.payload.address;
+          obj.age = action.payload.age;
+          obj.created = action.payload.created;
+          obj.gender = action.payload.gender;
+          obj.name = action.payload.name;
+          obj.user_id = action.payload.user_id;
+          d.push(obj);
+          arr = d;
+        }
       } else arr = d;
       return {
         ...state,
