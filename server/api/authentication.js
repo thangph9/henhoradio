@@ -1337,6 +1337,158 @@ function changeCare(req, res) {
     }
   );
 }
+function getUserCare(req, res) {
+  let legit = {};
+  let result = [];
+  const token = req.headers['x-access-token'];
+  let arr = [];
+  const verifyOptions = {
+    expiresIn: '30d',
+    algorithm: ['RS256'],
+  };
+  async.series(
+    [
+      callback => {
+        try {
+          legit = jwt.verify(token, jwtpublic, verifyOptions);
+          callback(null, null);
+        } catch (e) {
+          return res.send({
+            status: 'error',
+            message: 'Sai ma token',
+          });
+        }
+      },
+      callback => {
+        try {
+          models.instance.userCare.find({ user_id1: models.uuidFromString(legit.userid) }, function(
+            err,
+            results
+          ) {
+            if (results && results.length > 0) {
+              result = results;
+            }
+            callback(err, null);
+          });
+        } catch (e) {
+          callback(e, null);
+          console.log(e);
+        }
+      },
+      callback => {
+        try {
+          result.forEach((e, i) => {
+            models.instance.users.find({ user_id: e.user_id2 }, function(err, results) {
+              if (results && results.length > 0) {
+                let obj = {};
+                obj.name = results[0].fullname;
+                obj.gender = results[0].gender;
+                obj.address = results[0].address;
+                obj.age = new Date().getFullYear() - results[0].dob_year;
+                obj.user_id = results[0].user_id;
+                obj.created = e.created;
+                arr.push(obj);
+                if (arr.length === result.length) {
+                  callback(null, null);
+                }
+              } else {
+                return res.json({
+                  status: 'error',
+                });
+              }
+            });
+          });
+        } catch (e) {
+          callback(e, null);
+          console.log(e);
+        }
+      },
+    ],
+    err => {
+      if (err) return res.json({ status: 'error' });
+      return res.json({
+        status: 'ok',
+        data: arr,
+      });
+    }
+  );
+}
+function getUserWhoCare(req, res) {
+  let legit = {};
+  let result = [];
+  const token = req.headers['x-access-token'];
+  let arr = [];
+  const verifyOptions = {
+    expiresIn: '30d',
+    algorithm: ['RS256'],
+  };
+  async.series(
+    [
+      callback => {
+        try {
+          legit = jwt.verify(token, jwtpublic, verifyOptions);
+          callback(null, null);
+        } catch (e) {
+          return res.send({
+            status: 'error',
+            message: 'Sai ma token',
+          });
+        }
+      },
+      callback => {
+        try {
+          models.instance.userWhoCare.find(
+            { user_id2: models.uuidFromString(legit.userid) },
+            function(err, results) {
+              if (results && results.length > 0) {
+                result = results;
+              }
+              callback(err, null);
+            }
+          );
+        } catch (e) {
+          callback(e, null);
+          console.log(e);
+        }
+      },
+      callback => {
+        try {
+          result.forEach((e, i) => {
+            models.instance.users.find({ user_id: e.user_id1 }, function(err, results) {
+              if (results && results.length > 0) {
+                let obj = {};
+                obj.name = results[0].fullname;
+                obj.gender = results[0].gender;
+                obj.address = results[0].address;
+                obj.age = new Date().getFullYear() - results[0].dob_year;
+                obj.user_id = results[0].user_id;
+                obj.created = e.created;
+                arr.push(obj);
+                if (arr.length === result.length) {
+                  callback(null, null);
+                }
+              } else {
+                return res.json({
+                  status: 'error',
+                });
+              }
+            });
+          });
+        } catch (e) {
+          callback(e, null);
+          console.log(e);
+        }
+      },
+    ],
+    err => {
+      if (err) return res.json({ status: 'error' });
+      return res.json({
+        status: 'ok',
+        data: arr,
+      });
+    }
+  );
+}
 router.post('/register', register);
 router.post('/login', login);
 router.get('/sendanswer', sendAnswer);
@@ -1352,4 +1504,6 @@ router.post('/changepass', changePass);
 router.post('/updateemail', updateEmail);
 router.post('/updatephone', updatePhone);
 router.post('/changecare', changeCare);
+router.get('/getusercare', getUserCare);
+router.get('/getuserwhocare', getUserWhoCare);
 module.exports = router;

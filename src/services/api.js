@@ -199,6 +199,18 @@ export async function getUserById(params) {
     headers: { 'X-Access-Token': JSON.parse(localStorage.getItem('token')) },
   });
 }
+export async function getUserCare() {
+  return request(`/api/authentication/getusercare`, {
+    method: 'GET',
+    headers: { 'X-Access-Token': JSON.parse(localStorage.getItem('token')) },
+  });
+}
+export async function getUserWhoCare() {
+  return request(`/api/authentication/getuserwhocare`, {
+    method: 'GET',
+    headers: { 'X-Access-Token': JSON.parse(localStorage.getItem('token')) },
+  });
+}
 export async function getAllUsers() {
   return request('/api/authentication/getallusers', {
     method: 'GET',

@@ -13,6 +13,6 @@ module.exports = {
       default: { $db_function: 'toTimestamp(now())' },
     },
   },
-  key: [['user_id2', 'user_id1'], 'created'],
+  key: [['user_id2'], 'user_id1', 'created'],
   clustering_order: { created: 'desc' },
 };

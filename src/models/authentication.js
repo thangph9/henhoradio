@@ -17,6 +17,8 @@ import {
   getOnlyUser,
   getDetailList,
   changeCare,
+  getUserCare,
+  getUserWhoCare,
 } from '@/services/api';
 import { message } from 'antd';
 import { setAuthority } from '@/utils/authority';
@@ -43,6 +45,8 @@ export default {
     getonlyuser: {},
     getdetaillist: [],
     changecare: {},
+    getusercare: [],
+    getuserwhocare: [],
   },
   effects: {
     *login({ payload }, { call, put }) {
@@ -140,6 +144,28 @@ export default {
       if (response && response.status === 'ok') {
         yield put({
           type: 'getUser',
+          payload: response.data,
+        });
+      } else {
+        message.error('Có lỗi xảy ra. Hãy thử đăng nhập lại !');
+      }
+    },
+    *getusercare({ payload }, { call, put }) {
+      const response = yield call(getUserCare, payload);
+      if (response && response.status === 'ok') {
+        yield put({
+          type: 'getUserCare',
+          payload: response.data,
+        });
+      } else {
+        message.error('Có lỗi xảy ra. Hãy thử đăng nhập lại !');
+      }
+    },
+    *getuserwhocare({ payload }, { call, put }) {
+      const response = yield call(getUserWhoCare, payload);
+      if (response && response.status === 'ok') {
+        yield put({
+          type: 'getUserWhoCare',
           payload: response.data,
         });
       } else {
@@ -304,9 +330,17 @@ export default {
       const a = JSON.stringify(oldGetUserById);
       const b = JSON.parse(a);
       b.care = action.payload.care;
+      const oldGetUserCare = state.getusercare;
+      const c = JSON.stringify(oldGetUserCare);
+      const d = JSON.parse(c);
+      let arr = [];
+      if (d.length > 0) {
+        arr = d.filter(v => v.user_id.replace(/-/g, '') !== action.payload.userid);
+      } else arr = d;
       return {
         ...state,
         getuserbyid: b,
+        getusercare: arr,
       };
     },
     getAllUsers(state, action) {
@@ -368,6 +402,18 @@ export default {
       return {
         ...state,
         getonlyuser: action.payload,
+      };
+    },
+    getUserCare(state, action) {
+      return {
+        ...state,
+        getusercare: action.payload,
+      };
+    },
+    getUserWhoCare(state, action) {
+      return {
+        ...state,
+        getuserwhocare: action.payload,
       };
     },
     getDetailList(state, action) {
