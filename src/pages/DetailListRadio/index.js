@@ -18,7 +18,7 @@
 
 import React, { PureComponent } from 'react';
 import { connect } from 'dva';
-import { Skeleton, Icon, DatePicker, Select, Pagination, Row } from 'antd';
+import { Skeleton, Icon, DatePicker, Select, Pagination, Row, Tooltip } from 'antd';
 import { Redirect } from 'react-router-dom';
 import ReactPlayer from 'react-player';
 import moment from 'moment';
@@ -29,6 +29,7 @@ const { Option } = Select;
 @connect(({ authentication, members }) => ({
   authentication,
   members,
+  getusercare: authentication.getusercare,
 }))
 class ListRadio extends PureComponent {
   state = {
@@ -39,12 +40,16 @@ class ListRadio extends PureComponent {
     number: 0,
     played: 0,
     loaded: 0,
+    dataUserCare: [],
   };
 
   componentDidMount() {
     const { dispatch } = this.props;
     dispatch({
       type: 'members/getmembers',
+    });
+    this.props.dispatch({
+      type: 'authentication/getusercare',
     });
     const arrFilter = this.state.arrFilter;
     if (this.props.location.query.radio) {
@@ -123,6 +128,11 @@ class ListRadio extends PureComponent {
           }
         }
       );
+    }
+    if (this.props.getusercare !== nextProps.getusercare) {
+      this.setState({
+        dataUserCare: nextProps.getusercare,
+      });
     }
   }
 
@@ -409,6 +419,30 @@ class ListRadio extends PureComponent {
     }
   }
 
+  handleChangeCare(value, careItem) {
+    // console.log(value)
+    this.props.dispatch({
+      type: 'authentication/changecare',
+      payload: {
+        userid: value.membersid.replace(/\-/g, ''),
+        care: !careItem,
+        type: 'member',
+        address: value.address,
+        location: value.location,
+        created: value.created,
+        name: value.name,
+        gender: value.gender,
+        user_id: value.membersid,
+      },
+    });
+  }
+
+  checkCare(value) {
+    const check = this.state.dataUserCare.find(v => v.user_id === value);
+    if (check) return true;
+    return false;
+  }
+
   render() {
     if (this.props.location.search === '') {
       this.setState({
@@ -418,7 +452,15 @@ class ListRadio extends PureComponent {
         <Redirect to={{ pathname: '/home/detail-list', search: '?page=1&radio=ALL&gender=ALL' }} />
       );
     }
-    const { loadingPage, preLoad, detailList, dataFilter, globalPlaying, played } = this.state;
+    const {
+      loadingPage,
+      preLoad,
+      detailList,
+      dataFilter,
+      globalPlaying,
+      played,
+      dataUserCare,
+    } = this.state;
     const { page } = this.props.location.query;
     return (
       <div className={styles['detail-list-page']} style={{ background: '#f3f5f9' }}>
@@ -551,7 +593,13 @@ class ListRadio extends PureComponent {
                                 </span>
                               </div>
                               <div>
-                                <div>
+                                <div
+                                  className={
+                                    this.checkCare(v.membersid)
+                                      ? `${styles['duration-item']} ${styles.cared}`
+                                      : styles['duration-item']
+                                  }
+                                >
                                   <Icon style={{ paddingRight: '8px' }} type="clock-circle" />
                                   <span className={styles['span-discription']}>
                                     {this.getTimeInAudio(
@@ -572,6 +620,21 @@ class ListRadio extends PureComponent {
                                   ) : (
                                     <span className={styles['span-discription']}>00:00</span>
                                   )}
+                                  <Tooltip
+                                    title={
+                                      this.checkCare(v.membersid) ? 'Đã quan tâm' : 'Quan tâm ngay'
+                                    }
+                                    placement="topLeft"
+                                  >
+                                    <Icon
+                                      onClick={() =>
+                                        this.handleChangeCare(v, this.checkCare(v.membersid))
+                                      }
+                                      type="star"
+                                      theme="filled"
+                                    />
+                                  </Tooltip>
+                                  ,
                                 </div>
                               </div>
                             </div>

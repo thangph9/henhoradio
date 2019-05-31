@@ -408,6 +408,22 @@ li {
     width: 100% !important;
   }
 }
+.duration-item {
+  display: flex;
+  position: relative;
+  align-items: center;
+}
+.duration-item i:last-child {
+  cursor: pointer;
+  font-size: 18px;
+  color: gray;
+  position: absolute;
+  right: 0;
+}
+.cared i:last-child {
+  color: #ffd700;
+  animation: stretchbounce 0.5s ease-in-out;
+}
 .active {
   top: -50px !important;
 }
@@ -660,4 +676,21 @@ li {
   left: 16px;
   right: 0;
   height: 70px;
+}
+@keyframes stretchbounce {
+  0% {
+    transform: scale(1);
+  }
+  25% {
+    transform: scale(1.5);
+  }
+  50% {
+    transform: scale(0.9);
+  }
+  75% {
+    transform: scale(1.2);
+  }
+  100% {
+    transform: scale(1);
+  }
 }

@@ -1267,34 +1267,37 @@ function changeCare(req, res) {
           )}-${id.substring(16, 20)}-${id.substring(20, 32)}`;
           userid = models.uuidFromString(uuid);
         } catch (e) {
+          console.log(e);
           return res.json({ status: 'error1' });
         }
         callback(null, null);
       },
       callback => {
         try {
-          if (params.care) {
-            let object = {
-              user_id1: models.uuidFromString(legit.userid),
-              user_id2: userid,
-              created: new Date().getTime(),
-              type: params.type,
-            };
-            let instance = new models.instance.userCare(object);
-            let save = instance.save(function(err) {
-              if (err) callback(err, null);
-              else callback(null, null);
-            });
-          } else {
-            let query_object = {
-              user_id1: models.uuidFromString(legit.userid),
-              user_id2: userid,
-            };
-            models.instance.userCare.delete(query_object, function(err) {
-              if (err) callback(err, null);
-              else callback(null, null);
-            });
-          }
+          if (params.type === 'user') {
+            if (params.care && params.type === 'user') {
+              let object = {
+                user_id1: models.uuidFromString(legit.userid),
+                user_id2: userid,
+                created: new Date().getTime(),
+                type: params.type,
+              };
+              let instance = new models.instance.userCare(object);
+              let save = instance.save(function(err) {
+                if (err) callback(err, null);
+                else callback(null, null);
+              });
+            } else {
+              let query_object = {
+                user_id1: models.uuidFromString(legit.userid),
+                user_id2: userid,
+              };
+              models.instance.userCare.delete(query_object, function(err) {
+                if (err) callback(err, null);
+                else callback(null, null);
+              });
+            }
+          } else callback(null, null);
         } catch (error) {
           console.log(error);
           res.send({ status: 'error' });
@@ -1302,27 +1305,60 @@ function changeCare(req, res) {
       },
       callback => {
         try {
-          if (params.care) {
-            let object = {
-              user_id1: models.uuidFromString(legit.userid),
-              user_id2: userid,
-              created: new Date().getTime(),
-            };
-            let instance = new models.instance.userWhoCare(object);
-            let save = instance.save(function(err) {
-              if (err) callback(err, null);
-              else callback(null, null);
-            });
-          } else {
-            let query_object = {
-              user_id1: models.uuidFromString(legit.userid),
-              user_id2: userid,
-            };
-            models.instance.userWhoCare.delete(query_object, function(err) {
-              if (err) callback(err, null);
-              else callback(null, null);
-            });
-          }
+          if (params.type === 'user') {
+            if (params.care) {
+              let object = {
+                user_id1: models.uuidFromString(legit.userid),
+                user_id2: userid,
+                created: new Date().getTime(),
+              };
+              let instance = new models.instance.userWhoCare(object);
+              let save = instance.save(function(err) {
+                if (err) callback(err, null);
+                else callback(null, null);
+              });
+            } else {
+              let query_object = {
+                user_id1: models.uuidFromString(legit.userid),
+                user_id2: userid,
+              };
+              models.instance.userWhoCare.delete(query_object, function(err) {
+                if (err) callback(err, null);
+                else callback(null, null);
+              });
+            }
+          } else callback(null, null);
+        } catch (error) {
+          console.log(error);
+          res.send({ status: 'error' });
+        }
+      },
+      callback => {
+        try {
+          if (params.type === 'member') {
+            if (params.care) {
+              let object = {
+                user_id1: models.uuidFromString(legit.userid),
+                user_id2: userid,
+                created: new Date().getTime(),
+                type: params.type,
+              };
+              let instance = new models.instance.userCare(object);
+              let save = instance.save(function(err) {
+                if (err) callback(err, null);
+                else callback(null, null);
+              });
+            } else {
+              let query_object = {
+                user_id1: models.uuidFromString(legit.userid),
+                user_id2: userid,
+              };
+              models.instance.userCare.delete(query_object, function(err) {
+                if (err) callback(err, null);
+                else callback(null, null);
+              });
+            }
+          } else callback(null, null);
         } catch (error) {
           console.log(error);
           res.send({ status: 'error' });
@@ -1341,6 +1377,8 @@ function getUserCare(req, res) {
   let legit = {};
   let result = [];
   const token = req.headers['x-access-token'];
+  let arrUser = [];
+  let arrMember = [];
   let arr = [];
   const verifyOptions = {
     expiresIn: '30d',
@@ -1377,8 +1415,9 @@ function getUserCare(req, res) {
       },
       callback => {
         try {
-          if (result.length > 0) {
-            result.forEach((e, i) => {
+          const user = result.filter(v => v.type === 'user');
+          if (user.length > 0) {
+            user.forEach((e, i) => {
               models.instance.users.find({ user_id: e.user_id2 }, function(err, results) {
                 if (results && results.length > 0) {
                   let obj = {};
@@ -1388,8 +1427,10 @@ function getUserCare(req, res) {
                   obj.age = new Date().getFullYear() - results[0].dob_year;
                   obj.user_id = results[0].user_id;
                   obj.created = e.created;
-                  arr.push(obj);
-                  if (arr.length === result.length) {
+                  obj.avatar = results[0].avatar;
+                  obj.type = 'user';
+                  arrUser.push(obj);
+                  if (arrUser.length === user.length) {
                     callback(null, null);
                   }
                 } else {
@@ -1404,6 +1445,43 @@ function getUserCare(req, res) {
           callback(e, null);
           console.log(e);
         }
+      },
+      callback => {
+        try {
+          const member = result.filter(v => v.type === 'member');
+          if (member.length > 0) {
+            member.forEach((e, i) => {
+              models.instance.members.find({ membersid: e.user_id2 }, function(err, results) {
+                if (results && results.length > 0) {
+                  let obj = {};
+                  obj.name = results[0].name;
+                  obj.gender = results[0].gender;
+                  obj.address = results[0].address;
+                  obj.location = results[0].location;
+                  obj.user_id = results[0].membersid;
+                  obj.created = e.created;
+                  obj.avatar = null;
+                  obj.type = 'member';
+                  arrMember.push(obj);
+                  if (arrMember.length === member.length) {
+                    callback(null, null);
+                  }
+                } else {
+                  return res.json({
+                    status: 'error',
+                  });
+                }
+              });
+            });
+          } else callback(null, null);
+        } catch (e) {
+          callback(e, null);
+          console.log(e);
+        }
+      },
+      callback => {
+        arr = arrUser.concat(arrMember);
+        callback(null, null);
       },
     ],
     err => {

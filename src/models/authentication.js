@@ -337,7 +337,7 @@ export default {
       if (d.length > 0) {
         const temp = d.find(v => v.user_id === action.payload.user_id);
         if (temp) arr = d.filter(v => v.user_id !== action.payload.user_id);
-        else {
+        else if (action.payload.type === 'user') {
           const obj = {};
           obj.address = action.payload.address;
           obj.age = action.payload.age;
@@ -345,6 +345,18 @@ export default {
           obj.gender = action.payload.gender;
           obj.name = action.payload.name;
           obj.user_id = action.payload.user_id;
+          obj.type = action.payload.type;
+          d.push(obj);
+          arr = d;
+        } else {
+          const obj = {};
+          obj.address = action.payload.address;
+          obj.location = action.payload.location;
+          obj.created = action.payload.created;
+          obj.gender = action.payload.gender;
+          obj.name = action.payload.name;
+          obj.user_id = action.payload.user_id;
+          obj.type = action.payload.type;
           d.push(obj);
           arr = d;
         }
