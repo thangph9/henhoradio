@@ -39,9 +39,10 @@ class Care extends PureComponent {
     this.props.dispatch({
       type: 'authentication/changecare',
       payload: {
-        userid: value,
+        userid: value.user_id.replace(/-/g, ''),
         care: false,
         type: 'user',
+        user_id: value.user_id,
       },
     });
   }
@@ -108,7 +109,7 @@ class Care extends PureComponent {
                   <div className={styles['info-user']}>
                     <div className={styles['more-info']}>
                       <span
-                        onClick={() => this.handleClickChangeCare(v.user_id.replace(/-/g, ''))}
+                        onClick={() => this.handleClickChangeCare(v)}
                         className={styles['delete-care']}
                       >
                         Bỏ quan tâm
