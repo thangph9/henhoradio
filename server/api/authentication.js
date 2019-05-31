@@ -1377,27 +1377,29 @@ function getUserCare(req, res) {
       },
       callback => {
         try {
-          result.forEach((e, i) => {
-            models.instance.users.find({ user_id: e.user_id2 }, function(err, results) {
-              if (results && results.length > 0) {
-                let obj = {};
-                obj.name = results[0].fullname;
-                obj.gender = results[0].gender;
-                obj.address = results[0].address;
-                obj.age = new Date().getFullYear() - results[0].dob_year;
-                obj.user_id = results[0].user_id;
-                obj.created = e.created;
-                arr.push(obj);
-                if (arr.length === result.length) {
-                  callback(null, null);
+          if (result.length > 0) {
+            result.forEach((e, i) => {
+              models.instance.users.find({ user_id: e.user_id2 }, function(err, results) {
+                if (results && results.length > 0) {
+                  let obj = {};
+                  obj.name = results[0].fullname;
+                  obj.gender = results[0].gender;
+                  obj.address = results[0].address;
+                  obj.age = new Date().getFullYear() - results[0].dob_year;
+                  obj.user_id = results[0].user_id;
+                  obj.created = e.created;
+                  arr.push(obj);
+                  if (arr.length === result.length) {
+                    callback(null, null);
+                  }
+                } else {
+                  return res.json({
+                    status: 'error',
+                  });
                 }
-              } else {
-                return res.json({
-                  status: 'error',
-                });
-              }
+              });
             });
-          });
+          } else callback(null, null);
         } catch (e) {
           callback(e, null);
           console.log(e);
@@ -1453,27 +1455,29 @@ function getUserWhoCare(req, res) {
       },
       callback => {
         try {
-          result.forEach((e, i) => {
-            models.instance.users.find({ user_id: e.user_id1 }, function(err, results) {
-              if (results && results.length > 0) {
-                let obj = {};
-                obj.name = results[0].fullname;
-                obj.gender = results[0].gender;
-                obj.address = results[0].address;
-                obj.age = new Date().getFullYear() - results[0].dob_year;
-                obj.user_id = results[0].user_id;
-                obj.created = e.created;
-                arr.push(obj);
-                if (arr.length === result.length) {
-                  callback(null, null);
+          if (result.length > 0) {
+            result.forEach((e, i) => {
+              models.instance.users.find({ user_id: e.user_id1 }, function(err, results) {
+                if (results && results.length > 0) {
+                  let obj = {};
+                  obj.name = results[0].fullname;
+                  obj.gender = results[0].gender;
+                  obj.address = results[0].address;
+                  obj.age = new Date().getFullYear() - results[0].dob_year;
+                  obj.user_id = results[0].user_id;
+                  obj.created = e.created;
+                  arr.push(obj);
+                  if (arr.length === result.length) {
+                    callback(null, null);
+                  }
+                } else {
+                  return res.json({
+                    status: 'error',
+                  });
                 }
-              } else {
-                return res.json({
-                  status: 'error',
-                });
-              }
+              });
             });
-          });
+          } else callback(null, null);
         } catch (e) {
           callback(e, null);
           console.log(e);
