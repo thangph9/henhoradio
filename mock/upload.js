@@ -11,7 +11,7 @@ const models = require('../settings');
 
 // const jwtprivate = fs.readFileSync('./ssl/jwtprivate.pem', 'utf8');
 const upload = multer();
-const { getAudioDurationInSeconds } = require('get-audio-duration');
+
 const Uuid = models.datatypes.Uuid; // eslint-disable-line
 
 function audioUpload(req, res) {
@@ -81,7 +81,6 @@ function loadAudio(req, res) {
 }
 function getTrackList(req, res) {
   let result = [];
-  const obj = {};
   async.series(
     [
       function(callback) {
@@ -94,26 +93,10 @@ function getTrackList(req, res) {
           callback(error, null);
         }
       },
-      function(callback) {
-        try {
-          result.forEach(element => {
-            getAudioDurationInSeconds(`.././cms_hhr/public/files/${element.audio}.MP3`).then(
-              duration => {
-                obj[`${element.audio}`] = duration;
-                if (Object.keys(obj).length === result.length) {
-                  callback(null, obj);
-                }
-              }
-            );
-          });
-        } catch (error) {
-          callback(error, null);
-        }
-      },
     ],
-    (err, kq) => {
+    err => {
       if (err) return res.json({ status: 'error' });
-      return res.json({ status: 'ok', data: result, duration: kq[1] });
+      return res.json({ status: 'ok', data: result });
     }
   );
 }

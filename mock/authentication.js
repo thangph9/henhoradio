@@ -1,3 +1,4 @@
+/* eslint-disable no-empty */
 /* eslint-disable no-underscore-dangle */
 
 /* eslint-disable no-undef-init */
@@ -38,9 +39,9 @@ function register(req, res) {
   const userId = Uuid.random();
   const saltRounds = 10;
   const queries = [];
-  const PARAM_IS_VALID = {};
   let token = '';
-  // let verificationUrl = '';
+  const PARAM_IS_VALID = {};
+  let verificationUrl = '';
   let salt = '';
   let hash = '';
   const tasks = [
@@ -55,9 +56,46 @@ function register(req, res) {
         PARAM_IS_VALID.dob_day = params.dob_day;
         PARAM_IS_VALID.dob_month = params.dob_month;
         PARAM_IS_VALID.dob_year = params.dob_year;
+        PARAM_IS_VALID.useCaptcha = params.useCaptcha;
         callback(null, null);
       } catch (error) {
         res.send({ status: 'invalid' });
+      }
+    },
+    function checkCaptcha(callback) {
+      if (PARAM_IS_VALID.useCaptcha) {
+        if (!params.captcha) {
+          return res.json({
+            status: 'error',
+            message: 'Chưa nhập captcha',
+            timeline: new Date().getTime(),
+          });
+        }
+        verificationUrl = 'https://www.google.com/recaptcha/api/siteverify?secret=6LfUm5AUAAAAAC8xSPAt0pRUzUd4ZaK-1rZs-Aqm&response='.concat(
+          params.captcha,
+          '&remoteip=',
+          req.connection.remoteAddress
+        );
+        callback(null, verificationUrl);
+      } else {
+        callback(null, null);
+      }
+    },
+    function verifyCaptcha(callback) {
+      if (PARAM_IS_VALID.useCaptcha) {
+        request(verificationUrl, (error, response, b) => {
+          const body = JSON.parse(b);
+          if (body.success === false) {
+            return res.json({
+              status: 'error',
+              message: 'Sai captcha',
+              timeline: new Date().getTime(),
+            });
+          }
+          callback(error, null);
+        });
+      } else {
+        callback(null, null);
       }
     },
     function genSaltToken(callback) {
@@ -85,36 +123,9 @@ function register(req, res) {
           callback(err, null);
         });
       } catch (error) {
-        console.log(error);
         res.send({ status: 'error' });
       }
     },
-    /*
-      function checkCaptcha(callback) {
-      if (!params.captcha) {
-        return res.json({ responseCode: 1, responseDesc: 'Please select captcha' });
-      }
-      verificationUrl = 'https://www.google.com/recaptcha/api/siteverify?secret=6Ld1534UAAAAAFF8A3KCBEAfcfjS6COX9obBJrWV&response='.concat(
-        params.captcha,
-        '&remoteip=',
-        req.connection.remoteAddress
-      );
-      return callback(null, verificationUrl);
-    },
-
-    function verifyCaptcha(callback) {
-      request(verificationUrl, (error, response, b) => {
-        const body = JSON.parse(b);
-        if (body.success === false) {
-          res.json({
-            status: 'error',
-            message: 'Sai captcha',
-          });
-        }
-        callback(error, null);
-      });
-    },
-    */
     function saveUser(callback) {
       try {
         const userObject = {
@@ -131,9 +142,9 @@ function register(req, res) {
         const loginObject = {
           phone: PARAM_IS_VALID.phone,
           password: hash,
-          rule: ['Member'],
           password_hash_algorithm: 'bcrypt',
           password_salt: salt,
+          rule: ['Member'],
           user_id: PARAM_IS_VALID.user_id,
         };
         /* eslint-disable new-cap */
@@ -152,7 +163,6 @@ function register(req, res) {
         };
         queries.push(Login());
       } catch (error) {
-        console.log(error);
         res.send({ status: 'error' });
       }
       callback(null, null);
@@ -173,7 +183,6 @@ function register(req, res) {
           }
         );
       } catch (e) {
-        console.log(e);
         callback(null, null);
         res.send({ status: 'error' });
       }
@@ -187,7 +196,6 @@ function register(req, res) {
   ];
   async.series(tasks, err => {
     if (err) {
-      console.log(err);
       return res.json({ status: 'error', message: err, timeline: new Date().getTime() });
     }
     return res.json({
@@ -202,15 +210,53 @@ function login(req, res) {
   const PARAM_IS_VALID = {};
   let msg = '';
   let userInfo = [];
-  let rule = [];
   let hashPassword = '';
   let token = '';
+  let rule = [];
+  let verificationUrl = '';
   const tasks = [
     function validParams(callback) {
       PARAM_IS_VALID.phone = params.phone;
       PARAM_IS_VALID.password = params.password;
       PARAM_IS_VALID.captcha = params.captcha;
+      PARAM_IS_VALID.useCaptcha = params.useCaptcha;
       callback(null, null);
+    },
+    function checkCaptcha(callback) {
+      if (PARAM_IS_VALID.useCaptcha) {
+        if (!params.captcha) {
+          return res.json({
+            status: 'error',
+            message: 'Chưa nhập captcha',
+            timeline: new Date().getTime(),
+          });
+        }
+        verificationUrl = 'https://www.google.com/recaptcha/api/siteverify?secret=6LfUm5AUAAAAAC8xSPAt0pRUzUd4ZaK-1rZs-Aqm&response='.concat(
+          params.captcha,
+          '&remoteip=',
+          req.connection.remoteAddress
+        );
+        callback(null, verificationUrl);
+      } else {
+        callback(null, null);
+      }
+    },
+    function verifyCaptcha(callback) {
+      if (PARAM_IS_VALID.useCaptcha) {
+        request(verificationUrl, (error, response, b) => {
+          const body = JSON.parse(b);
+          if (body.success === false) {
+            return res.json({
+              status: 'error',
+              message: 'Sai captcha',
+              timeline: new Date().getTime(),
+            });
+          }
+          callback(error, null);
+        });
+      } else {
+        callback(null, null);
+      }
     },
     function fetchUsers(callback) {
       models.instance.users.find(
@@ -277,7 +323,6 @@ function login(req, res) {
           }
         );
       } catch (e) {
-        console.log(e);
         res.send({ status: 'error' });
       }
       callback(null, null);
@@ -574,7 +619,6 @@ function updateProfileQuestion(req, res) {
           legit = jwt.verify(token, jwtpublic, verifyOptions);
           callback(null, null);
         } catch (e) {
-          callback(e, null);
           return res.send({
             status: 'error',
             message: 'Sai ma token',
@@ -627,10 +671,7 @@ function getAllUsers(req, res) {
           legit = jwt.verify(token, jwtpublic, verifyOptions);
           callback(null, null);
         } catch (e) {
-          return res.json({
-            status: 'error',
-            message: 'Sai ma token',
-          });
+          callback(null, null);
         }
       },
       callback => {
@@ -648,9 +689,11 @@ function getAllUsers(req, res) {
                 obj.age = new Date().getFullYear() - element.dob_year;
                 obj.address = element.address;
                 obj.avatar = element.avatar;
+                obj.createat = element.createat;
                 arr.push(obj);
+                // if(element.public==='active') arr.push(obj);
               });
-              arr = arr.filter(element => element.user_id !== legit.userid);
+              if (legit.userid) arr = arr.filter(element => element.user_id !== legit.userid);
               result = arr;
             } else {
               return res.json({
@@ -677,6 +720,7 @@ function getUserById(req, res) {
   let legit = {};
   let question = [];
   let title = [];
+  let care = false;
   let group = [];
   let message = '';
   let userid = undefined;
@@ -694,10 +738,13 @@ function getUserById(req, res) {
           legit = jwt.verify(token, jwtpublic, verifyOptions);
           callback(null, null);
         } catch (e) {
-          return res.send({
+          /*
+            return res.send({
             status: 'error',
             message: 'Sai ma token',
           });
+          */
+          callback(null, null);
         }
       },
       function(callback) {
@@ -756,27 +803,31 @@ function getUserById(req, res) {
         }
       },
       callback => {
-        try {
-          models.instance.profile.find(
-            { user_id: models.uuidFromString(legit.userid) },
-            { select: ['question_id', 'answer'] },
-            function(err, results) {
-              if (results && results.length > 0) {
-                let arr = [];
-                results.forEach(element => {
-                  let a = JSON.stringify(element);
-                  let obj = JSON.parse(a);
-                  arr.push(obj);
-                });
-                yourQuestion = arr;
-              } else {
-                message = 'Chưa trả lời câu hỏi';
+        if (legit.userid) {
+          try {
+            models.instance.profile.find(
+              { user_id: models.uuidFromString(legit.userid) },
+              { select: ['question_id', 'answer'] },
+              function(err, results) {
+                if (results && results.length > 0) {
+                  let arr = [];
+                  results.forEach(element => {
+                    let a = JSON.stringify(element);
+                    let obj = JSON.parse(a);
+                    arr.push(obj);
+                  });
+                  yourQuestion = arr;
+                } else {
+                  message = 'Chưa trả lời câu hỏi';
+                }
+                callback(err, null);
               }
-              callback(err, null);
-            }
-          );
-        } catch (error) {
-          callback(error, null);
+            );
+          } catch (error) {
+            callback(error, null);
+          }
+        } else {
+          callback(null, null);
         }
       },
       callback => {
@@ -811,6 +862,21 @@ function getUserById(req, res) {
           callback(error);
         }
       },
+      callback => {
+        try {
+          models.instance.userCare.find(
+            { user_id1: models.uuidFromString(legit.userid), user_id2: userid },
+            function(err, results) {
+              if (results && results.length > 0) {
+                care = true;
+              }
+              callback(err, null);
+            }
+          );
+        } catch (error) {
+          callback(error);
+        }
+      },
     ],
     err => {
       if (err) return res.json({ status: 'error' });
@@ -824,6 +890,7 @@ function getUserById(req, res) {
           group,
           yourQuestion,
           timeline: new Date().getTime(),
+          care,
         },
       });
     }
@@ -1179,6 +1246,301 @@ function getOnlyUser(req, res) {
     }
   );
 }
+function changeCare(req, res) {
+  let legit = {};
+  const token = req.headers['x-access-token'];
+  let userid = undefined;
+  let params = req.body;
+  const verifyOptions = {
+    expiresIn: '30d',
+    algorithm: ['RS256'],
+  };
+  async.series(
+    [
+      callback => {
+        try {
+          legit = jwt.verify(token, jwtpublic, verifyOptions);
+          callback(null, null);
+        } catch (e) {
+          return res.send({
+            status: 'error',
+            message: 'Sai ma token',
+          });
+        }
+      },
+      function(callback) {
+        try {
+          let id = params.userid;
+          let uuid = `${id.substring(0, 8)}-${id.substring(8, 12)}-${id.substring(
+            12,
+            16
+          )}-${id.substring(16, 20)}-${id.substring(20, 32)}`;
+          userid = models.uuidFromString(uuid);
+        } catch (e) {
+          console.log(e);
+          return res.json({ status: 'error1' });
+        }
+        callback(null, null);
+      },
+      callback => {
+        try {
+          if (params.type === 'user') {
+            if (params.care && params.type === 'user') {
+              let object = {
+                user_id1: models.uuidFromString(legit.userid),
+                user_id2: userid,
+                created: new Date().getTime(),
+                type: params.type,
+              };
+              let instance = new models.instance.userCare(object);
+              let save = instance.save(function(err) {
+                if (err) callback(err, null);
+                else callback(null, null);
+              });
+            } else {
+              let query_object = {
+                user_id1: models.uuidFromString(legit.userid),
+                user_id2: userid,
+              };
+              models.instance.userCare.delete(query_object, function(err) {
+                if (err) callback(err, null);
+                else callback(null, null);
+              });
+            }
+          } else callback(null, null);
+        } catch (error) {
+          console.log(error);
+          res.send({ status: 'error' });
+        }
+      },
+      callback => {
+        try {
+          if (params.type === 'user') {
+            if (params.care) {
+              let object = {
+                user_id1: models.uuidFromString(legit.userid),
+                user_id2: userid,
+                created: new Date().getTime(),
+              };
+              let instance = new models.instance.userWhoCare(object);
+              let save = instance.save(function(err) {
+                if (err) callback(err, null);
+                else callback(null, null);
+              });
+            } else {
+              let query_object = {
+                user_id1: models.uuidFromString(legit.userid),
+                user_id2: userid,
+              };
+              models.instance.userWhoCare.delete(query_object, function(err) {
+                if (err) callback(err, null);
+                else callback(null, null);
+              });
+            }
+          } else callback(null, null);
+        } catch (error) {
+          console.log(error);
+          res.send({ status: 'error' });
+        }
+      },
+      callback => {
+        try {
+          if (params.type === 'member') {
+            if (params.care) {
+              let object = {
+                user_id1: models.uuidFromString(legit.userid),
+                user_id2: userid,
+                created: new Date().getTime(),
+                type: params.type,
+              };
+              let instance = new models.instance.userCare(object);
+              let save = instance.save(function(err) {
+                if (err) callback(err, null);
+                else callback(null, null);
+              });
+            } else {
+              let query_object = {
+                user_id1: models.uuidFromString(legit.userid),
+                user_id2: userid,
+              };
+              models.instance.userCare.delete(query_object, function(err) {
+                if (err) callback(err, null);
+                else callback(null, null);
+              });
+            }
+          } else callback(null, null);
+        } catch (error) {
+          console.log(error);
+          res.send({ status: 'error' });
+        }
+      },
+    ],
+    err => {
+      if (err) return res.json({ status: 'error' });
+      return res.json({
+        status: 'ok',
+      });
+    }
+  );
+}
+function getUserCare(req, res) {
+  let legit = {};
+  let result = [];
+  const token = req.headers['x-access-token'];
+  let arr = [];
+  const verifyOptions = {
+    expiresIn: '30d',
+    algorithm: ['RS256'],
+  };
+  async.series(
+    [
+      callback => {
+        try {
+          legit = jwt.verify(token, jwtpublic, verifyOptions);
+          callback(null, null);
+        } catch (e) {
+          return res.send({
+            status: 'error',
+            message: 'Sai ma token',
+          });
+        }
+      },
+      callback => {
+        try {
+          models.instance.userCare.find({ user_id1: models.uuidFromString(legit.userid) }, function(
+            err,
+            results
+          ) {
+            if (results && results.length > 0) {
+              result = results;
+            }
+            callback(err, null);
+          });
+        } catch (e) {
+          callback(e, null);
+          console.log(e);
+        }
+      },
+      callback => {
+        try {
+          if (result.length > 0) {
+            result.forEach((e, i) => {
+              models.instance.users.find({ user_id: e.user_id2 }, function(err, results) {
+                if (results && results.length > 0) {
+                  let obj = {};
+                  obj.name = results[0].fullname;
+                  obj.gender = results[0].gender;
+                  obj.address = results[0].address;
+                  obj.age = new Date().getFullYear() - results[0].dob_year;
+                  obj.user_id = results[0].user_id;
+                  obj.created = e.created;
+                  obj.avatar = results[0].avatar;
+                  arr.push(obj);
+                  if (arr.length === result.length) {
+                    callback(null, null);
+                  }
+                } else {
+                  return res.json({
+                    status: 'error',
+                  });
+                }
+              });
+            });
+          } else callback(null, null);
+        } catch (e) {
+          callback(e, null);
+          console.log(e);
+        }
+      },
+    ],
+    err => {
+      if (err) return res.json({ status: 'error' });
+      return res.json({
+        status: 'ok',
+        data: arr,
+      });
+    }
+  );
+}
+function getUserWhoCare(req, res) {
+  let legit = {};
+  let result = [];
+  const token = req.headers['x-access-token'];
+  let arr = [];
+  const verifyOptions = {
+    expiresIn: '30d',
+    algorithm: ['RS256'],
+  };
+  async.series(
+    [
+      callback => {
+        try {
+          legit = jwt.verify(token, jwtpublic, verifyOptions);
+          callback(null, null);
+        } catch (e) {
+          return res.send({
+            status: 'error',
+            message: 'Sai ma token',
+          });
+        }
+      },
+      callback => {
+        try {
+          models.instance.userWhoCare.find(
+            { user_id2: models.uuidFromString(legit.userid) },
+            function(err, results) {
+              if (results && results.length > 0) {
+                result = results;
+              }
+              callback(err, null);
+            }
+          );
+        } catch (e) {
+          callback(e, null);
+          console.log(e);
+        }
+      },
+      callback => {
+        try {
+          if (result.length > 0) {
+            result.forEach((e, i) => {
+              models.instance.users.find({ user_id: e.user_id1 }, function(err, results) {
+                if (results && results.length > 0) {
+                  let obj = {};
+                  obj.name = results[0].fullname;
+                  obj.gender = results[0].gender;
+                  obj.address = results[0].address;
+                  obj.age = new Date().getFullYear() - results[0].dob_year;
+                  obj.user_id = results[0].user_id;
+                  obj.created = e.created;
+                  obj.avatar = results[0].avatar;
+                  arr.push(obj);
+                  if (arr.length === result.length) {
+                    callback(null, null);
+                  }
+                } else {
+                  return res.json({
+                    status: 'error',
+                  });
+                }
+              });
+            });
+          } else callback(null, null);
+        } catch (e) {
+          callback(e, null);
+          console.log(e);
+        }
+      },
+    ],
+    err => {
+      if (err) return res.json({ status: 'error' });
+      return res.json({
+        status: 'ok',
+        data: arr,
+      });
+    }
+  );
+}
 export default {
   'POST /api/authentication/register': register,
   'POST /api/authentication/login': login,
@@ -1194,4 +1556,7 @@ export default {
   'POST /api/authentication/changepass': changePass,
   'POST /api/authentication/updatephone': updatePhone,
   'POST /api/authentication/updateemail': updateEmail,
+  'POST /api/authentication/changecare': changeCare,
+  'GET /api/authentication/getusercare': getUserCare,
+  'GET /api/authentication/getuserwhocare': getUserWhoCare,
 };

@@ -12,6 +12,7 @@ module.exports = {
       type: 'set',
       typeDef: '<text>',
     },
+    status: 'text',
   },
   key: ['phone', 'user_id'],
 };
