@@ -334,33 +334,32 @@ export default {
       const c = JSON.stringify(oldGetUserCare);
       const d = JSON.parse(c);
       let arr = [];
-      if (d.length > 0) {
-        const temp = d.find(v => v.user_id === action.payload.user_id);
-        if (temp) arr = d.filter(v => v.user_id !== action.payload.user_id);
-        else if (action.payload.type === 'user') {
-          const obj = {};
-          obj.address = action.payload.address;
-          obj.age = action.payload.age;
-          obj.created = action.payload.created;
-          obj.gender = action.payload.gender;
-          obj.name = action.payload.name;
-          obj.user_id = action.payload.user_id;
-          obj.type = action.payload.type;
-          d.push(obj);
-          arr = d;
-        } else {
-          const obj = {};
-          obj.address = action.payload.address;
-          obj.location = action.payload.location;
-          obj.created = action.payload.created;
-          obj.gender = action.payload.gender;
-          obj.name = action.payload.name;
-          obj.user_id = action.payload.user_id;
-          obj.type = action.payload.type;
-          d.push(obj);
-          arr = d;
-        }
-      } else arr = d;
+      const temp = d.find(v => v.user_id === action.payload.user_id);
+      if (temp) arr = d.filter(v => v.user_id !== action.payload.user_id);
+      else if (action.payload.type === 'user') {
+        const obj = {};
+        obj.address = action.payload.address;
+        obj.age = action.payload.age;
+        obj.created = action.payload.created;
+        obj.gender = action.payload.gender;
+        obj.name = action.payload.name;
+        obj.user_id = action.payload.user_id;
+        obj.type = action.payload.type;
+        d.push(obj);
+        arr = d;
+      } else {
+        const obj = {};
+        obj.address = action.payload.address;
+        obj.location = action.payload.location;
+        obj.created = action.payload.created;
+        obj.gender = action.payload.gender;
+        obj.name = action.payload.name;
+        obj.user_id = action.payload.user_id;
+        obj.type = action.payload.type;
+        obj.timeup = action.payload.timeup;
+        d.push(obj);
+        arr = d;
+      }
       return {
         ...state,
         getuserbyid: b,

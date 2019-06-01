@@ -1461,6 +1461,7 @@ function getUserCare(req, res) {
                   obj.user_id = results[0].membersid;
                   obj.created = e.created;
                   obj.avatar = null;
+                  obj.timeup = results[0].timeup;
                   obj.type = 'member';
                   arrMember.push(obj);
                   if (arrMember.length === member.length) {

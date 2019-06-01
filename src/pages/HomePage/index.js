@@ -92,7 +92,7 @@ class NewFeed extends PureComponent {
     const sort = this.props.location.query.sortby;
     this.props.history.push({
       pathname: `/home/newfeed`,
-      search: `?page=${v1}&gender=${gender}&age=${age}&sort=${sort}`,
+      search: `?page=${v1}&gender=${gender}&age=${age}&sortby=${sort}`,
     });
   }
 
@@ -271,20 +271,6 @@ class NewFeed extends PureComponent {
                   Tất cả
                   <span style={{ left: `${this.state.leftTab * 100}%` }} />
                 </li>
-                {/*
-                  <li
-                  onClick={() => this.handleClickTab(1)}
-                  className={this.state.leftTab === 1 ? `${styles['active-tab']}` : ''}
-                >
-                  Menu tab 2
-                </li>
-                <li
-                  onClick={() => this.handleClickTab(2)}
-                  className={this.state.leftTab === 2 ? `${styles['active-tab']}` : ''}
-                >
-                  Menu tab 3
-                </li>
-                */}
               </ul>
             </div>
             <div className={styles['filter-button']}>
@@ -296,17 +282,7 @@ class NewFeed extends PureComponent {
               >
                 Lọc dữ liệu
               </Button>
-              {/*
-                <Select
-                id={styles['desktop-sort']}
-                defaultValue={this.props.location.query.sortby}
-                onChange={e => this.handleChangeSort(e)}
-              >
-                <Option value="age_descending">Tuổi giảm dần</Option>
-                <Option value="age_ascending">Tuổi tăng dần</Option>
-                <Option value="newest_member">Thành viên mới nhất</Option>
-              </Select>
-              */}
+
               <Icon id={styles['icon-filter']} type="control" onClick={this.showDrawer} />
               <Drawer
                 title="Lựa chọn"
@@ -394,21 +370,6 @@ class NewFeed extends PureComponent {
                 </div>
               )}
               <div className={styles['mobile-sort']}>
-                {/*
-                  <Select
-                  style={{
-                    width: '160px',
-                    right: 0,
-                    paddingRight: '5px',
-                  }}
-                  onChange={e => this.handleChangeSort(e)}
-                >
-                  <Option value="age_descending">Tuổi giảm dần</Option>
-                  <Option value="age_ascending">Tuổi tăng dần</Option>
-                  <Option value="newest_member">Thành viên mới nhất</Option>
-                </Select>
-                */}
-
                 <div
                   onClick={() => this.handleClickButtonSort()}
                   data-v-03b85949={this.state.activeSort}
@@ -469,26 +430,7 @@ class NewFeed extends PureComponent {
                 <div style={{ width: '100%' }}>
                   <PageLoading />
                 </div>
-              )
-              /*
-
-                preLoad.map((v, i) => (
-                <div key={i} className={styles['cart-item']}>
-                  <div className={styles['box-cart']}>
-                    <div style={{ overflow: 'hidden' }}>
-                      <div
-                        className={styles['background-avatar']}
-                        style={{ background: '#fff' }}
-                      />
-                    </div>
-                    <div className={`${styles['title-cart']} home-page-preload`}>
-                      <Skeleton title={false} paragraph={{ rows: 2 }} active />
-                    </div>
-                  </div>
-                </div>
-              ))
-            */
-              }
+              )}
             </div>
             <Pagination
               hideOnSinglePage

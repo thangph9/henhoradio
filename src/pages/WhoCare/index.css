@@ -5,7 +5,7 @@
   margin-left: auto;
   margin-right: auto;
   background-color: #fff;
-  min-height: calc(0vh);
+  min-height: calc(-80vh);
 }
 .who-care-page .container .user-care-item {
   margin: 0 15px;
@@ -20,7 +20,11 @@
   font-weight: 600;
 }
 .who-care-page .container .user-care-item .title-care .title:first-child {
-  flex-basis: 10%;
+  flex-basis: 15%;
+}
+.who-care-page .container .user-care-item .title-care .title:first-child:first-child {
+  display: flex;
+  justify-content: center;
 }
 .who-care-page .container .user-care-item .title-care .title:nth-child(2) {
   flex: 1;
@@ -44,8 +48,10 @@
   padding: 5px 0 15px 0;
 }
 .who-care-page .container .user-care-item .content-info-item .avatar {
-  flex-basis: 10%;
+  flex-basis: 15%;
   cursor: pointer;
+  display: flex;
+  justify-content: center;
 }
 .who-care-page .container .user-care-item .content-info-item .avatar .avatar-user {
   background-position: center;

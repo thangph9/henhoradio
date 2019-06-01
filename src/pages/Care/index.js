@@ -1,3 +1,4 @@
+/* eslint-disable react/button-has-type */
 /* eslint-disable class-methods-use-this */
 /* eslint-disable no-nested-ternary */
 /* eslint-disable react/no-array-index-key */
@@ -5,19 +6,35 @@
 /* eslint-disable react/destructuring-assignment */
 /* eslint-disable react/sort-comp */
 /* eslint-disable react/react-in-jsx-scope */
+/* eslint-disable camelcase */
+/* eslint-disable react/button-has-type */
+/* eslint-disable no-unused-vars */
+/* eslint-disable react/sort-comp */
+/* eslint-disable class-methods-use-this */
+/* eslint-disable react/no-access-state-in-setstate */
+/* eslint-disable prefer-destructuring */
+/* eslint-disable react/no-unused-state */
+/* eslint-disable react/destructuring-assignment */
+/* eslint-disable react/jsx-indent */
+/* eslint-disable react/no-array-index-key */
+/* eslint-disable no-plusplus */
 
 import { PureComponent } from 'react';
 import { connect } from 'dva';
-import Link from 'umi/link';
+import { Link, Redirect } from 'react-router-dom';
+import { Drawer, Button, Radio, Icon, Pagination } from 'antd';
 import moment from 'moment';
 import styles from './index.less';
 
+const RadioGroup = Radio.Group;
 @connect(({ authentication }) => ({
   getusercare: authentication.getusercare,
 }))
 class Care extends PureComponent {
   state = {
     dataUserCare: [],
+    activeSort: false,
+    visible: false,
   };
 
   componentWillReceiveProps(nextProps) {
@@ -41,7 +58,7 @@ class Care extends PureComponent {
       payload: {
         userid: value.user_id.replace(/-/g, ''),
         care: false,
-        type: 'user',
+        type: value.type,
         user_id: value.user_id,
       },
     });
@@ -64,21 +81,248 @@ class Care extends PureComponent {
     };
   }
 
+  showDrawer = () => {
+    this.setState({
+      visible: true,
+    });
+  };
+
+  onClose = () => {
+    this.setState({
+      visible: false,
+    });
+  };
+
+  handleFinishButton() {
+    this.setState({
+      visible: false,
+    });
+  }
+
+  callback(key) {
+    console.log(key);
+  }
+
+  onChangeRadioAge(e) {
+    const sort = this.props.location.query.sortby;
+    const type = this.props.location.query.type;
+    this.props.history.push({
+      pathname: '/home/care',
+      search: `?page=1&type=${type}&age=${e.target.value}&sortby=${sort}`,
+    });
+  }
+
+  checkLocaton(value) {
+    if (value === 'HN') return 'Hà Nội';
+    return 'Hồ Chí Minh';
+  }
+
+  onChangeSort(e) {
+    const age = this.props.location.query.age;
+    const type = this.props.location.query.type;
+    this.props.history.push({
+      pathname: '/home/care',
+      search: `?page=1&type=${type}&age=${age}&sortby=${e.target.value}`,
+    });
+  }
+
+  onChangeType(e) {
+    const age = this.props.location.query.age;
+    const sort = this.props.location.query.sortby;
+    this.props.history.push({
+      pathname: '/home/care',
+      search: `?page=1&type=${e.target.value}&age=${age}&sortby=${sort}`,
+    });
+  }
+
+  handleChangePagination(v1) {
+    const age = this.props.location.query.age;
+    const type = this.props.location.query.type;
+    const sort = this.props.location.query.sortby;
+    this.props.history.push({
+      pathname: `/home/care`,
+      search: `?page=${v1}&type=${type}&age=${age}&sortby=${sort}`,
+    });
+  }
+
   render() {
     const { dataUserCare } = this.state;
+    if (
+      !this.props.location.query.page ||
+      !this.props.location.query.type ||
+      !this.props.location.query.age ||
+      !this.props.location.query.sortby
+    ) {
+      return <Redirect to="/home/care?page=1&type=all&age=all&sortby=newest_care" />;
+    }
+    const { page } = this.props.location.query;
     return (
       <div className={styles['who-care-page']}>
         <div className={styles.container}>
           <div className={styles['user-care-item']}>
             <div className={styles['title-care']}>
-              <div className={styles.title} />
-              <div className={styles.title}>Tên người dùng</div>
+              <div className={styles.title}>
+                <div className={styles['button-filter']}>
+                  <Button
+                    id={styles['button-filter']}
+                    type="primary"
+                    icon="control"
+                    onClick={this.showDrawer}
+                  >
+                    Lọc dữ liệu
+                  </Button>
+                  <Drawer
+                    title="Lựa chọn"
+                    placement="right"
+                    onClose={this.onClose}
+                    visible={this.state.visible}
+                  >
+                    <div style={{ padding: '20px' }}>
+                      <div>
+                        <h3 style={{ color: 'gray' }}>Sắp xếp</h3>
+                        <hr style={{ marginBottom: '15px' }} />
+                        <RadioGroup
+                          onChange={e => this.onChangeSort(e)}
+                          value={this.props.location.query.sortby}
+                        >
+                          <Radio
+                            style={{ display: 'block', marginBottom: '10px', marginLeft: '15px' }}
+                            value="descage"
+                          >
+                            Tuổi giảm dần (tài khoản)
+                          </Radio>
+                          <Radio
+                            style={{ display: 'block', marginBottom: '10px', marginLeft: '15px' }}
+                            value="ascage"
+                          >
+                            Tuổi tăng dần (tài khoản)
+                          </Radio>
+                          <Radio
+                            style={{ display: 'block', marginBottom: '10px', marginLeft: '15px' }}
+                            value="newest_up"
+                          >
+                            Lên sóng mới nhất (thính giả)
+                          </Radio>
+                          <Radio
+                            style={{ display: 'block', marginBottom: '10px', marginLeft: '15px' }}
+                            value="oldest_up"
+                          >
+                            Lên sóng cũ nhất (thính giả)
+                          </Radio>
+                          <Radio
+                            style={{ display: 'block', marginBottom: '10px', marginLeft: '15px' }}
+                            value="oldest_care"
+                          >
+                            Ngày quan tâm cũ nhất (tất cả)
+                          </Radio>
+                          <Radio
+                            style={{ display: 'block', marginBottom: '10px', marginLeft: '15px' }}
+                            value="newest_care"
+                          >
+                            Ngày quan tâm mới nhất (tất cả)
+                          </Radio>
+                        </RadioGroup>
+                      </div>
+                      <div style={{ marginTop: '20px' }}>
+                        <h3 style={{ color: 'gray' }}>Nhóm</h3>
+                        <hr style={{ marginBottom: '15px' }} />
+                        <RadioGroup
+                          onChange={e => this.onChangeType(e)}
+                          value={this.props.location.query.type}
+                        >
+                          <Radio
+                            style={{ display: 'block', marginBottom: '10px', marginLeft: '15px' }}
+                            value="user"
+                          >
+                            Tài khoản
+                          </Radio>
+                          <Radio
+                            style={{ display: 'block', marginBottom: '10px', marginLeft: '15px' }}
+                            value="member"
+                          >
+                            Thính giả
+                          </Radio>
+                          <Radio
+                            style={{ display: 'block', marginBottom: '10px', marginLeft: '15px' }}
+                            value="all"
+                          >
+                            Tất cả
+                          </Radio>
+                        </RadioGroup>
+                      </div>
+                      <div style={{ marginTop: '20px' }}>
+                        <h3 style={{ color: 'gray' }}>Độ tuổi (tài khoản)</h3>
+                        <hr style={{ marginBottom: '15px' }} />
+                        <RadioGroup
+                          onChange={e => this.onChangeRadioAge(e)}
+                          value={this.props.location.query.age}
+                        >
+                          <Radio
+                            style={{ display: 'block', marginBottom: '10px', marginLeft: '15px' }}
+                            value="18_24"
+                          >
+                            Từ 18 - 24 tuổi
+                          </Radio>
+                          <Radio
+                            style={{ display: 'block', marginBottom: '10px', marginLeft: '15px' }}
+                            value="25_35"
+                          >
+                            Từ 25 - 35 tuổi
+                          </Radio>
+                          <Radio
+                            style={{ display: 'block', marginBottom: '10px', marginLeft: '15px' }}
+                            value="36"
+                          >
+                            Ngoài 35 tuổi
+                          </Radio>
+                          <Radio
+                            style={{ display: 'block', marginBottom: '10px', marginLeft: '15px' }}
+                            value="all"
+                          >
+                            Tất cả
+                          </Radio>
+                        </RadioGroup>
+                      </div>
+                    </div>
+                  </Drawer>
+                </div>
+              </div>
+              <div className={styles.title}>Người dùng</div>
               <div className={styles.title}>Thời gian quan tâm</div>
-              <div className={styles.title}>Trang cá nhân</div>
+              <div className={styles.title}>Chi tiết</div>
               <div className={styles.title}>Chỉnh sửa</div>
             </div>
             {dataUserCare
-              .sort((a, b) => new Date(b.created) - new Date(a.created))
+              .filter((v, i, self) => {
+                if (this.props.location.query.type === 'user') return v.type === 'user';
+                if (this.props.location.query.type === 'member') return v.type === 'member';
+                return self;
+              })
+              .filter((v, i, self) => {
+                if (this.props.location.query.age === '18_24') return v.age >= 18 && v.age <= 24;
+                if (this.props.location.query.age === '25_35') return v.age >= 25 && v.age <= 35;
+                if (this.props.location.query.age === 'all') return self;
+                return v.age > 35;
+              })
+              .filter((v, i, self) => {
+                if (this.props.location.query.sortby === 'descage') return v.age;
+                if (this.props.location.query.sortby === 'ascage') return v.age;
+                if (this.props.location.query.sortby === 'newest_up') return v.timeup;
+                if (this.props.location.query.sortby === 'oldest_up') return v.timeup;
+                return self;
+              })
+              .sort((a, b) => {
+                if (this.props.location.query.sortby === 'descage') return b.age - a.age;
+                if (this.props.location.query.sortby === 'ascage') return a.age - b.age;
+                if (this.props.location.query.sortby === 'newest_up')
+                  return new Date(b.timeup) - new Date(a.timeup);
+                if (this.props.location.query.sortby === 'oldest_up')
+                  return new Date(a.timeup) - new Date(b.timeup);
+                if (this.props.location.query.sortby === 'oldest_care')
+                  return new Date(a.created) - new Date(b.created);
+                return new Date(b.created) - new Date(a.created);
+              })
+              .filter((value, index) => index >= page * 5 - 5 && index < page * 5)
               .map((v, i) => (
                 <div key={i} className={styles['content-info-item']}>
                   <div className={styles.avatar}>
@@ -91,19 +335,36 @@ class Care extends PureComponent {
                     <div className={styles['more-info']}>{v.name}</div>
                     <div className={styles['more-info']}>
                       <span className={styles['name-of-user']}>{v.address}</span>
-                      <span className={styles['age-of-user']}>{v.age} tuổi</span>
+                      {v.type === 'user' && (
+                        <span className={styles['age-of-user']}>{v.age} tuổi</span>
+                      )}
+                      {v.type === 'member' && (
+                        <div className={styles['age-of-user']}>
+                          Lên sóng: {moment(v.timeup).format('DD/MM/YYYY')}
+                        </div>
+                      )}
                     </div>
                   </div>
                   <div className={styles['info-user']}>
                     <div className={styles['more-info']}>
-                      {moment(v.created).format('HH:mm MM/DD/YYYY')}
+                      {moment(v.created).format('HH:mm DD/MM/YYYY')}
                     </div>
                   </div>
                   <div className={styles['info-user']}>
                     <div className={styles['more-info']}>
-                      <Link to={`/home/other-profile?id=${v.user_id.replace(/-/g, '')}`}>
-                        {v.name}
-                      </Link>
+                      {v.type === 'user' ? (
+                        <Link to={`/home/other-profile?id=${v.user_id.replace(/-/g, '')}`}>
+                          {v.name}
+                        </Link>
+                      ) : (
+                        <Link
+                          to={`/home/detail-list?page=1&radio=${v.location}&gender=${
+                            v.gender
+                          }&date=${moment(v.timeup).format('D_M_YYYY')}`}
+                        >
+                          Thính giả lên sóng
+                        </Link>
+                      )}
                     </div>
                   </div>
                   <div className={styles['info-user']}>
@@ -120,6 +381,20 @@ class Care extends PureComponent {
               ))}
           </div>
         </div>
+        <Pagination
+          hideOnSinglePage
+          style={{
+            padding: '5px',
+            display: 'table',
+            margin: '0 auto',
+            marginTop: '30px',
+            marginBottom: '20px',
+          }}
+          onChange={(v1, v2) => this.handleChangePagination(v1, v2)}
+          current={Number(page)}
+          pageSize={5}
+          total={this.state.dataUserCare.length}
+        />
       </div>
     );
   }

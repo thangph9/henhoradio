@@ -5,7 +5,7 @@
   margin-left: auto;
   margin-right: auto;
   background-color: #fff;
-  min-height: calc(0vh);
+  min-height: calc(-80vh);
 }
 .who-care-page .container .user-care-item {
   margin: 0 15px;
@@ -20,7 +20,11 @@
   font-weight: 600;
 }
 .who-care-page .container .user-care-item .title-care .title:first-child {
-  flex-basis: 10%;
+  flex-basis: 15%;
+}
+.who-care-page .container .user-care-item .title-care .title:first-child:first-child {
+  display: flex;
+  justify-content: center;
 }
 .who-care-page .container .user-care-item .title-care .title:nth-child(2) {
   flex: 1;
@@ -44,7 +48,9 @@
   padding: 5px 0 15px 0;
 }
 .who-care-page .container .user-care-item .content-info-item .avatar {
-  flex-basis: 10%;
+  flex-basis: 15%;
+  display: flex;
+  justify-content: center;
   cursor: pointer;
 }
 .who-care-page .container .user-care-item .content-info-item .avatar .avatar-user {
@@ -62,6 +68,7 @@
   display: flex;
   flex-direction: column;
   justify-content: center;
+  overflow: hidden;
   flex: 1;
 }
 .who-care-page .container .user-care-item .content-info-item .info-user .more-info {
@@ -82,6 +89,20 @@
 }
 .who-care-page .container .user-care-item .content-info-item .info-user:last-child {
   align-items: center;
+}
+.button-finish {
+  position: absolute;
+  bottom: 0;
+  padding: 12px 20px;
+  text-align: center;
+  width: 100%;
+  background: #2ecc71;
+  outline: none;
+  cursor: pointer;
+  color: #fff;
+  font-size: 18px;
+  text-transform: uppercase;
+  border-color: #2ecc71;
 }
 @media (min-width: 576px) {
   .container {

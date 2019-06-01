@@ -430,6 +430,7 @@ class ListRadio extends PureComponent {
         address: value.address,
         location: value.location,
         created: value.created,
+        timeup: value.timeup,
         name: value.name,
         gender: value.gender,
         user_id: value.membersid,
@@ -634,7 +635,6 @@ class ListRadio extends PureComponent {
                                       theme="filled"
                                     />
                                   </Tooltip>
-                                  ,
                                 </div>
                               </div>
                             </div>
