@@ -272,7 +272,7 @@ class WhoCare extends PureComponent {
                   return new Date(a.created) - new Date(b.created);
                 return new Date(b.created) - new Date(a.created);
               })
-              .filter((value, index) => index >= page * 1 - 1 && index < page * 1)
+              .filter((value, index) => index >= page * 5 - 5 && index < page * 5)
               .map((v, i) => (
                 <div key={i} className={styles['content-info-item']}>
                   <div className={styles.avatar}>
@@ -336,7 +336,7 @@ class WhoCare extends PureComponent {
           }}
           onChange={(v1, v2) => this.handleChangePagination(v1, v2)}
           current={Number(page)}
-          pageSize={1}
+          pageSize={5}
           total={this.state.dataUserWhoCare.length}
         />
       </div>
