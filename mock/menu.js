@@ -1,149 +1,151 @@
-export default {
-  'GET /api/menu/fetch': {
-    status: 'ok',
-    data: [
-      {
-        key: 1,
-        menuId: 'uuid',
-        parent: 1,
-        name: 'Home Page 01',
-        children: [
-          {
-            key: 11,
-            menuItemId: 'uuid01',
-            name: '0-0-1',
-            path: '/search-list',
-            icon: 'user',
-            orderby: '1',
-            authority: ['member', 'user'],
-            menuId: 'uuid',
-          },
-          {
-            key: 12,
-            menuItemId: 'uuid02',
-            name: '0-0-2',
-            path: '/question',
-            icon: 'global',
-            authority: ['gust'],
-            menuId: 'uuid',
-          },
-        ],
+/* eslint-disable no-underscore-dangle */
+
+/* eslint-disable no-undef-init */
+/* eslint-disable no-shadow */
+/* eslint-disable prefer-const */
+/* eslint-disable camelcase */
+/* eslint-disable no-unused-vars */
+/* eslint-disable consistent-return */
+/* eslint-disable prefer-arrow-callback */
+/* eslint-disable func-names */
+const async = require('async');
+const fs = require('fs');
+const driver = require('cassandra-driver');
+const bcrypt = require('bcryptjs');
+const jwt = require('jsonwebtoken');
+const request = require('request'); // eslint-disable-line
+const models = require('../settings');
+/* eslint-disable prefer-destructuring */
+const Uuid = models.datatypes.Uuid;
+
+const jwtpublic = fs.readFileSync('./ssl/jwtpublic.pem', 'utf8');
+const jwtprivate = fs.readFileSync('./ssl/jwtprivate.pem', 'utf8');
+
+const menu = [
+  {
+    menuid: '1c24cf55-9ecc-4660-b6f3-5748d1b552af',
+    name: 'Trang đăng ký đăng nhập',
+  },
+  {
+    menuid: '1c24cf55-9ecc-4660-b6f3-5748d1b552af',
+    name: 'HomePage',
+  },
+];
+const menuitem = [
+  {
+    menuitemid: 'abf66041-e735-4431-9be1-12ab33274f87',
+    activeicon: 'play-circle',
+    authority: ['Diamond', 'Gold', 'Guest', 'Member', 'Platium', 'Premium', 'Silver', 'User'],
+    icon: 'play-circle',
+    name: 'Thính giả lên sóng',
+    path: '/home/detail-list',
+  },
+  {
+    menuitemid: '8942413b-c54b-4d08-a347-f4b25ea5fb04',
+    activeicon: 'team',
+    authority: ['Diamond', 'Gold', 'Platium', 'Premium', 'Silver', 'Member'],
+    icon: 'team',
+    name: 'Quan tâm',
+    path: '/home/care',
+  },
+  {
+    menuitemid: '93b06313-05c1-4c0b-a9a5-bb4715ed642f',
+    activeicon: 'play-circle',
+    authority: ['Diamond', 'Gold', 'Member', 'Platium', 'Premium', 'Silver', 'User'],
+    icon: 'like',
+    name: 'Quan tâm bạn',
+    path: '/home/whocare',
+  },
+  {
+    menuitemid: 'e286ebff-e298-4b55-9fad-961a85324d48',
+    activeicon: 'search',
+    authority: ['Diamond', 'Gold', 'Guest', 'Member', 'Platium', 'Premium', 'Silver', 'User'],
+    icon: 'search',
+    name: 'Nghe lại',
+    path: '/home/search-list',
+  },
+];
+const menugroup = [
+  {
+    menuid: '1c24cf55-9ecc-4660-b6f3-5748d1b552af',
+    menuitemid: 'abf66041-e735-4431-9be1-12ab33274f87',
+    orderby: 1,
+  },
+  {
+    menuid: '1c24cf55-9ecc-4660-b6f3-5748d1b552af',
+    menuitemid: '8942413b-c54b-4d08-a347-f4b25ea5fb04',
+    orderby: 2,
+  },
+  {
+    menuid: '1c24cf55-9ecc-4660-b6f3-5748d1b552af',
+    menuitemid: '7079cd68-1477-404f-8181-bad3fec2c8ab',
+    orderby: 3,
+  },
+  {
+    menuid: '1c24cf55-9ecc-4660-b6f3-5748d1b552af',
+    menuitemid: '93b06313-05c1-4c0b-a9a5-bb4715ed642f',
+    orderby: 4,
+  },
+  {
+    menuid: '1c24cf55-9ecc-4660-b6f3-5748d1b552af',
+    menuitemid: 'e286ebff-e298-4b55-9fad-961a85324d48',
+    orderby: 1,
+  },
+];
+function getMenu(req, res) {
+  const params = req.params;
+  let menuReq = {};
+  let menugroupReq = [];
+  let menuItemReq = [];
+
+  async.series(
+    [
+      callback => {
+        try {
+          menuReq = menu.find(element => element.name === params.menu);
+          callback(null, null);
+        } catch (e) {
+          console.log(e);
+        }
       },
-      {
-        key: 2,
-        menuId: 'uuid02',
-        parent: 1,
-        name: 'Home Page 02',
-        children: [
-          {
-            key: 13,
-            menuItemId: 'uuid01',
-            name: '0-0-1',
-            path: '/search-list',
-            icon: 'user',
-            authority: ['member', 'user'],
-            menuId: 'uuid02',
-          },
-          {
-            key: 14,
-            menuItemId: 'uuid02',
-            name: '0-0-2',
-            path: '/question',
-            icon: 'global',
-            authority: ['gust'],
-            menuId: 'uuid02',
-          },
-        ],
+      callback => {
+        try {
+          menugroupReq = menugroup.filter(
+            element => element.menuid.toString() === menuReq.menuid.toString()
+          );
+          callback(null, null);
+        } catch (e) {
+          console.log(e);
+        }
+      },
+      callback => {
+        try {
+          menugroupReq.forEach((element, index, sefl) => {
+            let obj = menuitem.find(
+              value => value.menuitemid.toString() === element.menuitemid.toString()
+            );
+            if (obj) {
+              let a = JSON.stringify(obj);
+              let b = JSON.parse(a);
+              b.orderby = element.orderby;
+              menuItemReq.push(b);
+            }
+          });
+          callback(null, null);
+        } catch (e) {
+          console.log(e);
+        }
       },
     ],
-  },
-  'POST /api/menu/add': (req, res) => {
-    res.send({ status: 'ok', data: { ...req.body, menuId: Math.random() } });
-  },
-  'PUT /api/menu/update': (req, res) => {
-    const { body } = req;
-    body.key = 'newKey';
-    res.send({ status: 'ok', data: body });
-  },
-  'DELETE /api/menu/delete/:menuId': (req, res) => {
-    res.send({ status: 'ok' });
-  },
-  'GET /api/menu/search': (req, res) => {
-    res.send({ status: 'ok' });
-  },
-  'POST /api/menu/item/add': (req, res) => {
-    const { body } = req;
-    body.key = 'newKey';
-    res.send({ status: 'ok', data: body });
-  },
-  'PUT /api/menu/item/update': (req, res) => {
-    res.send({ status: 'ok', data: req.body });
-  },
-  'GET /api/menu/item/fetch': (req, res) => {
-    res.send({
-      status: 'ok',
-      data: [
-        {
-          menuItemId: '001',
-          name: 'Khám phá',
-          icon: 'like',
-          path: '/home/newfeed',
-          authority: ['gust', 'member'],
-          activeIcon: 'like',
-        },
-        {
-          menuItemId: '002',
-          name: 'Tìm kiếm',
-          icon: 'like',
-          path: '/search',
-          authority: ['gust', 'member'],
-          activeIcon: 'like',
-        },
-        {
-          menuItemId: '003',
-          name: 'Chat',
-          icon: 'like',
-          path: '/chat',
-          authority: ['gust', 'member'],
-          activeIcon: 'like',
-        },
-        {
-          menuItemId: '004',
-          name: 'Khách thăm',
-          icon: 'like',
-          path: '/visit',
-          authority: ['gust', 'member'],
-          activeIcon: 'like',
-        },
-        {
-          menuItemId: '005',
-          name: 'Bạn bè',
-          icon: 'like',
-          path: '/friends',
-          authority: ['gust', 'member'],
-          activeIcon: 'like',
-        },
-        {
-          menuItemId: '006',
-          name: 'Nghe lại VOV',
-          icon: 'like',
-          path: '/search-list',
-          authority: ['gust', 'member'],
-          activeIcon: 'like',
-        },
-        {
-          menuItemId: '007',
-          name: 'Thính giả lên VOV',
-          icon: 'like',
-          path: '/detail-list',
-          authority: ['gust', 'member'],
-          activeIcon: 'like',
-        },
-      ],
-    });
-  },
-  'DELETE /api/menu/group/delete/item': (req, res) => {
-    console.log(req.params, req.query);
-    res.send({ status: 'ok', data: req.query });
-  },
+    err => {
+      if (err) return res.json({ status: 'error' });
+      return res.json({
+        status: 'ok',
+        data: menuItemReq,
+      });
+    }
+  );
+}
+export default {
+  'GET /api/menu/getmenu/:menu': getMenu,
 };

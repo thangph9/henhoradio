@@ -1,25 +1,27 @@
+/* eslint-disable no-empty */
 /* eslint-disable no-underscore-dangle */
+
 /* eslint-disable no-undef-init */
 /* eslint-disable no-shadow */
-/* eslint-disable camelcase */
 /* eslint-disable prefer-const */
+/* eslint-disable camelcase */
 /* eslint-disable no-unused-vars */
 /* eslint-disable consistent-return */
-/* eslint-disable func-names */
 /* eslint-disable prefer-arrow-callback */
+/* eslint-disable func-names */
 const async = require('async');
 const fs = require('fs');
-const express = require('express');
+const driver = require('cassandra-driver');
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const request = require('request'); // eslint-disable-line
+const models = require('../settings');
 /* eslint-disable prefer-destructuring */
-const router = express.Router();
+const Uuid = models.datatypes.Uuid;
+
 const jwtpublic = fs.readFileSync('./ssl/jwtpublic.pem', 'utf8');
 const jwtprivate = fs.readFileSync('./ssl/jwtprivate.pem', 'utf8');
-const models = require('../settings');
 
-const Uuid = models.datatypes.Uuid;
 const MESSAGE = {
   USER_NOT_MATCH: 'Tài khoản hoặc mật khẩu không đúng',
   USER_NOT_FOUND: 'Tài khoản này không tồn tại!',
@@ -32,6 +34,175 @@ const MESSAGE = {
   CONFIRM_TOKEN: 'Vui lòng kiểm tra Email của bạn để xác thực tài khoản',
 };
 
+let usersDemo = [];
+
+let loginDemo = [];
+
+let questionDemo = [
+  {
+    question_id: '422f932a-e578-4338-bf23-fcee7110b804',
+    type: '1',
+    title: 'Nơi ở hiện nay của bạn?',
+    answer: null,
+    group_id: '7f9572a3-8bd0-41d1-aca7-ae97426d9da5',
+  },
+  {
+    question_id: '610c45e6-4dcd-4850-870e-215f90c85f19',
+    type: '1',
+    title: 'Bạn nghĩ thể nào về startup?',
+    answer: null,
+    group_id: 'aa3ec977-cf71-4dd1-afdb-960f3faca6cf',
+  },
+  {
+    question_id: 'e79bb30a-50e1-4ba5-a887-7815e9d6f3f3',
+    type: '2',
+    title: 'Bạn có đi học đại học?',
+    answer: ['Có', 'Không'],
+    group_id: '3c6de2ec-7521-4990-acdf-176caa967ea3',
+  },
+  {
+    question_id: '26eff392-319b-417a-8e21-614f077033b3',
+    type: '1',
+    title: 'Nhà bạn có mấy người ?',
+    answer: null,
+    group_id: 'aa3ec977-cf71-4dd1-afdb-960f3faca6cf',
+  },
+  {
+    question_id: '477eb320-6085-4fc0-bbd4-f4bff0c0a284',
+    type: '2',
+    title: 'Bạn có hay đi xem phim ko?',
+    answer: ['Có', 'Không', 'Ít đi xem'],
+    group_id: '4aa1e317-b37e-4200-8e2b-bb04537bfddd',
+  },
+  {
+    question_id: 'b1c27a09-0fc7-457a-9e62-01fe0a14c40d',
+    type: '3',
+    title: 'Bạn đã ra nước ngoài chưa?',
+    answer: ['Chưa đi đâu cả', 'Đã đi châu Mỹ', 'Đã đi châu Á', 'Đã đi châu Âu'],
+    group_id: '3c6de2ec-7521-4990-acdf-176caa967ea3',
+  },
+  {
+    question_id: '8ddcb95e-5458-40f3-b086-897252089522',
+    type: '2',
+    title: 'Bạn có thích đọc sách không?',
+    answer: ['Có', 'Không', 'Rất ít đọc'],
+    group_id: '4aa1e317-b37e-4200-8e2b-bb04537bfddd',
+  },
+  {
+    question_id: '9225436e-067b-4f9e-ab5c-e776ed4839a3',
+    type: '1',
+    title: 'Bạn cao bao nhiêu ? ',
+    answer: null,
+    group_id: '4aa1e317-b37e-4200-8e2b-bb04537bfddd',
+  },
+  {
+    question_id: '69b7223a-04c2-4058-b1ca-165371d1631a',
+    type: '2',
+    title: 'Bạn có đeo kính ?',
+    answer: ['Có', 'Không'],
+    group_id: '7f9572a3-8bd0-41d1-aca7-ae97426d9da5',
+  },
+  {
+    question_id: 'dfb0957e-b0c5-40ac-9a5c-b92cffb0b261',
+    type: '2',
+    title: 'Bạn có hay nghe radio?',
+    answer: ['Không bao giờ', 'Thường xuyên', 'Ít khi'],
+    group_id: '3c6de2ec-7521-4990-acdf-176caa967ea3',
+  },
+  {
+    question_id: '784a526d-56e7-4872-9568-b14796bb8546',
+    type: '2',
+    title: 'Bạn hay đi làm bằng phương tiên gì ?',
+    answer: ['Xe bus', 'Xe máy', 'Ô tô'],
+    group_id: 'aa3ec977-cf71-4dd1-afdb-960f3faca6cf',
+  },
+  {
+    question_id: '0fe56740-75b8-49de-a50d-c839703c00ff',
+    type: '1',
+    title: 'Bạn có đang sống cùng gia đình?',
+    answer: null,
+    group_id: 'aa3ec977-cf71-4dd1-afdb-960f3faca6cf',
+  },
+  {
+    question_id: 'cbd406af-aefd-4422-8f70-bb268cdf7a1b',
+    type: '2',
+    title: 'Bạn có hay đi du lịch?',
+    answer: ['Không đi bao giờ', 'Đi nhiều', 'Đi ít'],
+    group_id: '4aa1e317-b37e-4200-8e2b-bb04537bfddd',
+  },
+  {
+    question_id: 'eeea1051-4ad0-40b2-bba8-a02bd7a7c84f',
+    type: '1',
+    title: 'Nhà bạn đang ở?',
+    answer: null,
+    group_id: '7f9572a3-8bd0-41d1-aca7-ae97426d9da5',
+  },
+  {
+    question_id: 'a8c7abe0-6ce2-48d0-b744-bbef9e8a9376',
+    type: '1',
+    title: 'Khi nào bạn kết hôn?',
+    answer: null,
+    group_id: '4aa1e317-b37e-4200-8e2b-bb04537bfddd',
+  },
+  {
+    question_id: '9cb6854d-9427-4320-b0a1-2096761f4a92',
+    type: '1',
+    title: 'Quê gốc bạn ở đâu?',
+    answer: null,
+    group_id: '7f9572a3-8bd0-41d1-aca7-ae97426d9da5',
+  },
+  {
+    question_id: 'd1928c39-d17f-4695-b30f-dc5fa2795d51',
+    type: '2',
+    title: 'Bạn đang có công việc ổn đinh ?',
+    answer: ['Có', 'Không', 'Đang làm việc tự do'],
+    group_id: '3c6de2ec-7521-4990-acdf-176caa967ea3',
+  },
+  {
+    question_id: '7ede6586-0cb8-4af7-a970-f4786632c049',
+    type: '1',
+    title: 'Bạn nặng bao nhiêu ? ',
+    answer: null,
+    group_id: '4aa1e317-b37e-4200-8e2b-bb04537bfddd',
+  },
+  {
+    question_id: '83ef5bd7-57e8-48ef-b631-13886af117aa',
+    type: '2',
+    title: 'Bạn có hay đi phượt xa cùng bạn bè?',
+    answer: ['Có', 'Không', 'Ít khi'],
+    group_id: '7f9572a3-8bd0-41d1-aca7-ae97426d9da5',
+  },
+  {
+    question_id: '3aba89b9-e9d4-4dff-bdb4-c89a29e838d6',
+    type: '1',
+    title: 'Nêu đi du lịch thì bạn thích đến đâu nhất?',
+    answer: null,
+    group_id: '4aa1e317-b37e-4200-8e2b-bb04537bfddd',
+  },
+  {
+    question_id: '09050540-dd87-4087-a46e-e01086e57678',
+    type: '2',
+    title: 'Bạn có thích ăn sôcola ? ',
+    answer: ['Có', 'Không', 'Ít khi ăn'],
+    group_id: '4aa1e317-b37e-4200-8e2b-bb04537bfddd',
+  },
+];
+
+let profileDemo = [];
+
+let profile_by_questionDemo = [];
+
+let groupDemo = [
+  { group_id: '7f9572a3-8bd0-41d1-aca7-ae97426d9da5', title: 'Nhóm group số 4' },
+  { group_id: '4aa1e317-b37e-4200-8e2b-bb04537bfddd', title: 'Nhóm group số 3' },
+  { group_id: '3c6de2ec-7521-4990-acdf-176caa967ea3', title: 'Nhóm group số 2' },
+  { group_id: 'aa3ec977-cf71-4dd1-afdb-960f3faca6cf', title: 'Nhóm group số 1' },
+];
+
+let userCareDemo = [];
+let userWhoCareDemo = [];
+
+/* ------------------------------------------------------------------------------------------------------------------------------------------------ */
 function register(req, res) {
   const params = req.body;
   const userId = Uuid.random();
@@ -110,16 +281,15 @@ function register(req, res) {
     },
     function fetchPassword(callback) {
       try {
-        models.instance.login.find({ phone: PARAM_IS_VALID.phone }, function(err, _phone) {
-          if (_phone !== undefined && _phone.length > 0) {
-            return res.json({
-              status: 'error',
-              message: 'Số điện thoại đã được đăng ký!',
-              timeline: new Date().getTime(),
-            });
-          }
-          callback(err, null);
-        });
+        let phone = loginDemo.find(ele => PARAM_IS_VALID.phone === ele.phone);
+        if (phone) {
+          return res.json({
+            status: 'error',
+            message: 'Số điện thoại đã được đăng ký!',
+            timeline: new Date().getTime(),
+          });
+        }
+        callback(null, null);
       } catch (error) {
         res.send({ status: 'error' });
       }
@@ -146,20 +316,8 @@ function register(req, res) {
           user_id: PARAM_IS_VALID.user_id,
         };
         /* eslint-disable new-cap */
-        const Users = () => {
-          const object = userObject;
-          const instance = new models.instance.users(object);
-          const save = instance.save({ return_query: true });
-          return save;
-        };
-        queries.push(Users());
-        const Login = () => {
-          const object = loginObject;
-          const instance = new models.instance.login(object);
-          const save = instance.save({ return_query: true });
-          return save;
-        };
-        queries.push(Login());
+        usersDemo.push(userObject);
+        loginDemo.push(loginObject);
       } catch (error) {
         res.send({ status: 'error' });
       }
@@ -186,11 +344,6 @@ function register(req, res) {
       }
       callback(null, null);
     },
-    function doSubmit(callback) {
-      models.doBatch(queries, err => {
-        callback(err, null);
-      });
-    },
   ];
   async.series(tasks, err => {
     if (err) {
@@ -199,6 +352,7 @@ function register(req, res) {
     return res.json({
       status: 'ok',
       token,
+      loginDemo,
       timeline: new Date().getTime(),
     });
   });
@@ -257,39 +411,27 @@ function login(req, res) {
       }
     },
     function fetchUsers(callback) {
-      models.instance.users.find(
-        { phone: PARAM_IS_VALID.phone },
-        { allow_filtering: true },
-        function(err, _user) {
-          if (_user && _user.length > 0) {
-            userInfo = _user[0];
-          } else {
-            return res.json({
-              status: 'error',
-              message: 'Tài khoản không tồn tại!',
-              timeline: new Date().getTime(),
-            });
-          }
-          callback(err, null);
-        }
-      );
+      let acc = loginDemo.find(ele => ele.phone === PARAM_IS_VALID.phone);
+      if (acc) {
+        userInfo = acc;
+      } else {
+        return res.json({
+          status: 'error',
+          message: 'Tài khoản không tồn tại!',
+          timeline: new Date().getTime(),
+        });
+      }
+      callback(null, null);
     },
     function fetchPassword(callback) {
-      models.instance.login.find(
-        { phone: PARAM_IS_VALID.phone },
-        { allow_filtering: true },
-        (err, _user) => {
-          if (Array.isArray(_user)) {
-            if (_user !== undefined && _user.length > 0) {
-              hashPassword = _user[0].password;
-              rule = _user[0].rule;
-            } else {
-              msg = MESSAGE.USER_NOT_FOUND;
-            }
-          }
-          callback(err, null);
-        }
-      );
+      let _user = loginDemo.find(ele => ele.phone === PARAM_IS_VALID.phone);
+      if (_user) {
+        hashPassword = _user.password;
+        rule = _user.rule;
+      } else {
+        msg = MESSAGE.USER_NOT_FOUND;
+      }
+      callback(null, null);
     },
     function validPassword(callback) {
       if (hashPassword !== '') {
@@ -345,36 +487,32 @@ function checkUser(req, res) {
   // let verificationUrl = '';
   try {
     PARAM_IS_VALID.phone = params.phone;
-    models.instance.login.find({ phone: PARAM_IS_VALID.phone }, function(err, _phone) {
-      if (_phone !== undefined && _phone.length > 0) {
-        return res.json({
-          status: 'error',
-          message: 'Số điện thoại đã được đăng ký!',
-          timeline: new Date().getTime(),
-        });
-      }
+    let phone = loginDemo.find(ele => PARAM_IS_VALID.phone === ele.phone);
+    if (phone) {
       return res.json({
-        status: 'ok',
+        status: 'error',
+        message: 'Số điện thoại đã được đăng ký!',
         timeline: new Date().getTime(),
       });
+    }
+    return res.json({
+      status: 'ok',
+      timeline: new Date().getTime(),
     });
   } catch (error) {
+    console.log(error);
     res.send({ status: 'error' });
   }
 }
 function question(req, res) {
   let result = [];
-
   const tasks = [
     function findQues(callback) {
       try {
-        models.instance.question.find({}, function(err, ques) {
-          if (ques && ques.length > 0) {
-            result = ques;
-          }
-          callback(err, null);
-        });
+        result = questionDemo;
+        callback(null, null);
       } catch (error) {
+        console.log(error);
         callback(null, null);
         return res.send({ status: 'error' });
       }
@@ -382,6 +520,7 @@ function question(req, res) {
   ];
   async.series(tasks, err => {
     if (err) {
+      console.log(err);
       return res.json({ status: 'error' });
     }
     return res.json({
@@ -426,15 +565,10 @@ function sendAnswer(req, res) {
             answer: element.answer,
           };
           // eslint-disable-next-line no-shadow
-          const question = () => {
-            const object = answerObject;
-            const instance = new models.instance.profile(object);
-            const save = instance.save({ return_query: true });
-            return save;
-          };
-          queries.push(question());
+          profileDemo.push(answerObject);
         });
       } catch (error) {
+        console.log(error);
         res.send({ status: 'error' });
       }
       callback(null, null);
@@ -446,24 +580,14 @@ function sendAnswer(req, res) {
             user_id: models.uuidFromString(legit.userid),
             question_id: models.uuidFromString(element.question),
           };
-          const profile_by_question = () => {
-            const object = profileObject;
-            const instance = new models.instance.profile_by_question(object);
-            const save = instance.save({ return_query: true });
-            return save;
-          };
-          queries.push(profile_by_question());
+          profile_by_questionDemo.push(profileObject);
         });
       } catch (error) {
+        console.log(error);
         callback(null, null);
         res.send({ status: 'error' });
       }
       callback(null, null);
-    },
-    function doSubmit(callback) {
-      models.doBatch(queries, err => {
-        callback(err, null);
-      });
     },
   ];
   async.series(tasks, err => {});
@@ -474,12 +598,12 @@ function sendAnswer(req, res) {
 }
 function getUser(req, res) {
   let result = {};
-  let legit = {};
-  const token = req.headers['x-access-token'];
   let question = [];
   let title = [];
   let group = [];
   let message = '';
+  let legit = {};
+  const token = req.headers['x-access-token'];
   const verifyOptions = {
     expiresIn: '30d',
     algorithm: ['RS256'],
@@ -491,7 +615,6 @@ function getUser(req, res) {
           legit = jwt.verify(token, jwtpublic, verifyOptions);
           callback(null, null);
         } catch (e) {
-          callback(e, null);
           return res.send({
             status: 'error',
             message: 'Sai ma token',
@@ -500,20 +623,16 @@ function getUser(req, res) {
       },
       callback => {
         try {
-          models.instance.users.find({ user_id: models.uuidFromString(legit.userid) }, function(
-            err,
-            user
-          ) {
-            if (user && user.length > 0) {
-              result = user[0];
-            } else {
-              return res.json({
-                status: 'error',
-                message: 'Không tìm thấy tài khoản này',
-              });
-            }
-            callback(err, null);
-          });
+          let user = usersDemo.find(ele => ele.user_id.toString() === legit.userid.toString());
+          if (user) {
+            result = user;
+          } else {
+            return res.json({
+              status: 'error',
+              message: 'Không tìm thấy tài khoản này',
+            });
+          }
+          callback(null, null);
         } catch (error) {
           console.log(error);
           res.send({ status: 'error' });
@@ -521,64 +640,56 @@ function getUser(req, res) {
       },
       callback => {
         try {
-          models.instance.profile.find(
-            { user_id: models.uuidFromString(legit.userid) },
-            { select: ['question_id', 'answer'] },
-            function(err, results) {
-              if (results && results.length > 0) {
-                let arr = [];
-                results.forEach(element => {
-                  let a = JSON.stringify(element);
-                  let obj = JSON.parse(a);
-
-                  arr.push(obj);
-                });
-                question = arr;
-              } else {
-                message = 'Chưa trả lời câu hỏi';
-              }
-              callback(err, null);
-            }
+          let profile = profileDemo.filter(
+            ele => ele.user_id.toString() === legit.userid.toString()
           );
+          if (profile) {
+            let arr = [];
+            profile.forEach(element => {
+              let a = JSON.stringify(element);
+              let obj = JSON.parse(a);
+
+              arr.push(obj);
+            });
+            question = arr;
+          } else {
+            message = 'Chưa trả lời câu hỏi';
+          }
+          callback(null, null);
         } catch (error) {
           callback(error, null);
         }
       },
       callback => {
         try {
-          models.instance.question.find({}, function(err, results) {
-            if (results && results.length > 0) {
-              let arr = [];
-              results.forEach(element => {
-                arr.push(element);
-              });
-              title = arr;
-            }
-            callback(err, null);
+          let arr = [];
+          questionDemo.forEach(element => {
+            arr.push(element);
           });
+          title = arr;
+          callback(null, null);
         } catch (error) {
           callback(error);
         }
       },
       callback => {
         try {
-          models.instance.group.find({}, function(err, results) {
-            if (results && results.length > 0) {
-              let arr = [];
-              results.forEach(element => {
-                arr.push(element);
-              });
-              group = arr;
-            }
-            callback(err, null);
+          let arr = [];
+          groupDemo.forEach(element => {
+            arr.push(element);
           });
+          group = arr;
+          callback(null, null);
         } catch (error) {
           callback(error);
         }
       },
     ],
     err => {
-      if (err) return res.json({ status: 'error' });
+      if (err) {
+        console.log(err);
+        return res.json({ status: 'error' });
+      }
       return res.json({
         status: 'ok',
         data: {
@@ -620,25 +731,29 @@ function updateProfileQuestion(req, res) {
         }
       },
       callback => {
-        let update_object = {
-          answer: PARAM_IS_VALID.answer,
-        };
-        let object = update_object;
-        models.instance.profile.update(
-          {
-            user_id: models.uuidFromString(legit.userid),
-            question_id: models.uuidFromString(PARAM_IS_VALID.question_id),
-          },
-          object,
-          { if_exist: true },
-          function(err) {
-            if (err) {
-              console.log(err);
-              callback(err, null);
-            }
-            callback(null, null);
+        try {
+          let profileIndex = profileDemo.findIndex(
+            ele =>
+              ele.user_id.toString() === legit.userid.toString() &&
+              ele.question_id.toString() === PARAM_IS_VALID.question_id.toString()
+          );
+          if (profileIndex !== -1) {
+            profileDemo[profileIndex] = {
+              user_id: models.uuidFromString(legit.userid),
+              question_id: models.uuidFromString(PARAM_IS_VALID.question_id),
+              answer: PARAM_IS_VALID.answer,
+            };
+          } else {
+            profileDemo.push({
+              user_id: models.uuidFromString(legit.userid),
+              question_id: models.uuidFromString(PARAM_IS_VALID.question_id),
+              answer: PARAM_IS_VALID.answer,
+            });
           }
-        );
+          callback(null, null);
+        } catch (error) {
+          callback(error, null);
+        }
       },
     ],
     err => {
@@ -667,32 +782,24 @@ function getAllUsers(req, res) {
       },
       callback => {
         try {
-          models.instance.users.find({}, function(err, user) {
-            if (user && user.length > 0) {
-              let a = JSON.stringify(user);
-              let b = JSON.parse(a);
-              let arr = [];
-              b.forEach(element => {
-                let obj = {};
-                obj.user_id = element.user_id;
-                obj.fullname = element.fullname;
-                obj.gender = element.gender;
-                obj.age = new Date().getFullYear() - element.dob_year;
-                obj.address = element.address;
-                obj.avatar = element.avatar;
-                arr.push(obj);
-                // if (element.public === 'active') arr.push(obj);
-              });
-              if (legit.userid) arr = arr.filter(element => element.user_id !== legit.userid);
-              result = arr;
-            } else {
-              return res.json({
-                status: 'error',
-                message: 'Không tìm thấy tài khoản này',
-              });
-            }
-            callback(err, null);
+          let a = JSON.stringify(usersDemo);
+          let b = JSON.parse(a);
+          let arr = [];
+          b.forEach(element => {
+            let obj = {};
+            obj.user_id = element.user_id;
+            obj.fullname = element.fullname;
+            obj.gender = element.gender;
+            obj.age = new Date().getFullYear() - element.dob_year;
+            obj.address = element.address;
+            obj.avatar = element.avatar;
+            obj.createat = element.createat;
+            arr.push(obj);
+            // if(element.public==='active') arr.push(obj);
           });
+          if (legit.userid) arr = arr.filter(element => element.user_id !== legit.userid);
+          result = arr;
+          callback(null, null);
         } catch (error) {
           console.log(error);
           res.send({ status: 'error' });
@@ -752,17 +859,16 @@ function getUserById(req, res) {
       },
       callback => {
         try {
-          models.instance.users.find({ user_id: userid }, {}, function(err, user) {
-            if (user && user.length > 0) {
-              result = user[0];
-            } else {
-              return res.json({
-                status: 'error',
-                message: 'Không tìm thấy tài khoản này',
-              });
-            }
-            callback(err, null);
-          });
+          let acc = usersDemo.find(ele => ele.user_id.toString() === userid.toString());
+          if (acc) {
+            result = acc;
+            callback(null, null);
+          } else {
+            return res.json({
+              status: 'error',
+              message: 'Không tìm thấy tài khoản này',
+            });
+          }
         } catch (error) {
           console.log(error);
           res.send({ status: 'error' });
@@ -770,24 +876,20 @@ function getUserById(req, res) {
       },
       callback => {
         try {
-          models.instance.profile.find(
-            { user_id: userid },
-            { select: ['question_id', 'answer'] },
-            function(err, results) {
-              if (results && results.length > 0) {
-                let arr = [];
-                results.forEach(element => {
-                  let a = JSON.stringify(element);
-                  let obj = JSON.parse(a);
-                  arr.push(obj);
-                });
-                question = arr;
-              } else {
-                message = 'Chưa trả lời câu hỏi';
-              }
-              callback(err, null);
-            }
-          );
+          let profile = profileDemo.filter(ele => ele.user_id.toString() === userid.toString());
+          if (profile) {
+            let arr = [];
+            profile.forEach(element => {
+              let a = JSON.stringify(element);
+              let obj = JSON.parse(a);
+
+              arr.push(obj);
+            });
+            question = arr;
+          } else {
+            message = 'Chưa trả lời câu hỏi';
+          }
+          callback(null, null);
         } catch (error) {
           callback(error, null);
         }
@@ -795,24 +897,22 @@ function getUserById(req, res) {
       callback => {
         if (legit.userid) {
           try {
-            models.instance.profile.find(
-              { user_id: models.uuidFromString(legit.userid) },
-              { select: ['question_id', 'answer'] },
-              function(err, results) {
-                if (results && results.length > 0) {
-                  let arr = [];
-                  results.forEach(element => {
-                    let a = JSON.stringify(element);
-                    let obj = JSON.parse(a);
-                    arr.push(obj);
-                  });
-                  yourQuestion = arr;
-                } else {
-                  message = 'Chưa trả lời câu hỏi';
-                }
-                callback(err, null);
-              }
+            let profile = profileDemo.filter(
+              ele => ele.user_id.toString() === legit.userid.toString()
             );
+            if (profile) {
+              let arr = [];
+              profile.forEach(element => {
+                let a = JSON.stringify(element);
+                let obj = JSON.parse(a);
+
+                arr.push(obj);
+              });
+              yourQuestion = arr;
+            } else {
+              message = 'Chưa trả lời câu hỏi';
+            }
+            callback(null, null);
           } catch (error) {
             callback(error, null);
           }
@@ -822,47 +922,39 @@ function getUserById(req, res) {
       },
       callback => {
         try {
-          models.instance.question.find({}, function(err, results) {
-            if (results && results.length > 0) {
-              let arr = [];
-              results.forEach(element => {
-                arr.push(element);
-              });
-              title = arr;
-            }
-            callback(err, null);
+          let arr = [];
+          questionDemo.forEach(element => {
+            arr.push(element);
           });
+          title = arr;
+          callback(null, null);
         } catch (error) {
           callback(error);
         }
       },
       callback => {
         try {
-          models.instance.group.find({}, function(err, results) {
-            if (results && results.length > 0) {
-              let arr = [];
-              results.forEach(element => {
-                arr.push(element);
-              });
-              group = arr;
-            }
-            callback(err, null);
+          let arr = [];
+          groupDemo.forEach(element => {
+            arr.push(element);
           });
+          group = arr;
+          callback(null, null);
         } catch (error) {
           callback(error);
         }
       },
       callback => {
         try {
-          models.instance.userCare.find(
-            { user_id1: models.uuidFromString(legit.userid), user_id2: userid },
-            function(err, results) {
-              if (results && results.length > 0) {
-                care = true;
-              }
-              callback(err, null);
-            }
+          let careInfo = userCareDemo.find(
+            ele =>
+              ele.user_id1.toString() === legit.userid.toString() &&
+              ele.user_id2.toString() === userid.toString()
           );
+          if (careInfo) {
+            care = true;
+          }
+          callback(null, null);
         } catch (error) {
           callback(error);
         }
@@ -930,6 +1022,7 @@ function updateProfileUser(req, res) {
       callback => {
         try {
           let update_object = {
+            user_id: models.uuidFromString(legit.userid),
             address: PARAM_IS_VALID.address,
             avatar: PARAM_IS_VALID.avatar ? models.uuidFromString(PARAM_IS_VALID.avatar) : null,
             dob_day: PARAM_IS_VALID.dob_day,
@@ -943,18 +1036,15 @@ function updateProfileUser(req, res) {
             weight: PARAM_IS_VALID.weight,
           };
           let object = update_object;
-          models.instance.users.update(
-            { user_id: models.uuidFromString(legit.userid) },
-            object,
-            { if_exist: true },
-            function(err) {
-              if (err) {
-                console.log(err);
-                return res.json({ status: 'error' });
-              }
-              callback(null, null);
-            }
+          let userIndex = usersDemo.findIndex(
+            ele => ele.user_id.toString() === legit.userid.toString()
           );
+          if (userIndex !== -1) {
+            usersDemo[userIndex] = object;
+          } else {
+            return res.json({ status: 'error' });
+          }
+          callback(null, null);
         } catch (error) {
           callback(error, null);
         }
@@ -1100,22 +1190,15 @@ function updatePhone(req, res) {
       },
       callback => {
         try {
-          let update_object = {
-            phones: PARAM_IS_VALID.phone,
-          };
-          let object = update_object;
-          models.instance.users.update(
-            { user_id: models.uuidFromString(legit.userid) },
-            object,
-            { if_exist: true },
-            function(err) {
-              if (err) {
-                console.log(err);
-                return res.json({ status: 'error' });
-              }
-              callback(null, null);
-            }
+          let userIndex = usersDemo.findIndex(
+            ele => ele.user_id.toString() === legit.userid.toString()
           );
+          if (userIndex !== -1) {
+            usersDemo[userIndex].phone = PARAM_IS_VALID.phone;
+          } else {
+            return res.json({ status: 'error' });
+          }
+          callback(null, null);
         } catch (error) {
           callback(error, null);
         }
@@ -1156,22 +1239,18 @@ function updateEmail(req, res) {
       },
       callback => {
         try {
-          let update_object = {
-            email: PARAM_IS_VALID.email,
-          };
-          let object = update_object;
-          models.instance.users.update(
-            { user_id: models.uuidFromString(legit.userid) },
-            object,
-            { if_exist: true },
-            function(err) {
-              if (err) {
-                console.log(err);
-                return res.json({ status: 'error' });
-              }
-              callback(null, null);
+          try {
+            let userIndex = usersDemo.findIndex(
+              ele => ele.user_id.toString() === legit.userid.toString()
+            );
+            if (userIndex !== -1) {
+              usersDemo[userIndex].email = PARAM_IS_VALID.email;
+            } else {
+              return res.json({ status: 'error' });
             }
-          );
+          } catch (error) {
+            callback(error, null);
+          }
         } catch (error) {
           callback(error, null);
         }
@@ -1206,20 +1285,16 @@ function getOnlyUser(req, res) {
       },
       callback => {
         try {
-          models.instance.users.find({ user_id: models.uuidFromString(legit.userid) }, function(
-            err,
-            user
-          ) {
-            if (user && user.length > 0) {
-              result = user[0];
-            } else {
-              return res.json({
-                status: 'error',
-                message: 'Không tìm thấy tài khoản này',
-              });
-            }
-            callback(err, null);
-          });
+          let user = usersDemo.find(ele => ele.user_id.toString() === legit.userid.toString());
+          if (user) {
+            result = user;
+          } else {
+            return res.json({
+              status: 'error',
+              message: 'Không tìm thấy tài khoản này',
+            });
+          }
+          callback(null, null);
         } catch (error) {
           console.log(error);
           res.send({ status: 'error' });
@@ -1282,20 +1357,16 @@ function changeCare(req, res) {
                 created: new Date().getTime(),
                 type: params.type,
               };
-              let instance = new models.instance.userCare(object);
-              let save = instance.save(function(err) {
-                if (err) callback(err, null);
-                else callback(null, null);
-              });
+              userCareDemo.push(object);
+              callback(null, null);
             } else {
-              let query_object = {
-                user_id1: models.uuidFromString(legit.userid),
-                user_id2: userid,
-              };
-              models.instance.userCare.delete(query_object, function(err) {
-                if (err) callback(err, null);
-                else callback(null, null);
-              });
+              let careIndex = userCareDemo.findIndex(
+                ele =>
+                  ele.user_id1.toString() === legit.userid.toString() &&
+                  ele.user_id2.toString() === userid.toString()
+              );
+              userCareDemo.splice(1, careIndex);
+              callback(null, null);
             }
           } else callback(null, null);
         } catch (error) {
@@ -1312,20 +1383,20 @@ function changeCare(req, res) {
                 user_id2: userid,
                 created: new Date().getTime(),
               };
-              let instance = new models.instance.userWhoCare(object);
-              let save = instance.save(function(err) {
-                if (err) callback(err, null);
-                else callback(null, null);
-              });
+              userWhoCareDemo.push(object);
+              callback(null, null);
             } else {
               let query_object = {
                 user_id1: models.uuidFromString(legit.userid),
                 user_id2: userid,
               };
-              models.instance.userWhoCare.delete(query_object, function(err) {
-                if (err) callback(err, null);
-                else callback(null, null);
-              });
+              let careIndex = userWhoCareDemo.findIndex(
+                ele =>
+                  ele.user_id1.toString() === legit.userid.toString() &&
+                  ele.user_id2.toString() === userid.toString()
+              );
+              userWhoCareDemo.splice(1, careIndex);
+              callback(null, null);
             }
           } else callback(null, null);
         } catch (error) {
@@ -1343,20 +1414,20 @@ function changeCare(req, res) {
                 created: new Date().getTime(),
                 type: params.type,
               };
-              let instance = new models.instance.userCare(object);
-              let save = instance.save(function(err) {
-                if (err) callback(err, null);
-                else callback(null, null);
-              });
+              userCareDemo.push(object);
+              callback(null, null);
             } else {
               let query_object = {
                 user_id1: models.uuidFromString(legit.userid),
                 user_id2: userid,
               };
-              models.instance.userCare.delete(query_object, function(err) {
-                if (err) callback(err, null);
-                else callback(null, null);
-              });
+              let careIndex = userCareDemo.findIndex(
+                ele =>
+                  ele.user_id1.toString() === legit.userid.toString() &&
+                  ele.user_id2.toString() === userid.toString()
+              );
+              userCareDemo.splice(1, careIndex);
+              callback(null, null);
             }
           } else callback(null, null);
         } catch (error) {
@@ -1399,15 +1470,11 @@ function getUserCare(req, res) {
       },
       callback => {
         try {
-          models.instance.userCare.find({ user_id1: models.uuidFromString(legit.userid) }, function(
-            err,
-            results
-          ) {
-            if (results && results.length > 0) {
-              result = results;
-            }
-            callback(err, null);
-          });
+          let care = userCareDemo.filter(
+            ele => ele.user_id1.toString() === legit.userid.toString()
+          );
+          result = care;
+          callback(null, null);
         } catch (e) {
           callback(e, null);
           console.log(e);
@@ -1418,27 +1485,22 @@ function getUserCare(req, res) {
           const user = result.filter(v => v.type === 'user');
           if (user.length > 0) {
             user.forEach((e, i) => {
-              models.instance.users.find({ user_id: e.user_id2 }, function(err, results) {
-                if (results && results.length > 0) {
-                  let obj = {};
-                  obj.name = results[0].fullname;
-                  obj.gender = results[0].gender;
-                  obj.address = results[0].address;
-                  obj.age = new Date().getFullYear() - results[0].dob_year;
-                  obj.user_id = results[0].user_id;
-                  obj.created = e.created;
-                  obj.avatar = results[0].avatar;
-                  obj.type = 'user';
-                  arrUser.push(obj);
-                  if (arrUser.length === user.length) {
-                    callback(null, null);
-                  }
-                } else {
-                  return res.json({
-                    status: 'error',
-                  });
-                }
-              });
+              let userCare = usersDemo.find(
+                ele => ele.user_id.toString() === e.user_id2.toString()
+              );
+              let obj = {};
+              obj.name = userCare.fullname;
+              obj.gender = userCare.gender;
+              obj.address = userCare.address;
+              obj.age = new Date().getFullYear() - userCare.dob_year;
+              obj.user_id = userCare.user_id;
+              obj.created = e.created;
+              obj.avatar = userCare.avatar;
+              obj.type = 'user';
+              arrUser.push(obj);
+              if (arrUser.length === user.length) {
+                callback(null, null);
+              }
             });
           } else callback(null, null);
         } catch (e) {
@@ -1451,28 +1513,23 @@ function getUserCare(req, res) {
           const member = result.filter(v => v.type === 'member');
           if (member.length > 0) {
             member.forEach((e, i) => {
-              models.instance.members.find({ membersid: e.user_id2 }, function(err, results) {
-                if (results && results.length > 0) {
-                  let obj = {};
-                  obj.name = results[0].name;
-                  obj.gender = results[0].gender;
-                  obj.address = results[0].address;
-                  obj.location = results[0].location;
-                  obj.user_id = results[0].membersid;
-                  obj.created = e.created;
-                  obj.avatar = null;
-                  obj.timeup = results[0].timeup;
-                  obj.type = 'member';
-                  arrMember.push(obj);
-                  if (arrMember.length === member.length) {
-                    callback(null, null);
-                  }
-                } else {
-                  return res.json({
-                    status: 'error',
-                  });
-                }
-              });
+              let memCare = usersDemo.find(
+                ele => ele.membersid.toString() === e.user_id2.toString()
+              );
+              let obj = {};
+              obj.name = memCare.name;
+              obj.gender = memCare.gender;
+              obj.address = memCare.address;
+              obj.location = memCare.location;
+              obj.user_id = memCare.membersid;
+              obj.created = e.created;
+              obj.avatar = null;
+              obj.timeup = memCare.timeup;
+              obj.type = 'member';
+              arrMember.push(obj);
+              if (arrMember.length === member.length) {
+                callback(null, null);
+              }
             });
           } else callback(null, null);
         } catch (e) {
@@ -1518,15 +1575,11 @@ function getUserWhoCare(req, res) {
       },
       callback => {
         try {
-          models.instance.userWhoCare.find(
-            { user_id2: models.uuidFromString(legit.userid) },
-            function(err, results) {
-              if (results && results.length > 0) {
-                result = results;
-              }
-              callback(err, null);
-            }
+          let whocare = userWhoCareDemo.filter(
+            ele => ele.user_id2.toString() === legit.userid.toString()
           );
+          result = whocare;
+          callback(null, null);
         } catch (e) {
           callback(e, null);
           console.log(e);
@@ -1536,25 +1589,19 @@ function getUserWhoCare(req, res) {
         try {
           if (result.length > 0) {
             result.forEach((e, i) => {
-              models.instance.users.find({ user_id: e.user_id1 }, function(err, results) {
-                if (results && results.length > 0) {
-                  let obj = {};
-                  obj.name = results[0].fullname;
-                  obj.gender = results[0].gender;
-                  obj.address = results[0].address;
-                  obj.age = new Date().getFullYear() - results[0].dob_year;
-                  obj.user_id = results[0].user_id;
-                  obj.created = e.created;
-                  arr.push(obj);
-                  if (arr.length === result.length) {
-                    callback(null, null);
-                  }
-                } else {
-                  return res.json({
-                    status: 'error',
-                  });
-                }
-              });
+              let a = usersDemo.find(ele => ele.user_id.toString() === e.user_id1.toString());
+              let obj = {};
+              obj.name = a.fullname;
+              obj.gender = a.gender;
+              obj.address = a.address;
+              obj.age = new Date().getFullYear() - a.dob_year;
+              obj.user_id = a.user_id;
+              obj.created = e.created;
+              obj.avatar = a.avatar;
+              arr.push(obj);
+              if (arr.length === result.length) {
+                callback(null, null);
+              }
             });
           } else callback(null, null);
         } catch (e) {
@@ -1572,21 +1619,22 @@ function getUserWhoCare(req, res) {
     }
   );
 }
-router.post('/register', register);
-router.post('/login', login);
-router.post('/sendanswer', sendAnswer);
-router.get('/getuser', getUser);
-router.get('/getonlyuser', getOnlyUser);
-router.get('/question', question);
-router.get('/getuserbyid/:id', getUserById);
-router.get('/getallusers', getAllUsers);
-router.post('/updateprofilequestion', updateProfileQuestion);
-router.get('/checkuser/:phone', checkUser);
-router.post('/updateprofileuser', updateProfileUser);
-router.post('/changepass', changePass);
-router.post('/updateemail', updateEmail);
-router.post('/updatephone', updatePhone);
-router.post('/changecare', changeCare);
-router.get('/getusercare', getUserCare);
-router.get('/getuserwhocare', getUserWhoCare);
-module.exports = router;
+export default {
+  'POST /api/authentication/register': register,
+  'POST /api/authentication/login': login,
+  'GET /api/authentication/checkuser/:phone': checkUser,
+  'GET /api/authentication/question': question,
+  'POST /api/authentication/sendanswer': sendAnswer,
+  'GET /api/authentication/getuser': getUser,
+  'GET /api/authentication/getonlyuser': getOnlyUser,
+  'POST /api/authentication/updateprofilequestion': updateProfileQuestion,
+  'GET /api/authentication/getallusers': getAllUsers,
+  'GET /api/authentication/getuserbyid/:id': getUserById,
+  'POST /api/authentication/updateprofileuser': updateProfileUser,
+  'POST /api/authentication/changepass': changePass,
+  'POST /api/authentication/updatephone': updatePhone,
+  'POST /api/authentication/updateemail': updateEmail,
+  'POST /api/authentication/changecare': changeCare,
+  'GET /api/authentication/getusercare': getUserCare,
+  'GET /api/authentication/getuserwhocare': getUserWhoCare,
+};

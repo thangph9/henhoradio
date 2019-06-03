@@ -157,8 +157,6 @@ export default {
           type: 'getUserCare',
           payload: response.data,
         });
-      } else {
-        message.error('Có lỗi xảy ra. Hãy thử đăng nhập lại !');
       }
     },
     *getuserwhocare({ payload }, { call, put }) {
