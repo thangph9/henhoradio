@@ -6,10 +6,11 @@
     background-color: #fff;
     min-height: calc(100vh - 180px);
     .user-care-item {
-      margin: 0 15px;
       .title-care {
-        padding-top: 20px;
+        padding-top: 24px;
+        padding-right: 24px;
         display: flex;
+        justify-content: flex-end;
         .title {
           &:first-child {
             flex-basis: 15%;
@@ -45,9 +46,9 @@
         }
         .avatar {
           flex-basis: 15%;
-          cursor: pointer;
           display: flex;
           justify-content: center;
+          cursor: pointer;
           .avatar-user {
             background-position: center;
             background-repeat: no-repeat;
@@ -64,6 +65,7 @@
           display: flex;
           flex-direction: column;
           justify-content: center;
+          overflow: hidden;
           flex: 1;
           .more-info {
             font-size: 14px;
@@ -88,31 +90,104 @@
           }
         }
       }
+      .item-user {
+        padding-top: 24px;
+        padding-bottom: 24px;
+        padding-left: calc(24px + 156px + 24px);
+        min-height: calc(24px + 156px + 24px);
+        border-bottom: solid 1px #e6e6e6;
+        position: relative;
+        .content-info {
+          h3 {
+            font-size: 21px;
+            line-height: 27px;
+            font-weight: 700;
+            cursor: pointer;
+          }
+          .avatar-user {
+            position: absolute;
+            cursor: pointer;
+            top: 24px;
+            left: 24px;
+            width: 156px;
+            height: 156px;
+            div {
+              background-position: center;
+              background-size: cover;
+              display: block;
+              height: 100%;
+              margin: 0;
+              padding: 0;
+              width: 100%;
+            }
+          }
+          .detail-info {
+            color: #262e40;
+            margin-top: 9px;
+            font-size: 14px;
+            cursor: pointer;
+          }
+          .time-create {
+            margin-top: 12px;
+            line-height: 30px;
+            color: #ababab;
+            display: flex;
+            align-items: center;
+            position: relative;
+            justify-content: space-between;
+            .time-icon {
+              display: flex;
+              align-items: center;
+            }
+            .item-care {
+              display: flex;
+              align-items: center;
+              cursor: pointer;
+            }
+            .cared {
+              color: gold;
+              i {
+                font-size: 20px;
+                margin-right: 7px;
+                color: gold;
+                animation: stretchbounce 0.5s ease-in-out;
+              }
+            }
+            .not-care {
+              color: #a9a9a9;
+              cursor: pointer;
+              i {
+                font-size: 20px;
+                margin-right: 7px;
+                color: #a9a9a9;
+              }
+            }
+          }
+          i {
+            margin-right: 5px;
+            font-size: 20px;
+          }
+        }
+      }
     }
   }
 }
-.cared {
-  color: #ffd700;
-  display: flex;
-  align-items: center;
+.button-finish {
+  position: absolute;
+  bottom: 0;
+  padding: 12px 20px;
+  text-align: center;
+  width: 100%;
+  background: #2ecc71;
+  outline: none;
   cursor: pointer;
-  i {
-    font-size: 18px;
-    margin-right: 7px;
-    color: #ffd700;
-    animation: stretchbounce 0.5s ease-in-out;
-  }
+  color: #fff;
+  font-size: 18px;
+  text-transform: uppercase;
+  border-color: #2ecc71;
 }
-.not-care {
-  color: darkgray;
-  display: flex;
-  align-items: center;
-  cursor: pointer;
-  i {
-    font-size: 18px;
-    margin-right: 7px;
-    color: darkgray;
-  }
+.pr-rs {
+  padding-right: 24px;
 }
 @media (min-width: 576px) {
   .container {
@@ -128,21 +203,37 @@
   .container {
     max-width: 960px;
   }
+  .pr-rs {
+    padding-right: calc(24px + 156px + 100px);
+  }
+}
+@media (max-width: 575px) {
+  .container {
+    max-width: 95%;
+  }
+  .time-create {
+    flex-direction: column;
+    align-items: flex-start !important;
+  }
 }
 @keyframes stretchbounce {
   0% {
     transform: scale(1);
   }
+
   25% {
     transform: scale(1.5);
   }
+
   50% {
     transform: scale(0.9);
   }
+
   75% {
     transform: scale(1.2);
   }
-  100% {
+
+  to {
     transform: scale(1);
   }
 }

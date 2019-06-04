@@ -152,6 +152,13 @@ class WhoCare extends PureComponent {
     });
   }
 
+  rediercPage(value) {
+    this.props.history.push({
+      pathname: `/home/other-profile`,
+      search: `?id=${value.replace(/-/g, '')}`,
+    });
+  }
+
   render() {
     const { page } = this.props.location.query;
     if (
@@ -166,97 +173,91 @@ class WhoCare extends PureComponent {
         <div className={styles.container}>
           <div className={styles['user-care-item']}>
             <div className={styles['title-care']}>
-              <div className={styles.title}>
-                <div className={styles['button-filter']}>
-                  <Button
-                    id={styles['button-filter']}
-                    type="primary"
-                    icon="control"
-                    onClick={this.showDrawer}
-                  >
-                    Lọc dữ liệu
-                  </Button>
-                  <Drawer
-                    title="Lựa chọn"
-                    placement="right"
-                    onClose={this.onClose}
-                    visible={this.state.visible}
-                  >
-                    <div style={{ padding: '20px' }}>
-                      <div>
-                        <h3 style={{ color: 'gray' }}>Sắp xếp</h3>
-                        <hr style={{ marginBottom: '15px' }} />
-                        <RadioGroup
-                          onChange={e => this.onChangeSort(e)}
-                          value={this.props.location.query.sortby}
+              <div className={styles['button-filter']}>
+                <Button
+                  id={styles['button-filter']}
+                  type="primary"
+                  icon="control"
+                  onClick={this.showDrawer}
+                >
+                  Lọc dữ liệu
+                </Button>
+                <Drawer
+                  title="Lựa chọn"
+                  placement="right"
+                  onClose={this.onClose}
+                  visible={this.state.visible}
+                >
+                  <div style={{ padding: '20px' }}>
+                    <div>
+                      <h3 style={{ color: 'gray' }}>Sắp xếp</h3>
+                      <hr style={{ marginBottom: '15px' }} />
+                      <RadioGroup
+                        onChange={e => this.onChangeSort(e)}
+                        value={this.props.location.query.sortby}
+                      >
+                        <Radio
+                          style={{ display: 'block', marginBottom: '10px', marginLeft: '15px' }}
+                          value="descage"
                         >
-                          <Radio
-                            style={{ display: 'block', marginBottom: '10px', marginLeft: '15px' }}
-                            value="descage"
-                          >
-                            Tuổi giảm dần
-                          </Radio>
-                          <Radio
-                            style={{ display: 'block', marginBottom: '10px', marginLeft: '15px' }}
-                            value="ascage"
-                          >
-                            Tuổi tăng dần
-                          </Radio>
-                          <Radio
-                            style={{ display: 'block', marginBottom: '10px', marginLeft: '15px' }}
-                            value="oldest_care"
-                          >
-                            Ngày quan tâm bạn cũ nhất
-                          </Radio>
-                          <Radio
-                            style={{ display: 'block', marginBottom: '10px', marginLeft: '15px' }}
-                            value="newest_care"
-                          >
-                            Ngày quan tâm bạn mới nhất
-                          </Radio>
-                        </RadioGroup>
-                      </div>
-                      <div style={{ marginTop: '20px' }}>
-                        <h3 style={{ color: 'gray' }}>Độ tuổi</h3>
-                        <hr style={{ marginBottom: '15px' }} />
-                        <RadioGroup
-                          onChange={e => this.onChangeRadioAge(e)}
-                          value={this.props.location.query.age}
+                          Tuổi giảm dần
+                        </Radio>
+                        <Radio
+                          style={{ display: 'block', marginBottom: '10px', marginLeft: '15px' }}
+                          value="ascage"
                         >
-                          <Radio
-                            style={{ display: 'block', marginBottom: '10px', marginLeft: '15px' }}
-                            value="18_24"
-                          >
-                            Từ 18 - 24 tuổi
-                          </Radio>
-                          <Radio
-                            style={{ display: 'block', marginBottom: '10px', marginLeft: '15px' }}
-                            value="25_35"
-                          >
-                            Từ 25 - 35 tuổi
-                          </Radio>
-                          <Radio
-                            style={{ display: 'block', marginBottom: '10px', marginLeft: '15px' }}
-                            value="36"
-                          >
-                            Ngoài 35 tuổi
-                          </Radio>
-                          <Radio
-                            style={{ display: 'block', marginBottom: '10px', marginLeft: '15px' }}
-                            value="all"
-                          >
-                            Tất cả
-                          </Radio>
-                        </RadioGroup>
-                      </div>
+                          Tuổi tăng dần
+                        </Radio>
+                        <Radio
+                          style={{ display: 'block', marginBottom: '10px', marginLeft: '15px' }}
+                          value="oldest_care"
+                        >
+                          Ngày quan tâm bạn cũ nhất
+                        </Radio>
+                        <Radio
+                          style={{ display: 'block', marginBottom: '10px', marginLeft: '15px' }}
+                          value="newest_care"
+                        >
+                          Ngày quan tâm bạn mới nhất
+                        </Radio>
+                      </RadioGroup>
                     </div>
-                  </Drawer>
-                </div>
+                    <div style={{ marginTop: '20px' }}>
+                      <h3 style={{ color: 'gray' }}>Độ tuổi</h3>
+                      <hr style={{ marginBottom: '15px' }} />
+                      <RadioGroup
+                        onChange={e => this.onChangeRadioAge(e)}
+                        value={this.props.location.query.age}
+                      >
+                        <Radio
+                          style={{ display: 'block', marginBottom: '10px', marginLeft: '15px' }}
+                          value="18_24"
+                        >
+                          Từ 18 - 24 tuổi
+                        </Radio>
+                        <Radio
+                          style={{ display: 'block', marginBottom: '10px', marginLeft: '15px' }}
+                          value="25_35"
+                        >
+                          Từ 25 - 35 tuổi
+                        </Radio>
+                        <Radio
+                          style={{ display: 'block', marginBottom: '10px', marginLeft: '15px' }}
+                          value="36"
+                        >
+                          Ngoài 35 tuổi
+                        </Radio>
+                        <Radio
+                          style={{ display: 'block', marginBottom: '10px', marginLeft: '15px' }}
+                          value="all"
+                        >
+                          Tất cả
+                        </Radio>
+                      </RadioGroup>
+                    </div>
+                  </div>
+                </Drawer>
               </div>
-              <div className={styles.title}>Tên người dùng</div>
-              <div className={styles.title}>Thời gian quan tâm</div>
-              <div className={styles.title}>Trang cá nhân</div>
-              <div className={styles.title}>Chỉnh sửa</div>
             </div>
             {this.state.dataUserWhoCare
               .filter((v, i, self) => {
@@ -274,51 +275,54 @@ class WhoCare extends PureComponent {
               })
               .filter((value, index) => index >= page * 5 - 5 && index < page * 5)
               .map((v, i) => (
-                <div key={i} className={styles['content-info-item']}>
-                  <div className={styles.avatar}>
-                    <div
-                      className={styles['avatar-user']}
-                      style={this.background(v.avatar, v.gender)}
-                    />
-                  </div>
-                  <div className={styles['info-user']}>
-                    <div className={styles['more-info']}>{v.name}</div>
-                    <div className={styles['more-info']}>
-                      <span className={styles['name-of-user']}>{v.address}</span>
-                      <span className={styles['age-of-user']}>{v.age} tuổi</span>
-                    </div>
-                  </div>
-                  <div className={styles['info-user']}>
-                    <div className={styles['more-info']}>
-                      {moment(v.created).format('HH:mm MM/DD/YYYY')}
-                    </div>
-                  </div>
-                  <div className={styles['info-user']}>
-                    <div className={styles['more-info']}>
-                      <Link to={`/home/other-profile?id=${v.user_id.replace(/-/g, '')}`}>
-                        {v.name}
-                      </Link>
-                    </div>
-                  </div>
-                  <div className={styles['info-user']}>
-                    <div className={styles['more-info']}>
-                      <span
-                        className={this.checkCare(v.user_id) ? styles.cared : styles['not-care']}
-                        onClick={() =>
-                          this.handleClickChangeCare(v, `click-${i}`, this.checkCare(v.user_id))
-                        }
+                <div key={i} className={`${styles['item-user']} ${styles['pr-rs']}`}>
+                  <div>
+                    <div className={styles['content-info']}>
+                      <h3 onClick={() => this.rediercPage(v.user_id)}>
+                        {v.name}, {v.age} tuổi, {v.address}
+                      </h3>
+                      <div
+                        onClick={() => this.rediercPage(v.user_id)}
+                        className={styles['avatar-user']}
                       >
-                        <Icon
-                          style={!this.state[`click-${i}`] ? { animation: 'none' } : {}}
-                          type="star"
-                          theme="filled"
-                        />
-                        {this.checkCare(v.user_id) ? (
-                          <span>Đã quan tâm</span>
-                        ) : (
-                          <span>Quan tâm lại</span>
-                        )}
-                      </span>
+                        <div style={this.background(v.avatar, v.gender)} />
+                      </div>
+                      <div
+                        onClick={() => this.rediercPage(v.user_id)}
+                        className={styles['detail-info']}
+                      >
+                        Lorem Ipsum is simply dummy text of the printing and typesetting industry.
+                        Lorem Ipsum has been the standard dummy text ever since the 1500s Lorem
+                        Ipsum is simply dummy text of the printing and typesetting industry. Lorem
+                        Ipsum has been the standard dummy text ever since the 1500s
+                      </div>
+                      <div className={styles['time-create']}>
+                        <span className={styles['time-icon']}>
+                          <Icon type="clock-circle" />
+                          {moment(v.created).format('DD/MM/YYYY')}
+                        </span>
+                        <div
+                          className={
+                            this.checkCare(v.user_id)
+                              ? `${styles.cared} ${styles['item-care']}`
+                              : `${styles['not-care']} ${styles['item-care']}`
+                          }
+                          onClick={() =>
+                            this.handleClickChangeCare(v, `click-${i}`, this.checkCare(v.user_id))
+                          }
+                        >
+                          <Icon
+                            style={!this.state[`click-${i}`] ? { animation: 'none' } : {}}
+                            type="star"
+                            theme="filled"
+                          />
+                          {this.checkCare(v.user_id) ? (
+                            <span>Đã quan tâm</span>
+                          ) : (
+                            <span>Quan tâm lại</span>
+                          )}
+                        </div>
+                      </div>
                     </div>
                   </div>
                 </div>

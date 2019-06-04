@@ -7,12 +7,11 @@
   background-color: #fff;
   min-height: calc(-80vh);
 }
-.who-care-page .container .user-care-item {
-  margin: 0 15px;
-}
 .who-care-page .container .user-care-item .title-care {
-  padding-top: 20px;
+  padding-top: 24px;
+  padding-right: 24px;
   display: flex;
+  justify-content: flex-end;
 }
 .who-care-page .container .user-care-item .title-care .title {
   color: rgba(0, 0, 0, 0.65);
@@ -90,6 +89,51 @@
 .who-care-page .container .user-care-item .content-info-item .info-user:last-child {
   align-items: center;
 }
+.who-care-page .container .user-care-item .item-user {
+  padding-top: 24px;
+  padding-bottom: 24px;
+  padding-left: calc(204px);
+  min-height: calc(204px);
+  border-bottom: solid 1px #e6e6e6;
+  position: relative;
+}
+.who-care-page .container .user-care-item .item-user .content-info h3 {
+  font-size: 21px;
+  line-height: 27px;
+  font-weight: 700;
+}
+.who-care-page .container .user-care-item .item-user .content-info .avatar-user {
+  position: absolute;
+  top: 24px;
+  left: 24px;
+  width: 156px;
+  height: 156px;
+}
+.who-care-page .container .user-care-item .item-user .content-info .avatar-user div {
+  background-position: center;
+  background-size: cover;
+  display: block;
+  height: 100%;
+  margin: 0;
+  padding: 0;
+  width: 100%;
+}
+.who-care-page .container .user-care-item .item-user .content-info .detail-info {
+  color: #262e40;
+  margin-top: 9px;
+  font-size: 14px;
+}
+.who-care-page .container .user-care-item .item-user .content-info .time-create {
+  margin-top: 12px;
+  line-height: 30px;
+  color: #ababab;
+  display: flex;
+  align-items: center;
+}
+.who-care-page .container .user-care-item .item-user .content-info i {
+  margin-right: 5px;
+  font-size: 20px;
+}
 .button-finish {
   position: absolute;
   bottom: 0;
@@ -104,6 +148,9 @@
   text-transform: uppercase;
   border-color: #2ecc71;
 }
+.pr-rs {
+  padding-right: 24px;
+}
 @media (min-width: 576px) {
   .container {
     max-width: 540px;
@@ -117,5 +164,8 @@
 @media (min-width: 992px) {
   .container {
     max-width: 960px;
+  }
+  .pr-rs {
+    padding-right: calc(280px);
   }
 }

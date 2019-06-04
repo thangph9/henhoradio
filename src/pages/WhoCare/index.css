@@ -7,12 +7,11 @@
   background-color: #fff;
   min-height: calc(-80vh);
 }
-.who-care-page .container .user-care-item {
-  margin: 0 15px;
-}
 .who-care-page .container .user-care-item .title-care {
-  padding-top: 20px;
+  padding-top: 24px;
+  padding-right: 24px;
   display: flex;
+  justify-content: flex-end;
 }
 .who-care-page .container .user-care-item .title-care .title {
   color: rgba(0, 0, 0, 0.65);
@@ -49,9 +48,9 @@
 }
 .who-care-page .container .user-care-item .content-info-item .avatar {
   flex-basis: 15%;
-  cursor: pointer;
   display: flex;
   justify-content: center;
+  cursor: pointer;
 }
 .who-care-page .container .user-care-item .content-info-item .avatar .avatar-user {
   background-position: center;
@@ -68,6 +67,7 @@
   display: flex;
   flex-direction: column;
   justify-content: center;
+  overflow: hidden;
   flex: 1;
 }
 .who-care-page .container .user-care-item .content-info-item .info-user .more-info {
@@ -89,28 +89,99 @@
 .who-care-page .container .user-care-item .content-info-item .info-user:last-child {
   align-items: center;
 }
-.cared {
-  color: #ffd700;
+.who-care-page .container .user-care-item .item-user {
+  padding-top: 24px;
+  padding-bottom: 24px;
+  padding-left: calc(204px);
+  min-height: calc(204px);
+  border-bottom: solid 1px #e6e6e6;
+  position: relative;
+}
+.who-care-page .container .user-care-item .item-user .content-info h3 {
+  font-size: 21px;
+  line-height: 27px;
+  font-weight: 700;
+  cursor: pointer;
+}
+.who-care-page .container .user-care-item .item-user .content-info .avatar-user {
+  position: absolute;
+  cursor: pointer;
+  top: 24px;
+  left: 24px;
+  width: 156px;
+  height: 156px;
+}
+.who-care-page .container .user-care-item .item-user .content-info .avatar-user div {
+  background-position: center;
+  background-size: cover;
+  display: block;
+  height: 100%;
+  margin: 0;
+  padding: 0;
+  width: 100%;
+}
+.who-care-page .container .user-care-item .item-user .content-info .detail-info {
+  color: #262e40;
+  margin-top: 9px;
+  font-size: 14px;
+  cursor: pointer;
+}
+.who-care-page .container .user-care-item .item-user .content-info .time-create {
+  margin-top: 12px;
+  line-height: 30px;
+  color: #ababab;
+  display: flex;
+  align-items: center;
+  position: relative;
+  justify-content: space-between;
+}
+.who-care-page .container .user-care-item .item-user .content-info .time-create .time-icon {
+  display: flex;
+  align-items: center;
+}
+.who-care-page .container .user-care-item .item-user .content-info .time-create .item-care {
   display: flex;
   align-items: center;
   cursor: pointer;
 }
-.cared i {
-  font-size: 18px;
+.who-care-page .container .user-care-item .item-user .content-info .time-create .cared {
+  color: gold;
+}
+.who-care-page .container .user-care-item .item-user .content-info .time-create .cared i {
+  font-size: 20px;
   margin-right: 7px;
-  color: #ffd700;
+  color: gold;
   animation: stretchbounce 0.5s ease-in-out;
 }
-.not-care {
-  color: darkgray;
-  display: flex;
-  align-items: center;
+.who-care-page .container .user-care-item .item-user .content-info .time-create .not-care {
+  color: #a9a9a9;
   cursor: pointer;
 }
-.not-care i {
-  font-size: 18px;
+.who-care-page .container .user-care-item .item-user .content-info .time-create .not-care i {
+  font-size: 20px;
   margin-right: 7px;
-  color: darkgray;
+  color: #a9a9a9;
+}
+.who-care-page .container .user-care-item .item-user .content-info i {
+  margin-right: 5px;
+  font-size: 20px;
+}
+.button-finish {
+  position: absolute;
+  bottom: 0;
+  padding: 12px 20px;
+  text-align: center;
+  width: 100%;
+  background: #2ecc71;
+  outline: none;
+  cursor: pointer;
+  color: #fff;
+  font-size: 18px;
+  text-transform: uppercase;
+  border-color: #2ecc71;
+}
+.pr-rs {
+  padding-right: 24px;
 }
 @media (min-width: 576px) {
   .container {
@@ -126,6 +197,18 @@
   .container {
     max-width: 960px;
   }
+  .pr-rs {
+    padding-right: calc(280px);
+  }
+}
+@media (max-width: 575px) {
+  .container {
+    max-width: 95%;
+  }
+  .time-create {
+    flex-direction: column;
+    align-items: flex-start !important;
+  }
 }
 @keyframes stretchbounce {
   0% {
@@ -140,7 +223,7 @@
   75% {
     transform: scale(1.2);
   }
-  100% {
+  to {
     transform: scale(1);
   }
 }

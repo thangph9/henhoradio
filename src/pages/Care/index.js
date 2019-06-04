@@ -93,12 +93,6 @@ class Care extends PureComponent {
     });
   };
 
-  handleFinishButton() {
-    this.setState({
-      visible: false,
-    });
-  }
-
   callback(key) {
     console.log(key);
   }
@@ -110,11 +104,6 @@ class Care extends PureComponent {
       pathname: '/home/care',
       search: `?page=1&type=${type}&age=${e.target.value}&sortby=${sort}`,
     });
-  }
-
-  checkLocaton(value) {
-    if (value === 'HN') return 'Hà Nội';
-    return 'Hồ Chí Minh';
   }
 
   onChangeSort(e) {
@@ -136,6 +125,7 @@ class Care extends PureComponent {
   }
 
   handleChangePagination(v1) {
+    window.scrollTo(0, 0);
     const age = this.props.location.query.age;
     const type = this.props.location.query.type;
     const sort = this.props.location.query.sortby;
@@ -161,136 +151,130 @@ class Care extends PureComponent {
         <div className={styles.container}>
           <div className={styles['user-care-item']}>
             <div className={styles['title-care']}>
-              <div className={styles.title}>
-                <div className={styles['button-filter']}>
-                  <Button
-                    id={styles['button-filter']}
-                    type="primary"
-                    icon="control"
-                    onClick={this.showDrawer}
-                  >
-                    Lọc dữ liệu
-                  </Button>
-                  <Drawer
-                    title="Lựa chọn"
-                    placement="right"
-                    onClose={this.onClose}
-                    visible={this.state.visible}
-                  >
-                    <div style={{ padding: '20px' }}>
-                      <div>
-                        <h3 style={{ color: 'gray' }}>Sắp xếp</h3>
-                        <hr style={{ marginBottom: '15px' }} />
-                        <RadioGroup
-                          onChange={e => this.onChangeSort(e)}
-                          value={this.props.location.query.sortby}
+              <div className={styles['button-filter']}>
+                <Button
+                  id={styles['button-filter']}
+                  type="primary"
+                  icon="control"
+                  onClick={this.showDrawer}
+                >
+                  Lọc dữ liệu
+                </Button>
+                <Drawer
+                  title="Lựa chọn"
+                  placement="right"
+                  onClose={this.onClose}
+                  visible={this.state.visible}
+                >
+                  <div style={{ padding: '20px' }}>
+                    <div>
+                      <h3 style={{ color: 'gray' }}>Sắp xếp</h3>
+                      <hr style={{ marginBottom: '15px' }} />
+                      <RadioGroup
+                        onChange={e => this.onChangeSort(e)}
+                        value={this.props.location.query.sortby}
+                      >
+                        <Radio
+                          style={{ display: 'block', marginBottom: '10px', marginLeft: '15px' }}
+                          value="descage"
                         >
-                          <Radio
-                            style={{ display: 'block', marginBottom: '10px', marginLeft: '15px' }}
-                            value="descage"
-                          >
-                            Tuổi giảm dần (tài khoản)
-                          </Radio>
-                          <Radio
-                            style={{ display: 'block', marginBottom: '10px', marginLeft: '15px' }}
-                            value="ascage"
-                          >
-                            Tuổi tăng dần (tài khoản)
-                          </Radio>
-                          <Radio
-                            style={{ display: 'block', marginBottom: '10px', marginLeft: '15px' }}
-                            value="newest_up"
-                          >
-                            Lên sóng mới nhất (thính giả)
-                          </Radio>
-                          <Radio
-                            style={{ display: 'block', marginBottom: '10px', marginLeft: '15px' }}
-                            value="oldest_up"
-                          >
-                            Lên sóng cũ nhất (thính giả)
-                          </Radio>
-                          <Radio
-                            style={{ display: 'block', marginBottom: '10px', marginLeft: '15px' }}
-                            value="oldest_care"
-                          >
-                            Ngày quan tâm cũ nhất (tất cả)
-                          </Radio>
-                          <Radio
-                            style={{ display: 'block', marginBottom: '10px', marginLeft: '15px' }}
-                            value="newest_care"
-                          >
-                            Ngày quan tâm mới nhất (tất cả)
-                          </Radio>
-                        </RadioGroup>
-                      </div>
-                      <div style={{ marginTop: '20px' }}>
-                        <h3 style={{ color: 'gray' }}>Nhóm</h3>
-                        <hr style={{ marginBottom: '15px' }} />
-                        <RadioGroup
-                          onChange={e => this.onChangeType(e)}
-                          value={this.props.location.query.type}
+                          Tuổi giảm dần (tài khoản)
+                        </Radio>
+                        <Radio
+                          style={{ display: 'block', marginBottom: '10px', marginLeft: '15px' }}
+                          value="ascage"
                         >
-                          <Radio
-                            style={{ display: 'block', marginBottom: '10px', marginLeft: '15px' }}
-                            value="user"
-                          >
-                            Tài khoản
-                          </Radio>
-                          <Radio
-                            style={{ display: 'block', marginBottom: '10px', marginLeft: '15px' }}
-                            value="member"
-                          >
-                            Thính giả
-                          </Radio>
-                          <Radio
-                            style={{ display: 'block', marginBottom: '10px', marginLeft: '15px' }}
-                            value="all"
-                          >
-                            Tất cả
-                          </Radio>
-                        </RadioGroup>
-                      </div>
-                      <div style={{ marginTop: '20px' }}>
-                        <h3 style={{ color: 'gray' }}>Độ tuổi (tài khoản)</h3>
-                        <hr style={{ marginBottom: '15px' }} />
-                        <RadioGroup
-                          onChange={e => this.onChangeRadioAge(e)}
-                          value={this.props.location.query.age}
+                          Tuổi tăng dần (tài khoản)
+                        </Radio>
+                        <Radio
+                          style={{ display: 'block', marginBottom: '10px', marginLeft: '15px' }}
+                          value="newest_up"
                         >
-                          <Radio
-                            style={{ display: 'block', marginBottom: '10px', marginLeft: '15px' }}
-                            value="18_24"
-                          >
-                            Từ 18 - 24 tuổi
-                          </Radio>
-                          <Radio
-                            style={{ display: 'block', marginBottom: '10px', marginLeft: '15px' }}
-                            value="25_35"
-                          >
-                            Từ 25 - 35 tuổi
-                          </Radio>
-                          <Radio
-                            style={{ display: 'block', marginBottom: '10px', marginLeft: '15px' }}
-                            value="36"
-                          >
-                            Ngoài 35 tuổi
-                          </Radio>
-                          <Radio
-                            style={{ display: 'block', marginBottom: '10px', marginLeft: '15px' }}
-                            value="all"
-                          >
-                            Tất cả
-                          </Radio>
-                        </RadioGroup>
-                      </div>
+                          Lên sóng mới nhất (thính giả)
+                        </Radio>
+                        <Radio
+                          style={{ display: 'block', marginBottom: '10px', marginLeft: '15px' }}
+                          value="oldest_up"
+                        >
+                          Lên sóng cũ nhất (thính giả)
+                        </Radio>
+                        <Radio
+                          style={{ display: 'block', marginBottom: '10px', marginLeft: '15px' }}
+                          value="oldest_care"
+                        >
+                          Ngày quan tâm cũ nhất (tất cả)
+                        </Radio>
+                        <Radio
+                          style={{ display: 'block', marginBottom: '10px', marginLeft: '15px' }}
+                          value="newest_care"
+                        >
+                          Ngày quan tâm mới nhất (tất cả)
+                        </Radio>
+                      </RadioGroup>
                     </div>
-                  </Drawer>
-                </div>
+                    <div style={{ marginTop: '20px' }}>
+                      <h3 style={{ color: 'gray' }}>Nhóm</h3>
+                      <hr style={{ marginBottom: '15px' }} />
+                      <RadioGroup
+                        onChange={e => this.onChangeType(e)}
+                        value={this.props.location.query.type}
+                      >
+                        <Radio
+                          style={{ display: 'block', marginBottom: '10px', marginLeft: '15px' }}
+                          value="user"
+                        >
+                          Tài khoản
+                        </Radio>
+                        <Radio
+                          style={{ display: 'block', marginBottom: '10px', marginLeft: '15px' }}
+                          value="member"
+                        >
+                          Thính giả
+                        </Radio>
+                        <Radio
+                          style={{ display: 'block', marginBottom: '10px', marginLeft: '15px' }}
+                          value="all"
+                        >
+                          Tất cả
+                        </Radio>
+                      </RadioGroup>
+                    </div>
+                    <div style={{ marginTop: '20px' }}>
+                      <h3 style={{ color: 'gray' }}>Độ tuổi (tài khoản)</h3>
+                      <hr style={{ marginBottom: '15px' }} />
+                      <RadioGroup
+                        onChange={e => this.onChangeRadioAge(e)}
+                        value={this.props.location.query.age}
+                      >
+                        <Radio
+                          style={{ display: 'block', marginBottom: '10px', marginLeft: '15px' }}
+                          value="18_24"
+                        >
+                          Từ 18 - 24 tuổi
+                        </Radio>
+                        <Radio
+                          style={{ display: 'block', marginBottom: '10px', marginLeft: '15px' }}
+                          value="25_35"
+                        >
+                          Từ 25 - 35 tuổi
+                        </Radio>
+                        <Radio
+                          style={{ display: 'block', marginBottom: '10px', marginLeft: '15px' }}
+                          value="36"
+                        >
+                          Ngoài 35 tuổi
+                        </Radio>
+                        <Radio
+                          style={{ display: 'block', marginBottom: '10px', marginLeft: '15px' }}
+                          value="all"
+                        >
+                          Tất cả
+                        </Radio>
+                      </RadioGroup>
+                    </div>
+                  </div>
+                </Drawer>
               </div>
-              <div className={styles.title}>Người dùng</div>
-              <div className={styles.title}>Thời gian quan tâm</div>
-              <div className={styles.title}>Chi tiết</div>
-              <div className={styles.title}>Chỉnh sửa</div>
             </div>
             {dataUserCare
               .filter((v, i, self) => {
@@ -324,59 +308,39 @@ class Care extends PureComponent {
               })
               .filter((value, index) => index >= page * 5 - 5 && index < page * 5)
               .map((v, i) => (
-                <div key={i} className={styles['content-info-item']}>
-                  <div className={styles.avatar}>
-                    <div
-                      className={styles['avatar-user']}
-                      style={this.background(v.avatar, v.gender)}
-                    />
-                  </div>
-                  <div className={styles['info-user']}>
-                    <div className={styles['more-info']}>{v.name}</div>
-                    <div className={styles['more-info']}>
-                      <span className={styles['name-of-user']}>{v.address}</span>
-                      {v.type === 'user' && (
-                        <span className={styles['age-of-user']}>{v.age} tuổi</span>
-                      )}
-                      {v.type === 'member' && (
-                        <div className={styles['age-of-user']}>
-                          Lên sóng: {moment(v.timeup).format('DD/MM/YYYY')}
-                        </div>
-                      )}
-                    </div>
-                  </div>
-                  <div className={styles['info-user']}>
-                    <div className={styles['more-info']}>
-                      {moment(v.created).format('HH:mm DD/MM/YYYY')}
-                    </div>
-                  </div>
-                  <div className={styles['info-user']}>
-                    <div className={styles['more-info']}>
-                      {v.type === 'user' ? (
-                        <Link to={`/home/other-profile?id=${v.user_id.replace(/-/g, '')}`}>
-                          {v.name}
-                        </Link>
-                      ) : (
-                        <Link
-                          to={`/home/detail-list?page=1&radio=${v.location}&gender=${
+                <div key={i} className={`${styles['item-user']} ${styles['pr-rs']}`}>
+                  <Link
+                    to={
+                      v.type === 'user'
+                        ? `/home/other-profile?id=${v.user_id.replace(/-/g, '')}`
+                        : `/home/detail-list?page=1&radio=${v.location}&gender=${
                             v.gender
-                          }&date=${moment(v.timeup).format('D_M_YYYY')}`}
-                        >
-                          Thính giả lên sóng
-                        </Link>
-                      )}
+                          }&date=${moment(v.timeup).format('D_M_YYYY')}`
+                    }
+                  >
+                    <div className={styles['content-info']}>
+                      <h3>
+                        {v.name},{' '}
+                        {v.type === 'user'
+                          ? `${v.age} tuổi`
+                          : `đài ${v.location === 'HN' ? 'Hà Nội' : 'Hồ Chí Minh'}`}
+                        , {v.address}
+                      </h3>
+                      <div className={styles['avatar-user']}>
+                        <div style={this.background(v.avatar, v.gender)} />
+                      </div>
+                      <div className={styles['detail-info']}>
+                        Lorem Ipsum is simply dummy text of the printing and typesetting industry.
+                        Lorem Ipsum has been the standard dummy text ever since the 1500s Lorem
+                        Ipsum is simply dummy text of the printing and typesetting industry. Lorem
+                        Ipsum has been the standard dummy text ever since the 1500s
+                      </div>
+                      <div className={styles['time-create']}>
+                        <Icon type="clock-circle" />
+                        {moment(v.created).format('DD/MM/YYYY')}
+                      </div>
                     </div>
-                  </div>
-                  <div className={styles['info-user']}>
-                    <div className={styles['more-info']}>
-                      <span
-                        onClick={() => this.handleClickChangeCare(v)}
-                        className={styles['delete-care']}
-                      >
-                        Bỏ quan tâm
-                      </span>
-                    </div>
-                  </div>
+                  </Link>
                 </div>
               ))}
           </div>
