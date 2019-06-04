@@ -22,7 +22,7 @@
 import { PureComponent } from 'react';
 import { connect } from 'dva';
 import { Link, Redirect } from 'react-router-dom';
-import { Drawer, Button, Radio, Icon, Pagination } from 'antd';
+import { Drawer, Button, Radio, Icon, Pagination, Popconfirm } from 'antd';
 import moment from 'moment';
 import styles from './index.less';
 
@@ -133,6 +133,22 @@ class Care extends PureComponent {
       pathname: `/home/care`,
       search: `?page=${v1}&type=${type}&age=${age}&sortby=${sort}`,
     });
+  }
+
+  rediercPage(value) {
+    if (value.type === 'user') {
+      this.props.history.push({
+        pathname: `/home/other-profile`,
+        search: `?id=${value.user_id.replace(/-/g, '')}`,
+      });
+    } else {
+      this.props.history.push({
+        pathname: `/home/detail-list`,
+        search: `?page=1&radio=${value.location}&gender=${value.gender}&date=${moment(
+          value.timeup
+        ).format('D_M_YYYY')}`,
+      });
+    }
   }
 
   render() {
@@ -309,38 +325,33 @@ class Care extends PureComponent {
               .filter((value, index) => index >= page * 5 - 5 && index < page * 5)
               .map((v, i) => (
                 <div key={i} className={`${styles['item-user']} ${styles['pr-rs']}`}>
-                  <Link
-                    to={
-                      v.type === 'user'
-                        ? `/home/other-profile?id=${v.user_id.replace(/-/g, '')}`
-                        : `/home/detail-list?page=1&radio=${v.location}&gender=${
-                            v.gender
-                          }&date=${moment(v.timeup).format('D_M_YYYY')}`
-                    }
-                  >
+                  <div>
                     <div className={styles['content-info']}>
-                      <h3>
-                        {v.name},{' '}
-                        {v.type === 'user'
-                          ? `${v.age} tuổi`
-                          : `đài ${v.location === 'HN' ? 'Hà Nội' : 'Hồ Chí Minh'}`}
-                        , {v.address}
-                      </h3>
-                      <div className={styles['avatar-user']}>
+                      <h3 onClick={() => this.rediercPage(v)}>{v.name}</h3>
+                      <div onClick={() => this.rediercPage(v)} className={styles['avatar-user']}>
                         <div style={this.background(v.avatar, v.gender)} />
                       </div>
-                      <div className={styles['detail-info']}>
-                        Lorem Ipsum is simply dummy text of the printing and typesetting industry.
-                        Lorem Ipsum has been the standard dummy text ever since the 1500s Lorem
-                        Ipsum is simply dummy text of the printing and typesetting industry. Lorem
-                        Ipsum has been the standard dummy text ever since the 1500s
+                      <div onClick={() => this.rediercPage(v)} className={styles['detail-info']}>
+                        <p>Năm sinh: {v.age}</p>
+                        <p>Địa chỉ: {v.address}</p>
                       </div>
                       <div className={styles['time-create']}>
                         <Icon type="clock-circle" />
                         {moment(v.created).format('DD/MM/YYYY')}
                       </div>
+                      <Popconfirm
+                        placement="topLeft"
+                        title={`Bạn có chắc muốn xóa ${v.name} ra khỏi danh sách quan tâm`}
+                        onConfirm={() => this.handleClickChangeCare(v)}
+                        okText="Yes"
+                        cancelText="No"
+                      >
+                        <div className={styles['remover-care']}>
+                          <Icon type="close-circle" /> Bỏ quan tâm
+                        </div>
+                      </Popconfirm>
                     </div>
-                  </Link>
+                  </div>
                 </div>
               ))}
           </div>

@@ -101,9 +101,11 @@
   font-size: 21px;
   line-height: 27px;
   font-weight: 700;
+  cursor: pointer;
 }
 .who-care-page .container .user-care-item .item-user .content-info .avatar-user {
   position: absolute;
+  cursor: pointer;
   top: 24px;
   left: 24px;
   width: 156px;
@@ -120,11 +122,14 @@
 }
 .who-care-page .container .user-care-item .item-user .content-info .detail-info {
   color: #262e40;
+  cursor: pointer;
   margin-top: 9px;
   font-size: 14px;
 }
+.who-care-page .container .user-care-item .item-user .content-info .detail-info p {
+  margin-bottom: 10px;
+}
 .who-care-page .container .user-care-item .item-user .content-info .time-create {
-  margin-top: 12px;
   line-height: 30px;
   color: #ababab;
   display: flex;
@@ -133,6 +138,13 @@
 .who-care-page .container .user-care-item .item-user .content-info i {
   margin-right: 5px;
   font-size: 20px;
+  cursor: pointer;
+}
+.who-care-page .container .user-care-item .item-user .content-info .remover-care {
+  cursor: pointer;
+  display: flex;
+  color: #d63031;
+  align-items: center;
 }
 .button-finish {
   position: absolute;

@@ -22,7 +22,7 @@
 import { PureComponent } from 'react';
 import { connect } from 'dva';
 import { Link, Redirect } from 'react-router-dom';
-import { Drawer, Button, Radio, Icon, Pagination } from 'antd';
+import { Drawer, Button, Radio, Icon, Pagination, Popconfirm } from 'antd';
 import moment from 'moment';
 import styles from './index.less';
 
@@ -278,9 +278,7 @@ class WhoCare extends PureComponent {
                 <div key={i} className={`${styles['item-user']} ${styles['pr-rs']}`}>
                   <div>
                     <div className={styles['content-info']}>
-                      <h3 onClick={() => this.rediercPage(v.user_id)}>
-                        {v.name}, {v.age} tuổi, {v.address}
-                      </h3>
+                      <h3 onClick={() => this.rediercPage(v.user_id)}>{v.name}</h3>
                       <div
                         onClick={() => this.rediercPage(v.user_id)}
                         className={styles['avatar-user']}
@@ -291,37 +289,48 @@ class WhoCare extends PureComponent {
                         onClick={() => this.rediercPage(v.user_id)}
                         className={styles['detail-info']}
                       >
-                        Lorem Ipsum is simply dummy text of the printing and typesetting industry.
-                        Lorem Ipsum has been the standard dummy text ever since the 1500s Lorem
-                        Ipsum is simply dummy text of the printing and typesetting industry. Lorem
-                        Ipsum has been the standard dummy text ever since the 1500s
+                        <p>Năm sinh: {v.age}</p>
+                        <p>Địa chỉ: {v.address}</p>
                       </div>
                       <div className={styles['time-create']}>
                         <span className={styles['time-icon']}>
                           <Icon type="clock-circle" />
                           {moment(v.created).format('DD/MM/YYYY')}
                         </span>
-                        <div
-                          className={
-                            this.checkCare(v.user_id)
-                              ? `${styles.cared} ${styles['item-care']}`
-                              : `${styles['not-care']} ${styles['item-care']}`
-                          }
-                          onClick={() =>
-                            this.handleClickChangeCare(v, `click-${i}`, this.checkCare(v.user_id))
-                          }
-                        >
-                          <Icon
-                            style={!this.state[`click-${i}`] ? { animation: 'none' } : {}}
-                            type="star"
-                            theme="filled"
-                          />
-                          {this.checkCare(v.user_id) ? (
-                            <span>Đã quan tâm</span>
-                          ) : (
+                        {this.checkCare(v.user_id) ? (
+                          <Popconfirm
+                            placement="topLeft"
+                            title={`Bạn có chắc muốn bỏ quan tâm ${v.name} không?`}
+                            onConfirm={() =>
+                              this.handleClickChangeCare(v, `click-${i}`, this.checkCare(v.user_id))
+                            }
+                            okText="Yes"
+                            cancelText="No"
+                          >
+                            <div className={`${styles.cared} ${styles['item-care']}`}>
+                              <Icon
+                                style={!this.state[`click-${i}`] ? { animation: 'none' } : {}}
+                                type="star"
+                                theme="filled"
+                              />
+                              <span>Đã quan tâm</span>
+                            </div>
+                          </Popconfirm>
+                        ) : (
+                          <div
+                            className={`${styles['not-care']} ${styles['item-care']}`}
+                            onClick={() =>
+                              this.handleClickChangeCare(v, `click-${i}`, this.checkCare(v.user_id))
+                            }
+                          >
+                            <Icon
+                              style={!this.state[`click-${i}`] ? { animation: 'none' } : {}}
+                              type="star"
+                              theme="filled"
+                            />
                             <span>Quan tâm lại</span>
-                          )}
-                        </div>
+                          </div>
+                        )}
                       </div>
                     </div>
                   </div>

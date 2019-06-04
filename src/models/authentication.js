@@ -227,6 +227,7 @@ export default {
           type: 'changeCare',
           payload,
         });
+        message.success('Thay đổi hoàn tất');
       } else {
         message.error('Thay đổi thất bại !');
       }
