@@ -946,14 +946,16 @@ function getUserById(req, res) {
       },
       callback => {
         try {
-          let careInfo = userCareDemo.find(
-            ele =>
-              ele.user_id1.toString() === legit.userid.toString() &&
-              ele.user_id2.toString() === userid.toString()
-          );
-          if (careInfo) {
-            care = true;
-          }
+          if (legit.userid) {
+            let careInfo = userCareDemo.find(
+              ele =>
+                ele.user_id1.toString() === legit.userid.toString() &&
+                ele.user_id2.toString() === userid.toString()
+            );
+            if (careInfo) {
+              care = true;
+            }
+          } else care = undefined;
           callback(null, null);
         } catch (error) {
           callback(error);

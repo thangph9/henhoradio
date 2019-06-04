@@ -854,15 +854,20 @@ function getUserById(req, res) {
       },
       callback => {
         try {
-          models.instance.userCare.find(
-            { user_id1: models.uuidFromString(legit.userid), user_id2: userid },
-            function(err, results) {
-              if (results && results.length > 0) {
-                care = true;
+          if (legit.userid) {
+            models.instance.userCare.find(
+              { user_id1: models.uuidFromString(legit.userid), user_id2: userid },
+              function(err, results) {
+                if (results && results.length > 0) {
+                  care = true;
+                }
+                callback(err, null);
               }
-              callback(err, null);
-            }
-          );
+            );
+          } else {
+            care = undefined;
+            callback(null, null);
+          }
         } catch (error) {
           callback(error);
         }

@@ -390,13 +390,15 @@ class AdvancedProfile extends Component {
                   <span className={styles['address-of-user']}>{dataUser.address}</span>
                 </div>
               </div>
-              <div
-                onClick={() => this.handleClickChangeCare()}
-                data-care-star={this.state.care}
-                className={styles['care-star']}
-              >
-                <Icon type="star" theme="filled" /> Quan tâm
-              </div>
+              {this.state.care !== undefined && (
+                <div
+                  onClick={() => this.handleClickChangeCare()}
+                  data-care-star={this.state.care}
+                  className={styles['care-star']}
+                >
+                  <Icon type="star" theme="filled" /> Quan tâm
+                </div>
+              )}
             </div>
           </div>
         ) : (
