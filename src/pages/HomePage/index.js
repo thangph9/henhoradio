@@ -419,8 +419,8 @@ class NewFeed extends PureComponent {
                         <LazyImage gender={v.gender} number={i % 20} avatar={v.avatar} />
                         <div className={styles['title-cart']}>
                           <span className={styles.detail}>{v.fullname}</span>
-                          <span className={styles.detail}>,</span>
-                          <span className={styles.detail}>{v.age}</span>
+                          <span className={styles.detail}>, </span>
+                          <span className={styles.detail}>{v.age} tuổi</span>
                           <span className={styles.detail}>{v.address}</span>
                         </div>
                       </div>
