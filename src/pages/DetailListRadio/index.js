@@ -585,70 +585,69 @@ class ListRadio extends PureComponent {
                             <span className={styles['span-discription']}>Địa chỉ: {v.address}</span>
                           </div>
                           <div>
-                            <div>
-                              <Icon style={{ paddingRight: '8px' }} type="smile" />
+                            <Icon style={{ paddingRight: '8px' }} type="smile" />
+                            <span className={styles['span-discription']}>
+                              TT hôn nhân: {v.relationship === 'SINGLE' ? 'Độc thân' : 'Đã ly hôn'}
+                            </span>
+                          </div>
+                          <div>
+                            <Icon style={{ paddingRight: '8px' }} type="smile" />
+                            <span className={styles['span-discription']}>
+                              Mã số kết bạn: {v.gcode}
+                            </span>
+                          </div>
+                          <div
+                            className={
+                              this.checkCare(v.membersid)
+                                ? `${styles['duration-item']} ${styles.cared}`
+                                : styles['duration-item']
+                            }
+                          >
+                            <Icon style={{ paddingRight: '8px' }} type="clock-circle" />
+                            <span className={styles['span-discription']}>
+                              {this.getTimeInAudio(
+                                this[`input-played-${v.audio}`]
+                                  ? this[`input-played-${v.audio}`].value
+                                  : 0
+                              )}
+                            </span>{' '}
+                            /{' '}
+                            {this.state[`duration-${v.audio}`] ? (
                               <span className={styles['span-discription']}>
-                                TT hôn nhân:{' '}
-                                {v.relationship === 'SINGLE' ? 'Độc thân' : 'Đã ly hôn'}
+                                {this.getTimeInAudio(
+                                  this.state[`duration-${v.audio}`]
+                                    ? this.state[`duration-${v.audio}`]
+                                    : 0
+                                )}
                               </span>
-                            </div>
-                            <div>
-                              <div
-                                className={
-                                  this.checkCare(v.membersid)
-                                    ? `${styles['duration-item']} ${styles.cared}`
-                                    : styles['duration-item']
+                            ) : (
+                              <span className={styles['span-discription']}>00:00</span>
+                            )}
+                            {this.checkCare(v.membersid) ? (
+                              <Popconfirm
+                                placement="topLeft"
+                                title={`Bạn có chắc muốn xóa ${v.name} ra khỏi danh sách quan tâm?`}
+                                onConfirm={() =>
+                                  this.handleChangeCare(v, this.checkCare(v.membersid))
                                 }
+                                okText="Có"
+                                cancelText="Không"
                               >
-                                <Icon style={{ paddingRight: '8px' }} type="clock-circle" />
-                                <span className={styles['span-discription']}>
-                                  {this.getTimeInAudio(
-                                    this[`input-played-${v.audio}`]
-                                      ? this[`input-played-${v.audio}`].value
-                                      : 0
-                                  )}
-                                </span>{' '}
-                                /{' '}
-                                {this.state[`duration-${v.audio}`] ? (
-                                  <span className={styles['span-discription']}>
-                                    {this.getTimeInAudio(
-                                      this.state[`duration-${v.audio}`]
-                                        ? this.state[`duration-${v.audio}`]
-                                        : 0
-                                    )}
-                                  </span>
-                                ) : (
-                                  <span className={styles['span-discription']}>00:00</span>
-                                )}
-                                {this.checkCare(v.membersid) ? (
-                                  <Popconfirm
-                                    placement="topLeft"
-                                    title={`Bạn có chắc muốn xóa ${
-                                      v.name
-                                    } ra khỏi danh sách quan tâm?`}
-                                    onConfirm={() =>
-                                      this.handleChangeCare(v, this.checkCare(v.membersid))
-                                    }
-                                    okText="Có"
-                                    cancelText="Không"
-                                  >
-                                    <Tooltip title="Đã quan tâm" placement="topLeft">
-                                      <Icon type="star" theme="filled" />
-                                    </Tooltip>
-                                  </Popconfirm>
-                                ) : (
-                                  <Tooltip title="Quan tâm ngay" placement="topLeft">
-                                    <Icon
-                                      onClick={() =>
-                                        this.handleChangeCare(v, this.checkCare(v.membersid))
-                                      }
-                                      type="star"
-                                      theme="filled"
-                                    />
-                                  </Tooltip>
-                                )}
-                              </div>
-                            </div>
+                                <Tooltip title="Đã quan tâm" placement="topLeft">
+                                  <Icon type="star" theme="filled" />
+                                </Tooltip>
+                              </Popconfirm>
+                            ) : (
+                              <Tooltip title="Quan tâm ngay" placement="topLeft">
+                                <Icon
+                                  onClick={() =>
+                                    this.handleChangeCare(v, this.checkCare(v.membersid))
+                                  }
+                                  type="star"
+                                  theme="filled"
+                                />
+                              </Tooltip>
+                            )}
                           </div>
                         </div>
                         <a
