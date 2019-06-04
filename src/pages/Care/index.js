@@ -345,8 +345,8 @@ class Care extends PureComponent {
                         placement="topLeft"
                         title={`Bạn có chắc muốn xóa ${v.name} ra khỏi danh sách quan tâm?`}
                         onConfirm={() => this.handleClickChangeCare(v)}
-                        okText="Yes"
-                        cancelText="No"
+                        okText="Có"
+                        cancelText="Không"
                       >
                         <div className={styles['remover-care']}>
                           <Icon type="close-circle" /> Bỏ quan tâm

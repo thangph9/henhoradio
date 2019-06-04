@@ -304,8 +304,8 @@ class WhoCare extends PureComponent {
                             onConfirm={() =>
                               this.handleClickChangeCare(v, `click-${i}`, this.checkCare(v.user_id))
                             }
-                            okText="Yes"
-                            cancelText="No"
+                            okText="Có"
+                            cancelText="Không"
                           >
                             <div className={`${styles.cared} ${styles['item-care']}`}>
                               <Icon
