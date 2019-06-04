@@ -348,9 +348,7 @@ class Care extends PureComponent {
                         okText="Có"
                         cancelText="Không"
                       >
-                        <div className={styles['remover-care']}>
-                          <Icon type="close-circle" /> Bỏ quan tâm
-                        </div>
+                        <div className={styles['remover-care']}>Bỏ quan tâm</div>
                       </Popconfirm>
                     </div>
                   </div>
