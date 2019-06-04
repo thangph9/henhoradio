@@ -1429,7 +1429,7 @@ function getUserCare(req, res) {
                   obj.name = results[0].fullname;
                   obj.gender = results[0].gender;
                   obj.address = results[0].address;
-                  obj.age = new Date().getFullYear() - results[0].dob_year;
+                  obj.age = results[0].dob_year;
                   obj.user_id = results[0].user_id;
                   obj.created = e.created;
                   obj.avatar = results[0].avatar;
@@ -1464,6 +1464,8 @@ function getUserCare(req, res) {
                   obj.address = results[0].address;
                   obj.location = results[0].location;
                   obj.user_id = results[0].membersid;
+                  obj.age = results[0].year;
+                  obj.gcode = results[0].gcode;
                   obj.created = e.created;
                   obj.avatar = null;
                   obj.timeup = results[0].timeup;
@@ -1547,7 +1549,7 @@ function getUserWhoCare(req, res) {
                   obj.name = results[0].fullname;
                   obj.gender = results[0].gender;
                   obj.address = results[0].address;
-                  obj.age = new Date().getFullYear() - results[0].dob_year;
+                  obj.age = results[0].dob_year;
                   obj.user_id = results[0].user_id;
                   obj.created = e.created;
                   arr.push(obj);

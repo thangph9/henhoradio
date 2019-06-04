@@ -334,6 +334,8 @@ class Care extends PureComponent {
                       <div onClick={() => this.rediercPage(v)} className={styles['detail-info']}>
                         <p>Năm sinh: {v.age}</p>
                         <p>Địa chỉ: {v.address}</p>
+                        <p>Giới tính: {v.gender === 'male' ? 'Nam' : 'Nữ'}</p>
+                        {v.type === 'member' && <p>Mã số KB: {v.gcode}</p>}
                       </div>
                       <div className={styles['time-create']}>
                         <Icon type="clock-circle" />
@@ -341,7 +343,7 @@ class Care extends PureComponent {
                       </div>
                       <Popconfirm
                         placement="topLeft"
-                        title={`Bạn có chắc muốn xóa ${v.name} ra khỏi danh sách quan tâm`}
+                        title={`Bạn có chắc muốn xóa ${v.name} ra khỏi danh sách quan tâm?`}
                         onConfirm={() => this.handleClickChangeCare(v)}
                         okText="Yes"
                         cancelText="No"

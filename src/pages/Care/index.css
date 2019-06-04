@@ -92,8 +92,8 @@
 .who-care-page .container .user-care-item .item-user {
   padding-top: 24px;
   padding-bottom: 24px;
-  padding-left: calc(204px);
-  min-height: calc(204px);
+  padding-left: calc(248px);
+  min-height: calc(248px);
   border-bottom: solid 1px #e6e6e6;
   position: relative;
 }
@@ -108,8 +108,8 @@
   cursor: pointer;
   top: 24px;
   left: 24px;
-  width: 156px;
-  height: 156px;
+  width: 200px;
+  height: 200px;
 }
 .who-care-page .container .user-care-item .item-user .content-info .avatar-user div {
   background-position: center;
@@ -127,7 +127,7 @@
   font-size: 14px;
 }
 .who-care-page .container .user-care-item .item-user .content-info .detail-info p {
-  margin-bottom: 10px;
+  margin-bottom: 5px;
 }
 .who-care-page .container .user-care-item .item-user .content-info .time-create {
   line-height: 30px;
@@ -178,6 +178,6 @@
     max-width: 960px;
   }
   .pr-rs {
-    padding-right: calc(280px);
+    padding-right: calc(324px);
   }
 }
