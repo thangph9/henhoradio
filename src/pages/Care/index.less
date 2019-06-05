@@ -146,8 +146,6 @@
             display: flex;
             color: #d63031;
             align-items: center;
-            position: absolute;
-            bottom: 24px;
           }
         }
       }
@@ -187,5 +185,22 @@
   }
   .pr-rs {
     padding-right: calc(24px + 200px + 100px);
+  }
+}
+@media (max-width: 575px) {
+  .container {
+    max-width: 95%;
+  }
+  .time-create {
+    flex-direction: column;
+    align-items: flex-start !important;
+  }
+  .item-user {
+    padding-left: calc(24px + 125px + 24px) !important;
+    min-height: calc(24px + 125px + 24px) !important;
+    .avatar-user {
+      width: 125px !important;
+      height: 125px !important;
+    }
   }
 }

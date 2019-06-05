@@ -145,8 +145,6 @@
   display: flex;
   color: #d63031;
   align-items: center;
-  position: absolute;
-  bottom: 24px;
 }
 .button-finish {
   position: absolute;
@@ -181,5 +179,22 @@
   }
   .pr-rs {
     padding-right: calc(324px);
+  }
+}
+@media (max-width: 575px) {
+  .container {
+    max-width: 95%;
+  }
+  .time-create {
+    flex-direction: column;
+    align-items: flex-start !important;
+  }
+  .item-user {
+    padding-left: calc(173px) !important;
+    min-height: calc(173px) !important;
+  }
+  .item-user .avatar-user {
+    width: 125px !important;
+    height: 125px !important;
   }
 }
