@@ -18,7 +18,17 @@
 
 import React, { PureComponent } from 'react';
 import { connect } from 'dva';
-import { Skeleton, Icon, DatePicker, Select, Pagination, Row, Tooltip, Popconfirm } from 'antd';
+import {
+  Skeleton,
+  Icon,
+  DatePicker,
+  Select,
+  Pagination,
+  Row,
+  Tooltip,
+  Popconfirm,
+  Modal,
+} from 'antd';
 import PageLoading from '@/components/PageLoading';
 import { Redirect } from 'react-router-dom';
 import ReactPlayer from 'react-player';
@@ -540,13 +550,7 @@ class ListRadio extends PureComponent {
                 })
                 .map((v, i) => (
                   <div key={i} className={styles['cart-item']}>
-                    <article
-                      className={
-                        !this.state[`action-${v.membersid}`]
-                          ? `${styles['material-card']} ${styles['mc-active']}`
-                          : styles['material-card']
-                      }
-                    >
+                    <article className={`${styles['material-card']} ${styles['mc-active']}`}>
                       <h2>
                         <span className={styles['span-title']}>{v.name}</span>
                         <strong>
@@ -647,6 +651,16 @@ class ListRadio extends PureComponent {
                           className={styles['mc-btn-action']}
                         >
                           <Icon type="bars" />
+                          <Modal
+                            title={v.name}
+                            visible={!!this.state[`action-${v.membersid}`]}
+                            footer={null}
+                          >
+                            <p>
+                              Nội dung modal thông tin giới thiệu, Cách thức gửi tin nhắn Kết bạn
+                              HHR {v.gcode} Gửi 8779 để lấy thông tin kết bạn
+                            </p>
+                          </Modal>
                         </a>
                       </div>
                       <div className={styles['mc-footer']}>
