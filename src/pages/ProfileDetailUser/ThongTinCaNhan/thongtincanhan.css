@@ -1,7 +1,9 @@
 .thong-tin-ca-nhan {
   padding: 20px;
   display: flex;
+  display: -webkit-flex;
   align-items: center;
+  -webkit-align-items: center;
   background: #fff;
 }
 .form-edit {
@@ -9,9 +11,7 @@
 }
 .avatar-image {
   flex-basis: 40%;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
+  display: block;
 }
 .avatar-image .loading-circle {
   background: #1e1e1e;
@@ -23,6 +23,7 @@
   bottom: 0;
   right: 0;
   display: flex;
+  display: -webkit-flex;
   justify-content: center;
   z-index: 3;
   align-items: center;
@@ -110,17 +111,21 @@
 }
 .date-of-birth {
   display: flex;
+  display: -webkit-flex;
   justify-content: space-between;
 }
 .upload-button {
   display: flex;
+  display: -webkit-flex;
   justify-content: center;
   align-items: center;
   margin-top: 15px;
 }
 .more-information {
   display: flex;
+  display: -webkit-flex;
   flex-direction: column;
+  -webkit-flex-direction: column;
   align-items: center;
 }
 .item-info {
@@ -130,14 +135,16 @@
   background-position: center;
   background-repeat: no-repeat;
   background-size: cover;
-  position: relative;
   width: 180px;
   height: 180px;
   border-radius: 50%;
+  display: table;
+  margin: 0 auto;
 }
 @media (max-width: 767px) {
   .thong-tin-ca-nhan {
     flex-direction: column-reverse;
+    -webkit-flex-direction: column-reverse;
     align-items: unset;
   }
 }

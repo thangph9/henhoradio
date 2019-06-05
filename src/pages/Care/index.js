@@ -336,7 +336,6 @@ class Care extends PureComponent {
                         <p>Địa chỉ: {v.address}</p>
                         <p>Giới tính: {v.gender === 'male' ? 'Nam' : 'Nữ'}</p>
                         {v.type === 'member' && <p>Mã số KB: {v.gcode}</p>}
-                        <p>Ngày quan tâm: {moment(v.created).format('DD/MM/YYYY')}</p>
                       </div>
                       <Popconfirm
                         placement="topLeft"

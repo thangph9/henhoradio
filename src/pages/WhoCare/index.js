@@ -292,7 +292,6 @@ class WhoCare extends PureComponent {
                         <p>Năm sinh: {v.age}</p>
                         <p>Giới tính: {v.gender === 'male' ? 'Nam' : 'Nữ'}</p>
                         <p>Địa chỉ: {v.address}</p>
-                        <p>Ngày quan tâm : {moment(v.created).format('DD/MM/YYYY')}</p>
                       </div>
                     </div>
                     <div className={styles['time-create']}>

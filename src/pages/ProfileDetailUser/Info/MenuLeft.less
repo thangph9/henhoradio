@@ -6,11 +6,15 @@
   width: 100%;
   margin-right: auto;
   margin-left: auto;
-  padding-bottom: 200px;
 }
 .main {
   overflow: auto;
   padding: 15px;
+  &::after {
+    content: '';
+    clear: both;
+    display: table;
+  }
 }
 .detail-left {
   background: #fff;
