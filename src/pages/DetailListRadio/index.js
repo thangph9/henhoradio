@@ -620,28 +620,24 @@ class ListRadio extends PureComponent {
                             {this.checkCare(v.membersid) ? (
                               <Popconfirm
                                 placement="topLeft"
-                                title={`Bạn có chắc muốn xóa ${v.name} ra khỏi danh sách quan tâm?`}
+                                title="Bạn muốn bỏ quan tâm?"
                                 onConfirm={() =>
                                   this.handleChangeCare(v, this.checkCare(v.membersid))
                                 }
                                 okText="Có"
                                 cancelText="Không"
                               >
-                                <Tooltip title="Đã quan tâm" placement="topLeft">
-                                  <Icon type="star" theme="filled" />
-                                </Tooltip>
+                                <Icon type="star" theme="filled" />
                               </Popconfirm>
                             ) : (
                               this.checkCare(v.membersid) !== undefined && (
-                                <Tooltip title="Quan tâm ngay" placement="topLeft">
-                                  <Icon
-                                    onClick={() =>
-                                      this.handleChangeCare(v, this.checkCare(v.membersid))
-                                    }
-                                    type="star"
-                                    theme="filled"
-                                  />
-                                </Tooltip>
+                                <Icon
+                                  onClick={() =>
+                                    this.handleChangeCare(v, this.checkCare(v.membersid))
+                                  }
+                                  type="star"
+                                  theme="filled"
+                                />
                               )
                             )}
                           </div>
