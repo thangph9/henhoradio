@@ -93,8 +93,8 @@
       .item-user {
         padding-top: 24px;
         padding-bottom: 24px;
-        padding-left: calc(24px + 156px + 24px);
-        min-height: calc(24px + 156px + 24px);
+        padding-left: calc(24px + 175px + 24px);
+        min-height: calc(24px + 175px + 24px);
         border-bottom: solid 1px #e6e6e6;
         position: relative;
         .content-info {
@@ -109,8 +109,8 @@
             cursor: pointer;
             top: 24px;
             left: 24px;
-            width: 156px;
-            height: 156px;
+            width: 175px;
+            height: 175px;
             div {
               background-position: center;
               background-size: cover;
@@ -126,49 +126,52 @@
             margin-top: 9px;
             font-size: 14px;
             cursor: pointer;
-          }
-          .time-create {
-            margin-top: 12px;
-            line-height: 30px;
-            color: #ababab;
-            display: flex;
-            align-items: center;
-            position: relative;
-            justify-content: space-between;
-            .time-icon {
-              display: flex;
-              align-items: center;
-            }
-            .item-care {
-              display: flex;
-              align-items: center;
-              cursor: pointer;
-            }
-            .cared {
-              color: gold;
-              i {
-                font-size: 20px;
-                margin-right: 7px;
-                color: gold;
-                animation: stretchbounce 0.5s ease-in-out;
-                -moz-animation: stretchbounce 0.5s ease-in-out;
-                -webkit-animation: stretchbounce 0.5s ease-in-out;
-                -o-animation: stretchbounce 0.5s ease-in-out;
-              }
-            }
-            .not-care {
-              color: #a9a9a9;
-              cursor: pointer;
-              i {
-                font-size: 20px;
-                margin-right: 7px;
-                color: #a9a9a9;
-              }
+            p {
+              margin-bottom: 5px;
             }
           }
+
           i {
             margin-right: 5px;
             font-size: 20px;
+          }
+        }
+        .time-create {
+          color: #ababab;
+          display: flex;
+          align-items: center;
+          bottom: 24px;
+          position: absolute;
+          justify-content: space-between;
+          .time-icon {
+            display: flex;
+            align-items: center;
+          }
+          .item-care {
+            display: flex;
+            align-items: center;
+            cursor: pointer;
+          }
+          .cared {
+            color: gold;
+            i {
+              font-size: 20px;
+              margin-right: 7px;
+              color: gold;
+              animation: stretchbounce 0.5s ease-in-out;
+              -moz-animation: stretchbounce 0.5s ease-in-out;
+              -webkit-animation: stretchbounce 0.5s ease-in-out;
+              -o-animation: stretchbounce 0.5s ease-in-out;
+            }
+          }
+          .not-care {
+            color: #a9a9a9;
+            cursor: pointer;
+            i {
+              font-size: 20px;
+              margin-right: 7px;
+              color: #a9a9a9;
+            }
           }
         }
       }
@@ -207,7 +210,7 @@
     max-width: 960px;
   }
   .pr-rs {
-    padding-right: calc(24px + 156px + 100px);
+    padding-right: calc(24px + 175px + 100px);
   }
 }
 @media (max-width: 575px) {

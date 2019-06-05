@@ -290,48 +290,46 @@ class WhoCare extends PureComponent {
                         className={styles['detail-info']}
                       >
                         <p>Năm sinh: {v.age}</p>
+                        <p>Giới tính: {v.gender === 'male' ? 'Nam' : 'Nữ'}</p>
                         <p>Địa chỉ: {v.address}</p>
+                        <p>Ngày quan tâm : {moment(v.created).format('DD/MM/YYYY')}</p>
                       </div>
-                      <div className={styles['time-create']}>
-                        <span className={styles['time-icon']}>
-                          <Icon type="clock-circle" />
-                          {moment(v.created).format('DD/MM/YYYY')}
-                        </span>
-                        {this.checkCare(v.user_id) ? (
-                          <Popconfirm
-                            placement="topLeft"
-                            title={`Bạn có chắc muốn bỏ quan tâm ${v.name} không?`}
-                            onConfirm={() =>
-                              this.handleClickChangeCare(v, `click-${i}`, this.checkCare(v.user_id))
-                            }
-                            okText="Có"
-                            cancelText="Không"
-                          >
-                            <div className={`${styles.cared} ${styles['item-care']}`}>
-                              <Icon
-                                style={!this.state[`click-${i}`] ? { animation: 'none' } : {}}
-                                type="star"
-                                theme="filled"
-                              />
-                              <span>Đã quan tâm</span>
-                            </div>
-                          </Popconfirm>
-                        ) : (
-                          <div
-                            className={`${styles['not-care']} ${styles['item-care']}`}
-                            onClick={() =>
-                              this.handleClickChangeCare(v, `click-${i}`, this.checkCare(v.user_id))
-                            }
-                          >
+                    </div>
+                    <div className={styles['time-create']}>
+                      {this.checkCare(v.user_id) ? (
+                        <Popconfirm
+                          placement="topLeft"
+                          title={`Bạn có chắc muốn bỏ quan tâm ${v.name} không?`}
+                          onConfirm={() =>
+                            this.handleClickChangeCare(v, `click-${i}`, this.checkCare(v.user_id))
+                          }
+                          okText="Có"
+                          cancelText="Không"
+                        >
+                          <div className={`${styles.cared} ${styles['item-care']}`}>
                             <Icon
                               style={!this.state[`click-${i}`] ? { animation: 'none' } : {}}
                               type="star"
                               theme="filled"
                             />
-                            <span>Quan tâm lại</span>
+                            <span>Đã quan tâm</span>
                           </div>
-                        )}
-                      </div>
+                        </Popconfirm>
+                      ) : (
+                        <div
+                          className={`${styles['not-care']} ${styles['item-care']}`}
+                          onClick={() =>
+                            this.handleClickChangeCare(v, `click-${i}`, this.checkCare(v.user_id))
+                          }
+                        >
+                          <Icon
+                            style={!this.state[`click-${i}`] ? { animation: 'none' } : {}}
+                            type="star"
+                            theme="filled"
+                          />
+                          <span>Quan tâm lại</span>
+                        </div>
+                      )}
                     </div>
                   </div>
                 </div>

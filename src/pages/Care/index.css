@@ -145,6 +145,8 @@
   display: flex;
   color: #d63031;
   align-items: center;
+  position: absolute;
+  bottom: 24px;
 }
 .button-finish {
   position: absolute;

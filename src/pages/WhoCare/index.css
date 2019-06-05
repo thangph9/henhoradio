@@ -92,8 +92,8 @@
 .who-care-page .container .user-care-item .item-user {
   padding-top: 24px;
   padding-bottom: 24px;
-  padding-left: calc(204px);
-  min-height: calc(204px);
+  padding-left: calc(223px);
+  min-height: calc(223px);
   border-bottom: solid 1px #e6e6e6;
   position: relative;
 }
@@ -108,8 +108,8 @@
   cursor: pointer;
   top: 24px;
   left: 24px;
-  width: 156px;
-  height: 156px;
+  width: 175px;
+  height: 175px;
 }
 .who-care-page .container .user-care-item .item-user .content-info .avatar-user div {
   background-position: center;
@@ -126,28 +126,34 @@
   font-size: 14px;
   cursor: pointer;
 }
-.who-care-page .container .user-care-item .item-user .content-info .time-create {
-  margin-top: 12px;
-  line-height: 30px;
+.who-care-page .container .user-care-item .item-user .content-info .detail-info p {
+  margin-bottom: 5px;
+}
+.who-care-page .container .user-care-item .item-user .content-info i {
+  margin-right: 5px;
+  font-size: 20px;
+}
+.who-care-page .container .user-care-item .item-user .time-create {
   color: #ababab;
   display: flex;
   align-items: center;
-  position: relative;
+  bottom: 24px;
+  position: absolute;
   justify-content: space-between;
 }
-.who-care-page .container .user-care-item .item-user .content-info .time-create .time-icon {
+.who-care-page .container .user-care-item .item-user .time-create .time-icon {
   display: flex;
   align-items: center;
 }
-.who-care-page .container .user-care-item .item-user .content-info .time-create .item-care {
+.who-care-page .container .user-care-item .item-user .time-create .item-care {
   display: flex;
   align-items: center;
   cursor: pointer;
 }
-.who-care-page .container .user-care-item .item-user .content-info .time-create .cared {
+.who-care-page .container .user-care-item .item-user .time-create .cared {
   color: gold;
 }
-.who-care-page .container .user-care-item .item-user .content-info .time-create .cared i {
+.who-care-page .container .user-care-item .item-user .time-create .cared i {
   font-size: 20px;
   margin-right: 7px;
   color: gold;
@@ -156,18 +162,14 @@
   -webkit-animation: stretchbounce 0.5s ease-in-out;
   -o-animation: stretchbounce 0.5s ease-in-out;
 }
-.who-care-page .container .user-care-item .item-user .content-info .time-create .not-care {
+.who-care-page .container .user-care-item .item-user .time-create .not-care {
   color: #a9a9a9;
   cursor: pointer;
 }
-.who-care-page .container .user-care-item .item-user .content-info .time-create .not-care i {
+.who-care-page .container .user-care-item .item-user .time-create .not-care i {
   font-size: 20px;
   margin-right: 7px;
   color: #a9a9a9;
-}
-.who-care-page .container .user-care-item .item-user .content-info i {
-  margin-right: 5px;
-  font-size: 20px;
 }
 .button-finish {
   position: absolute;
@@ -201,7 +203,7 @@
     max-width: 960px;
   }
   .pr-rs {
-    padding-right: calc(280px);
+    padding-right: calc(299px);
   }
 }
 @media (max-width: 575px) {

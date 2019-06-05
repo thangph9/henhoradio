@@ -336,10 +336,7 @@ class Care extends PureComponent {
                         <p>Địa chỉ: {v.address}</p>
                         <p>Giới tính: {v.gender === 'male' ? 'Nam' : 'Nữ'}</p>
                         {v.type === 'member' && <p>Mã số KB: {v.gcode}</p>}
-                      </div>
-                      <div className={styles['time-create']}>
-                        <Icon type="clock-circle" />
-                        {moment(v.created).format('DD/MM/YYYY')}
+                        <p>Ngày quan tâm: {moment(v.created).format('DD/MM/YYYY')}</p>
                       </div>
                       <Popconfirm
                         placement="topLeft"
@@ -348,7 +345,10 @@ class Care extends PureComponent {
                         okText="Có"
                         cancelText="Không"
                       >
-                        <div className={styles['remover-care']}>Bỏ quan tâm</div>
+                        <div className={styles['remover-care']}>
+                          {' '}
+                          <Icon type="close-circle" /> Bỏ quan tâm
+                        </div>
                       </Popconfirm>
                     </div>
                   </div>
