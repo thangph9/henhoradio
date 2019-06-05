@@ -299,7 +299,7 @@ class WhoCare extends PureComponent {
                       {this.checkCare(v.user_id) ? (
                         <Popconfirm
                           placement="topLeft"
-                          title={`Bạn có chắc muốn bỏ quan tâm ${v.name} không?`}
+                          title="Bạn muốn bỏ quan tâm?"
                           onConfirm={() =>
                             this.handleClickChangeCare(v, `click-${i}`, this.checkCare(v.user_id))
                           }

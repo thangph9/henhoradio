@@ -340,7 +340,7 @@ class Care extends PureComponent {
                       </div>
                       <Popconfirm
                         placement="topLeft"
-                        title={`Bạn có chắc muốn xóa ${v.name} ra khỏi danh sách quan tâm?`}
+                        title="Bạn muốn bỏ quan tâm?"
                         onConfirm={() => this.handleClickChangeCare(v)}
                         okText="Có"
                         cancelText="Không"
