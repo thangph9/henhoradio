@@ -255,12 +255,15 @@
   font-size: 18px;
   margin-right: 10px;
 }
-.care-star[data-care-star="true"] {
+.care-star[data-care-star='true'] {
   color: #ffd700;
 }
-.care-star[data-care-star="true"] i {
+.care-star[data-care-star='true'] i {
   color: #ffd700;
   animation: stretchbounce 0.5s ease-in-out;
+  -moz-animation: stretchbounce 0.5s ease-in-out;
+  -webkit-animation: stretchbounce 0.5s ease-in-out;
+  -o-animation: stretchbounce 0.5s ease-in-out;
 }
 .age-of-user::after {
   content: '';
@@ -414,6 +417,57 @@
   }
 }
 @keyframes stretchbounce {
+  0% {
+    transform: scale(1);
+  }
+  25% {
+    transform: scale(1.5);
+  }
+  50% {
+    transform: scale(0.9);
+  }
+  75% {
+    transform: scale(1.2);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+@-moz-keyframes stretchbounce {
+  0% {
+    transform: scale(1);
+  }
+  25% {
+    transform: scale(1.5);
+  }
+  50% {
+    transform: scale(0.9);
+  }
+  75% {
+    transform: scale(1.2);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+@-webkit-keyframes stretchbounce {
+  0% {
+    transform: scale(1);
+  }
+  25% {
+    transform: scale(1.5);
+  }
+  50% {
+    transform: scale(0.9);
+  }
+  75% {
+    transform: scale(1.2);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+@-o-keyframes stretchbounce {
   0% {
     transform: scale(1);
   }

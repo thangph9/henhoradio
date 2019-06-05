@@ -22,6 +22,7 @@ import { Skeleton, Icon, DatePicker, Select, Pagination } from 'antd';
 import { Redirect, Link } from 'react-router-dom';
 import ReactPlayer from 'react-player';
 import moment from 'moment';
+import PageLoading from '@/components/PageLoading';
 import styles from './index.less';
 
 const dateFormat = 'DD/MM/YYYY';
@@ -344,268 +345,248 @@ class ListRadio extends PureComponent {
     }
     const { loadingPage, preLoad, detailList, dataFilter, globalPlaying, played } = this.state;
     const { page } = this.props.location.query;
-    return (
-      <div className={styles['search-list-page']} style={{ background: '#f3f5f9' }}>
-        <div className={styles.container}>
-          <div className={styles['filter-data']}>
-            <div className={styles['filter-date']}>
-              {this.props.location.query.date ? (
-                <DatePicker
-                  defaultValue={moment(
-                    this.props.location.query.date.replace(/\_/g, '/'),
-                    dateFormat
-                  )}
-                  format="D/M/YYYY"
-                  onChange={(e, v) => this.onChangeDate(e, v)}
-                  placeholder="Chọn ngày"
-                />
-              ) : (
-                <DatePicker
-                  format="D/M/YYYY"
-                  onChange={(e, v) => this.onChangeDate(e, v)}
-                  placeholder="Chọn ngày"
-                />
-              )}
+    if (!loadingPage) {
+      return (
+        <div className={styles['search-list-page']} style={{ background: '#f3f5f9' }}>
+          <div className={styles.container}>
+            <div className={styles['filter-data']}>
+              <div className={styles['filter-date']}>
+                {this.props.location.query.date ? (
+                  <DatePicker
+                    defaultValue={moment(
+                      this.props.location.query.date.replace(/\_/g, '/'),
+                      dateFormat
+                    )}
+                    format="D/M/YYYY"
+                    onChange={(e, v) => this.onChangeDate(e, v)}
+                    placeholder="Chọn ngày"
+                  />
+                ) : (
+                  <DatePicker
+                    format="D/M/YYYY"
+                    onChange={(e, v) => this.onChangeDate(e, v)}
+                    placeholder="Chọn ngày"
+                  />
+                )}
+              </div>
+              <div className={styles['filter-radio']}>
+                <Select
+                  defaultValue={
+                    this.props.location.query.radio ? `${this.props.location.query.radio}` : 'ALL'
+                  }
+                  onChange={e => this.handleChangeRadio(e)}
+                  placeholder="Lựa chọn"
+                >
+                  <Option value="HN">Hà Nội</Option>
+                  <Option value="HCM">Hồ Chí Minh</Option>
+                  <Option value="ALL">Cả hai đài</Option>
+                </Select>
+              </div>
+              <div className={styles['filter-sort']}>
+                <Select
+                  defaultValue={
+                    this.props.location.query.sort && `${this.props.location.query.sort}`
+                  }
+                  onChange={e => this.handleChangeSort(e)}
+                  placeholder="Sắp xếp"
+                >
+                  <Option value="default">Mặc định</Option>
+                  <Option value="newest">Mới nhất</Option>
+                  <Option value="special">Đặc biệt nhất</Option>
+                </Select>
+              </div>
             </div>
-            <div className={styles['filter-radio']}>
-              <Select
-                defaultValue={
-                  this.props.location.query.radio ? `${this.props.location.query.radio}` : 'ALL'
-                }
-                onChange={e => this.handleChangeRadio(e)}
-                placeholder="Lựa chọn"
-              >
-                <Option value="HN">Hà Nội</Option>
-                <Option value="HCM">Hồ Chí Minh</Option>
-                <Option value="ALL">Cả hai đài</Option>
-              </Select>
-            </div>
-            <div className={styles['filter-sort']}>
-              <Select
-                defaultValue={this.props.location.query.sort && `${this.props.location.query.sort}`}
-                onChange={e => this.handleChangeSort(e)}
-                placeholder="Sắp xếp"
-              >
-                <Option value="default">Mặc định</Option>
-                <Option value="newest">Mới nhất</Option>
-                <Option value="special">Đặc biệt nhất</Option>
-              </Select>
-            </div>
-          </div>
-          <div className={styles.row}>
-            {!loadingPage
-              ? (dataFilter || detailList)
-                  .filter((value, index) => index >= page * 20 - 20 && index < page * 20)
-                  .sort((a, b) => {
-                    if (this.props.location.query.sort === 'newest') {
-                      return new Date(b.date) - new Date(a.date);
-                    }
-                    return null;
-                  })
-                  .map((v, i) => (
-                    <div key={i} className={styles['cart-item']}>
-                      <article
-                        className={
-                          this.state[`action-${v.track_id}`]
-                            ? `${styles['material-card']} ${styles['mc-active']}`
-                            : styles['material-card']
-                        }
-                      >
-                        <h2>
-                          <span className={styles['span-title']}>{v.title}</span>
-                          <strong>
-                            <Icon
-                              style={{ paddingRight: '5px' }}
-                              type="clock-circle"
-                              theme="filled"
-                            />
-                            {moment(v.date).format('DD/MM/YYYY')}
-                          </strong>
-                        </h2>
-                        <div className={styles['mc-content']}>
-                          <div className={styles['img-container']}>
-                            <img
-                              className={
-                                !this.state[`${v.track_id}`]
-                                  ? styles['img-responsive']
-                                  : `${styles['img-responsive']} ${styles['active-play-audio']}`
-                              }
-                              src="https://i.scdn.co/image/9dcbd30dbe0c621cbaeae427cf80eff9877b4fcd"
-                              alt="img"
-                            />
-                          </div>
-                          <div className={styles['mc-description']}>
-                            <div>
-                              <Icon style={{ paddingRight: '8px' }} type="home" />
-                              <span className={styles['span-discription']}>
-                                Đài phát: {v.local === 'HN' ? 'Hà Nội' : 'Hồ Chí Minh'}
-                              </span>
-                            </div>
-                            <div>
-                              <Icon style={{ paddingRight: '8px' }} type="user" />
-                              <span className={styles['span-discription']}>MC: {v.mc}</span>
-                            </div>
-                            <div>
-                              <Icon style={{ paddingRight: '8px' }} type="clock-circle" />
-                              <span className={styles['span-discription']}>
-                                {this.getTimeInAudio(
-                                  this[`input-played-${v.track_id}`]
-                                    ? this[`input-played-${v.track_id}`].value
-                                    : 0
-                                )}
-                              </span>{' '}
-                              /{' '}
-                              {this.state[`duration-${v.track_id}`] ? (
-                                <span className={styles['span-discription']}>
-                                  {this.getTimeInAudio(
-                                    this.state[`duration-${v.track_id}`]
-                                      ? this.state[`duration-${v.track_id}`]
-                                      : 0
-                                  )}
-                                </span>
-                              ) : (
-                                <span className={styles['span-discription']}>00:00</span>
-                              )}
-                            </div>
-                            <div>
-                              <Icon style={{ paddingRight: '8px' }} type="usergroup-add" />
-                              <span className={styles['span-discription']}>
-                                <Link
-                                  style={{ color: '#e74c3c', textDecoration: 'underline' }}
-                                  to={`detail-list?page=1&radio=${v.local}&gender=ALL&date=${moment(
-                                    v.date
-                                  )
-                                    .format('D/M/YYYY')
-                                    .replace(/\//g, '_')}`}
-                                >
-                                  Chi tiết TV lên sóng...
-                                </Link>
-                              </span>
-                            </div>
-                          </div>
-                        </div>
-                        <a
-                          onClick={() => this.handleClickAction(v.track_id)}
-                          className={styles['mc-btn-action']}
-                        >
-                          <Icon type="bars" />
-                        </a>
-                        <div className={styles['mc-footer']}>
-                          <div className={styles.range}>
-                            <div className={styles['range-item']}>
-                              <input
-                                className={styles['input-loaded']}
-                                name={`name-${v.track_id}`}
-                                ref={input => (this[`input-played-loaded-${v.track_id}`] = input)}
-                                type="range"
-                                defaultValue={0}
-                                step="any"
-                                style={{
-                                  width: `${
-                                    this.state[`loaded-${v.track_id}`]
-                                      ? (this.state[`loaded-${v.track_id}`] * 100) /
-                                        this.state[`duration-${v.track_id}`]
-                                      : 0
-                                  }%`,
-                                }}
-                              />
-                              <input
-                                className={styles['input-played']}
-                                name={`name-${v.track_id}`}
-                                ref={input => (this[`input-played-${v.track_id}`] = input)}
-                                type="range"
-                                defaultValue={0}
-                                min={0}
-                                max={
-                                  this.state[`duration-${v.track_id}`]
-                                    ? this.state[`duration-${v.track_id}`]
-                                    : 0
-                                }
-                                step="any"
-                                onMouseDown={e => this.onSeekMouseDown(e, `player-${v.track_id}`)}
-                                onPointerDown={e => this.onSeekMouseDown(e, `player-${v.track_id}`)}
-                                onPointerUp={e => this.onSeekMouseUp(e, v.track_id)}
-                                onChange={e => this.onSeekChange(e, `player-${v.track_id}`)}
-                                onMouseUp={e => this.onSeekMouseUp(e, v.track_id)}
-                              />
-                            </div>
-                            <Icon
-                              onClick={() => this.handleClickTua(v.track_id, -15)}
-                              type="backward"
-                              theme="filled"
-                            />
-                            <Icon
-                              onClick={() => this.playAudioReact(v.track_id)}
-                              theme="filled"
-                              type={
-                                !this.state[`${v.track_id}`]
-                                  ? 'play-circle'
-                                  : this.state[`${v.track_id}`].paused
-                                  ? 'play-circle'
-                                  : 'pause-circle'
-                              }
-                            />
-                            <Icon
-                              onClick={() => this.handleClickTua(v.track_id, 15)}
-                              type="forward"
-                              theme="filled"
-                            />
-                          </div>
-                          <ReactPlayer
-                            playing={this.state[v.track_id]}
-                            ref={player => (this[`player-${v.track_id}`] = player)}
-                            width="0%"
-                            height="0%"
-                            loop={false}
-                            onSeek={e => this.onSeek(e)}
-                            url={`http://cdn.henhoradio.net/upload/audio/local/${v.audio}`}
-                            onProgress={e => this.onProgress(e, v.track_id)}
-                            config={{
-                              file: { forceAudio: true },
-                            }}
-                            onDuration={e => this.onDuration(e, v.track_id)}
-                            onEnded={() => this.onEnded(v.track_id)}
-                          />
-                        </div>
-                      </article>
-                    </div>
-                  ))
-              : preLoad.map((v, i) => (
+            <div className={styles.row}>
+              {(dataFilter || detailList)
+                .filter((value, index) => index >= page * 20 - 20 && index < page * 20)
+                .sort((a, b) => {
+                  if (this.props.location.query.sort === 'newest') {
+                    return new Date(b.date) - new Date(a.date);
+                  }
+                  return null;
+                })
+                .map((v, i) => (
                   <div key={i} className={styles['cart-item']}>
-                    <article className={styles['material-card']}>
+                    <article
+                      className={
+                        !this.state[`action-${v.track_id}`]
+                          ? `${styles['material-card']} ${styles['mc-active']}`
+                          : styles['material-card']
+                      }
+                    >
                       <h2>
-                        <li className={styles['li-skeleton']} />
-                        <li className={styles['li-skeleton']} />
+                        <span className={styles['span-title']}>{v.title}</span>
+                        <strong>
+                          <Icon
+                            style={{ paddingRight: '5px' }}
+                            type="clock-circle"
+                            theme="filled"
+                          />
+                          {moment(v.date).format('DD/MM/YYYY')}
+                        </strong>
                       </h2>
                       <div className={styles['mc-content']}>
                         <div className={styles['img-container']}>
                           <img
-                            className={styles['img-responsive']}
+                            className={
+                              !this.state[`${v.track_id}`]
+                                ? styles['img-responsive']
+                                : `${styles['img-responsive']} ${styles['active-play-audio']}`
+                            }
                             src="https://i.scdn.co/image/9dcbd30dbe0c621cbaeae427cf80eff9877b4fcd"
                             alt="img"
                           />
                         </div>
+                        <div className={styles['mc-description']}>
+                          <div>
+                            <Icon style={{ paddingRight: '8px' }} type="home" />
+                            <span className={styles['span-discription']}>
+                              Đài phát: {v.local === 'HN' ? 'Hà Nội' : 'Hồ Chí Minh'}
+                            </span>
+                          </div>
+                          <div>
+                            <Icon style={{ paddingRight: '8px' }} type="user" />
+                            <span className={styles['span-discription']}>MC: {v.mc}</span>
+                          </div>
+                          <div>
+                            <Icon style={{ paddingRight: '8px' }} type="clock-circle" />
+                            <span className={styles['span-discription']}>
+                              {this.getTimeInAudio(
+                                this[`input-played-${v.track_id}`]
+                                  ? this[`input-played-${v.track_id}`].value
+                                  : 0
+                              )}
+                            </span>{' '}
+                            /{' '}
+                            {this.state[`duration-${v.track_id}`] ? (
+                              <span className={styles['span-discription']}>
+                                {this.getTimeInAudio(
+                                  this.state[`duration-${v.track_id}`]
+                                    ? this.state[`duration-${v.track_id}`]
+                                    : 0
+                                )}
+                              </span>
+                            ) : (
+                              <span className={styles['span-discription']}>00:00</span>
+                            )}
+                          </div>
+                          <div>
+                            <Icon style={{ paddingRight: '8px' }} type="usergroup-add" />
+                            <span className={styles['span-discription']}>
+                              <Link
+                                style={{ color: '#e74c3c', textDecoration: 'underline' }}
+                                to={`detail-list?page=1&radio=${v.local}&gender=ALL&date=${moment(
+                                  v.date
+                                )
+                                  .format('D/M/YYYY')
+                                  .replace(/\//g, '_')}`}
+                              >
+                                Chi tiết TV lên sóng...
+                              </Link>
+                            </span>
+                          </div>
+                        </div>
                       </div>
+                      <a
+                        onClick={() => this.handleClickAction(v.track_id)}
+                        className={styles['mc-btn-action']}
+                      >
+                        <Icon type="bars" />
+                      </a>
                       <div className={styles['mc-footer']}>
                         <div className={styles.range}>
-                          <div className={styles['range-item']} />
+                          <div className={styles['range-item']}>
+                            <input
+                              className={styles['input-loaded']}
+                              name={`name-${v.track_id}`}
+                              ref={input => (this[`input-played-loaded-${v.track_id}`] = input)}
+                              type="range"
+                              defaultValue={0}
+                              step="any"
+                              style={{
+                                width: `${
+                                  this.state[`loaded-${v.track_id}`]
+                                    ? (this.state[`loaded-${v.track_id}`] * 100) /
+                                      this.state[`duration-${v.track_id}`]
+                                    : 0
+                                }%`,
+                              }}
+                            />
+                            <input
+                              className={styles['input-played']}
+                              name={`name-${v.track_id}`}
+                              ref={input => (this[`input-played-${v.track_id}`] = input)}
+                              type="range"
+                              defaultValue={0}
+                              min={0}
+                              max={
+                                this.state[`duration-${v.track_id}`]
+                                  ? this.state[`duration-${v.track_id}`]
+                                  : 0
+                              }
+                              step="any"
+                              onMouseDown={e => this.onSeekMouseDown(e, `player-${v.track_id}`)}
+                              onPointerDown={e => this.onSeekMouseDown(e, `player-${v.track_id}`)}
+                              onPointerUp={e => this.onSeekMouseUp(e, v.track_id)}
+                              onChange={e => this.onSeekChange(e, `player-${v.track_id}`)}
+                              onMouseUp={e => this.onSeekMouseUp(e, v.track_id)}
+                            />
+                          </div>
+                          <Icon
+                            onClick={() => this.handleClickTua(v.track_id, -15)}
+                            type="backward"
+                            theme="filled"
+                          />
+                          <Icon
+                            onClick={() => this.playAudioReact(v.track_id)}
+                            theme="filled"
+                            type={
+                              !this.state[`${v.track_id}`]
+                                ? 'play-circle'
+                                : this.state[`${v.track_id}`].paused
+                                ? 'play-circle'
+                                : 'pause-circle'
+                            }
+                          />
+                          <Icon
+                            onClick={() => this.handleClickTua(v.track_id, 15)}
+                            type="forward"
+                            theme="filled"
+                          />
                         </div>
+                        <ReactPlayer
+                          playing={this.state[v.track_id]}
+                          ref={player => (this[`player-${v.track_id}`] = player)}
+                          width="0%"
+                          height="0%"
+                          loop={false}
+                          onSeek={e => this.onSeek(e)}
+                          url={`http://cdn.henhoradio.net/upload/audio/local/${v.audio}`}
+                          onProgress={e => this.onProgress(e, v.track_id)}
+                          config={{
+                            file: { forceAudio: true },
+                          }}
+                          onDuration={e => this.onDuration(e, v.track_id)}
+                          onEnded={() => this.onEnded(v.track_id)}
+                        />
                       </div>
                     </article>
                   </div>
                 ))}
+            </div>
+            <Pagination
+              style={{ padding: '5px', float: 'right', marginTop: '30px' }}
+              onChange={(v1, v2) => this.handleChangePagination(v1, v2)}
+              current={Number(this.props.location.query.page)}
+              hideOnSinglePage
+              pageSize={20}
+              total={dataFilter ? dataFilter.length : detailList.length}
+            />
           </div>
-          <Pagination
-            style={{ padding: '5px', float: 'right', marginTop: '30px' }}
-            onChange={(v1, v2) => this.handleChangePagination(v1, v2)}
-            current={Number(this.props.location.query.page)}
-            hideOnSinglePage
-            pageSize={20}
-            total={dataFilter ? dataFilter.length : detailList.length}
-          />
         </div>
-      </div>
-    );
+      );
+    }
+    return <loadingPage />;
   }
 }
 

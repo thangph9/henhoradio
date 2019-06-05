@@ -321,15 +321,18 @@ li {
   background: #bdc3c7;
 }
 @media (min-width: 576px) {
+  .row {
+    justify-content: space-between;
+  }
   .detail-list-page {
     padding-top: 52px;
   }
   .container {
-    max-width: 540px;
+    max-width: 520px;
   }
   .cart-item {
     flex-basis: 50%;
-    max-width: 50%;
+    max-width: 250px;
   }
 }
 @media (min-width: 576px) and (max-width: 767px) {
@@ -373,7 +376,7 @@ li {
   }
   .cart-item {
     flex-basis: 100%;
-    max-width: 320px;
+    max-width: 250px;
     margin: 0 auto;
   }
   .filter-data {
@@ -423,21 +426,58 @@ li {
 .cared i:last-child {
   color: #ffd700;
   animation: stretchbounce 0.5s ease-in-out;
+  -moz-animation: stretchbounce 0.5s ease-in-out;
+  -webkit-animation: stretchbounce 0.5s ease-in-out;
+  -o-animation: stretchbounce 0.5s ease-in-out;
 }
 .active {
   top: -50px !important;
 }
 .active-play .album-art::before {
   animation: rotation 3s infinite linear;
+  -moz-animation: rotation 3s infinite linear;
   -webkit-animation: rotation 3s infinite linear;
+  -o-animation: rotation 3s infinite linear;
   animation-fill-mode: forwards;
+  -moz-animation-fill-mode: forwards;
+  -webkit-animation-fill-mode: forwards;
+  -o-animation-fill-mode: forwards;
 }
 .active-play-audio {
-  animation: rotation 3s linear infinite;
-  -webkit-animation: rotation 3s linear infinite;
+  animation: rotation 3s infinite linear;
+  -moz-animation: rotation 3s infinite linear;
+  -webkit-animation: rotation 3s infinite linear;
+  -o-animation: rotation 3s infinite linear;
   animation-fill-mode: forwards;
+  -moz-animation-fill-mode: forwards;
+  -webkit-animation-fill-mode: forwards;
+  -o-animation-fill-mode: forwards;
 }
 @keyframes rotation {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+@-moz-keyframes rotation {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+@-webkit-keyframes rotation {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+@-o-keyframes rotation {
   0% {
     transform: rotate(0deg);
   }
@@ -448,7 +488,7 @@ li {
 .material-card {
   position: relative;
   height: 0;
-  padding-bottom: 115%;
+  padding-bottom: 280px;
   margin-bottom: 6.6em;
 }
 .material-card h2 {
@@ -546,6 +586,10 @@ li {
 .material-card .mc-content .img-container {
   overflow: hidden;
   position: absolute;
+  background-image: url('https://i.scdn.co/image/9dcbd30dbe0c621cbaeae427cf80eff9877b4fcd');
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: cover;
   left: 0;
   top: 0;
   width: 100%;
@@ -564,7 +608,6 @@ li {
 }
 .material-card .mc-content .mc-description {
   position: relative;
-  padding-left: 20px;
   overflow: hidden;
   opacity: 0;
   -webkit-transition: all 1.2s;
@@ -639,6 +682,10 @@ li {
   -webkit-border-radius: 50%;
   -moz-border-radius: 50%;
   border-radius: 50%;
+  background-image: url('https://i.scdn.co/image/9dcbd30dbe0c621cbaeae427cf80eff9877b4fcd');
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: cover;
   left: 0;
   top: 12px;
   width: 40px;
@@ -679,6 +726,57 @@ li {
   height: 70px;
 }
 @keyframes stretchbounce {
+  0% {
+    transform: scale(1);
+  }
+  25% {
+    transform: scale(1.5);
+  }
+  50% {
+    transform: scale(0.9);
+  }
+  75% {
+    transform: scale(1.2);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+@-moz-keyframes stretchbounce {
+  0% {
+    transform: scale(1);
+  }
+  25% {
+    transform: scale(1.5);
+  }
+  50% {
+    transform: scale(0.9);
+  }
+  75% {
+    transform: scale(1.2);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+@-webkit-keyframes stretchbounce {
+  0% {
+    transform: scale(1);
+  }
+  25% {
+    transform: scale(1.5);
+  }
+  50% {
+    transform: scale(0.9);
+  }
+  75% {
+    transform: scale(1.2);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+@-o-keyframes stretchbounce {
   0% {
     transform: scale(1);
   }

@@ -361,7 +361,7 @@ li {
   .cart-item {
     margin: 0 auto;
     flex-basis: 100%;
-    max-width: 320px;
+    max-width: 250px;
   }
   .filter-data {
     flex-direction: column;
@@ -395,15 +395,49 @@ li {
 }
 .active-play .album-art::before {
   animation: rotation 3s infinite linear;
+  -moz-animation: rotation 3s infinite linear;
   -webkit-animation: rotation 3s infinite linear;
+  -o-animation: rotation 3s infinite linear;
   animation-fill-mode: forwards;
+  -moz-animation-fill-mode: forwards;
+  -webkit-animation-fill-mode: forwards;
+  -o-animation-fill-mode: forwards;
 }
 .active-play-audio {
-  animation: rotation 3s linear infinite;
-  -webkit-animation: rotation 3s linear infinite;
+  animation: rotation 3s infinite linear;
+  -moz-animation: rotation 3s infinite linear;
+  -webkit-animation: rotation 3s infinite linear;
+  -o-animation: rotation 3s infinite linear;
   animation-fill-mode: forwards;
+  -moz-animation-fill-mode: forwards;
+  -webkit-animation-fill-mode: forwards;
+  -o-animation-fill-mode: forwards;
 }
 @keyframes rotation {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+@-moz-keyframes rotation {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+@-webkit-keyframes rotation {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+@-o-keyframes rotation {
   0% {
     transform: rotate(0deg);
   }
@@ -414,7 +448,7 @@ li {
 .material-card {
   position: relative;
   height: 0;
-  padding-bottom: calc(84%);
+  padding-bottom: 230px;
   margin-bottom: 6.6em;
 }
 .material-card h2 {

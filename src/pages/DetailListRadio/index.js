@@ -440,9 +440,12 @@ class ListRadio extends PureComponent {
   }
 
   checkCare(value) {
-    const check = this.state.dataUserCare.find(v => v.user_id === value);
-    if (check) return true;
-    return false;
+    if (this.state.dataUserCare.length > 0) {
+      const check = this.state.dataUserCare.find(v => v.user_id === value);
+      if (check) return true;
+      return false;
+    }
+    return undefined;
   }
 
   render() {
@@ -556,17 +559,8 @@ class ListRadio extends PureComponent {
                         </strong>
                       </h2>
                       <div className={styles['mc-content']}>
-                        <div className={styles['img-container']}>
-                          <img
-                            className={
-                              !this.state[`${v.audio}`]
-                                ? styles['img-responsive']
-                                : `${styles['img-responsive']} ${styles['active-play-audio']}`
-                            }
-                            src="https://i.scdn.co/image/9dcbd30dbe0c621cbaeae427cf80eff9877b4fcd"
-                            alt="img"
-                          />
-                        </div>
+                        <div className={styles['img-container']} />
+
                         <div className={styles['mc-description']}>
                           <div>
                             <Icon style={{ paddingRight: '8px' }} type="home" />
@@ -638,15 +632,17 @@ class ListRadio extends PureComponent {
                                 </Tooltip>
                               </Popconfirm>
                             ) : (
-                              <Tooltip title="Quan tâm ngay" placement="topLeft">
-                                <Icon
-                                  onClick={() =>
-                                    this.handleChangeCare(v, this.checkCare(v.membersid))
-                                  }
-                                  type="star"
-                                  theme="filled"
-                                />
-                              </Tooltip>
+                              this.checkCare(v.membersid) !== undefined && (
+                                <Tooltip title="Quan tâm ngay" placement="topLeft">
+                                  <Icon
+                                    onClick={() =>
+                                      this.handleChangeCare(v, this.checkCare(v.membersid))
+                                    }
+                                    type="star"
+                                    theme="filled"
+                                  />
+                                </Tooltip>
+                              )
                             )}
                           </div>
                         </div>

@@ -151,6 +151,9 @@
                 margin-right: 7px;
                 color: gold;
                 animation: stretchbounce 0.5s ease-in-out;
+                -moz-animation: stretchbounce 0.5s ease-in-out;
+                -webkit-animation: stretchbounce 0.5s ease-in-out;
+                -o-animation: stretchbounce 0.5s ease-in-out;
               }
             }
             .not-care {
@@ -234,6 +237,57 @@
   }
 
   to {
+    transform: scale(1);
+  }
+}
+@-moz-keyframes stretchbounce {
+  0% {
+    transform: scale(1);
+  }
+  25% {
+    transform: scale(1.5);
+  }
+  50% {
+    transform: scale(0.9);
+  }
+  75% {
+    transform: scale(1.2);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+@-webkit-keyframes stretchbounce {
+  0% {
+    transform: scale(1);
+  }
+  25% {
+    transform: scale(1.5);
+  }
+  50% {
+    transform: scale(0.9);
+  }
+  75% {
+    transform: scale(1.2);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+@-o-keyframes stretchbounce {
+  0% {
+    transform: scale(1);
+  }
+  25% {
+    transform: scale(1.5);
+  }
+  50% {
+    transform: scale(0.9);
+  }
+  75% {
+    transform: scale(1.2);
+  }
+  100% {
     transform: scale(1);
   }
 }
