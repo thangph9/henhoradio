@@ -321,9 +321,6 @@ li {
   background: #bdc3c7;
 }
 @media (min-width: 576px) {
-  .row {
-    justify-content: space-between;
-  }
   .detail-list-page {
     padding-top: 52px;
   }
@@ -336,6 +333,9 @@ li {
   }
 }
 @media (min-width: 576px) and (max-width: 767px) {
+  .row {
+    justify-content: space-between;
+  }
   .filter-data {
     flex-wrap: wrap;
   }
