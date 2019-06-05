@@ -657,8 +657,8 @@ class ListRadio extends PureComponent {
                             footer={null}
                           >
                             <p>
-                              Nội dung modal thông tin giới thiệu, Cách thức gửi tin nhắn Kết bạn
-                              HHR {v.gcode} Gửi 8779 để lấy thông tin kết bạn
+                              Để kết bạn với {v.name} vui lòng soạn tin theo cú pháp: HHR {v.gcode}{' '}
+                              Gửi 8779. Để lấy thông tin kết bạn
                             </p>
                           </Modal>
                         </a>
