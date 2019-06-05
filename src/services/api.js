@@ -127,10 +127,9 @@ export async function fakeRegister(params) {
     body: params,
   });
 }
-export async function getMembers(params) {
+export async function getMembers() {
   return request('/api/members/getmembers', {
     method: 'GET',
-    body: params,
   });
 }
 export async function loginAccount(params) {
