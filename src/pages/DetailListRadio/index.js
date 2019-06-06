@@ -423,7 +423,7 @@ class ListRadio extends PureComponent {
   handleClickAction(value, id) {
     this.setState({
       [`action-${value}`]: !this.state[`action-${value}`],
-      [id]: undefined,
+      // [id]: undefined,
     });
   }
 
@@ -571,7 +571,20 @@ class ListRadio extends PureComponent {
                       <div className={styles['mc-content']}>
                         <div className={styles['img-container']} />
 
-                        <div className={styles['mc-description']}>
+                        <div
+                          onClick={() => this.handleClickAction(v.membersid, v.audio)}
+                          className={styles['mc-description']}
+                        >
+                          <Modal
+                            title={v.name}
+                            visible={!!this.state[`action-${v.membersid}`]}
+                            footer={null}
+                          >
+                            <p>
+                              Để kết bạn với {v.name} vui lòng soạn tin theo cú pháp: HHR {v.gcode}{' '}
+                              Gửi 8779. Để lấy thông tin kết bạn
+                            </p>
+                          </Modal>
                           <div>
                             <Icon style={{ paddingRight: '8px' }} type="home" />
                             <span className={styles['span-discription']}>
@@ -600,13 +613,7 @@ class ListRadio extends PureComponent {
                               Mã số kết bạn: {v.gcode}
                             </span>
                           </div>
-                          <div
-                            className={
-                              this.checkCare(v.membersid)
-                                ? `${styles['duration-item']} ${styles.cared}`
-                                : styles['duration-item']
-                            }
-                          >
+                          <div className={['duration-item']}>
                             <Icon style={{ paddingRight: '8px' }} type="clock-circle" />
                             <span className={styles['span-discription']}>
                               {this.getTimeInAudio(
@@ -627,48 +634,36 @@ class ListRadio extends PureComponent {
                             ) : (
                               <span className={styles['span-discription']}>00:00</span>
                             )}
-                            {this.checkCare(v.membersid) ? (
-                              <Popconfirm
-                                placement="topLeft"
-                                title="Bạn muốn bỏ quan tâm?"
-                                onConfirm={() =>
-                                  this.handleChangeCare(v, this.checkCare(v.membersid))
-                                }
-                                okText="Có"
-                                cancelText="Không"
-                              >
-                                <Icon type="star" theme="filled" />
-                              </Popconfirm>
-                            ) : (
-                              this.checkCare(v.membersid) !== undefined && (
-                                <Icon
-                                  onClick={() =>
-                                    this.handleChangeCare(v, this.checkCare(v.membersid))
-                                  }
-                                  type="star"
-                                  theme="filled"
-                                />
-                              )
-                            )}
                           </div>
                         </div>
-                        <a
-                          onClick={() => this.handleClickAction(v.membersid, v.audio)}
-                          className={styles['mc-btn-action']}
-                        >
-                          <Icon type="bars" />
-                          <Modal
-                            title={v.name}
-                            visible={!!this.state[`action-${v.membersid}`]}
-                            footer={null}
-                          >
-                            <p>
-                              Để kết bạn với {v.name} vui lòng soạn tin theo cú pháp: HHR {v.gcode}{' '}
-                              Gửi 8779. Để lấy thông tin kết bạn
-                            </p>
-                          </Modal>
-                        </a>
                       </div>
+                      <a
+                        className={
+                          this.checkCare(v.membersid)
+                            ? `${styles['mc-btn-action']} ${styles.cared}`
+                            : styles['mc-btn-action']
+                        }
+                      >
+                        {this.checkCare(v.membersid) ? (
+                          <Popconfirm
+                            placement="topLeft"
+                            title="Bạn muốn bỏ quan tâm?"
+                            onConfirm={() => this.handleChangeCare(v, this.checkCare(v.membersid))}
+                            okText="Có"
+                            cancelText="Không"
+                          >
+                            <Icon type="star" theme="filled" />
+                          </Popconfirm>
+                        ) : this.checkCare(v.membersid) !== undefined ? (
+                          <Icon
+                            onClick={() => this.handleChangeCare(v, this.checkCare(v.membersid))}
+                            type="star"
+                            theme="filled"
+                          />
+                        ) : (
+                          <Icon type="bars" />
+                        )}
+                      </a>
                       <div className={styles['mc-footer']}>
                         <div className={styles.range}>
                           <div className={styles['range-item']}>

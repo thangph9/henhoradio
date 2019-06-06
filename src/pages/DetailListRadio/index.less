@@ -429,17 +429,6 @@ li {
     }
   }
 }
-.cared {
-  i {
-    &:last-child {
-      color: #ffd700;
-      animation: stretchbounce 0.5s ease-in-out;
-      -moz-animation: stretchbounce 0.5s ease-in-out;
-      -webkit-animation: stretchbounce 0.5s ease-in-out;
-      -o-animation: stretchbounce 0.5s ease-in-out;
-    }
-  }
-}
 .active {
   top: -50px !important;
 }
@@ -622,9 +611,13 @@ li {
       }
     }
     .mc-description {
-      position: relative;
+      position: absolute;
+      cursor: pointer;
       overflow: hidden;
       opacity: 0;
+      width: 100%;
+      bottom: 0;
+      padding: 10px 0 15px 15px;
       -webkit-transition: all 1.2s;
       -moz-transition: all 1.2s;
       -ms-transition: all 1.2s;
@@ -668,6 +661,17 @@ li {
     -ms-transition: height 0.3s;
     -o-transition: height 0.3s;
     transition: height 0.3s;
+  }
+}
+.cared {
+  i {
+    &:last-child {
+      color: #ffd700;
+      animation: stretchbounce 0.5s ease-in-out;
+      -moz-animation: stretchbounce 0.5s ease-in-out;
+      -webkit-animation: stretchbounce 0.5s ease-in-out;
+      -o-animation: stretchbounce 0.5s ease-in-out;
+    }
   }
 }
 .mc-active {
@@ -729,9 +733,10 @@ li {
   .mc-btn-action {
     border-color: #f3e5f5;
     top: 50px;
-    i {
-      transform: rotateY(180deg);
-    }
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 18px;
   }
   .mc-footer {
     background-color: #e1bee7;
