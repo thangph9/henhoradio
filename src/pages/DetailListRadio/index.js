@@ -28,6 +28,7 @@ import {
   Tooltip,
   Popconfirm,
   Modal,
+  message,
 } from 'antd';
 import PageLoading from '@/components/PageLoading';
 import { Redirect } from 'react-router-dom';
@@ -78,6 +79,7 @@ class ListRadio extends PureComponent {
   }
 
   handleChangePagination(v1, v2) {
+    window.scrollTo(0, 0);
     const radio = this.props.location.query.radio;
     const date = this.props.location.query.date;
     const gender = this.props.location.query.gender;
@@ -343,6 +345,10 @@ class ListRadio extends PureComponent {
   //---------------------------------
 
   playAudioReact(value) {
+    if (!this.state[`duration-${value}`]) {
+      message.error('Tệp tin bị lỗi');
+      return;
+    }
     const { globalPlaying } = this.state;
     if (!globalPlaying || globalPlaying === value) {
       this.setState(prevState => ({
@@ -725,7 +731,7 @@ class ListRadio extends PureComponent {
                           />
                         </div>
                         <ReactPlayer
-                          playing={this.state[v.audio]}
+                          playing={!!this.state[v.audio]}
                           ref={player => (this[`player-${v.audio}`] = player)}
                           width="0%"
                           height="0%"

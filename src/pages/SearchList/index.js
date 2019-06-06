@@ -18,7 +18,7 @@
 
 import React, { PureComponent } from 'react';
 import { connect } from 'dva';
-import { Skeleton, Icon, DatePicker, Select, Pagination } from 'antd';
+import { Skeleton, Icon, DatePicker, Select, Pagination, message } from 'antd';
 import { Redirect, Link } from 'react-router-dom';
 import ReactPlayer from 'react-player';
 import moment from 'moment';
@@ -54,6 +54,7 @@ class ListRadio extends PureComponent {
   }
 
   handleChangePagination(v1, v2) {
+    window.scrollTo(0, 0);
     const radio = this.props.location.query.radio;
     const date = this.props.location.query.date;
     const sort = this.props.location.query.sort;
@@ -261,6 +262,10 @@ class ListRadio extends PureComponent {
   }
 
   playAudioReact(value) {
+    if (!this.state[`duration-${value}`]) {
+      message.error('Tệp tin bị lỗi');
+      return;
+    }
     const { globalPlaying } = this.state;
     if (!globalPlaying || globalPlaying === value) {
       this.setState(prevState => ({
@@ -555,7 +560,7 @@ class ListRadio extends PureComponent {
                           />
                         </div>
                         <ReactPlayer
-                          playing={this.state[v.track_id]}
+                          playing={!!this.state[v.track_id]}
                           ref={player => (this[`player-${v.track_id}`] = player)}
                           width="0%"
                           height="0%"
@@ -586,7 +591,7 @@ class ListRadio extends PureComponent {
         </div>
       );
     }
-    return <loadingPage />;
+    return <PageLoading />;
   }
 }
 
