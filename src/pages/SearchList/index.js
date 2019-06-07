@@ -20,6 +20,7 @@ import React, { PureComponent } from 'react';
 import { connect } from 'dva';
 import { Skeleton, Icon, DatePicker, Select, Pagination, message } from 'antd';
 import { Redirect, Link } from 'react-router-dom';
+import Footer from '@/layouts/Footer';
 import ReactPlayer from 'react-player';
 import moment from 'moment';
 import PageLoading from '@/components/PageLoading';
@@ -588,10 +589,20 @@ class ListRadio extends PureComponent {
               total={dataFilter ? dataFilter.length : detailList.length}
             />
           </div>
+          <div className={styles.footer}>
+            <Footer />
+          </div>
         </div>
       );
     }
-    return <PageLoading />;
+    return (
+      <div>
+        <PageLoading />
+        <div style={{ marginTop: '1000px' }} className={styles.footer}>
+          <Footer />
+        </div>
+      </div>
+    );
   }
 }
 

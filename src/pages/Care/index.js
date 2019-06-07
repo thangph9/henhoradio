@@ -23,6 +23,8 @@ import { PureComponent } from 'react';
 import { connect } from 'dva';
 import { Link, Redirect } from 'react-router-dom';
 import { Drawer, Button, Radio, Icon, Pagination, Popconfirm } from 'antd';
+import PageLoading from '@/components/PageLoading';
+import Footer from '@/layouts/Footer';
 import moment from 'moment';
 import styles from './index.less';
 
@@ -369,6 +371,14 @@ class Care extends PureComponent {
           pageSize={5}
           total={this.state.dataUserCare.length}
         />
+        <div>
+          <div
+            style={!dataUserCare.length > 0 ? { marginTop: '1000px' } : {}}
+            className={styles.footer}
+          >
+            <Footer />
+          </div>
+        </div>
       </div>
     );
   }

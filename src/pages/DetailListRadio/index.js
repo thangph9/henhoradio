@@ -34,6 +34,7 @@ import PageLoading from '@/components/PageLoading';
 import { Redirect } from 'react-router-dom';
 import ReactPlayer from 'react-player';
 import moment from 'moment';
+import Footer from '@/layouts/Footer';
 import styles from './index.less';
 
 const dateFormat = 'DD/MM/YYYY';
@@ -754,10 +755,20 @@ class ListRadio extends PureComponent {
               total={dataFilter ? dataFilter.length : detailList.length}
             />
           </div>
+          <div className={styles.footer}>
+            <Footer />
+          </div>
         </div>
       );
     }
-    return <PageLoading />;
+    return (
+      <div>
+        <PageLoading />
+        <div style={{ marginTop: '1000px' }} className={styles.footer}>
+          <Footer />
+        </div>
+      </div>
+    );
   }
 }
 

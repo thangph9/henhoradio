@@ -457,7 +457,7 @@ class NewFeed extends PureComponent {
           </div>
         )}
         */}
-        <div className={styles.footer}>
+        <div style={loadingPage ? { marginTop: '1000px' } : {}} className={styles.footer}>
           <Footer />
         </div>
       </div>

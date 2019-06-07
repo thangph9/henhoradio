@@ -24,6 +24,7 @@ import { connect } from 'dva';
 import { Link, Redirect } from 'react-router-dom';
 import { Drawer, Button, Radio, Icon, Pagination, Popconfirm } from 'antd';
 import moment from 'moment';
+import Footer from '@/layouts/Footer';
 import styles from './index.less';
 
 const RadioGroup = Radio.Group;
@@ -349,6 +350,14 @@ class WhoCare extends PureComponent {
           pageSize={5}
           total={this.state.dataUserWhoCare.length}
         />
+        <div>
+          <div
+            style={!this.state.dataUserWhoCare.length > 0 ? { marginTop: '1000px' } : {}}
+            className={styles.footer}
+          >
+            <Footer />
+          </div>
+        </div>
       </div>
     );
   }
