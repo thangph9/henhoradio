@@ -3,7 +3,6 @@
   margin-left: auto;
   margin-right: auto;
   background-color: #f3f5f9;
-  min-height: 100vh;
 }
 .row {
   display: flex;
@@ -800,6 +799,11 @@
     order: 3;
     flex-basis: 100%;
   }
+}
+.footer {
+  position: absolute;
+  width: 100%;
+  bottom: 0;
 }
 @keyframes lds-spinner {
   0% {

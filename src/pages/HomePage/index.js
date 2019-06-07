@@ -17,6 +17,7 @@ import { Link, Redirect } from 'react-router-dom';
 import { Skeleton, Pagination, Icon, Drawer, Button, Radio, Select, Tag } from 'antd';
 import LazyImage from './LazyImage';
 import PageLoading from '@/components/PageLoading';
+import Footer from '@/layouts/Footer';
 import styles from './index.less';
 
 const RadioGroup = Radio.Group;
@@ -138,10 +139,6 @@ class NewFeed extends PureComponent {
     this.setState({
       visible: false,
     });
-  }
-
-  callback(key) {
-    console.log(key);
   }
 
   handleClickTab(value) {
@@ -460,6 +457,11 @@ class NewFeed extends PureComponent {
           </div>
         )}
         */}
+        {loadingPage && (
+          <div className={styles.footer}>
+            <Footer />
+          </div>
+        )}
       </div>
     );
   }

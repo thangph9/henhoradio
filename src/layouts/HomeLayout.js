@@ -271,7 +271,7 @@ class HomeLayout extends React.PureComponent {
     }
     const layout = (
       <div
-        style={{ background: 'rgb(243, 245, 249)' }}
+        style={{ background: 'rgb(243, 245, 249)', minHeight: '100vh' }}
         className={
           styles['default-layout__container___13v1V'] + ' ' + styles['home__defaultLayout___Q6Udu']
         }
