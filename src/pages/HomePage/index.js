@@ -457,11 +457,9 @@ class NewFeed extends PureComponent {
           </div>
         )}
         */}
-        {loadingPage && (
-          <div className={styles.footer}>
-            <Footer />
-          </div>
-        )}
+        <div className={styles.footer}>
+          <Footer />
+        </div>
       </div>
     );
   }
