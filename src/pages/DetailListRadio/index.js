@@ -582,7 +582,7 @@ class ListRadio extends PureComponent {
                           >
                             <p>
                               Để kết bạn với {v.name} vui lòng soạn tin theo cú pháp: HHR {v.gcode}{' '}
-                              Gửi 8779. Để lấy thông tin kết bạn
+                              Gửi 8779.
                             </p>
                           </Modal>
                           <div>
