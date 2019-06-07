@@ -34,9 +34,46 @@ const MESSAGE = {
   CONFIRM_TOKEN: 'Vui lòng kiểm tra Email của bạn để xác thực tài khoản',
 };
 
-let usersDemo = [];
+let usersDemo = [
+  {
+    user_id: 'a0a8c0d5-88b7-4d2a-8015-51952e6748e2',
+    address: 'Đông Anh - Hà Nội',
+    avatar: 'cc81efc3-9957-4c15-abc5-b2845602e968',
+    country: null,
+    description: null,
+    distance: null,
+    dob_day: 27,
+    dob_month: 6,
+    public: 'active',
+    dob_year: 1997,
+    email: 'trjvjp97@gmail.com',
+    fullname: 'Nguyễn Hữu Trí ',
+    gender: 'male',
+    height: '177',
+    weight: '72',
+    hhr_goal: null,
+    phone: '0373962095',
+    uniqueid: null,
+    video: null,
+    jobs: { jobs: 'Ở nhà' },
+    education: { education: 'Đại học' },
+    audio: null,
+    phones: { '1': '0373962095' },
+    createat: '2019-03-14T14:59:27.728Z',
+  },
+];
 
-let loginDemo = [];
+let loginDemo = [
+  {
+    phone: '0373962095',
+    user_id: 'a0a8c0d5-88b7-4d2a-8015-51952e6748e2',
+    password: '$2a$10$4Ju7x0SFsPyU/hrhASRpPeuR37ncNj.hkkCuQbhMWLr.KyHhD9NxO',
+    password_hash_algorithm: 'bcrypt',
+    password_salt: '$2a$10$4Ju7x0SFsPyU/hrhASRpPe',
+    status: 'active',
+    rule: ['Member'],
+  },
+];
 
 let questionDemo = [
   {
@@ -1494,7 +1531,7 @@ function getUserCare(req, res) {
               obj.name = userCare.fullname;
               obj.gender = userCare.gender;
               obj.address = userCare.address;
-              obj.age = new Date().getFullYear() - userCare.dob_year;
+              obj.age = userCare.dob_year;
               obj.user_id = userCare.user_id;
               obj.created = e.created;
               obj.avatar = userCare.avatar;
@@ -1524,6 +1561,7 @@ function getUserCare(req, res) {
               obj.address = memCare.address;
               obj.location = memCare.location;
               obj.user_id = memCare.membersid;
+              obj.age = memCare.year;
               obj.created = e.created;
               obj.avatar = null;
               obj.timeup = memCare.timeup;
@@ -1596,7 +1634,7 @@ function getUserWhoCare(req, res) {
               obj.name = a.fullname;
               obj.gender = a.gender;
               obj.address = a.address;
-              obj.age = new Date().getFullYear() - a.dob_year;
+              obj.age = a.dob_year;
               obj.user_id = a.user_id;
               obj.created = e.created;
               obj.avatar = a.avatar;
