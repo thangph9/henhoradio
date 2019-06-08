@@ -255,156 +255,156 @@ class NewFeed extends PureComponent {
     ) {
       return <Redirect to="/home/newfeed?page=1&gender=all&age=18_24&sortby=newest_member" />;
     }
-    return (
-      <div className={styles['home-newfeed']}>
-        <div style={{ background: '#fff' }}>
-          <div className={styles['list-menu']}>
-            <div className={styles['tab-list']}>
-              <ul className={styles['tab-ul']}>
-                <li
-                  onClick={() => this.handleClickTab(0)}
-                  className={this.state.leftTab === 0 ? `${styles['active-tab']}` : ''}
+    if (!loadingPage) {
+      return (
+        <div className={styles['home-newfeed']}>
+          <div style={{ background: '#fff' }}>
+            <div className={styles['list-menu']}>
+              <div className={styles['tab-list']}>
+                <ul className={styles['tab-ul']}>
+                  <li
+                    onClick={() => this.handleClickTab(0)}
+                    className={this.state.leftTab === 0 ? `${styles['active-tab']}` : ''}
+                  >
+                    Tất cả
+                    <span style={{ left: `${this.state.leftTab * 100}%` }} />
+                  </li>
+                </ul>
+              </div>
+              <div className={styles['filter-button']}>
+                <Button
+                  id={styles['button-filter']}
+                  type="primary"
+                  icon="control"
+                  onClick={this.showDrawer}
                 >
-                  Tất cả
-                  <span style={{ left: `${this.state.leftTab * 100}%` }} />
-                </li>
-              </ul>
-            </div>
-            <div className={styles['filter-button']}>
-              <Button
-                id={styles['button-filter']}
-                type="primary"
-                icon="control"
-                onClick={this.showDrawer}
-              >
-                Lọc dữ liệu
-              </Button>
+                  Lọc dữ liệu
+                </Button>
 
-              <Icon id={styles['icon-filter']} type="control" onClick={this.showDrawer} />
-              <Drawer
-                title="Lựa chọn"
-                placement="right"
-                closable={false}
-                onClose={this.onClose}
-                visible={this.state.visible}
-              >
-                <div style={{ padding: '20px' }}>
-                  <div>
-                    <h3 style={{ color: 'gray' }}>Giới tính</h3>
-                    <hr style={{ marginBottom: '15px' }} />
-                    <RadioGroup
-                      onChange={e => this.onChangeRadioGender(e)}
-                      value={this.props.location.query.gender}
-                    >
-                      <Radio
-                        style={{ display: 'block', marginBottom: '10px', marginLeft: '15px' }}
-                        value="male"
-                      >
-                        Nam
-                      </Radio>
-                      <Radio
-                        style={{ display: 'block', marginBottom: '10px', marginLeft: '15px' }}
-                        value="female"
-                      >
-                        Nữ
-                      </Radio>
-                      <Radio
-                        style={{ display: 'block', marginBottom: '10px', marginLeft: '15px' }}
-                        value="all"
-                      >
-                        Cả nam và nữ
-                      </Radio>
-                    </RadioGroup>
-                  </div>
-                  <div style={{ marginTop: '20px' }}>
-                    <h3 style={{ color: 'gray' }}>Độ tuổi</h3>
-                    <hr style={{ marginBottom: '15px' }} />
-                    <RadioGroup
-                      onChange={e => this.onChangeRadioAge(e)}
-                      value={this.props.location.query.age}
-                    >
-                      <Radio
-                        style={{ display: 'block', marginBottom: '10px', marginLeft: '15px' }}
-                        value="18_24"
-                      >
-                        Từ 18 - 24 tuổi
-                      </Radio>
-                      <Radio
-                        style={{ display: 'block', marginBottom: '10px', marginLeft: '15px' }}
-                        value="25_35"
-                      >
-                        Từ 25 - 35 tuổi
-                      </Radio>
-                      <Radio
-                        style={{ display: 'block', marginBottom: '10px', marginLeft: '15px' }}
-                        value="36"
-                      >
-                        Ngoài 35 tuổi
-                      </Radio>
-                    </RadioGroup>
-                  </div>
-                </div>
-                <button
-                  onClick={() => this.handleFinishButton()}
-                  className={styles['button-finish']}
+                <Icon id={styles['icon-filter']} type="control" onClick={this.showDrawer} />
+                <Drawer
+                  title="Lựa chọn"
+                  placement="right"
+                  closable={false}
+                  onClose={this.onClose}
+                  visible={this.state.visible}
                 >
-                  Hoàn tất
-                </button>
-              </Drawer>
-            </div>
-          </div>
-        </div>
-        {this.state.leftTab === 0 && (
-          <div className={styles.container}>
-            <div className={styles['mobile-filter']}>
-              {this.state.tag_item.length > 0 && (
-                <div className={styles['tag-item']}>
-                  {this.state.tag_item.map((v, i) => (
-                    <Tag style={{ marginBottom: '5px' }} key={i}>
-                      {v.value}
-                    </Tag>
-                  ))}
-                </div>
-              )}
-              <div className={styles['mobile-sort']}>
-                <div
-                  onClick={() => this.handleClickButtonSort()}
-                  data-v-03b85949={this.state.activeSort}
-                  className={styles['copy-bar']}
-                >
-                  <span data-v-03b85949>Sắp xếp </span>
-                  <Icon type="caret-down" />
-                </div>
-                {this.state.activeSort && (
-                  <ul data-v-03b85949 className={styles['format-dd']}>
-                    <li
-                      onClick={() => this.handleChangeSort('age_descending')}
-                      data-v-03b85949
-                      className={styles['format-option']}
-                    >
-                      Tuổi giảm dần
-                    </li>
-                    <li
-                      onClick={() => this.handleChangeSort('age_ascending')}
-                      data-v-03b85949
-                      className={styles['format-option']}
-                    >
-                      Tuổi tăng dần
-                    </li>
-                    <li
-                      onClick={() => this.handleChangeSort('newest_member')}
-                      data-v-03b85949
-                      className={styles['format-option']}
-                    >
-                      Thành viên mới
-                    </li>
-                  </ul>
-                )}
+                  <div style={{ padding: '20px' }}>
+                    <div>
+                      <h3 style={{ color: 'gray' }}>Giới tính</h3>
+                      <hr style={{ marginBottom: '15px' }} />
+                      <RadioGroup
+                        onChange={e => this.onChangeRadioGender(e)}
+                        value={this.props.location.query.gender}
+                      >
+                        <Radio
+                          style={{ display: 'block', marginBottom: '10px', marginLeft: '15px' }}
+                          value="male"
+                        >
+                          Nam
+                        </Radio>
+                        <Radio
+                          style={{ display: 'block', marginBottom: '10px', marginLeft: '15px' }}
+                          value="female"
+                        >
+                          Nữ
+                        </Radio>
+                        <Radio
+                          style={{ display: 'block', marginBottom: '10px', marginLeft: '15px' }}
+                          value="all"
+                        >
+                          Cả nam và nữ
+                        </Radio>
+                      </RadioGroup>
+                    </div>
+                    <div style={{ marginTop: '20px' }}>
+                      <h3 style={{ color: 'gray' }}>Độ tuổi</h3>
+                      <hr style={{ marginBottom: '15px' }} />
+                      <RadioGroup
+                        onChange={e => this.onChangeRadioAge(e)}
+                        value={this.props.location.query.age}
+                      >
+                        <Radio
+                          style={{ display: 'block', marginBottom: '10px', marginLeft: '15px' }}
+                          value="18_24"
+                        >
+                          Từ 18 - 24 tuổi
+                        </Radio>
+                        <Radio
+                          style={{ display: 'block', marginBottom: '10px', marginLeft: '15px' }}
+                          value="25_35"
+                        >
+                          Từ 25 - 35 tuổi
+                        </Radio>
+                        <Radio
+                          style={{ display: 'block', marginBottom: '10px', marginLeft: '15px' }}
+                          value="36"
+                        >
+                          Ngoài 35 tuổi
+                        </Radio>
+                      </RadioGroup>
+                    </div>
+                  </div>
+                  <button
+                    onClick={() => this.handleFinishButton()}
+                    className={styles['button-finish']}
+                  >
+                    Hoàn tất
+                  </button>
+                </Drawer>
               </div>
             </div>
-            <div className={styles.row}>
-              {!loadingPage ? (
-                this.getDataFilter(allUser)
+          </div>
+          {this.state.leftTab === 0 && (
+            <div className={styles.container}>
+              <div className={styles['mobile-filter']}>
+                {this.state.tag_item.length > 0 && (
+                  <div className={styles['tag-item']}>
+                    {this.state.tag_item.map((v, i) => (
+                      <Tag style={{ marginBottom: '5px' }} key={i}>
+                        {v.value}
+                      </Tag>
+                    ))}
+                  </div>
+                )}
+                <div className={styles['mobile-sort']}>
+                  <div
+                    onClick={() => this.handleClickButtonSort()}
+                    data-v-03b85949={this.state.activeSort}
+                    className={styles['copy-bar']}
+                  >
+                    <span data-v-03b85949>Sắp xếp </span>
+                    <Icon type="caret-down" />
+                  </div>
+                  {this.state.activeSort && (
+                    <ul data-v-03b85949 className={styles['format-dd']}>
+                      <li
+                        onClick={() => this.handleChangeSort('age_descending')}
+                        data-v-03b85949
+                        className={styles['format-option']}
+                      >
+                        Tuổi giảm dần
+                      </li>
+                      <li
+                        onClick={() => this.handleChangeSort('age_ascending')}
+                        data-v-03b85949
+                        className={styles['format-option']}
+                      >
+                        Tuổi tăng dần
+                      </li>
+                      <li
+                        onClick={() => this.handleChangeSort('newest_member')}
+                        data-v-03b85949
+                        className={styles['format-option']}
+                      >
+                        Thành viên mới
+                      </li>
+                    </ul>
+                  )}
+                </div>
+              </div>
+              <div className={styles.row}>
+                {this.getDataFilter(allUser)
                   .filter((value, index) => index >= page * 20 - 20 && index < page * 20)
                   .map((v, i) => (
                     <Link
@@ -422,42 +422,33 @@ class NewFeed extends PureComponent {
                         </div>
                       </div>
                     </Link>
-                  ))
-              ) : (
-                <div style={{ width: '100%' }}>
-                  <PageLoading />
-                </div>
-              )}
+                  ))}
+              </div>
+              <Pagination
+                style={{
+                  padding: '5px',
+                  display: 'table',
+                  margin: '0 auto',
+                  marginTop: '30px',
+                  marginBottom: '20px',
+                }}
+                onChange={(v1, v2) => this.handleChangePagination(v1, v2)}
+                current={Number(page)}
+                pageSize={20}
+                total={this.getDataFilter(allUser).length}
+              />
             </div>
-            <Pagination
-              hideOnSinglePage
-              style={{
-                padding: '5px',
-                display: 'table',
-                margin: '0 auto',
-                marginTop: '30px',
-                marginBottom: '20px',
-              }}
-              onChange={(v1, v2) => this.handleChangePagination(v1, v2)}
-              current={Number(page)}
-              pageSize={20}
-              total={this.getDataFilter(allUser).length}
-            />
+          )}
+          <div className={styles.footer}>
+            <Footer />
           </div>
-        )}
-        {/*
-           {this.state.leftTab === 1 && (
-          <div className={styles.container}>
-            <span>Day la menu 2</span>
-          </div>
-        )}
-        {this.state.leftTab === 2 && (
-          <div className={styles.container}>
-            <span>Day la menu 3</span>
-          </div>
-        )}
-        */}
-        <div style={loadingPage ? { marginTop: '1000px' } : {}} className={styles.footer}>
+        </div>
+      );
+    }
+    return (
+      <div style={{ width: '100%' }}>
+        <PageLoading />
+        <div style={{ marginTop: '1000px' }} className={styles.footer}>
           <Footer />
         </div>
       </div>
