@@ -747,10 +747,15 @@ class ListRadio extends PureComponent {
                 ))}
             </div>
             <Pagination
-              style={{ padding: '5px', float: 'right', marginTop: '30px' }}
+              style={{
+                padding: '5px',
+                display: 'table',
+                margin: '0 auto',
+                marginTop: '30px',
+                marginBottom: '20px',
+              }}
               onChange={(v1, v2) => this.handleChangePagination(v1, v2)}
               current={Number(this.props.location.query.page)}
-              hideOnSinglePage
               pageSize={20}
               total={dataFilter ? dataFilter.length : detailList.length}
             />

@@ -358,7 +358,6 @@ class Care extends PureComponent {
           </div>
         </div>
         <Pagination
-          hideOnSinglePage
           style={{
             padding: '5px',
             display: 'table',
