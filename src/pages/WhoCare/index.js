@@ -38,12 +38,14 @@ class WhoCare extends PureComponent {
     dataUserCare: [],
     activeSort: false,
     visible: false,
+    loadingPage: true,
   };
 
   componentWillReceiveProps(nextProps) {
     if (this.props.getuserwhocare !== nextProps.getuserwhocare) {
       this.setState({
         dataUserWhoCare: nextProps.getuserwhocare,
+        loadingPage: false,
       });
     }
     if (this.props.getusercare !== nextProps.getusercare) {
@@ -351,7 +353,7 @@ class WhoCare extends PureComponent {
         />
         <div>
           <div
-            style={!this.state.dataUserWhoCare.length > 0 ? { marginTop: '1000px' } : {}}
+            style={this.state.loadingPage ? { marginTop: '1000px' } : {}}
             className={styles.footer}
           >
             <Footer />

@@ -37,12 +37,14 @@ class Care extends PureComponent {
     dataUserCare: [],
     activeSort: false,
     visible: false,
+    loadingPage: true,
   };
 
   componentWillReceiveProps(nextProps) {
     if (this.props.getusercare !== nextProps.getusercare) {
       this.setState({
         dataUserCare: nextProps.getusercare,
+        loadingPage: false,
       });
     }
   }
@@ -372,7 +374,7 @@ class Care extends PureComponent {
         />
         <div>
           <div
-            style={!dataUserCare.length > 0 ? { marginTop: '1000px' } : {}}
+            style={this.state.loadingPage ? { marginTop: '1000px' } : {}}
             className={styles.footer}
           >
             <Footer />
