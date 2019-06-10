@@ -594,9 +594,10 @@ class ListRadio extends PureComponent {
                             footer={null}
                           >
                             <p>
-                              Để kết bạn với {v.name} vui lòng soạn tin theo cú pháp:{' '}
-                              <span style={{ fontWeight: 600, color: '#333' }}>HHR</span> {v.gcode}{' '}
-                              Gửi <span style={{ fontWeight: 600, color: '#333' }}>8779</span>.
+                              Để kết bạn với <span className={styles.bold}>{v.name}</span> vui lòng
+                              soạn tin theo cú pháp: <span className={styles.bold}>HHR</span>{' '}
+                              <span className={styles.bold}>{v.gcode} </span>
+                              Gửi <span className={styles.bold}>8779</span>.
                             </p>
                           </Modal>
                           <div>
