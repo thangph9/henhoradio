@@ -345,9 +345,24 @@ class ListRadio extends PureComponent {
 
   //---------------------------------
 
+  destroyMessage() {
+    message.destroy();
+  }
+
   playAudioReact(value) {
     if (!this.state[`duration-${value}`]) {
-      message.error('Tệp tin bị lỗi');
+      message.open({
+        content: 'Tệp tin bị lỗi',
+        icon: (
+          <Icon
+            style={{ color: 'red' }}
+            theme="filled"
+            onClick={() => this.destroyMessage()}
+            type="close-circle"
+          />
+        ),
+        duration: 5,
+      });
       return;
     }
     const { globalPlaying } = this.state;
@@ -582,8 +597,9 @@ class ListRadio extends PureComponent {
                             footer={null}
                           >
                             <p>
-                              Để kết bạn với {v.name} vui lòng soạn tin theo cú pháp: HHR {v.gcode}{' '}
-                              Gửi 8779.
+                              Để kết bạn với {v.name} vui lòng soạn tin theo cú pháp:{' '}
+                              <span style={{ fontWeight: 600, color: '#333' }}>HHR</span> {v.gcode}{' '}
+                              Gửi <span style={{ fontWeight: 600, color: '#333' }}>8779</span>.
                             </p>
                           </Modal>
                           <div>

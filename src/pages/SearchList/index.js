@@ -262,9 +262,24 @@ class ListRadio extends PureComponent {
     }`;
   }
 
+  destroyMessage() {
+    message.destroy();
+  }
+
   playAudioReact(value) {
     if (!this.state[`duration-${value}`]) {
-      message.error('Tệp tin bị lỗi');
+      message.open({
+        content: 'Tệp tin bị lỗi',
+        icon: (
+          <Icon
+            style={{ color: 'red' }}
+            theme="filled"
+            onClick={() => this.destroyMessage()}
+            type="close-circle"
+          />
+        ),
+        duration: 5,
+      });
       return;
     }
     const { globalPlaying } = this.state;
