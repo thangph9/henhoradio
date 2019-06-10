@@ -472,12 +472,9 @@ class ListRadio extends PureComponent {
   }
 
   checkCare(value) {
-    if (this.state.dataUserCare.length > 0) {
-      const check = this.state.dataUserCare.find(v => v.user_id === value);
-      if (check) return true;
-      return false;
-    }
-    return undefined;
+    const check = this.state.dataUserCare.find(v => v.user_id === value);
+    if (check) return true;
+    return false;
   }
 
   render() {
@@ -671,7 +668,7 @@ class ListRadio extends PureComponent {
                           >
                             <Icon type="star" theme="filled" />
                           </Popconfirm>
-                        ) : this.checkCare(v.membersid) !== undefined ? (
+                        ) : localStorage.token ? (
                           <Icon
                             onClick={() => this.handleChangeCare(v, this.checkCare(v.membersid))}
                             type="star"
