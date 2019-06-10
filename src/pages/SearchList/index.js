@@ -20,7 +20,7 @@ import React, { PureComponent } from 'react';
 import { connect } from 'dva';
 import { Skeleton, Icon, DatePicker, Select, Pagination, message } from 'antd';
 import { Redirect, Link } from 'react-router-dom';
-import Footer from '@/layouts/Footer';
+import HHRFooter from '@/layouts/HHRFooter';
 import ReactPlayer from 'react-player';
 import moment from 'moment';
 import PageLoading from '@/components/PageLoading';
@@ -595,7 +595,7 @@ class ListRadio extends PureComponent {
             />
           </div>
           <div className={styles.footer}>
-            <Footer />
+            <HHRFooter />
           </div>
         </div>
       );
@@ -604,7 +604,7 @@ class ListRadio extends PureComponent {
       <div>
         <PageLoading />
         <div style={{ marginTop: '1000px' }} className={styles.footer}>
-          <Footer />
+          <HHRFooter />
         </div>
       </div>
     );

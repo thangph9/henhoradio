@@ -24,7 +24,7 @@ import { connect } from 'dva';
 import { Link, Redirect } from 'react-router-dom';
 import { Drawer, Button, Radio, Icon, Pagination, Popconfirm } from 'antd';
 import PageLoading from '@/components/PageLoading';
-import Footer from '@/layouts/Footer';
+import HHRFooter from '@/layouts/HHRFooter';
 import moment from 'moment';
 import styles from './index.less';
 
@@ -377,7 +377,7 @@ class Care extends PureComponent {
             style={this.state.loadingPage ? { marginTop: '1000px' } : {}}
             className={styles.footer}
           >
-            <Footer />
+            <HHRFooter />
           </div>
         </div>
       </div>

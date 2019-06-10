@@ -287,14 +287,19 @@ class ThongTinCaNhan extends Component {
                     },
                   ],
                   initialValue: dataUser.fullname,
-                })(<Input prefix={<Icon type="user" style={{ color: 'rgba(0,0,0,.25)' }} />} />)}
+                })(
+                  <Input
+                    disabled
+                    prefix={<Icon type="user" style={{ color: 'rgba(0,0,0,.25)' }} />}
+                  />
+                )}
               </Form.Item>
               <Form.Item label="Giới tính">
                 {getFieldDecorator('gender', {
                   rules: [{ required: true, message: 'Vui lòng chọn giới tính' }],
                   initialValue: dataUser.gender,
                 })(
-                  <Radio.Group buttonStyle="solid">
+                  <Radio.Group disabled buttonStyle="solid">
                     <Radio.Button value="male">Nam</Radio.Button>
                     <Radio.Button value="female">Nữ</Radio.Button>
                   </Radio.Group>
@@ -306,7 +311,7 @@ class ThongTinCaNhan extends Component {
                     rules: [{ required: true, message: 'Vui lòng chọn giới tính' }],
                     initialValue: dataUser.dob_day,
                   })(
-                    <Select style={{ minWidth: '100px' }}>
+                    <Select disabled style={{ minWidth: '100px' }}>
                       {dayInMonthFull.map((v, i) => (
                         <Option key={i} value={v}>
                           {v}
@@ -320,7 +325,7 @@ class ThongTinCaNhan extends Component {
                     rules: [{ required: true, message: 'Vui lòng chọn giới tính' }],
                     initialValue: dataUser.dob_month,
                   })(
-                    <Select style={{ minWidth: '100px' }}>
+                    <Select disabled style={{ minWidth: '100px' }}>
                       {months.map((v, i) => (
                         <Option key={i} value={v}>
                           {v}
@@ -334,7 +339,7 @@ class ThongTinCaNhan extends Component {
                     rules: [{ required: true, message: 'Vui lòng chọn giới tính' }],
                     initialValue: dataUser.dob_year,
                   })(
-                    <Select style={{ minWidth: '100px' }}>
+                    <Select disabled style={{ minWidth: '100px' }}>
                       {years.map((v, i) => (
                         <Option key={i} value={v}>
                           {v}

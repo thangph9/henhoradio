@@ -24,7 +24,7 @@ import { connect } from 'dva';
 import { Link, Redirect } from 'react-router-dom';
 import { Drawer, Button, Radio, Icon, Pagination, Popconfirm } from 'antd';
 import moment from 'moment';
-import Footer from '@/layouts/Footer';
+import HHRFooter from '@/layouts/HHRFooter';
 import styles from './index.less';
 
 const RadioGroup = Radio.Group;
@@ -356,7 +356,7 @@ class WhoCare extends PureComponent {
             style={this.state.loadingPage ? { marginTop: '1000px' } : {}}
             className={styles.footer}
           >
-            <Footer />
+            <HHRFooter />
           </div>
         </div>
       </div>

@@ -3,6 +3,7 @@
 /* eslint-disable camelcase */
 import React, { Component } from 'react';
 import { connect } from 'dva';
+import HHRFooter from '@/layouts/HHRFooter';
 import styles from './MenuLeft.less';
 
 @connect(({ profile, loading, authentication, myprops, user }) => ({
@@ -144,6 +145,9 @@ class Info extends Component {
             </div>
             <div className={styles['detail-right']}>{children}</div>
           </div>
+        </div>
+        <div className={styles.footer}>
+          <HHRFooter />
         </div>
       </div>
     );
