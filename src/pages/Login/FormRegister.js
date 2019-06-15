@@ -4,7 +4,7 @@
 
 import React, { PureComponent } from 'react';
 import { connect } from 'dva';
-import { Form, Input, Button, Popover, Progress, Select, Icon } from 'antd';
+import { Form, Input, Button, Popover, Progress, Select, Icon, message } from 'antd';
 // import {Link} from 'react-router-dom'
 import ReCAPTCHA from 'react-google-recaptcha';
 import 'antd/dist/antd.less';
@@ -145,7 +145,7 @@ class FormRegister extends PureComponent {
 
     if (authentication.register !== nextProps.authentication.register) {
       if (nextProps.authentication.register.status === 'ok') {
-        nextProps.history.push({ pathname: '/question' });
+        nextProps.history.push({ pathname: '/register-success' });
       }
       if (
         nextProps.authentication.register.status === 'error' &&
@@ -553,7 +553,7 @@ class FormRegister extends PureComponent {
                 pattern: /^[a-zA-ZàáạảãâầấậẩẫăằắặẳẵèéẹẻẽêềếệểễìíịỉĩòóọỏõôồốộổỗơờớợởỡùúụủũưừứựửữỳýỵỷỹđÀÁẠẢÃÂẦẤẬẨẪĂẰẮẶẲẴÈÉẸẺẼÊỀẾỆỂỄÌÍỊỈĨÒÓỌỎÕÔỒỐỘỔỖƠỜỚỢỞỠÙÚỤỦŨƯỪỨỰỬỮỲÝỴỶỸĐ][a-zA-Z àáạảãâầấậẩẫăằắặẳẵèéẹẻẽêềếệểễìíịỉĩòóọỏõôồốộổỗơờớợởỡùúụủũưừứựửữỳýỵỷỹđÀÁẠẢÃÂẦẤẬẨẪĂẰẮẶẲẴÈÉẸẺẼÊỀẾỆỂỄÌÍỊỈĨÒÓỌỎÕÔỒỐỘỔỖƠỜỚỢỞỠÙÚỤỦŨƯỪỨỰỬỮỲÝỴỶỸĐ]{2,30}$/,
               },
             ],
-          })(<Input onChange={e => this.handleChangeName(e)} placeholder="Ví dụ bạn là Trí" />)}
+          })(<Input onChange={e => this.handleChangeName(e)} placeholder="Ví dụ Thu Trang" />)}
         </Form.Item>
         <Form.Item
           label="Giới tính"

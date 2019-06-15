@@ -72,9 +72,9 @@ export default [
   },
 
   {
-    path: '/test',
+    path: '/register-success',
     component: '../layouts/EmptyLayout',
-    routes: [{ path: '/test', component: './User/RegisterResult.js' }],
+    routes: [{ path: '/register-success', component: './ResgisterResult' }],
   },
   {
     path: '/landing-page',

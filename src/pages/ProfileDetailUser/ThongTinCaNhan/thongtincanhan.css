@@ -139,8 +139,8 @@
   height: 180px;
   border-radius: 50%;
   display: table;
-  position: relative;
   margin: 0 auto;
+ 
 }
 @media (max-width: 767px) {
   .thong-tin-ca-nhan {
