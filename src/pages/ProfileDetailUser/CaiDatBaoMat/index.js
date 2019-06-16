@@ -1,7 +1,7 @@
 /* eslint-disable no-useless-escape */
 import React, { Component } from 'react';
 import { connect } from 'dva';
-import { Icon, Input, Button, Skeleton, message, Form, Popover, Progress } from 'antd';
+import { Icon, Input, Button, Skeleton, message, Form, Popover, Progress, Modal } from 'antd';
 import styles from './caidatbaomat.less';
 
 const passwordStatusMap = {
@@ -206,21 +206,39 @@ class CaiDatBaoMat extends Component {
   }
 
   handleDonePhone() {
-    const { valuePhone } = this.state;
+    const { valuePhone, dataUser } = this.state;
+    // eslint-disable-next-line no-unused-vars
     const { dispatch } = this.props;
     if (/^\d{10}$/.test(valuePhone) === false) {
-      message.error('Số điện thoại không đúng!');
+      message.error('Số điện thoại không đúng định dạng!');
       return;
     }
+    this.setState({
+      editPhone: false,
+    });
+    Modal.info({
+      title: 'Cập nhật số điện thoại liên hệ mới',
+      content: (
+        <div>
+          <p>
+            Số điện thoại liên hệ của bạn vẫn là:{' '}
+            {dataUser.phones ? dataUser.phones['1'] : dataUser.phone}{' '}
+          </p>
+          <p>
+            Vui lòng dùng số điện thoại nhắn tin: HHR CONFIRM gửi 8179 để xác thực số điện thoại
+          </p>
+        </div>
+      ),
+      onOk() {},
+    });
+    /*
     dispatch({
       type: 'authentication/updatephone',
       payload: {
         phone: valuePhone,
       },
     });
-    this.setState({
-      editPhone: false,
-    });
+    */
   }
 
   handleDoneEmail() {
@@ -288,7 +306,7 @@ class CaiDatBaoMat extends Component {
         <div className={styles['cai-dat-bao-mat']}>
           <div className={styles.item}>
             <div className={styles['title-item']}>
-              Điện thoai liên hệ
+              Điện thoại liên hệ với bạn
               {!editPhone ? (
                 <Icon
                   onClick={() => this.handleChangePhone()}
@@ -314,6 +332,7 @@ class CaiDatBaoMat extends Component {
               )}
               {editPhone ? (
                 <Input
+                  type="number"
                   onChange={e => this.handleChangeInputPhone(e)}
                   size="small"
                   style={{ marginTop: '5px', width: '40%', display: 'block' }}
@@ -332,7 +351,7 @@ class CaiDatBaoMat extends Component {
           </div>
           <div className={styles.item}>
             <div className={styles['title-item']}>
-              Địa chỉ khôi phục{' '}
+              Email của bạn{' '}
               {!editEmail ? (
                 <Icon
                   onClick={() => this.handleChangeEmail()}

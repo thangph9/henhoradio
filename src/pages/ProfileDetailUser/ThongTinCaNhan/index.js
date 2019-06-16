@@ -1,3 +1,4 @@
+/* eslint-disable class-methods-use-this */
 /* eslint-disable react/no-will-update-set-state */
 /* eslint-disable react/sort-comp */
 /* eslint-disable no-return-assign */
@@ -12,7 +13,19 @@
 import React, { Component } from 'react';
 import moment from 'moment';
 import { connect } from 'dva';
-import { Icon, Input, Button, Skeleton, Form, Radio, Select, Upload, Tooltip, message } from 'antd';
+import {
+  Icon,
+  Input,
+  Button,
+  Skeleton,
+  Form,
+  Radio,
+  Select,
+  Upload,
+  Tooltip,
+  message,
+  Checkbox,
+} from 'antd';
 import styles from './thongtincanhan.less';
 
 // eslint-disable-next-line prefer-destructuring
@@ -76,6 +89,194 @@ const years = [
   1947,
   1946,
   1945,
+];
+const height = [
+  145,
+  146,
+  147,
+  148,
+  149,
+  150,
+  151,
+  152,
+  153,
+  154,
+  155,
+  156,
+  157,
+  158,
+  159,
+  160,
+  161,
+  162,
+  163,
+  164,
+  165,
+  166,
+  167,
+  168,
+  169,
+  170,
+  171,
+  172,
+  173,
+  174,
+  175,
+  176,
+  177,
+  178,
+  179,
+  180,
+  181,
+  182,
+  183,
+  184,
+  185,
+  186,
+  187,
+  188,
+  189,
+  190,
+  191,
+  192,
+];
+const weight = [
+  30,
+  31,
+  32,
+  33,
+  34,
+  35,
+  36,
+  37,
+  38,
+  39,
+  40,
+  41,
+  42,
+  43,
+  44,
+  45,
+  46,
+  47,
+  48,
+  49,
+  50,
+  51,
+  52,
+  53,
+  54,
+  55,
+  56,
+  57,
+  58,
+  59,
+  60,
+  61,
+  62,
+  63,
+  64,
+  65,
+  66,
+  67,
+  68,
+  69,
+  70,
+  71,
+  72,
+  73,
+  74,
+  75,
+  76,
+  77,
+  78,
+  79,
+  80,
+  81,
+  82,
+  83,
+  84,
+  85,
+  86,
+  87,
+  88,
+  89,
+  90,
+  91,
+  92,
+  93,
+  94,
+  95,
+  96,
+  97,
+  98,
+  99,
+  100,
+];
+const addressInVN = [
+  'Cần Thơ',
+  'Đà Nẵng',
+  'Hải Phòng',
+  'Hà Nội',
+  'TP HCM',
+  'An Giang',
+  'Bà Rịa - Vũng Tàu',
+  'Bắc Giang',
+  'Bắc Kạn',
+  'Bạc Liêu',
+  'Bắc Ninh',
+  'Bến Tre',
+  'Bình Định',
+  'Bình Dương',
+  'Bình Phước',
+  'Bình Thuận',
+  'Cà Mau',
+  'Cao Bằng',
+  'Đắk Lắk',
+  'Đắk Nông',
+  'Điện Biên',
+  'Đồng Nai',
+  'Đồng Tháp',
+  'Gia Lai',
+  'Hà Giang',
+  'Hà Nam',
+  'Hà Tĩnh',
+  'Hải Dương',
+  'Hậu Giang',
+  'Hòa Bình',
+  'Hưng Yên',
+  'Khánh Hòa',
+  'Kiên Giang',
+  'Kon Tum',
+  'Lai Châu',
+  'Lâm Đồng',
+  'Lạng Sơn',
+  'Lào Cai',
+  'Long An',
+  'Nam Định',
+  'Nghệ An',
+  'Ninh Bình',
+  'Ninh Thuận',
+  'Phú Thọ',
+  'Quảng Bình',
+  'Quảng Nam',
+  'Quảng Ngãi',
+  'Quảng Ninh',
+  'Quảng Trị',
+  'Sóc Trăng',
+  'Sơn La',
+  'Tây Ninh',
+  'Thái Bình',
+  'Thái Nguyên',
+  'Thanh Hóa',
+  'Thừa Thiên Huế',
+  'Tiền Giang',
+  'Trà Vinh',
+  'Tuyên Quang',
+  'Vĩnh Long',
+  'Vĩnh Phúc',
+  'Yên Bái',
+  'Phú Yên',
 ];
 const months = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12];
 const dayInMonthFull = [
@@ -189,16 +390,96 @@ class ThongTinCaNhan extends Component {
   }
 
   handleSubmit = e => {
+    // eslint-disable-next-line no-unused-vars
     const { form, dispatch } = this.props;
     const { avatarImage } = this.state;
     e.preventDefault();
+    const jobs1 = form.getFieldValue('jobs1');
+    const jobs2 = form.getFieldValue('jobs2');
+    const asset1 = form.getFieldValue('asset1');
+    const asset2 = form.getFieldValue('asset2');
+    const hobby1 = form.getFieldValue('hobby1');
+    const hobby2 = form.getFieldValue('hobby2');
+    const marriage = form.getFieldValue('marriage');
+    const living = form.getFieldValue('living');
+    if (!living) {
+      form.setFields({
+        living: {
+          errors: [new Error('Vui lòng nhập địa chỉ thường trú')],
+        },
+      });
+    }
+    if (!jobs1) {
+      form.setFields({
+        jobs1: {
+          errors: [new Error('Vui lòng nhập thêm công việc')],
+        },
+      });
+    }
+    if (!jobs2) {
+      form.setFields({
+        jobs2: {
+          errors: [new Error('Vui lòng nhập thu nhập hàng tháng')],
+        },
+      });
+    }
+    if (!asset1) {
+      form.setFields({
+        asset1: {
+          errors: [new Error('Vui lòng nhập thêm 1 số tài sản')],
+        },
+      });
+    }
+    if (!asset2) {
+      form.setFields({
+        asset2: {
+          errors: [new Error('Vui lòng nhập thêm 1 số tài sản')],
+        },
+      });
+    }
+    if (!hobby1) {
+      form.setFields({
+        hobby1: {
+          errors: [new Error('Vui lòng nhập thêm 1 số sở thích của bạn')],
+        },
+      });
+    }
+    if (!hobby2) {
+      form.setFields({
+        hobby2: {
+          errors: [new Error('Vui lòng nhập thêm 1 số sở thích của bạn')],
+        },
+      });
+    }
+    if (!marriage) {
+      form.setFields({
+        marriage: {
+          errors: [new Error('Vui lòng chọn tình trạng hôn nhân của bạn')],
+        },
+      });
+    }
+
     form.validateFields((err, values) => {
       values.avatar = avatarImage;
+      values.confirmCheck = this.state.dataUser.vov;
       if (!err) {
-        dispatch({
+        if (!jobs1 || !jobs2 || !asset1 || !asset2 || !hobby1 || !hobby2 || !marriage || !living) {
+          this.setState({
+            confirmSubmit: false,
+          });
+          return;
+        }
+        this.setState({
+          confirmSubmit: true,
+        });
+        console.log(values);
+        /*
+
+          dispatch({
           type: 'authentication/updateprofileuser',
           payload: values,
-        });
+          });
+          */
       }
     });
   };
@@ -267,6 +548,100 @@ class ThongTinCaNhan extends Component {
     }
   }
 
+  handleChangeHeight(e) {
+    console.log(e);
+  }
+
+  handleChangeWeight(e) {
+    console.log(e);
+  }
+
+  onChangeEducation(e) {
+    console.log(e);
+  }
+
+  onChangeMarriage(e) {
+    console.log(e);
+    this.props.form.setFields({
+      marriage: {
+        errors: null,
+      },
+    });
+  }
+
+  handleChangeLiving(e) {
+    console.log(e);
+    this.props.form.setFields({
+      living: {
+        errors: null,
+      },
+    });
+  }
+
+  handleChangeHobby1() {
+    this.props.form.setFields({
+      hobby1: {
+        errors: null,
+      },
+    });
+  }
+
+  handleChangeHobby2() {
+    this.props.form.setFields({
+      hobby2: {
+        errors: null,
+      },
+    });
+  }
+
+  handleChangeJobs1() {
+    this.props.form.setFields({
+      jobs1: {
+        errors: null,
+      },
+    });
+  }
+
+  handleChangeJobs2() {
+    this.props.form.setFields({
+      jobs2: {
+        errors: null,
+      },
+    });
+  }
+
+  handleChangeAsset1() {
+    this.props.form.setFields({
+      asset1: {
+        errors: null,
+      },
+    });
+  }
+
+  handleChangeAsset2() {
+    this.props.form.setFields({
+      asset2: {
+        errors: null,
+      },
+    });
+  }
+
+  onChangeCheckBox(e) {
+    this.setState({
+      dataUser: { ...this.state.dataUser, vov: e.target.checked },
+    });
+  }
+
+  onChangeCheckBoxActiveFriend(e) {
+    this.setState({
+      dataUser: { ...this.state.dataUser, activeFriend: e.target.checked },
+    });
+  }
+
+  onChangeVOV(e) {
+    console.log(e);
+  }
+
   render() {
     const { getFieldDecorator } = this.props.form;
     const { loading } = this.props;
@@ -278,14 +653,7 @@ class ThongTinCaNhan extends Component {
             <Form onSubmit={this.handleSubmit} className="login-form">
               <Form.Item label="Tên đầy đủ">
                 {getFieldDecorator('fullname', {
-                  rules: [
-                    { required: true, message: 'Vui lòng nhập đầy đủ tên của bạn' },
-                    {
-                      required: true,
-                      message: 'Ký tự không hợp lệ!',
-                      pattern: /^[a-zA-Z0-9 àáạảãâầấậẩẫăằắặẳẵèéẹẻẽêềếệểễìíịỉĩòóọỏõôồốộổỗơờớợởỡùúụủũưừứựửữỳýỵỷỹđÀÁẠẢÃÂẦẤẬẨẪĂẰẮẶẲẴÈÉẸẺẼÊỀẾỆỂỄÌÍỊỈĨÒÓỌỎÕÔỒỐỘỔỖƠỜỚỢỞỠÙÚỤỦŨƯỪỨỰỬỮỲÝỴỶỸĐ]{1,30}$/,
-                    },
-                  ],
+                  rules: [{ required: true, message: 'Vui lòng nhập đầy đủ tên của bạn' }],
                   initialValue: dataUser.fullname,
                 })(
                   <Input
@@ -349,71 +717,186 @@ class ThongTinCaNhan extends Component {
                   )}
                 </Form.Item>
               </div>
-              <Form.Item label="Địa chỉ">
+              <Form.Item label="Thường trú">
+                {getFieldDecorator('living', {
+                  rules: [{ required: true, message: 'Vui lòng chọn nơi thường trú' }],
+                  onChange: e => this.handleChangeLiving(e),
+                  initialValue: dataUser.living,
+                })(
+                  <Select showSearch placeholder="Thường trú">
+                    {addressInVN.map(v => (
+                      <Option key={v} value={v}>
+                        {v}
+                      </Option>
+                    ))}
+                  </Select>
+                )}
+              </Form.Item>
+              <Form.Item label="Quê quán">
                 {getFieldDecorator('address', {
-                  rules: [
-                    { required: true, message: 'Vui lòng chọn địa chỉ' },
-                    {
-                      required: true,
-                      message: 'Ký tự không hợp lệ!',
-                      pattern: /^[a-zA-Z0-9 -àáạảãâầấậẩẫăằắặẳẵèéẹẻẽêềếệểễìíịỉĩòóọỏõôồốộổỗơờớợởỡùúụủũưừứựửữỳýỵỷỹđÀÁẠẢÃÂẦẤẬẨẪĂẰẮẶẲẴÈÉẸẺẼÊỀẾỆỂỄÌÍỊỈĨÒÓỌỎÕÔỒỐỘỔỖƠỜỚỢỞỠÙÚỤỦŨƯỪỨỰỬỮỲÝỴỶỸĐ]{1,50}$/,
-                    },
-                  ],
+                  rules: [{ required: true, message: 'Vui lòng chọn địa chỉ' }],
                   initialValue: dataUser.address,
                 })(<Input prefix={<Icon type="home" style={{ color: 'rgba(0,0,0,.25)' }} />} />)}
               </Form.Item>
               <div className={styles['date-of-birth']}>
-                <Form.Item label="Chiều cao">
+                <Form.Item label="Chiều cao (cm)" style={{ width: '100px' }}>
                   {getFieldDecorator('height', {
-                    rules: [{ required: true, message: 'Vui lòng nhập chiều cao' }, {}],
                     initialValue: dataUser.height ? dataUser.height : '',
+                    onChange: e => this.handleChangeHeight(e),
                   })(
-                    <Input type="number" min={0} style={{ width: '70%' }} placeholder="Centimet" />
+                    <Select showSearch placeholder="Centimet">
+                      {height.map(v => (
+                        <Option key={v} value={v}>
+                          {v}
+                        </Option>
+                      ))}
+                    </Select>
                   )}
                 </Form.Item>
-                <Form.Item label="Cân nặng">
+                <Form.Item label="Cân nặng (kg)" style={{ width: '100px' }}>
                   {getFieldDecorator('weight', {
-                    rules: [{ required: true, message: 'Vui lòng nhập cân nặng' }, {}],
                     initialValue: dataUser.weight ? dataUser.weight : '',
+                    onChange: e => this.handleChangeWeight(e),
                   })(
-                    <Input type="number" min={0} placeholder="Kilogram" style={{ width: '70%' }} />
+                    <Select showSearch placeholder="kilogram">
+                      {weight.map(v => (
+                        <Option key={v} value={v}>
+                          {v}
+                        </Option>
+                      ))}
+                    </Select>
                   )}
                 </Form.Item>
               </div>
               <Form.Item label="Trình độc học vấn">
                 {getFieldDecorator('education', {
-                  rules: [
-                    { required: true, message: 'Nhập trình độ học vấn của bạn' },
-                    {
-                      required: true,
-                      message: 'Ký tự không hợp lệ!',
-                      pattern: /^[a-zA-Z0-9 -àáạảãâầấậẩẫăằắặẳẵèéẹẻẽêềếệểễìíịỉĩòóọỏõôồốộổỗơờớợởỡùúụủũưừứựửữỳýỵỷỹđÀÁẠẢÃÂẦẤẬẨẪĂẰẮẶẲẴÈÉẸẺẼÊỀẾỆỂỄÌÍỊỈĨÒÓỌỎÕÔỒỐỘỔỖƠỜỚỢỞỠÙÚỤỦŨƯỪỨỰỬỮỲÝỴỶỸĐ]{1,50}$/,
-                    },
-                  ],
+                  rules: [{ required: true, message: 'Nhập trình độ học vấn của bạn' }],
                   initialValue: dataUser.education ? dataUser.education.education : '',
+                  onChange: e => this.onChangeEducation(e),
+                })(
+                  <Select showSearch>
+                    <Option value="Chưa tốt nghiệp phổ thông">Chưa tốt nghiệp phổ thông</Option>
+                    <Option value="Tốt nghiệp cấp 3">Tốt nghiệp cấp 3</Option>
+                    <Option value="Trung cấp">Trung cấp</Option>
+                    <Option value="Cao đẳng">Cao đẳng</Option>
+                    <Option value="Đại học">Đại học</Option>
+                    <Option value="Thạc sỹ">Thạc sỹ</Option>
+                    <Option value="Tiến sỹ">Tiến sỹ</Option>
+                    <Option value="Giáo sư">Giáo sư</Option>
+                  </Select>
+                )}
+              </Form.Item>
+              <Form.Item label="Sở thích, tính cách">
+                {getFieldDecorator('hobby1', {
+                  // initialValue: dataUser.jobs ? dataUser.jobs.jobs : '',
+                  initialValue: dataUser.hobbys ? dataUser.hobbys.hobby1 : '',
                 })(
                   <Input
-                    prefix={<Icon type="book" style={{ color: 'rgba(0,0,0,.25)' }} />}
-                    placeholder="Bạn từng học đến cấp độ nào?"
+                    onChange={() => this.handleChangeHobby1()}
+                    placeholder="Ví dụ: nghe nhạc...."
+                    prefix={<Icon type="smile" style={{ color: 'rgba(0,0,0,.25)' }} />}
+                  />
+                )}
+              </Form.Item>
+              <Form.Item>
+                {getFieldDecorator('hobby2', {
+                  initialValue: dataUser.hobbys ? dataUser.hobbys.hobby2 : '',
+                  // initialValue: dataUser.jobs ? dataUser.jobs.jobs : '',
+                })(
+                  <Input
+                    onChange={() => this.handleChangeHobby2()}
+                    placeholder="Ví dụ: Chơi thể thao...."
+                    prefix={<Icon type="smile" style={{ color: 'rgba(0,0,0,.25)' }} />}
                   />
                 )}
               </Form.Item>
               <Form.Item label="Công việc hiện tại">
-                {getFieldDecorator('jobs', {
-                  rules: [
-                    { required: true, message: 'Nhập công việc của bạn' },
-                    {
-                      required: true,
-                      message: 'Ký tự không hợp lệ!',
-                      pattern: /^[a-zA-Z0-9 -àáạảãâầấậẩẫăằắặẳẵèéẹẻẽêềếệểễìíịỉĩòóọỏõôồốộổỗơờớợởỡùúụủũưừứựửữỳýỵỷỹđÀÁẠẢÃÂẦẤẬẨẪĂẰẮẶẲẴÈÉẸẺẼÊỀẾỆỂỄÌÍỊỈĨÒÓỌỎÕÔỒỐỘỔỖƠỜỚỢỞỠÙÚỤỦŨƯỪỨỰỬỮỲÝỴỶỸĐ]{1,50}$/,
-                    },
-                  ],
-                  initialValue: dataUser.jobs ? dataUser.jobs.jobs : '',
+                {getFieldDecorator('jobs1', {
+                  initialValue: dataUser.jobs ? dataUser.jobs.jobs1 : '',
                 })(
                   <Input
+                    onChange={() => this.handleChangeJobs1()}
                     prefix={<Icon type="build" style={{ color: 'rgba(0,0,0,.25)' }} />}
-                    placeholder="Công việc chính hiện tại?"
+                    placeholder="Ngành nghề?"
                   />
+                )}
+              </Form.Item>
+              <Form.Item>
+                {getFieldDecorator('jobs2', {
+                  initialValue: dataUser.jobs ? dataUser.jobs.jobs2 : '',
+                  // initialValue: dataUser.jobs ? dataUser.jobs.jobs : '',
+                })(
+                  <Input
+                    onChange={() => this.handleChangeJobs2()}
+                    prefix={<Icon type="dollar" style={{ color: 'rgba(0,0,0,.25)' }} />}
+                    placeholder="Thu nhập hàng tháng?"
+                  />
+                )}
+              </Form.Item>
+              <Form.Item label="Tài sản hiện có">
+                {getFieldDecorator('asset1', {
+                  initialValue: dataUser.assets ? dataUser.assets.asset1 : '',
+                  // initialValue: dataUser.jobs ? dataUser.jobs.jobs : '',
+                })(
+                  <Input
+                    onChange={() => this.handleChangeAsset1()}
+                    placeholder="Ví dụ: nhà cửa...."
+                    prefix={<Icon type="sketch" style={{ color: 'rgba(0,0,0,.25)' }} />}
+                  />
+                )}
+              </Form.Item>
+              <Form.Item>
+                {getFieldDecorator('asset2', {
+                  initialValue: dataUser.assets ? dataUser.assets.asset2 : '',
+                  // initialValue: dataUser.jobs ? dataUser.jobs.jobs : '',
+                })(
+                  <Input
+                    onChange={() => this.handleChangeAsset2()}
+                    placeholder="Ví dụ: xe cộ...."
+                    prefix={<Icon type="sketch" style={{ color: 'rgba(0,0,0,.25)' }} />}
+                  />
+                )}
+              </Form.Item>
+              <Form.Item label="Tình trạng hôn nhân">
+                {getFieldDecorator('marriage', {
+                  initialValue: dataUser.marriage ? dataUser.marriage : '',
+                  onChange: e => this.onChangeMarriage(e),
+                })(
+                  <Select showSearch placeholder="Chọn ...">
+                    <Option value="Độc thân">Độc thân</Option>
+                    <Option value="Đã ly hôn">Đã ly hôn</Option>
+                    <Option value="Mẹ đơn thân">Mẹ đơn thân</Option>
+                    <Option value="Cha đơn thân">Cha đơn thân</Option>
+                    <Option value="Hôn nhân phức tạp">Hôn nhân phức tạp</Option>
+                  </Select>
+                )}
+              </Form.Item>
+              <Form.Item label="Chọn đài lên sóng">
+                {getFieldDecorator('location', {
+                  initialValue: dataUser.location ? dataUser.location : '',
+                  onChange: e => this.onChangeVOV(e),
+                })(
+                  <Select placeholder="Lựa chọn">
+                    <Option value="VOVHN">VOV giao thông Hà Nội</Option>
+                    <Option value="VOVHCM">VOV giao thông Hồ Chí Minh</Option>
+                  </Select>
+                )}
+              </Form.Item>
+              <Form.Item>
+                {getFieldDecorator('confirmCheck', {})(
+                  <Checkbox checked={dataUser.vov} onChange={e => this.onChangeCheckBox(e)}>
+                    Đăng ký lên sóng VOV
+                  </Checkbox>
+                )}
+              </Form.Item>
+              <Form.Item>
+                {getFieldDecorator('activeFriend', {})(
+                  <Checkbox
+                    checked={dataUser.activeFriend}
+                    onChange={e => this.onChangeCheckBoxActiveFriend(e)}
+                  >
+                    Mở kết bạn
+                  </Checkbox>
                 )}
               </Form.Item>
               <Form.Item>
@@ -421,6 +904,12 @@ class ThongTinCaNhan extends Component {
                   Cập nhật thông tin
                 </Button>
               </Form.Item>
+              {this.state.confirmSubmit && (
+                <span style={{ color: 'green' }}>
+                  Thông tin cập nhập của bạn đã được gửi đi ban biên tập sẽ xác nhận lại thông tin
+                  của bạn
+                </span>
+              )}
             </Form>
           </div>
           <div className={styles['basic-center']} />

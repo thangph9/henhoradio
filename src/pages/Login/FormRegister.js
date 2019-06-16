@@ -1,10 +1,12 @@
+/* eslint-disable class-methods-use-this */
+/* eslint-disable react/sort-comp */
 /* eslint-disable react/destructuring-assignment */
 /* eslint-disable no-unused-vars */
 /* eslint-disable camelcase */
 
 import React, { PureComponent } from 'react';
 import { connect } from 'dva';
-import { Form, Input, Button, Popover, Progress, Select, Icon, message } from 'antd';
+import { Form, Input, Button, Popover, Progress, Select, Icon, message, Checkbox } from 'antd';
 // import {Link} from 'react-router-dom'
 import ReCAPTCHA from 'react-google-recaptcha';
 import 'antd/dist/antd.less';
@@ -24,6 +26,11 @@ const passwordProgressMap = {
   poor: 'exception',
 };
 const years = [
+  2007,
+  2006,
+  2005,
+  2004,
+  2003,
   2002,
   2001,
   2000,
@@ -117,6 +124,71 @@ const dayInMonthFull = [
   30,
   31,
 ];
+const addressInVN = [
+  'Cần Thơ',
+  'Đà Nẵng',
+  'Hải Phòng',
+  'Hà Nội',
+  'TP HCM',
+  'An Giang',
+  'Bà Rịa - Vũng Tàu',
+  'Bắc Giang',
+  'Bắc Kạn',
+  'Bạc Liêu',
+  'Bắc Ninh',
+  'Bến Tre',
+  'Bình Định',
+  'Bình Dương',
+  'Bình Phước',
+  'Bình Thuận',
+  'Cà Mau',
+  'Cao Bằng',
+  'Đắk Lắk',
+  'Đắk Nông',
+  'Điện Biên',
+  'Đồng Nai',
+  'Đồng Tháp',
+  'Gia Lai',
+  'Hà Giang',
+  'Hà Nam',
+  'Hà Tĩnh',
+  'Hải Dương',
+  'Hậu Giang',
+  'Hòa Bình',
+  'Hưng Yên',
+  'Khánh Hòa',
+  'Kiên Giang',
+  'Kon Tum',
+  'Lai Châu',
+  'Lâm Đồng',
+  'Lạng Sơn',
+  'Lào Cai',
+  'Long An',
+  'Nam Định',
+  'Nghệ An',
+  'Ninh Bình',
+  'Ninh Thuận',
+  'Phú Thọ',
+  'Quảng Bình',
+  'Quảng Nam',
+  'Quảng Ngãi',
+  'Quảng Ninh',
+  'Quảng Trị',
+  'Sóc Trăng',
+  'Sơn La',
+  'Tây Ninh',
+  'Thái Bình',
+  'Thái Nguyên',
+  'Thanh Hóa',
+  'Thừa Thiên Huế',
+  'Tiền Giang',
+  'Trà Vinh',
+  'Tuyên Quang',
+  'Vĩnh Long',
+  'Vĩnh Phúc',
+  'Yên Bái',
+  'Phú Yên',
+];
 @connect(({ loading, authentication }) => ({
   validatting: loading.effects['authentication/checkuser'],
   authentication,
@@ -138,6 +210,7 @@ class FormRegister extends PureComponent {
     checkCharPass: '',
     helpRePass: '',
     valiRePass: '',
+    checkBoxconfirm: false,
   };
 
   componentWillReceiveProps(nextProps) {
@@ -155,6 +228,15 @@ class FormRegister extends PureComponent {
           valiPhone: 'error',
           helpPhone: nextProps.authentication.register.message,
           value: '',
+        });
+        if (this.props.useCaptcha) recaptchaRef.current.reset();
+      }
+      if (
+        nextProps.authentication.register.status === 'error2' &&
+        nextProps.authentication.register.timeline !== authentication.register.timeline
+      ) {
+        this.setState({
+          messageResponsive: nextProps.authentication.register.message,
         });
         if (this.props.useCaptcha) recaptchaRef.current.reset();
       }
@@ -191,7 +273,7 @@ class FormRegister extends PureComponent {
   handleSubmit = e => {
     e.preventDefault();
     const { form, dispatch } = this.props;
-    const { value } = this.state;
+    const { value, checkBoxconfirm } = this.state;
     const dob_day = form.getFieldValue('dob_day');
     const dob_month = form.getFieldValue('dob_month');
     const dob_year = form.getFieldValue('dob_year');
@@ -201,6 +283,7 @@ class FormRegister extends PureComponent {
     const address = form.getFieldValue('address');
     const password = form.getFieldValue('password');
     const repassword = form.getFieldValue('repassword');
+
     if (
       !fullname ||
       /^[a-zA-ZàáạảãâầấậẩẫăằắặẳẵèéẹẻẽêềếệểễìíịỉĩòóọỏõôồốộổỗơờớợởỡùúụủũưừứựửữỳýỵỷỹđÀÁẠẢÃÂẦẤẬẨẪĂẰẮẶẲẴÈÉẸẺẼÊỀẾỆỂỄÌÍỊỈĨÒÓỌỎÕÔỒỐỘỔỖƠỜỚỢỞỠÙÚỤỦŨƯỪỨỰỬỮỲÝỴỶỸĐ][a-zA-Z àáạảãâầấậẩẫăằắặẳẵèéẹẻẽêềếệểễìíịỉĩòóọỏõôồốộổỗơờớợởỡùúụủũưừứựửữỳýỵỷỹđÀÁẠẢÃÂẦẤẬẨẪĂẰẮẶẲẴÈÉẸẺẼÊỀẾỆỂỄÌÍỊỈĨÒÓỌỎÕÔỒỐỘỔỖƠỜỚỢỞỠÙÚỤỦŨƯỪỨỰỬỮỲÝỴỶỸĐ]{2,30}$/.test(
@@ -208,7 +291,7 @@ class FormRegister extends PureComponent {
       ) === false
     ) {
       this.setState({
-        helpName: 'Tên không hợp lệ',
+        helpName: 'Họ và tên không hợp lệ',
         valiName: 'error',
       });
     }
@@ -219,7 +302,7 @@ class FormRegister extends PureComponent {
       ) === false
     ) {
       this.setState({
-        helpAddress: 'Địa chỉ không hợp lệ',
+        helpAddress: 'Thường trú không hợp lệ',
         valiAddress: 'error',
       });
     }
@@ -235,6 +318,14 @@ class FormRegister extends PureComponent {
           errors: [new Error('Chọn giới tính!')],
         },
       });
+    }
+    if (!checkBoxconfirm) {
+      form.setFields({
+        confirmCheck: {
+          errors: [new Error('Vui lòng chấp nhận điều khoản')],
+        },
+      });
+      return;
     }
     if (!password) {
       this.setState({
@@ -458,29 +549,24 @@ class FormRegister extends PureComponent {
     } else {
       this.setState({
         valiName: 'error',
-        helpName: 'Tên không hợp lệ',
+        helpName: 'Họ và tên không hợp lệ',
       });
     }
   }
 
   handleChangeAddress(e) {
-    const { value } = e.target;
     this.setState({
       valiAddress: '',
       helpAddress: '',
     });
-    if (
-      /^[a-zA-Z0-9 -àáạảãâầấậẩẫăằắặẳẵèéẹẻẽêềếệểễìíịỉĩòóọỏõôồốộổỗơờớợởỡùúụủũưừứựửữỳýỵỷỹđÀÁẠẢÃÂẦẤẬẨẪĂẰẮẶẲẴÈÉẸẺẼÊỀẾỆỂỄÌÍỊỈĨÒÓỌỎÕÔỒỐỘỔỖƠỜỚỢỞỠÙÚỤỦŨƯỪỨỰỬỮỲÝỴỶỸĐ]{1,50}$/.test(
-        value
-      )
-    ) {
+    if (e) {
       this.setState({
         valiAddress: 'success',
       });
     } else {
       this.setState({
         valiAddress: 'error',
-        helpAddress: 'Địa chỉ không hợp lệ',
+        helpAddress: 'Thường trú không hợp lệ',
       });
     }
   }
@@ -496,6 +582,17 @@ class FormRegister extends PureComponent {
     if (password === value) {
       this.setState({
         valiRePass: 'success',
+      });
+    }
+  }
+
+  onChangeCheckBox(e) {
+    this.setState({
+      checkBoxconfirm: e.target.checked,
+    });
+    if (e) {
+      this.props.form.setFields({
+        confirmCheck: {},
       });
     }
   }
@@ -540,7 +637,7 @@ class FormRegister extends PureComponent {
     return (
       <Form onSubmit={this.handleSubmit}>
         <Form.Item
-          label="Tên"
+          label="Họ và tên"
           hasFeedback
           help={helpName}
           validateStatus={valiName}
@@ -553,7 +650,7 @@ class FormRegister extends PureComponent {
                 pattern: /^[a-zA-ZàáạảãâầấậẩẫăằắặẳẵèéẹẻẽêềếệểễìíịỉĩòóọỏõôồốộổỗơờớợởỡùúụủũưừứựửữỳýỵỷỹđÀÁẠẢÃÂẦẤẬẨẪĂẰẮẶẲẴÈÉẸẺẼÊỀẾỆỂỄÌÍỊỈĨÒÓỌỎÕÔỒỐỘỔỖƠỜỚỢỞỠÙÚỤỦŨƯỪỨỰỬỮỲÝỴỶỸĐ][a-zA-Z àáạảãâầấậẩẫăằắặẳẵèéẹẻẽêềếệểễìíịỉĩòóọỏõôồốộổỗơờớợởỡùúụủũưừứựửữỳýỵỷỹđÀÁẠẢÃÂẦẤẬẨẪĂẰẮẶẲẴÈÉẸẺẼÊỀẾỆỂỄÌÍỊỈĨÒÓỌỎÕÔỒỐỘỔỖƠỜỚỢỞỠÙÚỤỦŨƯỪỨỰỬỮỲÝỴỶỸĐ]{2,30}$/,
               },
             ],
-          })(<Input onChange={e => this.handleChangeName(e)} placeholder="Ví dụ Thu Trang" />)}
+          })(<Input onChange={e => this.handleChangeName(e)} placeholder="Trần Thu Trang" />)}
         </Form.Item>
         <Form.Item
           label="Giới tính"
@@ -574,7 +671,7 @@ class FormRegister extends PureComponent {
           {getFieldDecorator('dob_day', {
             onChange: this.handleChangeDay,
           })(
-            <Select placeholder="Ngày">
+            <Select placeholder="Ngày" showSearch>
               {dayInMonthFull.map(v => (
                 <Option key={v} value={v}>
                   {v}
@@ -585,7 +682,7 @@ class FormRegister extends PureComponent {
           {getFieldDecorator('dob_month', {
             onChange: this.handleChangeMonth,
           })(
-            <Select placeholder="Tháng">
+            <Select placeholder="Tháng" showSearch>
               {months.map(v => (
                 <Option key={v} value={v}>
                   {v}
@@ -596,7 +693,7 @@ class FormRegister extends PureComponent {
           {getFieldDecorator('dob_year', {
             onChange: this.handleChangeYear,
           })(
-            <Select placeholder="Năm">
+            <Select placeholder="Năm" showSearch>
               {years.map(v => (
                 <Option key={v} value={v}>
                   {v}
@@ -606,20 +703,22 @@ class FormRegister extends PureComponent {
           )}
         </Form.Item>
         <Form.Item
-          label="Địa chỉ"
+          label="Thường trú"
           help={helpAddress}
           validateStatus={valiAddress}
-          hasFeedback
           style={{ width: '45%', display: 'inline-block', marginBottom: '0px' }}
         >
           {getFieldDecorator('address', {
-            rules: [
-              {
-                required: true,
-                pattern: /^[a-zA-ZàáạảãâầấậẩẫăằắặẳẵèéẹẻẽêềếệểễìíịỉĩòóọỏõôồốộổỗơờớợởỡùúụủũưừứựửữỳýỵỷỹđÀÁẠẢÃÂẦẤẬẨẪĂẰẮẶẲẴÈÉẸẺẼÊỀẾỆỂỄÌÍỊỈĨÒÓỌỎÕÔỒỐỘỔỖƠỜỚỢỞỠÙÚỤỦŨƯỪỨỰỬỮỲÝỴỶỸĐ][a-zA-Z -àáạảãâầấậẩẫăằắặẳẵèéẹẻẽêềếệểễìíịỉĩòóọỏõôồốộổỗơờớợởỡùúụủũưừứựửữỳýỵỷỹđÀÁẠẢÃÂẦẤẬẨẪĂẰẮẶẲẴÈÉẸẺẼÊỀẾỆỂỄÌÍỊỈĨÒÓỌỎÕÔỒỐỘỔỖƠỜỚỢỞỠÙÚỤỦŨƯỪỨỰỬỮỲÝỴỶỸĐ]{2,50}$/,
-              },
-            ],
-          })(<Input onChange={e => this.handleChangeAddress(e)} placeholder="Ví dụ Hà Nội" />)}
+            onChange: e => this.handleChangeAddress(e),
+          })(
+            <Select showSearch placeholder="Thường trú">
+              {addressInVN.map(v => (
+                <Option key={v} value={v}>
+                  {v}
+                </Option>
+              ))}
+            </Select>
+          )}
         </Form.Item>
         <Form.Item
           label="Bạn ở đây để"
@@ -629,9 +728,8 @@ class FormRegister extends PureComponent {
             onChange: this.handleChangeIntent,
           })(
             <Select placeholder="Chọn...">
-              <Option value="chat">Chat</Option>
-              <Option value="pal">Kết bạn</Option>
-              <Option value="dating">Hẹn hò</Option>
+              <Option value="pal">Kết bạn mới</Option>
+              <Option value="dating">Hẹn hò, kết hôn</Option>
             </Select>
           )}
         </Form.Item>
@@ -715,6 +813,13 @@ class FormRegister extends PureComponent {
             />
           )}
         </Form.Item>
+        <Form.Item>
+          {getFieldDecorator('confirmCheck', {})(
+            <Checkbox onChange={e => this.onChangeCheckBox(e)}>
+              Bạn có chấp nhận điều khoản?
+            </Checkbox>
+          )}
+        </Form.Item>
         {this.props.useCaptcha && (
           <ReCAPTCHA
             ref={recaptchaRef}
@@ -739,6 +844,9 @@ class FormRegister extends PureComponent {
             Đăng ký
           </Button>
         </Form.Item>
+        {this.state.messageResponsive && (
+          <span style={{ color: '#f5222d' }}>{this.state.messageResponsive}</span>
+        )}
       </Form>
     );
   }

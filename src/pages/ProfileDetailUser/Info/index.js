@@ -119,7 +119,7 @@ class Info extends Component {
                       : styles['menu-item-left']
                   }
                 >
-                  Thông tin cá nhân
+                  Hồ sơ của bạn
                 </div>
                 <div
                   onClick={() => this.handleClickItemMenu(1)}
@@ -131,7 +131,8 @@ class Info extends Component {
                 >
                   Cài đặt bảo mật
                 </div>
-                <div
+                {/*
+                  <div
                   onClick={() => this.handleClickItemMenu(2)}
                   className={
                     menu_item_profile === 2
@@ -141,6 +142,7 @@ class Info extends Component {
                 >
                   Hỏi đáp cá nhân
                 </div>
+                */}
               </div>
             </div>
             <div className={styles['detail-right']}>{children}</div>

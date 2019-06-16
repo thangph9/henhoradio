@@ -388,8 +388,15 @@ export default {
       oldProps.height = action.payload.height;
       oldProps.weight = action.payload.weight;
       oldProps.education = { education: action.payload.education };
-      oldProps.jobs = { jobs: action.payload.jobs };
+      oldProps.jobs = { jobs1: action.payload.jobs1, jobs2: action.payload.jobs2 };
+      oldProps.hobbys = { hobby1: action.payload.hobby1, hobby2: action.payload.hobby2 };
+      oldProps.assets = { asset1: action.payload.asset1, asset2: action.payload.asset2 };
+      oldProps.marriage = action.payload.marriage;
+      oldProps.living = action.payload.living;
       oldProps.avatar = action.payload.avatar;
+      oldProps.activeFriend = action.payload.activeFriend;
+      oldProps.location = action.payload.location;
+      oldProps.vov = action.payload.vov;
       const newProps = JSON.stringify(oldProps);
       return {
         ...state,

@@ -55,7 +55,14 @@ let usersDemo = [
     phone: '0373962095',
     uniqueid: null,
     video: null,
-    jobs: { jobs: 'Ở nhà' },
+    living: 'Hà Nội',
+    jobs: { jobs1: 'Ở nhà', jobs2: '20000000' },
+    hobbys: { hobby1: 'Đá bóng', hobby2: 'Nghe nhạc' },
+    assets: { asset1: 'Nhà 3 tầng', asset2: 'BMW' },
+    marriage: 'Độc thân',
+    vov: true,
+    location: 'VOVHN',
+    activeFriend: true,
     education: { education: 'Đại học' },
     audio: null,
     phones: { '1': '0373962095' },
@@ -267,6 +274,16 @@ function register(req, res) {
       } catch (error) {
         res.send({ status: 'invalid' });
       }
+    },
+    callback => {
+      if (new Date().getFullYear() - PARAM_IS_VALID.dob_year < 18) {
+        return res.json({
+          status: 'error2',
+          message: 'Bạn chưa đủ 18 tuổi không thể tham gia hẹn hò',
+          timeline: new Date().getTime(),
+        });
+      }
+      callback(null, null);
     },
     function checkCaptcha(callback) {
       if (PARAM_IS_VALID.useCaptcha) {
@@ -1018,6 +1035,7 @@ function getUserById(req, res) {
   );
 }
 function updateProfileUser(req, res) {
+  /*
   let legit = {};
   const token = req.headers['x-access-token'];
   const params = req.body;
@@ -1094,6 +1112,8 @@ function updateProfileUser(req, res) {
       return res.json({ status: 'ok', timeline: new Date().getTime() });
     }
   );
+  */
+  return res.json({ status: 'ok', timeline: new Date().getTime() });
 }
 function changePass(req, res) {
   let params = req.body;
