@@ -225,7 +225,8 @@ class CaiDatBaoMat extends Component {
             {dataUser.phones ? dataUser.phones['1'] : dataUser.phone}{' '}
           </p>
           <p>
-            Vui lòng dùng số điện thoại nhắn tin: HHR CONFIRM gửi 8179 để xác thực số điện thoại
+            Vui lòng dùng số điện thoại {valuePhone} nhắn tin: HHR CONFIRM gửi 8179 để xác thực số
+            điện thoại
           </p>
         </div>
       ),

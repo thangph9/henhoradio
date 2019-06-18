@@ -189,6 +189,129 @@ const addressInVN = [
   'Yên Bái',
   'Phú Yên',
 ];
+const height = [
+  145,
+  146,
+  147,
+  148,
+  149,
+  150,
+  151,
+  152,
+  153,
+  154,
+  155,
+  156,
+  157,
+  158,
+  159,
+  160,
+  161,
+  162,
+  163,
+  164,
+  165,
+  166,
+  167,
+  168,
+  169,
+  170,
+  171,
+  172,
+  173,
+  174,
+  175,
+  176,
+  177,
+  178,
+  179,
+  180,
+  181,
+  182,
+  183,
+  184,
+  185,
+  186,
+  187,
+  188,
+  189,
+  190,
+  191,
+  192,
+];
+const weight = [
+  30,
+  31,
+  32,
+  33,
+  34,
+  35,
+  36,
+  37,
+  38,
+  39,
+  40,
+  41,
+  42,
+  43,
+  44,
+  45,
+  46,
+  47,
+  48,
+  49,
+  50,
+  51,
+  52,
+  53,
+  54,
+  55,
+  56,
+  57,
+  58,
+  59,
+  60,
+  61,
+  62,
+  63,
+  64,
+  65,
+  66,
+  67,
+  68,
+  69,
+  70,
+  71,
+  72,
+  73,
+  74,
+  75,
+  76,
+  77,
+  78,
+  79,
+  80,
+  81,
+  82,
+  83,
+  84,
+  85,
+  86,
+  87,
+  88,
+  89,
+  90,
+  91,
+  92,
+  93,
+  94,
+  95,
+  96,
+  97,
+  98,
+  99,
+  100,
+];
 @connect(({ loading, authentication }) => ({
   validatting: loading.effects['authentication/checkuser'],
   authentication,
@@ -325,7 +448,6 @@ class FormRegister extends PureComponent {
           errors: [new Error('Vui lòng chấp nhận điều khoản')],
         },
       });
-      return;
     }
     if (!password) {
       this.setState({
@@ -597,6 +719,14 @@ class FormRegister extends PureComponent {
     }
   }
 
+  handleChangeHeight(e) {
+    console.log(e);
+  }
+
+  handleChangeWeight(e) {
+    console.log(e);
+  }
+
   render() {
     const {
       form: { getFieldDecorator },
@@ -650,7 +780,7 @@ class FormRegister extends PureComponent {
                 pattern: /^[a-zA-ZàáạảãâầấậẩẫăằắặẳẵèéẹẻẽêềếệểễìíịỉĩòóọỏõôồốộổỗơờớợởỡùúụủũưừứựửữỳýỵỷỹđÀÁẠẢÃÂẦẤẬẨẪĂẰẮẶẲẴÈÉẸẺẼÊỀẾỆỂỄÌÍỊỈĨÒÓỌỎÕÔỒỐỘỔỖƠỜỚỢỞỠÙÚỤỦŨƯỪỨỰỬỮỲÝỴỶỸĐ][a-zA-Z àáạảãâầấậẩẫăằắặẳẵèéẹẻẽêềếệểễìíịỉĩòóọỏõôồốộổỗơờớợởỡùúụủũưừứựửữỳýỵỷỹđÀÁẠẢÃÂẦẤẬẨẪĂẰẮẶẲẴÈÉẸẺẼÊỀẾỆỂỄÌÍỊỈĨÒÓỌỎÕÔỒỐỘỔỖƠỜỚỢỞỠÙÚỤỦŨƯỪỨỰỬỮỲÝỴỶỸĐ]{2,30}$/,
               },
             ],
-          })(<Input onChange={e => this.handleChangeName(e)} placeholder="Trần Thu Trang" />)}
+          })(<Input onChange={e => this.handleChangeName(e)} placeholder="VD: Trần Thu Trang" />)}
         </Form.Item>
         <Form.Item
           label="Giới tính"
@@ -734,6 +864,50 @@ class FormRegister extends PureComponent {
           )}
         </Form.Item>
         <Form.Item
+          label="Chiều cao"
+          style={{ width: '45%', display: 'inline-block', marginBottom: '0px' }}
+        >
+          {getFieldDecorator('height', {
+            rules: [
+              {
+                required: true,
+                message: 'Nhập chiều cao',
+              },
+            ],
+            onChange: e => this.handleChangeHeight(e),
+          })(
+            <Select showSearch placeholder="Chiều cao">
+              {height.map(v => (
+                <Option key={v} value={v}>
+                  {v}
+                </Option>
+              ))}
+            </Select>
+          )}
+        </Form.Item>
+        <Form.Item
+          label="Cân nặng"
+          style={{ width: '45%', display: 'inline-block', float: 'right', marginBottom: '0px' }}
+        >
+          {getFieldDecorator('weight', {
+            rules: [
+              {
+                required: true,
+                message: 'Nhập cân nặng',
+              },
+            ],
+            onChange: this.handleChangeWeight,
+          })(
+            <Select placeholder="Cân nặng">
+              {weight.map(v => (
+                <Option key={v} value={v}>
+                  {v}
+                </Option>
+              ))}
+            </Select>
+          )}
+        </Form.Item>
+        <Form.Item
           help={helpPhone}
           validateStatus={validatting ? 'validating' : valiPhone}
           label="Số điện thoại"
@@ -764,10 +938,10 @@ class FormRegister extends PureComponent {
         >
           <Popover
             content={
-              <div style={{ padding: '4px 0' }}>
+              <div style={{ padding: '4px 0', position: 'relative' }}>
                 <Icon
                   onClick={() => this.handleClosePass()}
-                  style={{ position: 'absolute', right: '10px', top: '10px', cursor: 'pointer' }}
+                  style={{ position: 'absolute', right: '0', top: '0', cursor: 'pointer' }}
                   type="close"
                 />
                 {passwordStatusMap[this.getPasswordStatus()]}

@@ -394,12 +394,9 @@ class ThongTinCaNhan extends Component {
     const { form, dispatch } = this.props;
     const { avatarImage } = this.state;
     e.preventDefault();
-    const jobs1 = form.getFieldValue('jobs1');
-    const jobs2 = form.getFieldValue('jobs2');
-    const asset1 = form.getFieldValue('asset1');
-    const asset2 = form.getFieldValue('asset2');
-    const hobby1 = form.getFieldValue('hobby1');
-    const hobby2 = form.getFieldValue('hobby2');
+    const jobs = form.getFieldValue('jobs');
+    const assets = form.getFieldValue('assets');
+    const hobbys = form.getFieldValue('hobbys');
     const marriage = form.getFieldValue('marriage');
     const living = form.getFieldValue('living');
     if (!living) {
@@ -409,44 +406,23 @@ class ThongTinCaNhan extends Component {
         },
       });
     }
-    if (!jobs1) {
+    if (!jobs) {
       form.setFields({
-        jobs1: {
+        jobs: {
           errors: [new Error('Vui lòng nhập thêm công việc')],
         },
       });
     }
-    if (!jobs2) {
+    if (!assets) {
       form.setFields({
-        jobs2: {
-          errors: [new Error('Vui lòng nhập thu nhập hàng tháng')],
-        },
-      });
-    }
-    if (!asset1) {
-      form.setFields({
-        asset1: {
+        assets: {
           errors: [new Error('Vui lòng nhập thêm 1 số tài sản')],
         },
       });
     }
-    if (!asset2) {
+    if (!hobbys) {
       form.setFields({
-        asset2: {
-          errors: [new Error('Vui lòng nhập thêm 1 số tài sản')],
-        },
-      });
-    }
-    if (!hobby1) {
-      form.setFields({
-        hobby1: {
-          errors: [new Error('Vui lòng nhập thêm 1 số sở thích của bạn')],
-        },
-      });
-    }
-    if (!hobby2) {
-      form.setFields({
-        hobby2: {
+        hobbys: {
           errors: [new Error('Vui lòng nhập thêm 1 số sở thích của bạn')],
         },
       });
@@ -463,7 +439,7 @@ class ThongTinCaNhan extends Component {
       values.avatar = avatarImage;
       values.confirmCheck = this.state.dataUser.vov;
       if (!err) {
-        if (!jobs1 || !jobs2 || !asset1 || !asset2 || !hobby1 || !hobby2 || !marriage || !living) {
+        if (!jobs || !assets || !hobbys || !marriage || !living) {
           this.setState({
             confirmSubmit: false,
           });
@@ -578,49 +554,25 @@ class ThongTinCaNhan extends Component {
     });
   }
 
-  handleChangeHobby1() {
+  handleChangeHobbys() {
     this.props.form.setFields({
-      hobby1: {
+      hobbys: {
         errors: null,
       },
     });
   }
 
-  handleChangeHobby2() {
+  handleChangeJobs() {
     this.props.form.setFields({
-      hobby2: {
+      jobs: {
         errors: null,
       },
     });
   }
 
-  handleChangeJobs1() {
+  handleChangeAssets() {
     this.props.form.setFields({
-      jobs1: {
-        errors: null,
-      },
-    });
-  }
-
-  handleChangeJobs2() {
-    this.props.form.setFields({
-      jobs2: {
-        errors: null,
-      },
-    });
-  }
-
-  handleChangeAsset1() {
-    this.props.form.setFields({
-      asset1: {
-        errors: null,
-      },
-    });
-  }
-
-  handleChangeAsset2() {
-    this.props.form.setFields({
-      asset2: {
+      assets: {
         errors: null,
       },
     });
@@ -655,19 +607,14 @@ class ThongTinCaNhan extends Component {
                 {getFieldDecorator('fullname', {
                   rules: [{ required: true, message: 'Vui lòng nhập đầy đủ tên của bạn' }],
                   initialValue: dataUser.fullname,
-                })(
-                  <Input
-                    disabled
-                    prefix={<Icon type="user" style={{ color: 'rgba(0,0,0,.25)' }} />}
-                  />
-                )}
+                })(<Input prefix={<Icon type="user" style={{ color: 'rgba(0,0,0,.25)' }} />} />)}
               </Form.Item>
               <Form.Item label="Giới tính">
                 {getFieldDecorator('gender', {
                   rules: [{ required: true, message: 'Vui lòng chọn giới tính' }],
                   initialValue: dataUser.gender,
                 })(
-                  <Radio.Group disabled buttonStyle="solid">
+                  <Radio.Group buttonStyle="solid">
                     <Radio.Button value="male">Nam</Radio.Button>
                     <Radio.Button value="female">Nữ</Radio.Button>
                   </Radio.Group>
@@ -679,7 +626,7 @@ class ThongTinCaNhan extends Component {
                     rules: [{ required: true, message: 'Vui lòng chọn giới tính' }],
                     initialValue: dataUser.dob_day,
                   })(
-                    <Select disabled style={{ minWidth: '100px' }}>
+                    <Select style={{ minWidth: '100px' }}>
                       {dayInMonthFull.map((v, i) => (
                         <Option key={i} value={v}>
                           {v}
@@ -693,7 +640,7 @@ class ThongTinCaNhan extends Component {
                     rules: [{ required: true, message: 'Vui lòng chọn giới tính' }],
                     initialValue: dataUser.dob_month,
                   })(
-                    <Select disabled style={{ minWidth: '100px' }}>
+                    <Select style={{ minWidth: '100px' }}>
                       {months.map((v, i) => (
                         <Option key={i} value={v}>
                           {v}
@@ -707,7 +654,7 @@ class ThongTinCaNhan extends Component {
                     rules: [{ required: true, message: 'Vui lòng chọn giới tính' }],
                     initialValue: dataUser.dob_year,
                   })(
-                    <Select disabled style={{ minWidth: '100px' }}>
+                    <Select style={{ minWidth: '100px' }}>
                       {years.map((v, i) => (
                         <Option key={i} value={v}>
                           {v}
@@ -787,72 +734,38 @@ class ThongTinCaNhan extends Component {
                 )}
               </Form.Item>
               <Form.Item label="Sở thích, tính cách">
-                {getFieldDecorator('hobby1', {
-                  // initialValue: dataUser.jobs ? dataUser.jobs.jobs : '',
-                  initialValue: dataUser.hobbys ? dataUser.hobbys.hobby1 : '',
+                {getFieldDecorator('hobbys', {
+                  initialValue: dataUser.hobbys ? dataUser.hobbys.hobbys : '',
                 })(
                   <Input
-                    onChange={() => this.handleChangeHobby1()}
+                    rows={2}
+                    onChange={() => this.handleChangeHobbys()}
                     placeholder="Ví dụ: nghe nhạc...."
                     prefix={<Icon type="smile" style={{ color: 'rgba(0,0,0,.25)' }} />}
                   />
                 )}
               </Form.Item>
-              <Form.Item>
-                {getFieldDecorator('hobby2', {
-                  initialValue: dataUser.hobbys ? dataUser.hobbys.hobby2 : '',
-                  // initialValue: dataUser.jobs ? dataUser.jobs.jobs : '',
-                })(
-                  <Input
-                    onChange={() => this.handleChangeHobby2()}
-                    placeholder="Ví dụ: Chơi thể thao...."
-                    prefix={<Icon type="smile" style={{ color: 'rgba(0,0,0,.25)' }} />}
-                  />
-                )}
-              </Form.Item>
               <Form.Item label="Công việc hiện tại">
-                {getFieldDecorator('jobs1', {
-                  initialValue: dataUser.jobs ? dataUser.jobs.jobs1 : '',
+                {getFieldDecorator('jobs', {
+                  initialValue: dataUser.jobs ? dataUser.jobs.jobs : '',
                 })(
-                  <Input
-                    onChange={() => this.handleChangeJobs1()}
+                  <Input.TextArea
+                    rows={2}
+                    onChange={() => this.handleChangeJobs()}
                     prefix={<Icon type="build" style={{ color: 'rgba(0,0,0,.25)' }} />}
                     placeholder="Ngành nghề?"
                   />
                 )}
               </Form.Item>
-              <Form.Item>
-                {getFieldDecorator('jobs2', {
-                  initialValue: dataUser.jobs ? dataUser.jobs.jobs2 : '',
-                  // initialValue: dataUser.jobs ? dataUser.jobs.jobs : '',
-                })(
-                  <Input
-                    onChange={() => this.handleChangeJobs2()}
-                    prefix={<Icon type="dollar" style={{ color: 'rgba(0,0,0,.25)' }} />}
-                    placeholder="Thu nhập hàng tháng?"
-                  />
-                )}
-              </Form.Item>
               <Form.Item label="Tài sản hiện có">
-                {getFieldDecorator('asset1', {
-                  initialValue: dataUser.assets ? dataUser.assets.asset1 : '',
+                {getFieldDecorator('assets', {
+                  initialValue: dataUser.assets ? dataUser.assets.assets : '',
                   // initialValue: dataUser.jobs ? dataUser.jobs.jobs : '',
                 })(
                   <Input
-                    onChange={() => this.handleChangeAsset1()}
+                    rows={2}
+                    onChange={() => this.handleChangeAssets()}
                     placeholder="Ví dụ: nhà cửa...."
-                    prefix={<Icon type="sketch" style={{ color: 'rgba(0,0,0,.25)' }} />}
-                  />
-                )}
-              </Form.Item>
-              <Form.Item>
-                {getFieldDecorator('asset2', {
-                  initialValue: dataUser.assets ? dataUser.assets.asset2 : '',
-                  // initialValue: dataUser.jobs ? dataUser.jobs.jobs : '',
-                })(
-                  <Input
-                    onChange={() => this.handleChangeAsset2()}
-                    placeholder="Ví dụ: xe cộ...."
                     prefix={<Icon type="sketch" style={{ color: 'rgba(0,0,0,.25)' }} />}
                   />
                 )}

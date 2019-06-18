@@ -359,6 +359,8 @@ function register(req, res) {
           dob_year: PARAM_IS_VALID.dob_year,
           fullname: PARAM_IS_VALID.fullname,
           phone: PARAM_IS_VALID.phone,
+          height: req.body.height,
+          weight: req.body.weight,
           createat: new Date().getTime(),
         };
         const loginObject = {
