@@ -125,11 +125,11 @@ const dayInMonthFull = [
   31,
 ];
 const addressInVN = [
+  'Hà Nội',
+  'TP HCM',
   'Cần Thơ',
   'Đà Nẵng',
   'Hải Phòng',
-  'Hà Nội',
-  'TP HCM',
   'An Giang',
   'Bà Rịa - Vũng Tàu',
   'Bắc Giang',
@@ -860,50 +860,6 @@ class FormRegister extends PureComponent {
             <Select placeholder="Chọn...">
               <Option value="pal">Kết bạn mới</Option>
               <Option value="dating">Hẹn hò, kết hôn</Option>
-            </Select>
-          )}
-        </Form.Item>
-        <Form.Item
-          label="Chiều cao"
-          style={{ width: '45%', display: 'inline-block', marginBottom: '0px' }}
-        >
-          {getFieldDecorator('height', {
-            rules: [
-              {
-                required: true,
-                message: 'Nhập chiều cao',
-              },
-            ],
-            onChange: e => this.handleChangeHeight(e),
-          })(
-            <Select showSearch placeholder="Chiều cao">
-              {height.map(v => (
-                <Option key={v} value={v}>
-                  {v}
-                </Option>
-              ))}
-            </Select>
-          )}
-        </Form.Item>
-        <Form.Item
-          label="Cân nặng"
-          style={{ width: '45%', display: 'inline-block', float: 'right', marginBottom: '0px' }}
-        >
-          {getFieldDecorator('weight', {
-            rules: [
-              {
-                required: true,
-                message: 'Nhập cân nặng',
-              },
-            ],
-            onChange: this.handleChangeWeight,
-          })(
-            <Select placeholder="Cân nặng">
-              {weight.map(v => (
-                <Option key={v} value={v}>
-                  {v}
-                </Option>
-              ))}
             </Select>
           )}
         </Form.Item>

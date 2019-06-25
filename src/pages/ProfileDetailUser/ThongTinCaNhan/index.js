@@ -214,11 +214,11 @@ const weight = [
   100,
 ];
 const addressInVN = [
+  'Hà Nội',
+  'TP HCM',
   'Cần Thơ',
   'Đà Nẵng',
   'Hải Phòng',
-  'Hà Nội',
-  'TP HCM',
   'An Giang',
   'Bà Rịa - Vũng Tàu',
   'Bắc Giang',
@@ -398,10 +398,10 @@ class ThongTinCaNhan extends Component {
     const assets = form.getFieldValue('assets');
     const hobbys = form.getFieldValue('hobbys');
     const marriage = form.getFieldValue('marriage');
-    const living = form.getFieldValue('living');
-    if (!living) {
+    const hometown = form.getFieldValue('hometown');
+    if (!hometown) {
       form.setFields({
-        living: {
+        hometown: {
           errors: [new Error('Vui lòng nhập địa chỉ thường trú')],
         },
       });
@@ -437,9 +437,9 @@ class ThongTinCaNhan extends Component {
 
     form.validateFields((err, values) => {
       values.avatar = avatarImage;
-      values.confirmCheck = this.state.dataUser.vov;
+      values.vov = this.state.dataUser.vov;
       if (!err) {
-        if (!jobs || !assets || !hobbys || !marriage || !living) {
+        if (!jobs || !assets || !hobbys || !marriage || !hometown) {
           this.setState({
             confirmSubmit: false,
           });
@@ -448,14 +448,10 @@ class ThongTinCaNhan extends Component {
         this.setState({
           confirmSubmit: true,
         });
-        console.log(values);
-        /*
-
-          dispatch({
+        dispatch({
           type: 'authentication/updateprofileuser',
           payload: values,
-          });
-          */
+        });
       }
     });
   };
@@ -545,10 +541,10 @@ class ThongTinCaNhan extends Component {
     });
   }
 
-  handleChangeLiving(e) {
+  handleChangehometown(e) {
     console.log(e);
     this.props.form.setFields({
-      living: {
+      hometown: {
         errors: null,
       },
     });
@@ -586,7 +582,7 @@ class ThongTinCaNhan extends Component {
 
   onChangeCheckBoxActiveFriend(e) {
     this.setState({
-      dataUser: { ...this.state.dataUser, activeFriend: e.target.checked },
+      dataUser: { ...this.state.dataUser, active_friend: e.target.checked },
     });
   }
 
@@ -665,10 +661,10 @@ class ThongTinCaNhan extends Component {
                 </Form.Item>
               </div>
               <Form.Item label="Thường trú">
-                {getFieldDecorator('living', {
+                {getFieldDecorator('address', {
                   rules: [{ required: true, message: 'Vui lòng chọn nơi thường trú' }],
-                  onChange: e => this.handleChangeLiving(e),
-                  initialValue: dataUser.living,
+                  onChange: e => this.handleChangehometown(e),
+                  initialValue: dataUser.address || '',
                 })(
                   <Select showSearch placeholder="Thường trú">
                     {addressInVN.map(v => (
@@ -680,15 +676,20 @@ class ThongTinCaNhan extends Component {
                 )}
               </Form.Item>
               <Form.Item label="Quê quán">
-                {getFieldDecorator('address', {
+                {getFieldDecorator('hometown', {
                   rules: [{ required: true, message: 'Vui lòng chọn địa chỉ' }],
-                  initialValue: dataUser.address,
-                })(<Input prefix={<Icon type="home" style={{ color: 'rgba(0,0,0,.25)' }} />} />)}
+                  initialValue: dataUser.hometown || '',
+                })(
+                  <Input
+                    placeholder="Quê quán"
+                    prefix={<Icon type="home" style={{ color: 'rgba(0,0,0,.25)' }} />}
+                  />
+                )}
               </Form.Item>
               <div className={styles['date-of-birth']}>
                 <Form.Item label="Chiều cao (cm)" style={{ width: '100px' }}>
                   {getFieldDecorator('height', {
-                    initialValue: dataUser.height ? dataUser.height : '',
+                    initialValue: dataUser.height || '',
                     onChange: e => this.handleChangeHeight(e),
                   })(
                     <Select showSearch placeholder="Centimet">
@@ -702,7 +703,7 @@ class ThongTinCaNhan extends Component {
                 </Form.Item>
                 <Form.Item label="Cân nặng (kg)" style={{ width: '100px' }}>
                   {getFieldDecorator('weight', {
-                    initialValue: dataUser.weight ? dataUser.weight : '',
+                    initialValue: dataUser.weigh || '',
                     onChange: e => this.handleChangeWeight(e),
                   })(
                     <Select showSearch placeholder="kilogram">
@@ -718,7 +719,7 @@ class ThongTinCaNhan extends Component {
               <Form.Item label="Trình độc học vấn">
                 {getFieldDecorator('education', {
                   rules: [{ required: true, message: 'Nhập trình độ học vấn của bạn' }],
-                  initialValue: dataUser.education ? dataUser.education.education : '',
+                  initialValue: dataUser.education || '',
                   onChange: e => this.onChangeEducation(e),
                 })(
                   <Select showSearch>
@@ -735,9 +736,9 @@ class ThongTinCaNhan extends Component {
               </Form.Item>
               <Form.Item label="Sở thích, tính cách">
                 {getFieldDecorator('hobbys', {
-                  initialValue: dataUser.hobbys ? dataUser.hobbys.hobbys : '',
+                  initialValue: dataUser.hobbys || '',
                 })(
-                  <Input
+                  <Input.TextArea
                     rows={2}
                     onChange={() => this.handleChangeHobbys()}
                     placeholder="Ví dụ: nghe nhạc...."
@@ -747,22 +748,21 @@ class ThongTinCaNhan extends Component {
               </Form.Item>
               <Form.Item label="Công việc hiện tại">
                 {getFieldDecorator('jobs', {
-                  initialValue: dataUser.jobs ? dataUser.jobs.jobs : '',
+                  initialValue: dataUser.jobs || '',
                 })(
                   <Input.TextArea
                     rows={2}
                     onChange={() => this.handleChangeJobs()}
                     prefix={<Icon type="build" style={{ color: 'rgba(0,0,0,.25)' }} />}
-                    placeholder="Ngành nghề?"
+                    placeholder="Ngành nghề chính?"
                   />
                 )}
               </Form.Item>
               <Form.Item label="Tài sản hiện có">
                 {getFieldDecorator('assets', {
-                  initialValue: dataUser.assets ? dataUser.assets.assets : '',
-                  // initialValue: dataUser.jobs ? dataUser.jobs.jobs : '',
+                  initialValue: dataUser.assets || '',
                 })(
-                  <Input
+                  <Input.TextArea
                     rows={2}
                     onChange={() => this.handleChangeAssets()}
                     placeholder="Ví dụ: nhà cửa...."
@@ -772,7 +772,7 @@ class ThongTinCaNhan extends Component {
               </Form.Item>
               <Form.Item label="Tình trạng hôn nhân">
                 {getFieldDecorator('marriage', {
-                  initialValue: dataUser.marriage ? dataUser.marriage : '',
+                  initialValue: dataUser.marriage || '',
                   onChange: e => this.onChangeMarriage(e),
                 })(
                   <Select showSearch placeholder="Chọn ...">
@@ -786,7 +786,7 @@ class ThongTinCaNhan extends Component {
               </Form.Item>
               <Form.Item label="Chọn đài lên sóng">
                 {getFieldDecorator('location', {
-                  initialValue: dataUser.location ? dataUser.location : '',
+                  initialValue: dataUser.location || 'VOVHN',
                   onChange: e => this.onChangeVOV(e),
                 })(
                   <Select placeholder="Lựa chọn">
@@ -796,16 +796,16 @@ class ThongTinCaNhan extends Component {
                 )}
               </Form.Item>
               <Form.Item>
-                {getFieldDecorator('confirmCheck', {})(
+                {getFieldDecorator('vov', {})(
                   <Checkbox checked={dataUser.vov} onChange={e => this.onChangeCheckBox(e)}>
                     Đăng ký lên sóng VOV
                   </Checkbox>
                 )}
               </Form.Item>
               <Form.Item>
-                {getFieldDecorator('activeFriend', {})(
+                {getFieldDecorator('active_friend', {})(
                   <Checkbox
-                    checked={dataUser.activeFriend}
+                    checked={dataUser.active_friend}
                     onChange={e => this.onChangeCheckBoxActiveFriend(e)}
                   >
                     Mở kết bạn
