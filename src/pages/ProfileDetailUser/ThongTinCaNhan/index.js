@@ -740,7 +740,7 @@ class ThongTinCaNhan extends Component {
               </Form.Item>
               <Form.Item label="Sở thích, tính cách">
                 {getFieldDecorator('hobbys', {
-                  initialValue: dataUser.hobbys.hobbys || '',
+                  initialValue: dataUser.hobbys ? dataUser.hobbys.hobbys : '',
                 })(
                   <Input.TextArea
                     rows={2}
@@ -752,7 +752,7 @@ class ThongTinCaNhan extends Component {
               </Form.Item>
               <Form.Item label="Công việc hiện tại">
                 {getFieldDecorator('jobs', {
-                  initialValue: dataUser.jobs.jobs || '',
+                  initialValue: dataUser.jobs ? dataUser.jobs.jobs : '',
                 })(
                   <Input.TextArea
                     rows={2}
@@ -764,7 +764,7 @@ class ThongTinCaNhan extends Component {
               </Form.Item>
               <Form.Item label="Tài sản hiện có">
                 {getFieldDecorator('assets', {
-                  initialValue: dataUser.assets.assets || '',
+                  initialValue: dataUser.assets ? dataUser.assets.assets : '',
                 })(
                   <Input.TextArea
                     rows={2}
