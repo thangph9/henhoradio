@@ -18,6 +18,19 @@ module.exports = {
     hhr_goal: 'text',
     phone: 'text',
     uniqueid: 'int',
+    hometown: 'text',
+    vov: 'boolean',
+    location: 'text',
+    marriage: 'text',
+    active_friend: 'boolean',
+    hobbys: {
+      type: 'map',
+      typeDef: '<text,text>',
+    },
+    assets: {
+      type: 'map',
+      typeDef: '<text,text>',
+    },
     video: {
       type: 'map',
       typeDef: '<text,uuid>',

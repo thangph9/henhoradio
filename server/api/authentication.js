@@ -60,6 +60,16 @@ function register(req, res) {
         res.send({ status: 'invalid' });
       }
     },
+    callback => {
+      if (new Date().getFullYear() - PARAM_IS_VALID.dob_year < 18) {
+        return res.json({
+          status: 'error2',
+          message: 'Bạn chưa đủ 18 tuổi không thể tham gia hẹn hò',
+          timeline: new Date().getTime(),
+        });
+      }
+      callback(null, null);
+    },
     function checkCaptcha(callback) {
       if (PARAM_IS_VALID.useCaptcha) {
         if (!params.captcha) {
@@ -915,6 +925,12 @@ function updateProfileUser(req, res) {
         PARAM_IS_VALID.jobs = {
           jobs: params.jobs,
         };
+        PARAM_IS_VALID.hobbys = {
+          hobbys: params.hobbys,
+        };
+        PARAM_IS_VALID.assets = {
+          assets: params.assets,
+        };
         PARAM_IS_VALID.dob_month = params.monthinfo;
         PARAM_IS_VALID.weight = params.weight;
         PARAM_IS_VALID.dob_year = params.yearinfo;
@@ -943,9 +959,16 @@ function updateProfileUser(req, res) {
             education: PARAM_IS_VALID.education,
             fullname: PARAM_IS_VALID.fullname,
             gender: PARAM_IS_VALID.gender,
-            height: PARAM_IS_VALID.height,
+            height: PARAM_IS_VALID.height.toString(),
             jobs: PARAM_IS_VALID.jobs,
-            weight: PARAM_IS_VALID.weight,
+            hobbys: PARAM_IS_VALID.hobbys,
+            assets: PARAM_IS_VALID.assets,
+            weight: PARAM_IS_VALID.weight.toString(),
+            hometown: params.hometown,
+            vov: params.vov,
+            location: params.location,
+            marriage: params.marriage,
+            active_friend: params.active_friend,
           };
           let object = update_object;
           models.instance.users.update(
@@ -966,7 +989,10 @@ function updateProfileUser(req, res) {
       },
     ],
     err => {
-      if (err) return res.json({ status: 'error' });
+      if (err) {
+        console.log(err);
+        return res.json({ status: 'error' });
+      }
       return res.json({ status: 'ok', timeline: new Date().getTime() });
     }
   );
