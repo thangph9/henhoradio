@@ -723,7 +723,7 @@ class ThongTinCaNhan extends Component {
               <Form.Item label="Trình độc học vấn">
                 {getFieldDecorator('education', {
                   rules: [{ required: true, message: 'Nhập trình độ học vấn của bạn' }],
-                  initialValue: dataUser.education.education || '',
+                  initialValue: dataUser.education ? dataUser.education.education : '',
                   onChange: e => this.onChangeEducation(e),
                 })(
                   <Select showSearch>
