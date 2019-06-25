@@ -707,7 +707,7 @@ class ThongTinCaNhan extends Component {
                 </Form.Item>
                 <Form.Item label="Cân nặng (kg)" style={{ width: '100px' }}>
                   {getFieldDecorator('weight', {
-                    initialValue: dataUser.weigh || '',
+                    initialValue: dataUser.weight || '',
                     onChange: e => this.handleChangeWeight(e),
                   })(
                     <Select showSearch placeholder="kilogram">
