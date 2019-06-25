@@ -235,11 +235,11 @@ export default {
     *updateprofileuser({ payload }, { call, put }) {
       const response = yield call(updateProfileUser, payload);
       if (response && response.status === 'ok') {
+        const { status } = response;
         yield put({
           type: 'updateProfileUser',
-          payload,
+          payload: { ...payload, status },
         });
-        message.success('Thay đổi thông tin thành công !');
       } else {
         message.error('Có lỗi xảy ra !');
       }
@@ -397,6 +397,7 @@ export default {
       oldProps.active_friend = action.payload.active_friend;
       oldProps.location = action.payload.location;
       oldProps.vov = action.payload.vov;
+      oldProps.status = action.payload.status;
       const newProps = JSON.stringify(oldProps);
       return {
         ...state,

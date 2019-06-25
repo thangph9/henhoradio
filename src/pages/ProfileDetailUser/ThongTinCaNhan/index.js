@@ -364,6 +364,12 @@ class ThongTinCaNhan extends Component {
   componentWillReceiveProps(nextProps) {
     const { authentication } = this.props;
     if (authentication.getonlyuser !== nextProps.authentication.getonlyuser) {
+      console.log(nextProps.authentication.getonlyuser.status);
+      if (nextProps.authentication.getonlyuser.status) {
+        this.setState({
+          confirmSubmit: true,
+        });
+      }
       this.setState(
         {
           dataUser: nextProps.authentication.getonlyuser,
@@ -438,6 +444,7 @@ class ThongTinCaNhan extends Component {
     form.validateFields((err, values) => {
       values.avatar = avatarImage;
       values.vov = this.state.dataUser.vov;
+      values.active_friend = this.state.dataUser.active_friend;
       if (!err) {
         if (!jobs || !assets || !hobbys || !marriage || !hometown) {
           this.setState({
@@ -445,9 +452,6 @@ class ThongTinCaNhan extends Component {
           });
           return;
         }
-        this.setState({
-          confirmSubmit: true,
-        });
         dispatch({
           type: 'authentication/updateprofileuser',
           payload: values,
@@ -719,7 +723,7 @@ class ThongTinCaNhan extends Component {
               <Form.Item label="Trình độc học vấn">
                 {getFieldDecorator('education', {
                   rules: [{ required: true, message: 'Nhập trình độ học vấn của bạn' }],
-                  initialValue: dataUser.education || '',
+                  initialValue: dataUser.education.education || '',
                   onChange: e => this.onChangeEducation(e),
                 })(
                   <Select showSearch>
@@ -736,7 +740,7 @@ class ThongTinCaNhan extends Component {
               </Form.Item>
               <Form.Item label="Sở thích, tính cách">
                 {getFieldDecorator('hobbys', {
-                  initialValue: dataUser.hobbys || '',
+                  initialValue: dataUser.hobbys.hobbys || '',
                 })(
                   <Input.TextArea
                     rows={2}
@@ -748,7 +752,7 @@ class ThongTinCaNhan extends Component {
               </Form.Item>
               <Form.Item label="Công việc hiện tại">
                 {getFieldDecorator('jobs', {
-                  initialValue: dataUser.jobs || '',
+                  initialValue: dataUser.jobs.jobs || '',
                 })(
                   <Input.TextArea
                     rows={2}
@@ -760,7 +764,7 @@ class ThongTinCaNhan extends Component {
               </Form.Item>
               <Form.Item label="Tài sản hiện có">
                 {getFieldDecorator('assets', {
-                  initialValue: dataUser.assets || '',
+                  initialValue: dataUser.assets.assets || '',
                 })(
                   <Input.TextArea
                     rows={2}
@@ -818,10 +822,7 @@ class ThongTinCaNhan extends Component {
                 </Button>
               </Form.Item>
               {this.state.confirmSubmit && (
-                <span style={{ color: 'green' }}>
-                  Thông tin cập nhập của bạn đã được gửi đi ban biên tập sẽ xác nhận lại thông tin
-                  của bạn
-                </span>
+                <span style={{ color: 'green' }}>Thay đổi thành công</span>
               )}
             </Form>
           </div>
