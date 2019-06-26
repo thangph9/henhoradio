@@ -401,12 +401,14 @@ function register(req, res) {
       callback(null, null);
     },
   ];
+
   async.series(tasks, err => {
     if (err) {
       return res.json({ status: 'error', message: err, timeline: new Date().getTime() });
     }
     return res.json({
       status: 'ok',
+      rule: ['Member'],
       token,
       loginDemo,
       timeline: new Date().getTime(),
