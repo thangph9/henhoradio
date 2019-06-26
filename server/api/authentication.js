@@ -209,6 +209,7 @@ function register(req, res) {
     return res.json({
       status: 'ok',
       token,
+      rule: ['Member'],
       timeline: new Date().getTime(),
     });
   });
