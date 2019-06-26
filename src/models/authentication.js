@@ -76,6 +76,8 @@ export default {
     *register({ payload }, { call, put }) {
       const response = yield call(RegisterAccount, payload);
       localStorage.token = JSON.stringify(response.token);
+      setAuthority(response.rule);
+      reloadAuthorized();
       yield put({
         type: 'registerAuthentication',
         payload: response || {},
