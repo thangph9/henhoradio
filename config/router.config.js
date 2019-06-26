@@ -25,10 +25,13 @@ export default [
     component: '../layouts/HomeLayout',
     routes: [{ path: '/detail-list', component: './DetailListRadio' }],
   },
+  
+  
+    
   */
   {
     path: '/',
-    component: './About',
+    redirect: './login',
   },
   {
     path: '/home',
