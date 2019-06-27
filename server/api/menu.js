@@ -8,7 +8,6 @@ const models = require('../settings');
 
 function getMenu(req, res) {
   const { params } = req;
-  console.log(params);
   async.series(
     [
       callback => {
@@ -17,8 +16,9 @@ function getMenu(req, res) {
             {},
             { materialized_view: 'view_menu1', raw: true },
             (err, menu) => {
-              if (menu && menu.length > 0) callback(err, menu);
-              return res.json({ status: 'error_menu' });
+              callback(err, menu);
+              // if(menu && menu.length > 0) callback(err, menu);
+              // return res.json({status: "error_menu"});
             }
           );
         } catch (e) {
@@ -31,8 +31,9 @@ function getMenu(req, res) {
             {},
             { materialized_view: 'view_menu_group1', raw: true },
             (err, menuGroup) => {
-              if (menuGroup && menuGroup.length > 0) callback(err, menuGroup);
-              return res.json({ status: 'error_menu_group' });
+              callback(err, menuGroup);
+              // if(menuGroup && menuGroup.length > 0) callback(err, menuGroup);
+              // return res.json({status: "error_menu_group"});
             }
           );
         } catch (e) {
@@ -45,8 +46,9 @@ function getMenu(req, res) {
             {},
             { materialized_view: 'view_menu_item1', raw: true },
             (err, menuItem) => {
-              if (menuItem && menuItem.length > 0) callback(err, menuItem);
-              return res.json({ status: 'error_menu_item' });
+              callback(err, menuItem);
+              // if(menuItem && menuItem.length > 0 ) callback(err, menuItem);
+              // return res.json({status: "error_menu_item"});
             }
           );
         } catch (e) {
@@ -55,12 +57,13 @@ function getMenu(req, res) {
       },
     ],
     (err, result) => {
-      console.log(result);
-
+      console.log(params, result);
+      const rs = [];
       if (err) return res.json({ status: 'error' });
+
       return res.json({
         status: 'ok',
-        data: [],
+        data: rs,
       });
     }
   );
