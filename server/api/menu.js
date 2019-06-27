@@ -1,102 +1,66 @@
-/* eslint-disable no-underscore-dangle */
-
-/* eslint-disable no-undef-init */
-/* eslint-disable no-shadow */
-/* eslint-disable prefer-const */
-/* eslint-disable camelcase */
-/* eslint-disable no-unused-vars */
-/* eslint-disable consistent-return */
-/* eslint-disable prefer-arrow-callback */
-/* eslint-disable func-names */
 const async = require('async');
-const fs = require('fs');
-const driver = require('cassandra-driver');
-const bcrypt = require('bcryptjs');
-const jwt = require('jsonwebtoken');
 const request = require('request'); // eslint-disable-line
-const models = require('../settings');
-/* eslint-disable prefer-destructuring */
-const Uuid = models.datatypes.Uuid;
-// eslint-disable-next-line import/order
 const express = require('express');
 
-const jwtpublic = fs.readFileSync('./ssl/jwtpublic.pem', 'utf8');
-const jwtprivate = fs.readFileSync('./ssl/jwtprivate.pem', 'utf8');
+const models = require('../settings');
+
+// const Uuid = models.datatypes.Uuid;
 
 function getMenu(req, res) {
-  const params = req.params;
-  let menuReq = {};
-  let menugroupReq = [];
-  let menuItemReq = [];
-
+  const { params } = req;
+  console.log(params);
   async.series(
     [
       callback => {
         try {
-          models.instance.menu.find({}, {}, function(err, menu) {
-            if (menu && menu.length > 0) {
-              menuReq = menu.find(element => element.name === params.menu);
-            } else {
-              return res.json({
-                status: 'error',
-              });
+          models.instance.menu.find(
+            {},
+            { materialized_view: 'view_menu1', raw: true },
+            (err, menu) => {
+              if (menu && menu.length > 0) callback(err, menu);
+              return res.json({ status: 'error_menu' });
             }
-            callback(err, null);
-          });
+          );
         } catch (e) {
           console.log(e);
         }
       },
       callback => {
         try {
-          models.instance.menuGroup.find({}, {}, function(err, menugroup) {
-            if (menugroup && menugroup.length > 0) {
-              menugroupReq = menugroup.filter(
-                element => element.menuid.toString() === menuReq.menuid.toString()
-              );
-            } else {
-              return res.json({
-                status: 'error',
-              });
+          models.instance.menuGroup.find(
+            {},
+            { materialized_view: 'view_menu_group1', raw: true },
+            (err, menuGroup) => {
+              if (menuGroup && menuGroup.length > 0) callback(err, menuGroup);
+              return res.json({ status: 'error_menu_group' });
             }
-            callback(err, null);
-          });
+          );
         } catch (e) {
           console.log(e);
         }
       },
       callback => {
         try {
-          models.instance.menuItem.find({}, {}, function(err, menuitem) {
-            if (menuitem && menuitem.length > 0) {
-              menugroupReq.forEach((element, index, sefl) => {
-                let obj = menuitem.find(
-                  value => value.menuitemid.toString() === element.menuitemid.toString()
-                );
-                if (obj) {
-                  let a = JSON.stringify(obj);
-                  let b = JSON.parse(a);
-                  b.orderby = element.orderby;
-                  menuItemReq.push(b);
-                }
-              });
-              callback(err, null);
-            } else {
-              return res.json({
-                status: 'error',
-              });
+          models.instance.menuItem.find(
+            {},
+            { materialized_view: 'view_menu_item1', raw: true },
+            (err, menuItem) => {
+              if (menuItem && menuItem.length > 0) callback(err, menuItem);
+              return res.json({ status: 'error_menu_item' });
             }
-          });
+          );
         } catch (e) {
           console.log(e);
         }
       },
     ],
-    err => {
+    (err, result) => {
+      console.log(result);
+
       if (err) return res.json({ status: 'error' });
       return res.json({
         status: 'ok',
-        data: menuItemReq,
+        data: [],
       });
     }
   );
