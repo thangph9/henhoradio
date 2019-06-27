@@ -1,25 +1,17 @@
-/* eslint-disable no-underscore-dangle */
-/* eslint-disable no-undef-init */
-/* eslint-disable no-shadow */
-/* eslint-disable camelcase */
-/* eslint-disable prefer-const */
-/* eslint-disable no-unused-vars */
-/* eslint-disable consistent-return */
-/* eslint-disable func-names */
-/* eslint-disable prefer-arrow-callback */
 const async = require('async');
 const fs = require('fs');
 const express = require('express');
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
+
 const request = require('request'); // eslint-disable-line
-/* eslint-disable prefer-destructuring */
 const router = express.Router();
+
 const jwtpublic = fs.readFileSync('./ssl/jwtpublic.pem', 'utf8');
 const jwtprivate = fs.readFileSync('./ssl/jwtprivate.pem', 'utf8');
 const models = require('../settings');
 
-const Uuid = models.datatypes.Uuid;
+const Uuid = models.datatypes.Uuid; // eslint-disable-line
 const MESSAGE = {
   USER_NOT_MATCH: 'Tài khoản hoặc mật khẩu không đúng',
   USER_NOT_FOUND: 'Tài khoản này không tồn tại!',
@@ -50,41 +42,28 @@ function register(req, res) {
         PARAM_IS_VALID.fullname = params.fullname;
         PARAM_IS_VALID.address = params.address;
         PARAM_IS_VALID.password = params.password;
-        PARAM_IS_VALID.user_id = userId;
+        PARAM_IS_VALID.id = userId;
         PARAM_IS_VALID.dob_day = params.dob_day;
         PARAM_IS_VALID.dob_month = params.dob_month;
         PARAM_IS_VALID.dob_year = params.dob_year;
         PARAM_IS_VALID.useCaptcha = params.useCaptcha;
         callback(null, null);
       } catch (error) {
-        res.send({ status: 'invalid' });
+        console.log(error);
       }
-    },
-    callback => {
-      if (new Date().getFullYear() - PARAM_IS_VALID.dob_year < 18) {
-        return res.json({
-          status: 'error2',
-          message: 'Bạn chưa đủ 18 tuổi không thể tham gia hẹn hò',
-          timeline: new Date().getTime(),
-        });
-      }
-      callback(null, null);
     },
     function checkCaptcha(callback) {
       if (PARAM_IS_VALID.useCaptcha) {
         if (!params.captcha) {
-          return res.json({
-            status: 'error',
-            message: 'Chưa nhập captcha',
-            timeline: new Date().getTime(),
-          });
+          callback(null, params.captcha);
+        } else {
+          verificationUrl = 'https://www.google.com/recaptcha/api/siteverify?secret=6LfUm5AUAAAAAC8xSPAt0pRUzUd4ZaK-1rZs-Aqm&response='.concat(
+            params.captcha,
+            '&remoteip=',
+            req.connection.remoteAddress
+          );
+          callback(null, verificationUrl);
         }
-        verificationUrl = 'https://www.google.com/recaptcha/api/siteverify?secret=6LfUm5AUAAAAAC8xSPAt0pRUzUd4ZaK-1rZs-Aqm&response='.concat(
-          params.captcha,
-          '&remoteip=',
-          req.connection.remoteAddress
-        );
-        callback(null, verificationUrl);
       } else {
         callback(null, null);
       }
@@ -93,14 +72,7 @@ function register(req, res) {
       if (PARAM_IS_VALID.useCaptcha) {
         request(verificationUrl, (error, response, b) => {
           const body = JSON.parse(b);
-          if (body.success === false) {
-            return res.json({
-              status: 'error',
-              message: 'Sai captcha',
-              timeline: new Date().getTime(),
-            });
-          }
-          callback(error, null);
+          callback(error, body.success);
         });
       } else {
         callback(null, null);
@@ -109,35 +81,32 @@ function register(req, res) {
     function genSaltToken(callback) {
       bcrypt.genSalt(saltRounds, (err, rs) => {
         salt = rs;
-        callback(err, null);
+        callback(err, rs);
       });
     },
     function getHashToken(callback) {
       bcrypt.hash(PARAM_IS_VALID.password, salt, (err, rs) => {
         hash = rs;
-        callback(err, null);
+        callback(err, rs);
       });
     },
     function fetchPassword(callback) {
       try {
-        models.instance.login.find({ phone: PARAM_IS_VALID.phone }, function(err, _phone) {
-          if (_phone !== undefined && _phone.length > 0) {
-            return res.json({
-              status: 'error',
-              message: 'Số điện thoại đã được đăng ký!',
-              timeline: new Date().getTime(),
-            });
+        models.instance.login.find(
+          { phone: PARAM_IS_VALID.phone },
+          { materialized_view: 'view_login', raw: true },
+          (err, phone) => {
+            callback(err, phone);
           }
-          callback(err, null);
-        });
+        );
       } catch (error) {
-        res.send({ status: 'error' });
+        console.log(error);
       }
     },
     function saveUser(callback) {
       try {
         const userObject = {
-          user_id: PARAM_IS_VALID.user_id,
+          id: PARAM_IS_VALID.id,
           address: PARAM_IS_VALID.address,
           gender: PARAM_IS_VALID.gender,
           dob_day: PARAM_IS_VALID.dob_day,
@@ -153,7 +122,7 @@ function register(req, res) {
           password_hash_algorithm: 'bcrypt',
           password_salt: salt,
           rule: ['Member'],
-          user_id: PARAM_IS_VALID.user_id,
+          user_id: PARAM_IS_VALID.id,
         };
         /* eslint-disable new-cap */
         const Users = () => {
@@ -171,7 +140,7 @@ function register(req, res) {
         };
         queries.push(Login());
       } catch (error) {
-        res.send({ status: 'error' });
+        console.log(error);
       }
       callback(null, null);
     },
@@ -179,7 +148,7 @@ function register(req, res) {
       try {
         token = jwt.sign(
           {
-            userid: PARAM_IS_VALID.user_id,
+            userid: PARAM_IS_VALID.id,
             fullname: PARAM_IS_VALID.fullname,
             phone: PARAM_IS_VALID.phone,
             address: PARAM_IS_VALID.address,
@@ -191,21 +160,18 @@ function register(req, res) {
           }
         );
       } catch (e) {
-        callback(null, null);
-        res.send({ status: 'error' });
+        console.log(e);
       }
       callback(null, null);
     },
-    function doSubmit(callback) {
+    function submit(callback) {
       models.doBatch(queries, err => {
-        callback(err, null);
+        callback(err);
       });
     },
   ];
   async.series(tasks, err => {
-    if (err) {
-      return res.json({ status: 'error', message: err, timeline: new Date().getTime() });
-    }
+    if (err) return res.json({ status: 'error', message: err, timeline: new Date().getTime() });
     return res.json({
       status: 'ok',
       token,
@@ -217,11 +183,11 @@ function register(req, res) {
 function login(req, res) {
   const params = req.body;
   const PARAM_IS_VALID = {};
-  let msg = '';
-  let userInfo = [];
-  let hashPassword = '';
+  const msg = '';
+  const userInfo = [];
+  const hashPassword = '';
   let token = '';
-  let rule = [];
+  const rule = [];
   let verificationUrl = '';
   const tasks = [
     function validParams(callback) {
@@ -234,34 +200,23 @@ function login(req, res) {
     function checkCaptcha(callback) {
       if (PARAM_IS_VALID.useCaptcha) {
         if (!params.captcha) {
-          return res.json({
-            status: 'error',
-            message: 'Chưa nhập captcha',
-            timeline: new Date().getTime(),
-          });
+          callback(null, null);
+        } else {
+          verificationUrl = 'https://www.google.com/recaptcha/api/siteverify?secret=6LfUm5AUAAAAAC8xSPAt0pRUzUd4ZaK-1rZs-Aqm&response='.concat(
+            params.captcha,
+            '&remoteip=',
+            req.connection.remoteAddress
+          );
+          callback(null, verificationUrl);
         }
-        verificationUrl = 'https://www.google.com/recaptcha/api/siteverify?secret=6LfUm5AUAAAAAC8xSPAt0pRUzUd4ZaK-1rZs-Aqm&response='.concat(
-          params.captcha,
-          '&remoteip=',
-          req.connection.remoteAddress
-        );
-        callback(null, verificationUrl);
-      } else {
-        callback(null, null);
       }
+      callback(null, null);
     },
     function verifyCaptcha(callback) {
       if (PARAM_IS_VALID.useCaptcha) {
         request(verificationUrl, (error, response, b) => {
           const body = JSON.parse(b);
-          if (body.success === false) {
-            return res.json({
-              status: 'error',
-              message: 'Sai captcha',
-              timeline: new Date().getTime(),
-            });
-          }
-          callback(error, null);
+          callback(error, body.success);
         });
       } else {
         callback(null, null);
@@ -270,57 +225,33 @@ function login(req, res) {
     function fetchUsers(callback) {
       models.instance.users.find(
         { phone: PARAM_IS_VALID.phone },
-        { allow_filtering: true },
-        function(err, _user) {
-          if (_user && _user.length > 0) {
-            userInfo = _user[0];
-          } else {
-            return res.json({
-              status: 'error',
-              message: 'Tài khoản không tồn tại!',
-              timeline: new Date().getTime(),
-            });
-          }
-          callback(err, null);
+        { materialized_view: 'view_user_phone', raw: true },
+        (err, user) => {
+          callback(err, user);
         }
       );
     },
     function fetchPassword(callback) {
       models.instance.login.find(
         { phone: PARAM_IS_VALID.phone },
-        { allow_filtering: true },
-        (err, _user) => {
-          if (Array.isArray(_user)) {
-            if (_user !== undefined && _user.length > 0) {
-              hashPassword = _user[0].password;
-              rule = _user[0].rule;
-            } else {
-              msg = MESSAGE.USER_NOT_FOUND;
-            }
-          }
-          callback(err, null);
+        { materialized_view: 'view_login', raw: true },
+        (err, lg) => {
+          callback(err, lg);
         }
       );
     },
     function validPassword(callback) {
       if (hashPassword !== '') {
         bcrypt.compare(PARAM_IS_VALID.password, hashPassword, (err, result) => {
-          if (result === false) {
-            return res.json({
-              status: 'error',
-              message: 'Nhập sai mật khẩu',
-              timeline: new Date().getTime(),
-            });
-          }
-          callback(err, null);
+          callback(err, result);
         });
       } else callback(null, null);
     },
-    function Login(callback) {
+    function signIn(callback) {
       try {
         token = jwt.sign(
           {
-            userid: userInfo.user_id,
+            userid: userInfo.id,
             fullname: userInfo.fullname,
             phone: userInfo.phone,
             address: userInfo.address,
@@ -332,7 +263,7 @@ function login(req, res) {
           }
         );
       } catch (e) {
-        res.send({ status: 'error' });
+        console.log(e);
       }
       callback(null, null);
     },
@@ -350,51 +281,40 @@ function login(req, res) {
     }
   });
 }
-function checkUser(req, res) {
-  const params = req.params;
+function checkUser(req) {
+  const { params } = req;
   const PARAM_IS_VALID = {};
   // let verificationUrl = '';
   try {
     PARAM_IS_VALID.phone = params.phone;
-    models.instance.login.find({ phone: PARAM_IS_VALID.phone }, function(err, _phone) {
-      if (_phone !== undefined && _phone.length > 0) {
-        return res.json({
-          status: 'error',
-          message: 'Số điện thoại đã được đăng ký!',
-          timeline: new Date().getTime(),
-        });
+    models.instance.login.find(
+      { phone: PARAM_IS_VALID.phone },
+      { materialized_view: 'view_login', raw: true },
+      (err, phone) => {
+        //   callback(err,phone)
+        console.log(err, phone);
       }
-      return res.json({
-        status: 'ok',
-        timeline: new Date().getTime(),
-      });
-    });
-  } catch (error) {
-    res.send({ status: 'error' });
+    );
+  } catch (e) {
+    console.log(e);
   }
 }
 function question(req, res) {
-  let result = [];
+  const result = [];
 
   const tasks = [
     function findQues(callback) {
       try {
-        models.instance.question.find({}, function(err, ques) {
-          if (ques && ques.length > 0) {
-            result = ques;
-          }
-          callback(err, null);
+        models.instance.question.find({}, (err, ques) => {
+          callback(err, ques);
         });
-      } catch (error) {
-        callback(null, null);
-        return res.send({ status: 'error' });
+      } catch (e) {
+        console.log(e);
       }
     },
   ];
   async.series(tasks, err => {
-    if (err) {
-      return res.json({ status: 'error' });
-    }
+    if (err) return res.json({ status: 'error' });
     return res.json({
       status: 'ok',
       data: result,
@@ -404,8 +324,8 @@ function question(req, res) {
 function sendAnswer(req, res) {
   const params = req.body;
   const token = req.headers['x-access-token'];
-  let queries = [];
-  let PARAM_IS_VALID = {};
+  const queries = [];
+  const PARAM_IS_VALID = {};
   const verifyOptions = {
     expiresIn: '30d',
     algorithm: ['RS256'],
@@ -419,13 +339,9 @@ function sendAnswer(req, res) {
     function checkUserId(callback) {
       try {
         legit = jwt.verify(token, jwtpublic, verifyOptions);
-        callback(null, null);
+        callback(null, legit);
       } catch (e) {
-        callback(e, null);
-        return res.send({
-          status: 'error',
-          message: 'Sai ma token',
-        });
+        console.log(e);
       }
     },
     function saveAnswer(callback) {
@@ -438,15 +354,14 @@ function sendAnswer(req, res) {
           };
           // eslint-disable-next-line no-shadow
           const question = () => {
-            const object = answerObject;
-            const instance = new models.instance.profile(object);
+            const instance = new models.instance.profile(answerObject);
             const save = instance.save({ return_query: true });
             return save;
           };
           queries.push(question());
         });
-      } catch (error) {
-        res.send({ status: 'error' });
+      } catch (e) {
+        console.log(e);
       }
       callback(null, null);
     },
@@ -457,17 +372,16 @@ function sendAnswer(req, res) {
             user_id: models.uuidFromString(legit.userid),
             question_id: models.uuidFromString(element.question),
           };
-          const profile_by_question = () => {
+          const profileByQuestion = () => {
             const object = profileObject;
             const instance = new models.instance.profile_by_question(object);
             const save = instance.save({ return_query: true });
             return save;
           };
-          queries.push(profile_by_question());
+          queries.push(profileByQuestion());
         });
-      } catch (error) {
-        callback(null, null);
-        res.send({ status: 'error' });
+      } catch (e) {
+        console.log(e);
       }
       callback(null, null);
     },
@@ -477,114 +391,74 @@ function sendAnswer(req, res) {
       });
     },
   ];
-  async.series(tasks, err => {});
-  return res.json({
-    status: 'ok',
-    timeline: new Date().getTime(),
+  async.series(tasks, err => {
+    if (err) return res.json({ status: 'error' });
+    return res.json({
+      status: 'ok',
+      timeline: new Date().getTime(),
+    });
   });
 }
 function getUser(req, res) {
-  let result = {};
+  const result = {};
   let legit = {};
   const token = req.headers['x-access-token'];
-  let question = [];
-  let title = [];
-  let group = [];
-  let message = '';
+  // let question = [];
+  const title = [];
+  const group = [];
+  const message = '';
   const verifyOptions = {
     expiresIn: '30d',
     algorithm: ['RS256'],
   };
   async.series(
     [
-      callback => {
+      function decodeToken(callback) {
         try {
           legit = jwt.verify(token, jwtpublic, verifyOptions);
-          callback(null, null);
+          callback(null, legit);
         } catch (e) {
-          callback(e, null);
-          return res.send({
-            status: 'error',
-            message: 'Sai ma token',
-          });
+          console.log(e);
         }
       },
-      callback => {
+      function findUser(callback) {
         try {
-          models.instance.users.find({ user_id: models.uuidFromString(legit.userid) }, function(
-            err,
-            user
-          ) {
-            if (user && user.length > 0) {
-              result = user[0];
-            } else {
-              return res.json({
-                status: 'error',
-                message: 'Không tìm thấy tài khoản này',
-              });
-            }
-            callback(err, null);
+          models.instance.users.find({ id: models.uuidFromString(legit.userid) }, (err, user) => {
+            callback(err, user);
           });
-        } catch (error) {
-          console.log(error);
-          res.send({ status: 'error' });
+        } catch (e) {
+          console.log(e);
         }
       },
-      callback => {
+      function findProfile(callback) {
         try {
           models.instance.profile.find(
             { user_id: models.uuidFromString(legit.userid) },
             { select: ['question_id', 'answer'] },
-            function(err, results) {
-              if (results && results.length > 0) {
-                let arr = [];
-                results.forEach(element => {
-                  let a = JSON.stringify(element);
-                  let obj = JSON.parse(a);
-
-                  arr.push(obj);
-                });
-                question = arr;
-              } else {
-                message = 'Chưa trả lời câu hỏi';
-              }
-              callback(err, null);
+            (err, results) => {
+              callback(err, results);
             }
           );
-        } catch (error) {
-          callback(error, null);
+        } catch (e) {
+          console.log(e);
         }
       },
-      callback => {
+      function findQuestion(callback) {
         try {
-          models.instance.question.find({}, function(err, results) {
-            if (results && results.length > 0) {
-              let arr = [];
-              results.forEach(element => {
-                arr.push(element);
-              });
-              title = arr;
-            }
-            callback(err, null);
+          models.instance.question.find({}, (err, results) => {
+            callback(err, results);
           });
-        } catch (error) {
-          callback(error);
+        } catch (e) {
+          console.log(e);
         }
       },
-      callback => {
+      function findGroup(callback) {
         try {
-          models.instance.group.find({}, function(err, results) {
-            if (results && results.length > 0) {
-              let arr = [];
-              results.forEach(element => {
-                arr.push(element);
-              });
-              group = arr;
-            }
-            callback(err, null);
+          models.instance.group.find({}, (err, results) => {
+            callback(err, results);
           });
         } catch (error) {
-          callback(error);
+          console.log(error);
         }
       },
     ],
@@ -607,47 +481,39 @@ function getUser(req, res) {
 function updateProfileQuestion(req, res) {
   let legit = {};
   const token = req.headers['x-access-token'];
-  let PARAM_IS_VALID = {};
+  const PARAM_IS_VALID = {};
   const verifyOptions = {
     expiresIn: '30d',
     algorithm: ['RS256'],
   };
   async.series(
     [
-      callback => {
+      function init(callback) {
         PARAM_IS_VALID.question_id = req.body.question_id;
         PARAM_IS_VALID.answer = req.body.answer;
         callback(null, null);
       },
-      callback => {
+      function verify(callback) {
         try {
           legit = jwt.verify(token, jwtpublic, verifyOptions);
-          callback(null, null);
         } catch (e) {
-          return res.send({
-            status: 'error',
-            message: 'Sai ma token',
-          });
+          console.log(e);
         }
+        callback(null, legit);
       },
-      callback => {
-        let update_object = {
+      function updateAnswer(callback) {
+        const updateObject = {
           answer: PARAM_IS_VALID.answer,
         };
-        let object = update_object;
         models.instance.profile.update(
           {
             user_id: models.uuidFromString(legit.userid),
             question_id: models.uuidFromString(PARAM_IS_VALID.question_id),
           },
-          object,
+          updateObject,
           { if_exist: true },
-          function(err) {
-            if (err) {
-              console.log(err);
-              callback(err, null);
-            }
-            callback(null, null);
+          err => {
+            callback(err, null);
           }
         );
       },
@@ -659,7 +525,7 @@ function updateProfileQuestion(req, res) {
   );
 }
 function getAllUsers(req, res) {
-  let result = {};
+  const result = {};
   let legit = {};
   const token = req.headers['x-access-token'];
   const verifyOptions = {
@@ -668,45 +534,21 @@ function getAllUsers(req, res) {
   };
   async.series(
     [
-      callback => {
+      function verify(callback) {
         try {
           legit = jwt.verify(token, jwtpublic, verifyOptions);
-          callback(null, null);
         } catch (e) {
-          callback(null, null);
+          console.log(e);
         }
+        callback(null, legit);
       },
-      callback => {
+      function findUser(callback) {
         try {
-          models.instance.users.find({}, function(err, user) {
-            if (user && user.length > 0) {
-              let a = JSON.stringify(user);
-              let b = JSON.parse(a);
-              let arr = [];
-              b.forEach(element => {
-                let obj = {};
-                obj.user_id = element.user_id;
-                obj.fullname = element.fullname;
-                obj.gender = element.gender;
-                obj.age = new Date().getFullYear() - element.dob_year;
-                obj.address = element.address;
-                obj.avatar = element.avatar;
-                arr.push(obj);
-                // if (element.public === 'active') arr.push(obj);
-              });
-              if (legit.userid) arr = arr.filter(element => element.user_id !== legit.userid);
-              result = arr;
-            } else {
-              return res.json({
-                status: 'error',
-                message: 'Không tìm thấy tài khoản này',
-              });
-            }
-            callback(err, null);
+          models.instance.users.find({}, (err, user) => {
+            callback(err, user);
           });
         } catch (error) {
           console.log(error);
-          res.send({ status: 'error' });
         }
       },
     ],
@@ -717,158 +559,111 @@ function getAllUsers(req, res) {
   );
 }
 function getUserById(req, res) {
-  let result = {};
+  const result = {};
   let legit = {};
-  let question = [];
-  let title = [];
+  // const question = [];
+  const title = [];
   let care = false;
-  let group = [];
-  let message = '';
-  let userid = undefined;
-  let yourQuestion = [];
+  const group = [];
+  const message = '';
+  let userid = '';
+  const yourQuestion = [];
   const token = req.headers['x-access-token'];
   const verifyOptions = {
     expiresIn: '30d',
     algorithm: ['RS256'],
   };
-  let params = req.params;
+  const { params } = req;
   async.series(
     [
-      callback => {
+      function verify(callback) {
         try {
           legit = jwt.verify(token, jwtpublic, verifyOptions);
-          callback(null, null);
+          callback(null, legit);
         } catch (e) {
-          /*
-            return res.send({
-            status: 'error',
-            message: 'Sai ma token',
-          });
-          */
-          callback(null, null);
+          console.log(e);
         }
       },
-      function(callback) {
+      function process(callback) {
         try {
-          let id = params.id;
-          let uuid = `${id.substring(0, 8)}-${id.substring(8, 12)}-${id.substring(
+          const { id } = params;
+          const uuid = `${id.substring(0, 8)}-${id.substring(8, 12)}-${id.substring(
             12,
             16
           )}-${id.substring(16, 20)}-${id.substring(20, 32)}`;
           userid = models.uuidFromString(uuid);
         } catch (e) {
-          return res.json({ status: 'error1' });
+          console.log(e);
         }
         callback(null, null);
       },
-      callback => {
+      function findUsers(callback) {
         try {
-          models.instance.users.find({ user_id: userid }, {}, function(err, user) {
-            if (user && user.length > 0) {
-              result = user[0];
-            } else {
-              return res.json({
-                status: 'error',
-                message: 'Không tìm thấy tài khoản này',
-              });
+          models.instance.users.find(
+            { id: userid },
+            { materialized_view: 'view_users', raw: true },
+            (err, user) => {
+              callback(err, user);
             }
-            callback(err, null);
-          });
+          );
         } catch (error) {
           console.log(error);
-          res.send({ status: 'error' });
         }
       },
-      callback => {
+      function findProfile(callback) {
         try {
           models.instance.profile.find(
             { user_id: userid },
             { select: ['question_id', 'answer'] },
-            function(err, results) {
-              if (results && results.length > 0) {
-                let arr = [];
-                results.forEach(element => {
-                  let a = JSON.stringify(element);
-                  let obj = JSON.parse(a);
-                  arr.push(obj);
-                });
-                question = arr;
-              } else {
-                message = 'Chưa trả lời câu hỏi';
-              }
-              callback(err, null);
+            (err, results) => {
+              callback(err, results);
             }
           );
         } catch (error) {
-          callback(error, null);
+          console.log(error);
         }
       },
-      callback => {
+      function processProfile(callback) {
         if (legit.userid) {
           try {
             models.instance.profile.find(
               { user_id: models.uuidFromString(legit.userid) },
               { select: ['question_id', 'answer'] },
-              function(err, results) {
-                if (results && results.length > 0) {
-                  let arr = [];
-                  results.forEach(element => {
-                    let a = JSON.stringify(element);
-                    let obj = JSON.parse(a);
-                    arr.push(obj);
-                  });
-                  yourQuestion = arr;
-                } else {
-                  message = 'Chưa trả lời câu hỏi';
-                }
-                callback(err, null);
+              (err, results) => {
+                callback(err, results);
               }
             );
-          } catch (error) {
-            callback(error, null);
+          } catch (e) {
+            console.log(e);
           }
         } else {
           callback(null, null);
         }
       },
-      callback => {
+      function findQuestion(callback) {
         try {
-          models.instance.question.find({}, function(err, results) {
-            if (results && results.length > 0) {
-              let arr = [];
-              results.forEach(element => {
-                arr.push(element);
-              });
-              title = arr;
-            }
-            callback(err, null);
+          models.instance.question.find({}, (err, results) => {
+            callback(err, results);
           });
         } catch (error) {
-          callback(error);
+          console.log(error);
         }
       },
-      callback => {
+      function findGroup(callback) {
         try {
-          models.instance.group.find({}, function(err, results) {
-            if (results && results.length > 0) {
-              let arr = [];
-              results.forEach(element => {
-                arr.push(element);
-              });
-              group = arr;
-            }
-            callback(err, null);
+          models.instance.group.find({}, (err, results) => {
+            callback(err, results);
           });
         } catch (error) {
-          callback(error);
+          console.log(error);
         }
       },
-      callback => {
+      function findUserCare(callback) {
         try {
           if (legit.userid) {
             models.instance.userCare.find(
               { user_id1: models.uuidFromString(legit.userid), user_id2: userid },
-              function(err, results) {
+              (err, results) => {
                 if (results && results.length > 0) {
                   care = true;
                 }
@@ -880,7 +675,7 @@ function getUserById(req, res) {
             callback(null, null);
           }
         } catch (error) {
-          callback(error);
+          console.log(error);
         }
       },
     ],
@@ -906,14 +701,14 @@ function updateProfileUser(req, res) {
   let legit = {};
   const token = req.headers['x-access-token'];
   const params = req.body;
-  let PARAM_IS_VALID = {};
+  const PARAM_IS_VALID = {};
   const verifyOptions = {
     expiresIn: '30d',
     algorithm: ['RS256'],
   };
   async.series(
     [
-      callback => {
+      function init(callback) {
         PARAM_IS_VALID.address = params.address;
         PARAM_IS_VALID.avatar = params.avatar;
         PARAM_IS_VALID.dob_day = params.dateinfo;
@@ -937,21 +732,17 @@ function updateProfileUser(req, res) {
         PARAM_IS_VALID.dob_year = params.yearinfo;
         callback(null, null);
       },
-      callback => {
+      function verify(callback) {
         try {
           legit = jwt.verify(token, jwtpublic, verifyOptions);
           callback(null, null);
         } catch (e) {
-          callback(e, null);
-          return res.send({
-            status: 'error',
-            message: 'Sai ma token',
-          });
+          console.log(e);
         }
       },
-      callback => {
+      function updateProfile(callback) {
         try {
-          let update_object = {
+          const updateObject = {
             address: PARAM_IS_VALID.address,
             avatar: PARAM_IS_VALID.avatar ? models.uuidFromString(PARAM_IS_VALID.avatar) : null,
             dob_day: PARAM_IS_VALID.dob_day,
@@ -971,44 +762,36 @@ function updateProfileUser(req, res) {
             marriage: params.marriage,
             active_friend: params.active_friend,
           };
-          let object = update_object;
           models.instance.users.update(
-            { user_id: models.uuidFromString(legit.userid) },
-            object,
+            { id: models.uuidFromString(legit.userid) },
+            updateObject,
             { if_exist: true },
-            function(err) {
-              if (err) {
-                console.log(err);
-                return res.json({ status: 'error' });
-              }
-              callback(null, null);
+            err => {
+              callback(err, null);
             }
           );
-        } catch (error) {
-          callback(error, null);
+        } catch (e) {
+          console.log(e);
         }
       },
     ],
     err => {
-      if (err) {
-        console.log(err);
-        return res.json({ status: 'error' });
-      }
+      if (err) return res.json({ status: 'error' });
       return res.json({ status: 'ok', timeline: new Date().getTime() });
     }
   );
 }
 function changePass(req, res) {
-  let params = req.body;
-  let PARAM_IS_VALID = {};
-  let msg = '';
+  const params = req.body;
+  const PARAM_IS_VALID = {};
   let hashPassword = '';
-  let _salt = '';
-  let _hash = '';
-  let saltRounds = 10;
-  let queries = [];
-  let token = req.headers['x-access-token'];
-  let verifyOptions = {
+  let salt = '';
+  let hash = '';
+  let msg = '';
+  const saltRounds = 10;
+  const queries = [];
+  const token = req.headers['x-access-token'];
+  const verifyOptions = {
     expiresIn: '30d',
     algorithm: ['RS256'],
   };
@@ -1016,89 +799,79 @@ function changePass(req, res) {
   try {
     legit = jwt.verify(token, jwtpublic, verifyOptions);
   } catch (e) {
-    return res.send({
-      status: 'error',
-      message: 'Có lỗi xảy ra! vui lòng đăng nhập lại trước khi đổi mật khẩu',
-    });
+    console.log(e);
   }
   async.series(
     [
-      function(callback) {
+      function init(callback) {
         PARAM_IS_VALID.password = params.password;
         PARAM_IS_VALID.newpassword = params.newpassword;
         callback(null, null);
       },
-      function(callback) {
-        models.instance.login.find({ phone: legit.phone }, function(err, _user) {
-          if (_user !== undefined && _user.length > 0) {
-            hashPassword = _user[0].password;
-          } else {
-            msg = MESSAGE.USER_NOT_FOUND;
-          }
-          callback(err, null);
-        });
-      },
-      function(callback) {
-        if (hashPassword !== '') {
-          bcrypt.compare(PARAM_IS_VALID.password, hashPassword, function(err, result) {
-            // res == true
-            if (result === false) {
-              return res.json({
-                status: 'error0',
-                message: 'Mật khẩu cũ không chính xác',
-                timeline: new Date().getTime(),
-              });
+      function findLogin(callback) {
+        models.instance.login.find(
+          { phone: legit.phone },
+          { materialized_view: 'view_login', raw: true },
+          (err, _user) => {
+            if (_user !== undefined && _user.length > 0) {
+              hashPassword = _user[0].password;
+            } else {
+              msg = MESSAGE.USER_NOT_FOUND;
             }
             callback(err, null);
+          }
+        );
+      },
+      function validPassword(callback) {
+        if (hashPassword !== '') {
+          bcrypt.compare(PARAM_IS_VALID.password, hashPassword, (err, result) => {
+            callback(err, result);
           });
         } else callback(null, null);
       },
-      function(callback) {
-        bcrypt.genSalt(saltRounds, function(err, salt) {
-          _salt = salt;
+      function genSaltChange(callback) {
+        bcrypt.genSalt(saltRounds, (err, s) => {
+          salt = s;
           callback(err, null);
         });
       },
-      function(callback) {
-        bcrypt.hash(params.newpassword, _salt, function(err, hash) {
-          _hash = hash;
+      function genHashChange(callback) {
+        bcrypt.hash(params.newpassword, salt, (err, h) => {
+          hash = h;
           callback(err, null);
         });
       },
-      function(callback) {
+      function changePassword(callback) {
         try {
-          let update_password_object = {
-            password: _hash,
-            password_salt: _salt,
+          const updatePasswordObject = {
+            password: hash,
+            password_salt: salt,
           };
-          let update_password = () => {
-            let object = update_password_object;
-            let update = models.instance.login.update(
+          const updatePassword = () =>
+            models.instance.login.update(
               { phone: legit.phone, user_id: models.uuidFromString(legit.userid) },
-              object,
+              updatePasswordObject,
               { if_exist: true, return_query: true }
             );
-            return update;
-          };
-          queries.push(update_password());
+          queries.push(updatePassword());
           callback(null, null);
-        } catch (error) {
-          callback(error, null);
+        } catch (e) {
+          console.log(e);
         }
       },
-    ],
-    function(err, result) {
-      if (err) return res.json({ status: 'error1' });
-      models.doBatch(queries, function(err) {
-        if (err) {
-          console.log(err);
-          return res.json({ status: 'error2' });
-        }
-        return res.json({
-          status: 'ok',
-          message: 'Thay đổi mật khẩu thành công',
-          timeline: new Date().getTime(),
+      function submit(callback) {
+        models.doBatch(queries, e => {
+          callback(e);
         });
+      },
+    ],
+    (err, result) => {
+      console.log(result, msg);
+      if (err) return res.json({ status: 'error1' });
+      return res.json({
+        status: 'ok',
+        message: 'Thay đổi mật khẩu thành công',
+        timeline: new Date().getTime(),
       });
     }
   );
@@ -1107,49 +880,40 @@ function updatePhone(req, res) {
   let legit = {};
   const token = req.headers['x-access-token'];
   const params = req.body;
-  let PARAM_IS_VALID = {};
+  const PARAM_IS_VALID = {};
   const verifyOptions = {
     expiresIn: '30d',
     algorithm: ['RS256'],
   };
   async.series(
     [
-      callback => {
+      function init(callback) {
         PARAM_IS_VALID.phone = { '1': params.phone };
         callback(null, null);
       },
-      callback => {
+      function verify(callback) {
         try {
           legit = jwt.verify(token, jwtpublic, verifyOptions);
-          callback(null, null);
+          callback(null, legit);
         } catch (e) {
-          callback(e, null);
-          return res.send({
-            status: 'error',
-            message: 'Sai ma token',
-          });
+          console.log(e);
         }
       },
-      callback => {
+      function processUpdate(callback) {
         try {
-          let update_object = {
+          const updateObject = {
             phones: PARAM_IS_VALID.phone,
           };
-          let object = update_object;
           models.instance.users.update(
-            { user_id: models.uuidFromString(legit.userid) },
-            object,
+            { id: models.uuidFromString(legit.userid) },
+            updateObject,
             { if_exist: true },
-            function(err) {
-              if (err) {
-                console.log(err);
-                return res.json({ status: 'error' });
-              }
-              callback(null, null);
+            err => {
+              callback(err, null);
             }
           );
-        } catch (error) {
-          callback(error, null);
+        } catch (e) {
+          console.log(e);
         }
       },
     ],
@@ -1163,49 +927,40 @@ function updateEmail(req, res) {
   let legit = {};
   const token = req.headers['x-access-token'];
   const params = req.body;
-  let PARAM_IS_VALID = {};
+  const PARAM_IS_VALID = {};
   const verifyOptions = {
     expiresIn: '30d',
     algorithm: ['RS256'],
   };
   async.series(
     [
-      callback => {
+      function init(callback) {
         PARAM_IS_VALID.email = params.email;
         callback(null, null);
       },
-      callback => {
+      function verify(callback) {
         try {
           legit = jwt.verify(token, jwtpublic, verifyOptions);
-          callback(null, null);
+          callback(null, legit);
         } catch (e) {
-          callback(e, null);
-          return res.send({
-            status: 'error',
-            message: 'Sai ma token',
-          });
+          console.log(e);
         }
       },
-      callback => {
+      function processUpdate(callback) {
         try {
-          let update_object = {
+          const updateObject = {
             email: PARAM_IS_VALID.email,
           };
-          let object = update_object;
           models.instance.users.update(
-            { user_id: models.uuidFromString(legit.userid) },
-            object,
+            { id: models.uuidFromString(legit.userid) },
+            updateObject,
             { if_exist: true },
-            function(err) {
-              if (err) {
-                console.log(err);
-                return res.json({ status: 'error' });
-              }
-              callback(null, null);
+            err => {
+              callback(err, null);
             }
           );
-        } catch (error) {
-          callback(error, null);
+        } catch (e) {
+          console.log(e);
         }
       },
     ],
@@ -1216,45 +971,34 @@ function updateEmail(req, res) {
   );
 }
 function getOnlyUser(req, res) {
-  let result = {};
   let legit = {};
   const token = req.headers['x-access-token'];
+  const result = [];
   const verifyOptions = {
     expiresIn: '30d',
     algorithm: ['RS256'],
   };
   async.series(
     [
-      callback => {
+      function verify(callback) {
         try {
           legit = jwt.verify(token, jwtpublic, verifyOptions);
-          callback(null, null);
+          callback(null, legit);
         } catch (e) {
-          return res.send({
-            status: 'error',
-            message: 'Sai ma token',
-          });
+          console.log(e);
         }
       },
-      callback => {
+      function findUser(callback) {
         try {
-          models.instance.users.find({ user_id: models.uuidFromString(legit.userid) }, function(
-            err,
-            user
-          ) {
-            if (user && user.length > 0) {
-              result = user[0];
-            } else {
-              return res.json({
-                status: 'error',
-                message: 'Không tìm thấy tài khoản này',
-              });
+          models.instance.users.find(
+            { id: models.uuidFromString(legit.userid) },
+            { materialized_view: 'view_user', raw: true },
+            (err, user) => {
+              callback(err, user);
             }
-            callback(err, null);
-          });
-        } catch (error) {
-          console.log(error);
-          res.send({ status: 'error' });
+          );
+        } catch (e) {
+          console.log(e);
         }
       },
     ],
@@ -1271,137 +1015,123 @@ function getOnlyUser(req, res) {
 function changeCare(req, res) {
   let legit = {};
   const token = req.headers['x-access-token'];
-  let userid = undefined;
-  let params = req.body;
+  let userid = '';
+
+  const params = req.body;
   const verifyOptions = {
     expiresIn: '30d',
     algorithm: ['RS256'],
   };
   async.series(
     [
-      callback => {
+      function verify(callback) {
         try {
           legit = jwt.verify(token, jwtpublic, verifyOptions);
-          callback(null, null);
+          callback(null, legit);
         } catch (e) {
-          return res.send({
-            status: 'error',
-            message: 'Sai ma token',
-          });
+          console.log(e);
         }
       },
-      function(callback) {
+      function process(callback) {
         try {
-          let id = params.userid;
-          let uuid = `${id.substring(0, 8)}-${id.substring(8, 12)}-${id.substring(
+          const id = params.userid;
+          const uuid = `${id.substring(0, 8)}-${id.substring(8, 12)}-${id.substring(
             12,
             16
           )}-${id.substring(16, 20)}-${id.substring(20, 32)}`;
           userid = models.uuidFromString(uuid);
         } catch (e) {
           console.log(e);
-          return res.json({ status: 'error1' });
         }
         callback(null, null);
       },
-      callback => {
+      function processUserCare(callback) {
         try {
           if (params.type === 'user') {
             if (params.care) {
-              let object = {
+              const object = {
                 user_id1: models.uuidFromString(legit.userid),
                 user_id2: userid,
                 created: new Date().getTime(),
                 type: params.type,
               };
-              let instance = new models.instance.userCare(object);
-              let save = instance.save(function(err) {
-                if (err) callback(err, null);
-                else callback(null, null);
+              const instance = new models.instance.userCare(object);
+              instance.save(err => {
+                callback(err);
               });
             } else {
-              let query_object = {
+              const queryObject = {
                 user_id1: models.uuidFromString(legit.userid),
                 user_id2: userid,
               };
-              models.instance.userCare.delete(query_object, function(err) {
-                if (err) callback(err, null);
-                else callback(null, null);
+              models.instance.userCare.delete(queryObject, err => {
+                callback(err);
               });
             }
           } else callback(null, null);
-        } catch (error) {
-          console.log(error);
-          res.send({ status: 'error' });
+        } catch (e) {
+          console.log(e);
         }
       },
-      callback => {
+      function saveWhocare(callback) {
         try {
           if (params.type === 'user') {
             if (params.care) {
-              let object = {
+              const object = {
                 user_id1: models.uuidFromString(legit.userid),
                 user_id2: userid,
                 created: new Date().getTime(),
               };
-              let instance = new models.instance.userWhoCare(object);
-              let save = instance.save(function(err) {
-                if (err) callback(err, null);
-                else callback(null, null);
+              const instance = new models.instance.userWhoCare(object);
+              instance.save(err => {
+                callback(err);
               });
             } else {
-              let query_object = {
+              const queryObject = {
                 user_id1: models.uuidFromString(legit.userid),
                 user_id2: userid,
               };
-              models.instance.userWhoCare.delete(query_object, function(err) {
-                if (err) callback(err, null);
-                else callback(null, null);
+              models.instance.userWhoCare.delete(queryObject, err => {
+                callback(err);
               });
             }
           } else callback(null, null);
-        } catch (error) {
-          console.log(error);
-          res.send({ status: 'error' });
+        } catch (e) {
+          console.log(e);
         }
       },
-      callback => {
+      function processUpdateUserCare(callback) {
         try {
           if (params.type === 'member') {
             if (params.care) {
-              let object = {
+              const object = {
                 user_id1: models.uuidFromString(legit.userid),
                 user_id2: userid,
                 created: new Date().getTime(),
                 type: params.type,
               };
-              let instance = new models.instance.userCare(object);
-              let save = instance.save(function(err) {
-                if (err) callback(err, null);
-                else callback(null, null);
+              const instance = new models.instance.userCare(object);
+              instance.save(err => {
+                callback(err);
               });
             } else {
-              let query_object = {
+              const queryObject = {
                 user_id1: models.uuidFromString(legit.userid),
                 user_id2: userid,
               };
-              models.instance.userCare.delete(query_object, function(err) {
-                if (err) callback(err, null);
-                else callback(null, null);
+              models.instance.userCare.delete(queryObject, err => {
+                callback(err);
               });
             }
           } else callback(null, null);
-        } catch (error) {
-          console.log(error);
-          res.send({ status: 'error' });
+        } catch (e) {
+          console.log(e);
         }
       },
     ],
     err => {
       if (err) return res.json({ status: 'error' });
-      return res.json({
-        status: 'ok',
-      });
+      return res.json({ status: 'ok' });
     }
   );
 }
@@ -1409,8 +1139,8 @@ function getUserCare(req, res) {
   let legit = {};
   let result = [];
   const token = req.headers['x-access-token'];
-  let arrUser = [];
-  let arrMember = [];
+  const arrUser = [];
+  const arrMember = [];
   let arr = [];
   const verifyOptions = {
     expiresIn: '30d',
@@ -1418,41 +1148,39 @@ function getUserCare(req, res) {
   };
   async.series(
     [
-      callback => {
+      function verify(callback) {
         try {
           legit = jwt.verify(token, jwtpublic, verifyOptions);
-          callback(null, null);
+          callback(null, legit);
         } catch (e) {
-          return res.send({
-            status: 'error',
-            message: 'Sai ma token',
-          });
-        }
-      },
-      callback => {
-        try {
-          models.instance.userCare.find({ user_id1: models.uuidFromString(legit.userid) }, function(
-            err,
-            results
-          ) {
-            if (results && results.length > 0) {
-              result = results;
-            }
-            callback(err, null);
-          });
-        } catch (e) {
-          callback(e, null);
           console.log(e);
         }
       },
-      callback => {
+      function findUserCare(callback) {
+        try {
+          models.instance.userCare.find(
+            { user_id1: models.uuidFromString(legit.userid) },
+            (err, results) => {
+              if (results && results.length > 0) {
+                result = results;
+              }
+              callback(err, null);
+            }
+          );
+        } catch (e) {
+          console.log(e);
+        }
+      },
+      function findUser(callback) {
         try {
           const user = result.filter(v => v.type === 'user');
+          console.log(user);
+          /*
           if (user.length > 0) {
-            user.forEach((e, i) => {
-              models.instance.users.find({ user_id: e.user_id2 }, function(err, results) {
+            user.forEach((e) => {
+              models.instance.users.find({ id: e.user_id2 }, { materialized_view: 'view_user', raw: true  } , (err, results) =>{
                 if (results && results.length > 0) {
-                  let obj = {};
+                  const obj = {};
                   obj.name = results[0].fullname;
                   obj.gender = results[0].gender;
                   obj.address = results[0].address;
@@ -1472,20 +1200,25 @@ function getUserCare(req, res) {
                 }
               });
             });
+            //
           } else callback(null, null);
+          */
+          callback(null, null);
         } catch (e) {
-          callback(e, null);
           console.log(e);
         }
       },
-      callback => {
+      function processMember(callback) {
         try {
           const member = result.filter(v => v.type === 'member');
+          console.log(member);
+          /*
           if (member.length > 0) {
-            member.forEach((e, i) => {
-              models.instance.members.find({ membersid: e.user_id2 }, function(err, results) {
+        
+            member.forEach((e) => {
+              models.instance.members.find({ membersid: e.user_id2 }, (err, results)=> {
                 if (results && results.length > 0) {
-                  let obj = {};
+                  const obj = {};
                   obj.name = results[0].name;
                   obj.gender = results[0].gender;
                   obj.address = results[0].address;
@@ -1508,13 +1241,15 @@ function getUserCare(req, res) {
                 }
               });
             });
+            callback(null, null);  
           } else callback(null, null);
+          */
+          callback(null, null);
         } catch (e) {
-          callback(e, null);
           console.log(e);
         }
       },
-      callback => {
+      function mergeArr(callback) {
         arr = arrUser.concat(arrMember);
         callback(null, null);
       },
@@ -1530,31 +1265,28 @@ function getUserCare(req, res) {
 }
 function getUserWhoCare(req, res) {
   let legit = {};
-  let result = [];
   const token = req.headers['x-access-token'];
-  let arr = [];
+  const arr = [];
   const verifyOptions = {
     expiresIn: '30d',
     algorithm: ['RS256'],
   };
+  let result = [];
   async.series(
     [
-      callback => {
+      function verify(callback) {
         try {
           legit = jwt.verify(token, jwtpublic, verifyOptions);
-          callback(null, null);
+          callback(null, legit);
         } catch (e) {
-          return res.send({
-            status: 'error',
-            message: 'Sai ma token',
-          });
+          console.log(e);
         }
       },
-      callback => {
+      function findWhoCare(callback) {
         try {
           models.instance.userWhoCare.find(
             { user_id2: models.uuidFromString(legit.userid) },
-            function(err, results) {
+            (err, results) => {
               if (results && results.length > 0) {
                 result = results;
               }
@@ -1562,17 +1294,18 @@ function getUserWhoCare(req, res) {
             }
           );
         } catch (e) {
-          callback(e, null);
           console.log(e);
         }
       },
-      callback => {
+      function findUser(callback) {
         try {
+          /*  
           if (result.length > 0) {
-            result.forEach((e, i) => {
-              models.instance.users.find({ user_id: e.user_id1 }, function(err, results) {
+            
+            result.forEach((e) => {
+              models.instance.users.find({ user_id: e.user_id1 }, {materialized_view: 'view_user', raw: true } , (err, results) => {
                 if (results && results.length > 0) {
-                  let obj = {};
+                  const obj = {};
                   obj.name = results[0].fullname;
                   obj.gender = results[0].gender;
                   obj.address = results[0].address;
@@ -1590,14 +1323,18 @@ function getUserWhoCare(req, res) {
                 }
               });
             });
+            // callback(null, null);  
           } else callback(null, null);
+          */
+
+          callback(null, null);
         } catch (e) {
-          callback(e, null);
           console.log(e);
         }
       },
     ],
     err => {
+      console.log(result);
       if (err) return res.json({ status: 'error' });
       return res.json({
         status: 'ok',
