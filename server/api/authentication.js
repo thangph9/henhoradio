@@ -184,10 +184,6 @@ function login(req, res) {
   const params = req.body;
   const PARAM_IS_VALID = {};
   const msg = '';
-  const userInfo = [];
-  const hashPassword = '';
-  let token = '';
-  const rule = [];
   let verificationUrl = '';
   const tasks = [
     function validParams(callback) {
@@ -222,15 +218,6 @@ function login(req, res) {
         callback(null, null);
       }
     },
-    function fetchUsers(callback) {
-      models.instance.users.find(
-        { phone: PARAM_IS_VALID.phone },
-        { materialized_view: 'view_user_phone', raw: true },
-        (err, user) => {
-          callback(err, user);
-        }
-      );
-    },
     function fetchPassword(callback) {
       models.instance.login.find(
         { phone: PARAM_IS_VALID.phone },
@@ -240,44 +227,48 @@ function login(req, res) {
         }
       );
     },
-    function validPassword(callback) {
-      if (hashPassword !== '') {
-        bcrypt.compare(PARAM_IS_VALID.password, hashPassword, (err, result) => {
-          callback(err, result);
-        });
-      } else callback(null, null);
-    },
-    function signIn(callback) {
+  ];
+  async.series(tasks, (err, result) => {
+    if (err) res.json({ status: 'error', message: msg });
+    else {
       try {
-        token = jwt.sign(
-          {
-            userid: userInfo.id,
-            fullname: userInfo.fullname,
-            phone: userInfo.phone,
-            address: userInfo.address,
-          },
-          jwtprivate,
-          {
-            expiresIn: '30d', // expires in 30 day
-            algorithm: 'RS256',
+        const userLogin = result[3][0];
+        bcrypt.compare(PARAM_IS_VALID.password, userLogin.password, (e, rs) => {
+          if (e)
+            res.json({
+              status: 'error',
+              message: 'Tài khoản hoặc mật khẩu không đúng!',
+              timeline: new Date().getTime(),
+            });
+          else if (!rs)
+            res.json({
+              status: 'error',
+              message: 'Tài khoản hoặc mật khẩu không đúng!',
+              timeline: new Date().getTime(),
+            });
+          else {
+            const token = jwt.sign(
+              {
+                userid: userLogin.user_id,
+                phone: userLogin.phone,
+              },
+              jwtprivate,
+              {
+                expiresIn: '30d', // expires in 30 day
+                algorithm: 'RS256',
+              }
+            );
+            res.json({
+              status: 'ok',
+              token,
+              rule: userLogin.rule,
+              timeline: new Date().getTime(),
+            });
           }
-        );
+        });
       } catch (e) {
         console.log(e);
       }
-      callback(null, null);
-    },
-  ];
-  async.series(tasks, err => {
-    if (err) {
-      res.json({ status: 'error', message: msg });
-    } else {
-      res.json({
-        status: 'ok',
-        token,
-        rule,
-        timeline: new Date().getTime(),
-      });
     }
   });
 }
@@ -970,10 +961,9 @@ function updateEmail(req, res) {
     }
   );
 }
-function getOnlyUser(req, res) {
+function currentUser(req, res) {
   let legit = {};
   const token = req.headers['x-access-token'];
-  const result = [];
   const verifyOptions = {
     expiresIn: '30d',
     algorithm: ['RS256'],
@@ -1002,13 +992,16 @@ function getOnlyUser(req, res) {
         }
       },
     ],
-    err => {
-      if (err) return res.json({ status: 'error' });
-      return res.json({
-        status: 'ok',
-        data: result,
-        timeline: new Date().getTime(),
-      });
+    (err, result) => {
+      if (err) res.json({ status: 'error' });
+      else {
+        const rs = result[1][0];
+        res.json({
+          status: 'ok',
+          data: rs,
+          timeline: new Date().getTime(),
+        });
+      }
     }
   );
 }
@@ -1347,7 +1340,7 @@ router.post('/register', register);
 router.post('/login', login);
 router.post('/sendanswer', sendAnswer);
 router.get('/getuser', getUser);
-router.get('/getonlyuser', getOnlyUser);
+router.get('/current_user', currentUser);
 router.get('/question', question);
 router.get('/getuserbyid/:id', getUserById);
 router.get('/getallusers', getAllUsers);
