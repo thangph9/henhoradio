@@ -1,44 +1,45 @@
-/* eslint-disable react/jsx-closing-tag-location */
-/* eslint-disable react/jsx-closing-bracket-location */
-/* eslint-disable no-return-assign */
-/* eslint-disable react/no-will-update-set-state */
-/* eslint-disable no-continue */
-/* eslint-disable react/sort-comp */
-/* eslint-disable no-unused-vars */
-/* eslint-disable prefer-destructuring */
-/* eslint-disable no-useless-escape */
-/* eslint-disable no-nested-ternary */
-/* eslint-disable react/no-access-state-in-setstate */
-/* eslint-disable react/destructuring-assignment */
-/* eslint-disable class-methods-use-this */
-/* eslint-disable jsx-a11y/media-has-caption */
-/* eslint-disable react/jsx-indent */
-/* eslint-disable react/no-array-index-key */
-/* eslint-disable no-plusplus */
-
 import React, { PureComponent } from 'react';
 import { connect } from 'dva';
-import {
-  Skeleton,
-  Icon,
-  DatePicker,
-  Select,
-  Pagination,
-  Row,
-  Tooltip,
-  Popconfirm,
-  Modal,
-  message,
-} from 'antd';
+import { DatePicker, Select, Pagination } from 'antd';
 import PageLoading from '@/components/PageLoading';
 import { Redirect } from 'react-router-dom';
-import ReactPlayer from 'react-player';
 import moment from 'moment';
 import HHRFooter from '@/layouts/HHRFooter';
+import CardItem from './CardItem';
 import styles from './index.less';
 
 const dateFormat = 'DD/MM/YYYY';
 const { Option } = Select;
+
+function locationGenerate(query, v1) {
+  const { date, gender, sort, radio } = query;
+  let path = {};
+  if (date) {
+    if (sort) {
+      path = {
+        pathname: `/home/detail-list`,
+        search: `?page=${v1}&radio=${radio}&gender=${gender}&sort=${sort}&date=${date}`,
+      };
+    } else {
+      path = {
+        pathname: `/home/detail-list`,
+        search: `?page=${v1}&radio=${radio}&gender=${gender}&date=${date}`,
+      };
+    }
+  } else if (sort) {
+    path = {
+      pathname: `/home/detail-list`,
+      search: `?page=${v1}&radio=${radio}&gender=${gender}&sort=${sort}`,
+    };
+  } else {
+    path = {
+      pathname: `/home/detail-list`,
+      search: `?page=${v1}&radio=${radio}&gender=${gender}`,
+    };
+  }
+  return path;
+}
+
 @connect(({ authentication, members }) => ({
   authentication,
   members,
@@ -47,95 +48,75 @@ const { Option } = Select;
 class ListRadio extends PureComponent {
   state = {
     loadingPage: true,
-    preLoad: [1, 2, 3, 4, 5, 6, 7, 8],
     detailList: [],
     arrFilter: ['', '', ''],
-    number: 0,
-    played: 0,
-    loaded: 0,
     dataUserCare: [],
   };
+
+  componentWillMount() {
+    const { dispatch } = this.props;
+    dispatch({
+      type: 'menu/getmenu',
+      payload: 'HomePage',
+    });
+  }
 
   componentDidMount() {
     const { dispatch } = this.props;
     dispatch({
       type: 'members/getmembers',
     });
-    this.props.dispatch({
+    dispatch({
       type: 'authentication/getusercare',
     });
-    const arrFilter = this.state.arrFilter;
-    if (this.props.location.query.radio) {
-      if (this.props.location.query.radio === 'ALL') {
+    const { arrFilter } = this.state;
+    const {
+      location: { query },
+    } = this.props;
+    const { radio, gender, date } = query;
+    if (radio) {
+      if (radio === 'ALL') {
         arrFilter[1] = '';
-      } else arrFilter[1] = this.props.location.query.radio;
+      } else arrFilter[1] = radio;
     }
-    if (this.props.location.query.gender) {
-      if (this.props.location.query.gender === 'ALL') {
+    if (gender) {
+      if (gender === 'ALL') {
         arrFilter[2] = '';
-      } else arrFilter[2] = this.props.location.query.gender;
+      } else arrFilter[2] = gender;
     }
-    if (this.props.location.query.date)
-      arrFilter[0] = this.props.location.query.date.replace(/\_/g, '/');
-  }
-
-  handleChangePagination(v1, v2) {
-    window.scrollTo(0, 0);
-    const radio = this.props.location.query.radio;
-    const date = this.props.location.query.date;
-    const gender = this.props.location.query.gender;
-    const sort = this.props.location.query.sort;
-    if (date) {
-      if (sort) {
-        this.props.history.push({
-          pathname: `/home/detail-list`,
-          search: `?page=${v1}&radio=${radio}&gender=${gender}&sort=${sort}&date=${date}`,
-        });
-      } else {
-        this.props.history.push({
-          pathname: `/home/detail-list`,
-          search: `?page=${v1}&radio=${radio}&gender=${gender}&date=${date}`,
-        });
-      }
-    } else if (sort) {
-      this.props.history.push({
-        pathname: `/home/detail-list`,
-        search: `?page=${v1}&radio=${radio}&gender=${gender}&sort=${sort}`,
-      });
-    } else {
-      this.props.history.push({
-        pathname: `/home/detail-list`,
-        search: `?page=${v1}&radio=${radio}&gender=${gender}`,
-      });
-    }
+    if (date) arrFilter[0] = date.replace(/_/g, '/');
   }
 
   componentWillReceiveProps(nextProps) {
-    const { members } = this.props;
-    if (members.getmembers !== nextProps.members.getmembers) {
+    const {
+      getusercare,
+      members: { getmembers },
+    } = this.props;
+    const { members } = nextProps;
+    const { arrFilter, detailList } = this.state;
+    if (getmembers !== members.getmembers) {
       this.setState(
         {
-          detailList: nextProps.members.getmembers,
+          detailList: members.getmembers,
           loadingPage: false,
         },
         () => {
-          if (this.state.arrFilter) {
-            let dataArr = this.state.detailList;
-            for (let i = 0; i < this.state.arrFilter.length; i++) {
-              if (this.state.arrFilter[i] === '') continue;
-              dataArr = dataArr.filter((value, index) => {
+          if (arrFilter) {
+            let dataArr = detailList;
+            arrFilter.forEach((e, i) => {
+              dataArr = dataArr.filter(value => {
                 if (i === 0) {
                   const timeCreate = new Date(value.timeup);
                   const stringTime = `${`${timeCreate.getDate()}`}/${`${timeCreate.getMonth() +
                     1}`}/${timeCreate.getFullYear()}`;
-                  return stringTime === this.state.arrFilter[0];
+                  return stringTime === arrFilter[0];
                 }
                 if (i === 1) {
-                  return value.location === this.state.arrFilter[1];
+                  return value.location === arrFilter[1];
                 }
-                return value.gender === this.state.arrFilter[2];
+                return value.gender === arrFilter[2];
               });
-            }
+            });
             this.setState({
               dataFilter: dataArr,
             });
@@ -143,15 +124,49 @@ class ListRadio extends PureComponent {
         }
       );
     }
-    if (this.props.getusercare !== nextProps.getusercare) {
+    if (getusercare !== nextProps.getusercare) {
       this.setState({
         dataUserCare: nextProps.getusercare,
       });
     }
   }
 
+  /*
+   componentWillUpdate(nextProps, nextState) {
+    
+    const { arrFilter, detailList } = this.state;
+       
+    if (arrFilter !== nextState.arrFilter) {
+      if (nextState.arrFilter) {
+        let dataArr = detailList;
+        nextState.arrFilter.forEach((e,i)=>{
+              dataArr = dataArr.filter((value) => {
+                if (i === 0) {
+                  const timeCreate = new Date(value.timeup);
+                  const stringTime = `${`${timeCreate.getDate()}`}/${`${timeCreate.getMonth() +
+                    1}`}/${timeCreate.getFullYear()}`;
+                  return stringTime === nextState.arrFilter[0];
+                }
+                if (i === 1) {
+                  return value.location === nextState.arrFilter[1];
+                }
+                return value.gender === nextState.arrFilter[2];
+              });
+        })
+        this.setState({
+          dataFilter: dataArr,
+        });
+      }
+    } 
+  }
+*/
+
   onChangeDate(value1, value2) {
-    const arrFilter = this.state.arrFilter;
+    const { arrFilter } = this.state;
+    const {
+      location: { query },
+      history,
+    } = this.props;
     arrFilter[0] = value2;
     this.setState(
       {
@@ -163,39 +178,55 @@ class ListRadio extends PureComponent {
         });
       }
     );
-    const radio = this.props.location.query.radio;
-    const gender = this.props.location.query.gender;
-    const sort = this.props.location.query.sort;
+    const { radio, sort, gender } = query;
+    let path = {};
     if (value2 === '') {
       if (sort) {
-        this.props.history.push({
+        path = {
           pathname: '/home/detail-list',
           search: `?page=1&radio=${radio}&gender=${gender}&sort=${sort}`,
-        });
+        };
       } else {
-        this.props.history.push({
+        path = {
           pathname: '/home/detail-list',
           search: `?page=1&radio=${radio}&gender=${gender}`,
-        });
+        };
       }
     } else if (sort) {
-      this.props.history.push({
+      path = {
         pathname: '/home/detail-list',
         search: `?page=1&radio=${radio}&gender=${gender}&sort=${sort}&date=${value2.replace(
           /\//g,
           '_'
         )}`,
-      });
+      };
     } else {
-      this.props.history.push({
+      path = {
         pathname: '/home/detail-list',
         search: `?page=1&radio=${radio}&gender=${gender}&date=${value2.replace(/\//g, '_')}`,
-      });
+      };
     }
+    history.push(path);
+  }
+
+  //---------------------------------
+
+  handleChangePagination(v1, v2) {
+    console.log(v2);
+    window.scrollTo(0, 0);
+    const {
+      location: { query },
+      history,
+    } = this.props;
+    history.push(locationGenerate(query, v1));
   }
 
   handleChangeRadio(e) {
-    const arrFilter = this.state.arrFilter;
+    const { arrFilter } = this.state;
+    const {
+      location: { query },
+      history,
+    } = this.props;
     if (e === 'ALL') {
       arrFilter[1] = '';
     } else arrFilter[1] = e;
@@ -209,36 +240,40 @@ class ListRadio extends PureComponent {
         });
       }
     );
-    const gender = this.props.location.query.gender;
-    const date = this.props.location.query.date;
-    const sort = this.props.location.query.sort;
+    const { gender, date, sort } = query;
+    let path = {};
     if (date) {
       if (sort) {
-        this.props.history.push({
+        path = {
           pathname: '/home/detail-list',
           search: `?page=1&radio=${e}&gender=${gender}&sort=${sort}&date=${date}`,
-        });
+        };
       } else {
-        this.props.history.push({
+        path = {
           pathname: '/home/detail-list',
           search: `?page=1&radio=${e}&gender=${gender}&date=${date}`,
-        });
+        };
       }
     } else if (sort) {
-      this.props.history.push({
+      path = {
         pathname: '/home/detail-list',
         search: `?page=1&radio=${e}&gender=${gender}&sort=${sort}`,
-      });
+      };
     } else {
-      this.props.history.push({
+      path = {
         pathname: '/home/detail-list',
         search: `?page=1&radio=${e}&gender=${gender}`,
-      });
+      };
     }
+    history.push(path);
   }
 
   handleChangeGender(e) {
-    const arrFilter = this.state.arrFilter;
+    const { arrFilter } = this.state;
+    const {
+      location: { query },
+      history,
+    } = this.props;
     if (e === 'ALL') {
       arrFilter[2] = '';
     } else arrFilter[2] = e;
@@ -252,233 +287,47 @@ class ListRadio extends PureComponent {
         });
       }
     );
-    const radio = this.props.location.query.radio;
-    const date = this.props.location.query.date;
-    const sort = this.props.location.query.sort;
-    if (date) {
-      if (sort) {
-        this.props.history.push({
-          pathname: '/home/detail-list',
-          search: `?page=1&radio=${radio}&gender=${e}&sort=${sort}&date=${date}`,
-        });
-      } else {
-        this.props.history.push({
-          pathname: '/home/detail-list',
-          search: `?page=1&radio=${radio}&gender=${e}&date=${date}`,
-        });
-      }
-    } else if (sort) {
-      this.props.history.push({
-        pathname: '/home/detail-list',
-        search: `?page=1&radio=${radio}&gender=${e}&sort=${sort}`,
-      });
-    } else {
-      this.props.history.push({
-        pathname: '/home/detail-list',
-        search: `?page=1&radio=${radio}&gender=${e}`,
-      });
-    }
-  }
-
-  componentWillMount() {
-    const { dispatch } = this.props;
-    dispatch({
-      type: 'menu/getmenu',
-      payload: 'HomePage',
-    });
-  }
-
-  componentWillUpdate(nextProps, nextState) {
-    if (this.state.arrFilter !== nextState.arrFilter) {
-      if (nextState.arrFilter) {
-        let dataArr = this.state.detailList;
-        for (let i = 0; i < nextState.arrFilter.length; i++) {
-          if (nextState.arrFilter[i] === '') continue;
-          dataArr = dataArr.filter((value, index) => {
-            if (i === 0) {
-              const timeCreate = new Date(value.timeup);
-              const stringTime = `${`${timeCreate.getDate()}`}/${`${timeCreate.getMonth() +
-                1}`}/${timeCreate.getFullYear()}`;
-              return stringTime === nextState.arrFilter[0];
-            }
-            if (i === 1) {
-              return value.location === nextState.arrFilter[1];
-            }
-            return value.gender === nextState.arrFilter[2];
-          });
-        }
-        this.setState({
-          dataFilter: dataArr,
-        });
-      }
-    }
+    history.push(locationGenerate(query, 1));
   }
 
   handleChangeSort(e) {
-    const radio = this.props.location.query.radio;
-    const date = this.props.location.query.date;
-    const gender = this.props.location.query.gender;
+    const {
+      location: { query },
+      history,
+    } = this.props;
+    const { radio, date, gender } = query;
+    let path = {};
     if (date) {
       if (e !== 'default') {
-        this.props.history.push({
+        path = {
           pathname: '/home/detail-list',
           search: `?page=1&radio=${radio}&gender=${gender}&sort=${e}&date=${date}`,
-        });
+        };
       } else {
-        this.props.history.push({
+        path = {
           pathname: '/home/detail-list',
           search: `?page=1&radio=${radio}&gender=${gender}&date=${date}`,
-        });
+        };
       }
     } else if (e !== 'default') {
-      this.props.history.push({
+      path = {
         pathname: '/home/detail-list',
         search: `?page=1&radio=${radio}&gender=${gender}&sort=${e}`,
-      });
+      };
     } else {
-      this.props.history.push({
+      path = {
         pathname: '/home/detail-list',
         search: `?page=1&radio=${radio}&gender=${gender}`,
-      });
+      };
     }
-  }
-
-  //---------------------------------
-
-  destroyMessage() {
-    message.destroy();
-  }
-
-  playAudioReact(value) {
-    if (!this.state[`duration-${value}`]) {
-      message.open({
-        content: 'Tệp tin bị lỗi',
-        icon: (
-          <Icon
-            style={{ color: 'red' }}
-            theme="filled"
-            onClick={() => this.destroyMessage()}
-            type="close-circle"
-          />
-        ),
-        duration: 5,
-      });
-      return;
-    }
-    const { globalPlaying } = this.state;
-    if (!globalPlaying || globalPlaying === value) {
-      this.setState(prevState => ({
-        globalPlaying: value,
-        [value]: !prevState[value],
-      }));
-    } else {
-      this.setState(prevState => ({
-        [globalPlaying]: false,
-        [value]: !prevState[value],
-        globalPlaying: value,
-      }));
-    }
-  }
-
-  onProgress(state, audio) {
-    if (this.state[audio]) {
-      this.setState(
-        {
-          [audio]: state.playedSeconds,
-          [`loaded-${audio}`]: state.loadedSeconds,
-        },
-        () => {
-          this[`input-played-${audio}`].value = this.state[audio];
-        }
-      );
-    }
-  }
-
-  onSeekMouseDown(e, v) {}
-
-  onSeekChange(e, v) {
-    this.setState({ played: parseFloat(e.target.value) });
-  }
-
-  onSeekMouseUp(e, v) {
-    if (e.target.value < this.state[`duration-${v}`]) {
-      this[`player-${v}`].seekTo(e.target.value);
-    }
-  }
-
-  onSeek(e) {
-    // console.log('onSeek', e)
-  }
-
-  onDuration(duration, audio) {
-    this.setState({
-      [`duration-${audio}`]: duration,
-    });
-  }
-
-  onEnded(audio) {
-    this[`input-played-${audio}`].value = 0;
-    this.setState({
-      globalPlaying: undefined,
-      [audio]: false,
-    });
-  }
-
-  getTimeInAudio(value) {
-    if (value >= 3600) {
-      const h = value / 3600;
-      const m = (value % 3600) / 60;
-      const s = (value % 3600) % 60;
-      return `${Math.trunc(h)}:${Math.trunc(m)}:${Math.trunc(s)}`;
-    }
-    const m = value / 60;
-    const s = value % 60;
-    return `${Math.trunc(m)}:${Math.trunc(s)}`;
-  }
-
-  handleClickAction(value, id) {
-    this.setState({
-      [`action-${value}`]: !this.state[`action-${value}`],
-      // [id]: undefined,
-    });
-  }
-
-  handleClickTua(id, value) {
-    if (this.state[`${id}`]) {
-      const v = Number(this[`input-played-${id}`].value);
-      if (v + value < 0 || v + value > this.state[`duration-${id}`]) {
-        this[`player-${id}`].seekTo(0);
-      } else this[`player-${id}`].seekTo(v + value);
-    }
-  }
-
-  handleChangeCare(value, careItem) {
-    // console.log(value)
-    this.props.dispatch({
-      type: 'authentication/changecare',
-      payload: {
-        userid: value.membersid.replace(/\-/g, ''),
-        care: !careItem,
-        type: 'member',
-        address: value.address,
-        location: value.location,
-        created: value.created,
-        timeup: value.timeup,
-        name: value.name,
-        gender: value.gender,
-        user_id: value.membersid,
-      },
-    });
-  }
-
-  checkCare(value) {
-    const check = this.state.dataUserCare.find(v => v.user_id === value);
-    if (check) return true;
-    return false;
+    history.push(path);
   }
 
   render() {
-    if (this.props.location.search === '') {
+    const {
+      location: { search },
+    } = this.props;
+    if (search === '') {
       this.setState({
         arrFilter: ['', '', ''],
       });
@@ -486,28 +335,28 @@ class ListRadio extends PureComponent {
         <Redirect to={{ pathname: '/home/detail-list', search: '?page=1&radio=ALL&gender=ALL' }} />
       );
     }
+    const { loadingPage, detailList, dataFilter, dataUserCare } = this.state;
     const {
-      loadingPage,
-      preLoad,
-      detailList,
-      dataFilter,
-      globalPlaying,
-      played,
-      dataUserCare,
-    } = this.state;
-    const { page } = this.props.location.query;
+      location: { query },
+    } = this.props;
+    const { radio, gender, sort, page, date } = query;
+    const listMember = (dataFilter || detailList)
+      .filter((value, index) => index >= page * 20 - 20 && index < page * 20)
+      .sort((a, b) => {
+        if (sort === 'newest') {
+          return new Date(b.timeup) - new Date(a.timeup);
+        }
+        return [];
+      });
     if (!loadingPage) {
       return (
         <div className={styles['detail-list-page']} style={{ background: '#f3f5f9' }}>
           <div className={styles.container}>
             <div className={styles['filter-data']}>
               <div className={`${styles['filter-date']} ${styles['item-filter']}`}>
-                {this.props.location.query.date ? (
+                {date ? (
                   <DatePicker
-                    defaultValue={moment(
-                      this.props.location.query.date.replace(/\_/g, '/'),
-                      dateFormat
-                    )}
+                    defaultValue={moment(date.replace(/_/g, '/'), dateFormat)}
                     format="D/M/YYYY"
                     onChange={(e, v) => this.onChangeDate(e, v)}
                     placeholder="Lựa chọn"
@@ -522,9 +371,7 @@ class ListRadio extends PureComponent {
               </div>
               <div className={`${styles['filter-radio']} ${styles['item-filter']}`}>
                 <Select
-                  value={
-                    this.props.location.query.radio ? `${this.props.location.query.radio}` : 'ALL'
-                  }
+                  value={radio ? `${radio}` : 'ALL'}
                   onChange={e => this.handleChangeRadio(e)}
                   placeholder="Lựa chọn"
                 >
@@ -535,9 +382,7 @@ class ListRadio extends PureComponent {
               </div>
               <div className={`${styles['filter-gender']} ${styles['item-filter']}`}>
                 <Select
-                  value={
-                    this.props.location.query.gender ? `${this.props.location.query.gender}` : 'ALL'
-                  }
+                  value={gender ? `${gender}` : 'ALL'}
                   onChange={e => this.handleChangeGender(e)}
                   placeholder="Lựa chọn"
                 >
@@ -548,7 +393,7 @@ class ListRadio extends PureComponent {
               </div>
               <div className={`${styles['filter-sort']} ${styles['item-filter']}`}>
                 <Select
-                  value={this.props.location.query.sort && `${this.props.location.query.sort}`}
+                  value={sort && `${sort}`}
                   onChange={e => this.handleChangeSort(e)}
                   placeholder="Sắp xếp"
                 >
@@ -559,205 +404,9 @@ class ListRadio extends PureComponent {
               </div>
             </div>
             <div className={styles.row}>
-              {(dataFilter || detailList)
-                .filter((value, index) => index >= page * 20 - 20 && index < page * 20)
-                .sort((a, b) => {
-                  if (this.props.location.query.sort === 'newest') {
-                    return new Date(b.timeup) - new Date(a.timeup);
-                  }
-                  return null;
-                })
-                .map((v, i) => (
-                  <div key={i} className={styles['cart-item']}>
-                    <article className={`${styles['material-card']} ${styles['mc-active']}`}>
-                      <h2>
-                        <span className={styles['span-title']}>{v.name}</span>
-                        <strong>
-                          <Icon
-                            style={{ paddingRight: '5px' }}
-                            type="clock-circle"
-                            theme="filled"
-                          />
-                          {moment(v.timeup).format('DD/MM/YYYY')}
-                        </strong>
-                      </h2>
-                      <div className={styles['mc-content']}>
-                        <div className={styles['img-container']} />
-
-                        <div
-                          onClick={() => this.handleClickAction(v.membersid, v.audio)}
-                          className={styles['mc-description']}
-                        >
-                          <Modal
-                            title={v.name}
-                            visible={!!this.state[`action-${v.membersid}`]}
-                            footer={null}
-                          >
-                            <p>
-                              Để kết bạn với <span className={styles.bold}>{v.name}</span> vui lòng
-                              soạn tin theo cú pháp: <span className={styles.bold}>HHR</span>{' '}
-                              <span className={styles.bold}>{v.gcode} </span>
-                              Gửi <span className={styles.bold}>8779</span>.
-                            </p>
-                          </Modal>
-                          <div>
-                            <Icon style={{ paddingRight: '8px' }} type="home" />
-                            <span className={styles['span-discription']}>
-                              Đài phát: {v.location === 'HN' ? 'Hà Nội' : 'Hồ Chí Minh'}
-                            </span>
-                          </div>
-                          <div>
-                            <Icon style={{ paddingRight: '8px' }} type="user" />
-                            <span className={styles['span-discription']}>
-                              Giới tính: {v.gender === 'MALE' ? 'Nam' : 'Nữ'}
-                            </span>
-                          </div>
-                          <div>
-                            <Icon style={{ paddingRight: '8px' }} type="global" />
-                            <span className={styles['span-discription']}>Địa chỉ: {v.address}</span>
-                          </div>
-                          <div>
-                            <Icon style={{ paddingRight: '8px' }} type="smile" />
-                            <span className={styles['span-discription']}>
-                              TT hôn nhân: {v.relationship === 'SINGLE' ? 'Độc thân' : 'Đã ly hôn'}
-                            </span>
-                          </div>
-                          <div>
-                            <Icon style={{ paddingRight: '8px' }} type="smile" />
-                            <span className={styles['span-discription']}>
-                              Mã số kết bạn: {v.gcode}
-                            </span>
-                          </div>
-                          <div className={['duration-item']}>
-                            <Icon style={{ paddingRight: '8px' }} type="clock-circle" />
-                            <span className={styles['span-discription']}>
-                              {this.getTimeInAudio(
-                                this[`input-played-${v.audio}`]
-                                  ? this[`input-played-${v.audio}`].value
-                                  : 0
-                              )}
-                            </span>{' '}
-                            /{' '}
-                            {this.state[`duration-${v.audio}`] ? (
-                              <span className={styles['span-discription']}>
-                                {this.getTimeInAudio(
-                                  this.state[`duration-${v.audio}`]
-                                    ? this.state[`duration-${v.audio}`]
-                                    : 0
-                                )}
-                              </span>
-                            ) : (
-                              <span className={styles['span-discription']}>00:00</span>
-                            )}
-                          </div>
-                        </div>
-                      </div>
-                      <a
-                        className={
-                          this.checkCare(v.membersid)
-                            ? `${styles['mc-btn-action']} ${styles.cared}`
-                            : styles['mc-btn-action']
-                        }
-                      >
-                        {this.checkCare(v.membersid) ? (
-                          <Popconfirm
-                            placement="topLeft"
-                            title="Bạn muốn bỏ quan tâm?"
-                            onConfirm={() => this.handleChangeCare(v, this.checkCare(v.membersid))}
-                            okText="Có"
-                            cancelText="Không"
-                          >
-                            <Icon type="star" theme="filled" />
-                          </Popconfirm>
-                        ) : localStorage.token ? (
-                          <Icon
-                            onClick={() => this.handleChangeCare(v, this.checkCare(v.membersid))}
-                            type="star"
-                            theme="filled"
-                          />
-                        ) : (
-                          <Icon type="bars" />
-                        )}
-                      </a>
-                      <div className={styles['mc-footer']}>
-                        <div className={styles.range}>
-                          <div className={styles['range-item']}>
-                            <input
-                              className={styles['input-loaded']}
-                              name={`name-${v.audio}`}
-                              ref={input => (this[`input-played-loaded-${v.audio}`] = input)}
-                              type="range"
-                              defaultValue={0}
-                              step="any"
-                              style={{
-                                width: `${
-                                  this.state[`loaded-${v.audio}`]
-                                    ? (this.state[`loaded-${v.audio}`] * 100) /
-                                      this.state[`duration-${v.audio}`]
-                                    : 0
-                                }%`,
-                              }}
-                            />
-                            <input
-                              className={styles['input-played']}
-                              name={`name-${v.audio}`}
-                              ref={input => (this[`input-played-${v.audio}`] = input)}
-                              type="range"
-                              defaultValue={0}
-                              min={0}
-                              max={
-                                this.state[`duration-${v.audio}`]
-                                  ? this.state[`duration-${v.audio}`]
-                                  : 0
-                              }
-                              step="any"
-                              onMouseDown={e => this.onSeekMouseDown(e, `player-${v.audio}`)}
-                              onPointerDown={e => this.onSeekMouseDown(e, `player-${v.audio}`)}
-                              onPointerUp={e => this.onSeekMouseUp(e, v.audio)}
-                              onChange={e => this.onSeekChange(e, `player-${v.audio}`)}
-                              onMouseUp={e => this.onSeekMouseUp(e, v.audio)}
-                            />
-                          </div>
-                          <Icon
-                            onClick={() => this.handleClickTua(v.audio, -15)}
-                            type="backward"
-                            theme="filled"
-                          />
-                          <Icon
-                            onClick={() => this.playAudioReact(v.audio)}
-                            theme="filled"
-                            type={
-                              !this.state[`${v.audio}`]
-                                ? 'play-circle'
-                                : this.state[`${v.audio}`].paused
-                                ? 'play-circle'
-                                : 'pause-circle'
-                            }
-                          />
-                          <Icon
-                            onClick={() => this.handleClickTua(v.audio, 15)}
-                            type="forward"
-                            theme="filled"
-                          />
-                        </div>
-                        <ReactPlayer
-                          playing={!!this.state[v.audio]}
-                          ref={player => (this[`player-${v.audio}`] = player)}
-                          width="0%"
-                          height="0%"
-                          loop={false}
-                          onSeek={e => this.onSeek(e)}
-                          url={`http://cdn.henhoradio.net/upload/audio/local/${v.audio}`}
-                          onProgress={e => this.onProgress(e, v.audio)}
-                          config={{
-                            file: { forceAudio: true },
-                          }}
-                          onDuration={e => this.onDuration(e, v.audio)}
-                          onEnded={() => this.onEnded(v.audio)}
-                        />
-                      </div>
-                    </article>
-                  </div>
+              {listMember.length > 0 &&
+                listMember.map(v => (
+                  <CardItem key={v.membersid} item={v} dataUserCare={dataUserCare} />
                 ))}
             </div>
             <Pagination
@@ -769,7 +418,7 @@ class ListRadio extends PureComponent {
                 marginBottom: '20px',
               }}
               onChange={(v1, v2) => this.handleChangePagination(v1, v2)}
-              current={Number(this.props.location.query.page)}
+              current={Number(page)}
               pageSize={20}
               total={dataFilter ? dataFilter.length : detailList.length}
             />
