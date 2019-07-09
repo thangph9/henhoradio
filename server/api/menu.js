@@ -57,10 +57,9 @@ function getMenu(req, res) {
       },
     ],
     (err, result) => {
-      console.log(params, result);
+      console.log(params, result, err);
       const rs = [];
       if (err) return res.json({ status: 'error' });
-
       return res.json({
         status: 'ok',
         data: rs,
