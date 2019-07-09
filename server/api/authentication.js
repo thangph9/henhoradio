@@ -34,6 +34,7 @@ function register(req, res) {
   let verificationUrl = '';
   let salt = '';
   let hash = '';
+  const created = new Date();
   const tasks = [
     function validParams(callback) {
       try {
@@ -114,7 +115,7 @@ function register(req, res) {
           dob_year: PARAM_IS_VALID.dob_year,
           fullname: PARAM_IS_VALID.fullname,
           phone: PARAM_IS_VALID.phone,
-          createat: new Date().getTime(),
+          created,
         };
         const loginObject = {
           phone: PARAM_IS_VALID.phone,
@@ -123,6 +124,7 @@ function register(req, res) {
           password_salt: salt,
           rule: ['Member'],
           user_id: PARAM_IS_VALID.id,
+          created,
         };
         /* eslint-disable new-cap */
         const Users = () => {
@@ -149,9 +151,8 @@ function register(req, res) {
         token = jwt.sign(
           {
             userid: PARAM_IS_VALID.id,
-            fullname: PARAM_IS_VALID.fullname,
             phone: PARAM_IS_VALID.phone,
-            address: PARAM_IS_VALID.address,
+            created,
           },
           jwtprivate,
           {
@@ -251,6 +252,7 @@ function login(req, res) {
               {
                 userid: userLogin.user_id,
                 phone: userLogin.phone,
+                created: userLogin.created,
               },
               jwtprivate,
               {
@@ -272,23 +274,34 @@ function login(req, res) {
     }
   });
 }
-function checkUser(req) {
+function checkUser(req, res) {
   const { params } = req;
   const PARAM_IS_VALID = {};
   // let verificationUrl = '';
-  try {
-    PARAM_IS_VALID.phone = params.phone;
-    models.instance.login.find(
-      { phone: PARAM_IS_VALID.phone },
-      { materialized_view: 'view_login', raw: true },
-      (err, phone) => {
-        //   callback(err,phone)
-        console.log(err, phone);
-      }
-    );
-  } catch (e) {
-    console.log(e);
-  }
+  PARAM_IS_VALID.phone = params.phone;
+  async.series(
+    [
+      function findPhone(callback) {
+        models.instance.login.find(
+          { phone: PARAM_IS_VALID.phone },
+          { materialized_view: 'view_login', raw: true },
+          (err, phone) => {
+            callback(err, phone);
+            // console.log(err, phone);
+          }
+        );
+      },
+    ],
+    (err, result) => {
+      if (err) res.json({ status: 'error', message: '' });
+      else if (result && result[0] && result[0].length > 0)
+        res.json({
+          status: 'error',
+          message: 'Số điện thoại đã được đăng ký, mời bạn chọn số khác!',
+        });
+      else res.json({ status: 'ok' });
+    }
+  );
 }
 function question(req, res) {
   const result = [];
@@ -752,15 +765,13 @@ function updateProfileUser(req, res) {
             location: params.location,
             marriage: params.marriage,
             active_friend: params.active_friend,
+            user_id: models.uuidFromString(legit.userid),
+            created: legit.created,
           };
-          models.instance.users.update(
-            { id: models.uuidFromString(legit.userid) },
-            updateObject,
-            { if_exist: true },
-            err => {
-              callback(err, null);
-            }
-          );
+          const userModify = new models.instance.userModify(updateObject);
+          userModify.save(err => {
+            callback(err, null);
+          });
         } catch (e) {
           console.log(e);
         }
