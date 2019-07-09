@@ -43,23 +43,14 @@ function locationGenerate(query, v1) {
 @connect(({ authentication, members }) => ({
   authentication,
   members,
-  getusercare: authentication.getusercare,
 }))
 class ListRadio extends PureComponent {
   state = {
     loadingPage: true,
     detailList: [],
+    dataFilter: [],
     arrFilter: ['', '', ''],
-    dataUserCare: [],
   };
-
-  componentWillMount() {
-    const { dispatch } = this.props;
-    dispatch({
-      type: 'menu/getmenu',
-      payload: 'HomePage',
-    });
-  }
 
   componentDidMount() {
     const { dispatch } = this.props;
@@ -89,7 +80,6 @@ class ListRadio extends PureComponent {
 
   componentWillReceiveProps(nextProps) {
     const {
-      getusercare,
       members: { getmembers },
     } = this.props;
     const { members } = nextProps;
@@ -124,11 +114,13 @@ class ListRadio extends PureComponent {
         }
       );
     }
+    /*
     if (getusercare !== nextProps.getusercare) {
       this.setState({
         dataUserCare: nextProps.getusercare,
       });
     }
+    */
   }
 
   /*
@@ -211,62 +203,24 @@ class ListRadio extends PureComponent {
 
   //---------------------------------
 
-  handleChangePagination(v1, v2) {
-    console.log(v2);
-    window.scrollTo(0, 0);
-    const {
-      location: { query },
-      history,
-    } = this.props;
-    history.push(locationGenerate(query, v1));
-  }
-
-  handleChangeRadio(e) {
-    const { arrFilter } = this.state;
-    const {
-      location: { query },
-      history,
-    } = this.props;
-    if (e === 'ALL') {
-      arrFilter[1] = '';
-    } else arrFilter[1] = e;
-    this.setState(
-      {
-        arrFilter: undefined,
+  handleChangeCare = (value, careItem) => {
+    const { dispatch } = this.props;
+    dispatch({
+      type: 'authentication/changecare',
+      payload: {
+        userid: value.membersid.replace(/-/g, ''),
+        care: !careItem,
+        type: 'member',
+        address: value.address,
+        location: value.location,
+        created: value.created,
+        timeup: value.timeup,
+        name: value.name,
+        gender: value.gender,
+        user_id: value.membersid,
       },
-      () => {
-        this.setState({
-          arrFilter,
-        });
-      }
-    );
-    const { gender, date, sort } = query;
-    let path = {};
-    if (date) {
-      if (sort) {
-        path = {
-          pathname: '/home/detail-list',
-          search: `?page=1&radio=${e}&gender=${gender}&sort=${sort}&date=${date}`,
-        };
-      } else {
-        path = {
-          pathname: '/home/detail-list',
-          search: `?page=1&radio=${e}&gender=${gender}&date=${date}`,
-        };
-      }
-    } else if (sort) {
-      path = {
-        pathname: '/home/detail-list',
-        search: `?page=1&radio=${e}&gender=${gender}&sort=${sort}`,
-      };
-    } else {
-      path = {
-        pathname: '/home/detail-list',
-        search: `?page=1&radio=${e}&gender=${gender}`,
-      };
-    }
-    history.push(path);
-  }
+    });
+  };
 
   handleChangeGender(e) {
     const { arrFilter } = this.state;
@@ -323,24 +277,79 @@ class ListRadio extends PureComponent {
     history.push(path);
   }
 
+  handleChangeRadio(e) {
+    const { arrFilter } = this.state;
+    const {
+      location: { query },
+      history,
+    } = this.props;
+    if (e === 'ALL') {
+      arrFilter[1] = '';
+    } else arrFilter[1] = e;
+    this.setState(
+      {
+        arrFilter: undefined,
+      },
+      () => {
+        this.setState({
+          arrFilter,
+        });
+      }
+    );
+    const { gender, date, sort } = query;
+    let path = {};
+    if (date) {
+      if (sort) {
+        path = {
+          pathname: '/home/detail-list',
+          search: `?page=1&radio=${e}&gender=${gender}&sort=${sort}&date=${date}`,
+        };
+      } else {
+        path = {
+          pathname: '/home/detail-list',
+          search: `?page=1&radio=${e}&gender=${gender}&date=${date}`,
+        };
+      }
+    } else if (sort) {
+      path = {
+        pathname: '/home/detail-list',
+        search: `?page=1&radio=${e}&gender=${gender}&sort=${sort}`,
+      };
+    } else {
+      path = {
+        pathname: '/home/detail-list',
+        search: `?page=1&radio=${e}&gender=${gender}`,
+      };
+    }
+    history.push(path);
+  }
+
+  handleChangePagination(v1, v2) {
+    console.log(v2);
+    window.scrollTo(0, 0);
+    const {
+      location: { query },
+      history,
+    } = this.props;
+    history.push(locationGenerate(query, v1));
+  }
+
   render() {
     const {
       location: { search },
     } = this.props;
     if (search === '') {
-      this.setState({
-        arrFilter: ['', '', ''],
-      });
       return (
         <Redirect to={{ pathname: '/home/detail-list', search: '?page=1&radio=ALL&gender=ALL' }} />
       );
     }
-    const { loadingPage, detailList, dataFilter, dataUserCare } = this.state;
+    const { loadingPage, detailList, dataFilter } = this.state;
     const {
       location: { query },
+      getusercare,
     } = this.props;
     const { radio, gender, sort, page, date } = query;
-    const listMember = (dataFilter || detailList)
+    const listMember = detailList
       .filter((value, index) => index >= page * 20 - 20 && index < page * 20)
       .sort((a, b) => {
         if (sort === 'newest') {
@@ -348,6 +357,11 @@ class ListRadio extends PureComponent {
         }
         return [];
       });
+    const actions = {
+      handleChangeCare: this.handleChangeCare,
+    };
+    console.log(page);
+    // console.log(dataUserCare);
     if (!loadingPage) {
       return (
         <div className={styles['detail-list-page']} style={{ background: '#f3f5f9' }}>
@@ -405,9 +419,11 @@ class ListRadio extends PureComponent {
             </div>
             <div className={styles.row}>
               {listMember.length > 0 &&
-                listMember.map(v => (
-                  <CardItem key={v.membersid} item={v} dataUserCare={dataUserCare} />
-                ))}
+                listMember.map(v => {
+                  const find = getusercare.filter(k => k.user_id === v.membersid);
+                  const logs = find && find.length > 0;
+                  return <CardItem key={v.membersid} item={v} isCare={logs} {...actions} />;
+                })}
             </div>
             <Pagination
               style={{
@@ -418,7 +434,7 @@ class ListRadio extends PureComponent {
                 marginBottom: '20px',
               }}
               onChange={(v1, v2) => this.handleChangePagination(v1, v2)}
-              current={Number(page)}
+              current={Number(page) > 0 ? Number(page) : 1}
               pageSize={20}
               total={dataFilter ? dataFilter.length : detailList.length}
             />
