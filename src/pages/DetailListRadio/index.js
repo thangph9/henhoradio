@@ -83,36 +83,12 @@ class ListRadio extends PureComponent {
       members: { getmembers },
     } = this.props;
     const { members } = nextProps;
-    const { arrFilter, detailList } = this.state;
+    // const { arrFilter, detailList } = this.state;
     if (getmembers !== members.getmembers) {
-      this.setState(
-        {
-          detailList: members.getmembers,
-          loadingPage: false,
-        },
-        () => {
-          if (arrFilter) {
-            let dataArr = detailList;
-            arrFilter.forEach((e, i) => {
-              dataArr = dataArr.filter(value => {
-                if (i === 0) {
-                  const timeCreate = new Date(value.timeup);
-                  const stringTime = `${`${timeCreate.getDate()}`}/${`${timeCreate.getMonth() +
-                    1}`}/${timeCreate.getFullYear()}`;
-                  return stringTime === arrFilter[0];
-                }
-                if (i === 1) {
-                  return value.location === arrFilter[1];
-                }
-                return value.gender === arrFilter[2];
-              });
-            });
-            this.setState({
-              dataFilter: dataArr,
-            });
-          }
-        }
-      );
+      this.setState({
+        detailList: members.getmembers,
+        loadingPage: false,
+      });
     }
     /*
     if (getusercare !== nextProps.getusercare) {
@@ -349,14 +325,7 @@ class ListRadio extends PureComponent {
       getusercare,
     } = this.props;
     const { radio, gender, sort, page, date } = query;
-    const listMember = detailList
-      .filter((value, index) => index >= page * 20 - 20 && index < page * 20)
-      .sort((a, b) => {
-        if (sort === 'newest') {
-          return new Date(b.timeup) - new Date(a.timeup);
-        }
-        return [];
-      });
+    const listMember = detailList;
     const actions = {
       handleChangeCare: this.handleChangeCare,
     };
