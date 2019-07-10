@@ -8,6 +8,7 @@ const models = require('../settings');
 
 function getMenu(req, res) {
   const { params } = req;
+  console.log(params);
   async.series(
     [
       callback => {
@@ -57,12 +58,21 @@ function getMenu(req, res) {
       },
     ],
     (err, result) => {
-      console.log(params, result, err);
-      const rs = [];
+      const menu = result[0];
+      const menuGroup = result[1];
+      const menuItem = result[2];
+      const listItem = [];
+
+      const newGrp = menuGroup.filter(e => e.menu_id.toString() === menu[0].id.toString());
+      newGrp.forEach((e, i) => {
+        const j = menuItem.find(k => e.item_id.toString() === k.id.toString());
+        j.orderby = e.orderby;
+        listItem[i] = j;
+      });
       if (err) return res.json({ status: 'error' });
       return res.json({
         status: 'ok',
-        data: rs,
+        data: listItem,
       });
     }
   );
