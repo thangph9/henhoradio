@@ -1,10 +1,10 @@
 /* eslint-disable no-multi-assign */
 const express = require('express'); // eslint-disable-line
-// const https = require('https');
-// const http = require('http');
+const https = require('https');
+const http = require('http');
 const bodyParser = require('body-parser'); // eslint-disable-line
 const path = require('path');
-// const fs = require('fs');
+const fs = require('fs');
 
 const api = require('./api');
 // const images = require('./api/images');
@@ -12,9 +12,9 @@ const api = require('./api');
 
 const app = express();
 
-// const privateKey = fs.readFileSync('./ssl_cert/hhr.key', 'utf8');
-// const certificate = fs.readFileSync('./ssl_cert/hhr.crt', 'utf8');
-// const credentials = { key: privateKey, cert: certificate };
+const privateKey = fs.readFileSync('./ssl_cert/hhr.key', 'utf8');
+const certificate = fs.readFileSync('./ssl_cert/hhr.crt', 'utf8');
+const credentials = { key: privateKey, cert: certificate };
 
 // Use the default path '/' (Not recommended)
 // app.use(mockjs(path.join(__dirname, 'mocks')))
@@ -44,9 +44,8 @@ app.get('/*', (req, res) => {
   res.sendFile(path.join(__dirname, '../dist', 'index.html'));
 });
 //  Here you can add any code.
-// const server = https.createServer(credentials, app);
+const server = https.createServer(credentials, app);
 if (!module.parent) {
-  /*      
   server.listen(445, () => {
     console.log('server running at https://henhoradio.net/');
   });
@@ -56,9 +55,9 @@ if (!module.parent) {
       res.end();
     })
     .listen(8003);
- */
-
-  app.listen(8001, () => {
-    console.log('server dev running port 8001');
-  });
+  /*
+    app.listen(8001, () => {
+  console.log('server dev running port 8001');
+});
+*/
 }
