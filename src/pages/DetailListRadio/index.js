@@ -329,7 +329,7 @@ class ListRadio extends PureComponent {
     const actions = {
       handleChangeCare: this.handleChangeCare,
     };
-    console.log(page);
+    console.log(page, getusercare);
     // console.log(dataUserCare);
     if (!loadingPage) {
       return (
