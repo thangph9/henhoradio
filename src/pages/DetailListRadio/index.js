@@ -389,8 +389,12 @@ class ListRadio extends PureComponent {
             <div className={styles.row}>
               {listMember.length > 0 &&
                 listMember.map(v => {
-                  const find = getusercare.filter(k => k.user_id === v.membersid);
-                  const logs = find && find.length > 0;
+                  let find = [];
+                  let logs = false;
+                  if (getusercare) {
+                    find = getusercare.filter(k => k.user_id === v.membersid);
+                    logs = find && find.length > 0;
+                  }
                   return <CardItem key={v.membersid} item={v} isCare={logs} {...actions} />;
                 })}
             </div>
