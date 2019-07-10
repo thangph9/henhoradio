@@ -1,6 +1,9 @@
 module.exports = {
   fields: {
-    user_id: 'uuid',
+    id: {
+      type: 'uuid',
+      default: { $db_function: 'uuid()' },
+    },
     address: 'text',
     avatar: 'uuid',
     country: 'text',
@@ -19,10 +22,10 @@ module.exports = {
     phone: 'text',
     uniqueid: 'int',
     hometown: 'text',
-    vov: 'boolean',
     location: 'text',
     marriage: 'text',
-    active_friend: 'boolean',
+    vov: { type: 'boolean', default: true },
+    active_friend: { type: 'boolean', default: true },
     hobbys: {
       type: 'map',
       typeDef: '<text,text>',
@@ -51,7 +54,30 @@ module.exports = {
       type: 'map',
       typeDef: '<text,text>',
     },
-    createat: 'timestamp',
+    created: {
+      type: 'timestamp',
+      default: { $db_function: 'toTimestamp(now())' },
+    },
   },
-  key: ['user_id'],
+  key: [['id'], 'created'],
+  clustering_order: { created: 'desc' },
+  materialized_views: {
+    view_user: {
+      select: ['*'],
+      key: ['id', 'created'],
+    },
+    view_user_phone: {
+      select: ['phone', 'id'],
+      key: ['phone', 'id', 'created'],
+    },
+  },
+  options: {
+    timestamps: {
+      createdAt: 'created_at', // defaults to createdAt
+      updatedAt: 'updated_at', // defaults to updatedAt
+    },
+    versions: {
+      key: '__v', // defaults to __v
+    },
+  },
 };
