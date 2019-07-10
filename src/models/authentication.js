@@ -20,10 +20,15 @@ import {
   getUserCare,
   getUserWhoCare,
 } from '@/services/api';
-import { message } from 'antd';
+import { notification } from 'antd';
 import { setAuthority } from '@/utils/authority';
 import { reloadAuthorized } from '@/utils/Authorized';
 
+notification.config({
+  placement: 'bottomRight',
+  bottom: 50,
+  duration: 3,
+});
 export default {
   namespace: 'authentication',
 
@@ -93,38 +98,38 @@ export default {
     *changepass({ payload }, { call, put }) {
       const response = yield call(changePass, payload);
       if (response && response.status === 'ok') {
-        message.success('Thay đổi mật khẩu thành công !');
+        notification.success({ message: 'Thay đổi mật khẩu thành công!' });
         yield put({
           type: 'changePass',
         });
       } else if (response && response.status === 'error0') {
-        message.error('Mật khẩu cũ không chính xác !');
+        notification.error({ message: 'Mật khẩu cũ không chính xác!' });
       } else {
-        message.error('Có lỗi xảy ra !');
+        notification.error({ message: 'Có lỗi xảy ra!' });
       }
     },
     *updatephone({ payload }, { call, put }) {
       const response = yield call(updatePhone, payload);
       if (response && response.status === 'ok') {
-        message.success('Thay đổi dữ liệu thành công !');
+        notification.success({ message: 'Thay đổi dữ liệu thành công!' });
         yield put({
           type: 'updatePhone',
           payload,
         });
       } else {
-        message.error('Thao tác không thành công');
+        notification.error({ messsage: 'Thao tác không thành công' });
       }
     },
     *updateemail({ payload }, { call, put }) {
       const response = yield call(updateEmail, payload);
       if (response && response.status === 'ok') {
-        message.success('Thay đổi thành công !');
+        notification.success({ message: 'Thay đổi thành công !' });
         yield put({
           type: 'updateEmail',
           payload,
         });
       } else {
-        message.error('Thay đổi không thành công !');
+        notification.error({ message: 'Thay đổi không thành công!' });
       }
     },
     *questionregister({ payload }, { call, put }) {
@@ -146,10 +151,10 @@ export default {
       if (response && response.status === 'ok') {
         yield put({
           type: 'getUser',
-          payload: response.data,
+          payload: response.data || {},
         });
       } else {
-        message.error('Có lỗi xảy ra. Hãy thử đăng nhập lại !');
+        notification.error({ message: 'Có lỗi xảy ra. Hãy thử đăng nhập lại!' });
       }
     },
     *getusercare({ payload }, { call, put }) {
@@ -157,7 +162,7 @@ export default {
       if (response && response.status === 'ok') {
         yield put({
           type: 'getUserCare',
-          payload: response.data,
+          payload: response.data || [],
         });
       }
     },
@@ -166,21 +171,21 @@ export default {
       if (response && response.status === 'ok') {
         yield put({
           type: 'getUserWhoCare',
-          payload: response.data,
+          payload: response.data || [],
         });
       } else {
-        message.error('Có lỗi xảy ra. Hãy thử đăng nhập lại !');
+        notification.error({ message: 'Có lỗi xảy ra. Hãy thử đăng nhập lại!' });
       }
     },
     *getonlyuser({ payload }, { call, put }) {
       const response = yield call(getOnlyUser, payload);
       if (response && response.status === 'ok') {
         yield put({
-          type: 'getOnlyUser',
-          payload: response.data,
+          type: 'getOnlyUserReducer',
+          payload: response.data || {},
         });
       } else {
-        message.error('Có lỗi xảy ra. Hãy thử đăng nhập lại !');
+        notification.error({ message: 'Có lỗi xảy ra. Hãy thử đăng nhập lại!' });
       }
     },
     *getdetaillist({ payload }, { call, put }) {
@@ -188,7 +193,7 @@ export default {
       if (response && response.status === 'ok') {
         yield put({
           type: 'getDetailList',
-          payload: response.data,
+          payload: response.data || [],
         });
       }
     },
@@ -197,7 +202,7 @@ export default {
       if (response && response.status === 'ok') {
         yield put({
           type: 'getUserById',
-          payload: response.data,
+          payload: response.data || {},
         });
       }
     },
@@ -206,20 +211,20 @@ export default {
       if (response && response.status === 'ok') {
         yield put({
           type: 'getAllUsers',
-          payload: response.data,
+          payload: response.data || [],
         });
       }
     },
     *updateprofilequestion({ payload }, { call, put }) {
       const response = yield call(updateProfileQuestion, payload);
       if (response && response.status === 'ok') {
-        message.success('Thay đổi dữ liệu thành công !');
+        notification.success({ message: 'Thay đổi dữ liệu thành công!' });
         yield put({
           type: 'updateProfileQuestion',
           payload,
         });
       } else {
-        message.error('Thay đổi thất bại !');
+        notification.error({ message: 'Thao tác thất bại! ' });
       }
     },
     *changecare({ payload }, { call, put }) {
@@ -229,9 +234,11 @@ export default {
           type: 'changeCare',
           payload,
         });
-        message.success('Thay đổi hoàn tất');
+        notification.success({
+          message: payload.care ? 'Bạn đã quan tâm' : 'Bạn đã bỏ quan tâm',
+        });
       } else {
-        message.error('Thay đổi thất bại !');
+        notification.error({ message: 'Thao tác thất bại!' });
       }
     },
     *updateprofileuser({ payload }, { call, put }) {
@@ -243,7 +250,7 @@ export default {
           payload: { ...payload, status },
         });
       } else {
-        message.error('Có lỗi xảy ra !');
+        notification.error({ message: 'Thao tác thất bại!' });
       }
     },
   },
@@ -430,7 +437,7 @@ export default {
         getonlyuser: JSON.parse(a),
       };
     },
-    getOnlyUser(state, action) {
+    getOnlyUserReducer(state, action) {
       return {
         ...state,
         getonlyuser: action.payload,

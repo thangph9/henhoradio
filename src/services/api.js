@@ -188,7 +188,7 @@ export async function getUser() {
   });
 }
 export async function getOnlyUser() {
-  return request('/api/authentication/getonlyuser', {
+  return request('/api/authentication/current_user', {
     method: 'GET',
     headers: { 'X-Access-Token': JSON.parse(localStorage.getItem('token')) },
   });
