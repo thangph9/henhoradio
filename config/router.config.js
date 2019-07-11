@@ -39,7 +39,7 @@ export default [
     // Routes: ['src/pages/Authorized'],
     // authority: ['member'],
     routes: [
-      { path: '/home', redirect: './newfeed' },
+      { path: '/home', redirect: './detail-list' },
       { path: '/home/newfeed', component: './HomePage' },
       { path: '/home/profile', component: './ProfileDetail' },
       { path: '/home/search-list', component: './SearchList' },

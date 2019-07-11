@@ -6,9 +6,9 @@ import styles from './index.less';
 
 const actions = (
   <div className={styles.actions}>
-    <Link to="/login">
+    <Link to="/home/detail-list">
       <Button size="large" type="primary">
-        Về trang đăng nhập
+        Trang chủ
       </Button>
     </Link>
   </div>
