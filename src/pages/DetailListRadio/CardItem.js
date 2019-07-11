@@ -7,8 +7,6 @@ import styles from './index.less';
 
 class CardItem extends PureComponent {
   state = {
-    loaded: false,
-    duration: 0,
     visiableInfo: false,
     playing: false,
   };
@@ -22,10 +20,10 @@ class CardItem extends PureComponent {
   render() {
     const { item, isCare } = this.props;
     const v = item;
-    const { loaded, visiableInfo, duration, playing } = this.state;
-    const loadedPersent = loaded ? (loaded * 100) / duration : 0;
+    const { visiableInfo, playing } = this.state;
+    // const loadedPersent = loaded ? (loaded * 100) / duration : 0;
 
-    console.log(loadedPersent);
+    // console.log("Is Care ",isCare);
     let caredStyle = styles['mc-btn-action'];
     let caredConfirm = <Icon type="bars" />;
     if (isCare) {
@@ -34,7 +32,7 @@ class CardItem extends PureComponent {
         <Popconfirm
           placement="topLeft"
           title="Bạn muốn bỏ quan tâm?"
-          onConfirm={this.handleChange(v, true)}
+          onConfirm={() => this.handleChange(v, true)}
           okText="Có"
           cancelText="Không"
         >
@@ -43,7 +41,7 @@ class CardItem extends PureComponent {
       );
     } else {
       caredConfirm = localStorage.token ? (
-        <Icon onClick={this.handleChange(v, false)} type="star" theme="filled" />
+        <Icon onClick={() => this.handleChange(v, false)} type="star" theme="filled" />
       ) : (
         <Icon type="bars" />
       );

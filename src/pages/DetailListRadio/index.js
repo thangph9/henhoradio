@@ -312,7 +312,8 @@ class ListRadio extends PureComponent {
 
   render() {
     const {
-      location: { search },
+      location: { search, query },
+      authentication: { getusercare },
     } = this.props;
     if (search === '') {
       return (
@@ -320,16 +321,13 @@ class ListRadio extends PureComponent {
       );
     }
     const { loadingPage, detailList, dataFilter } = this.state;
-    const {
-      location: { query },
-      getusercare,
-    } = this.props;
     const { radio, gender, sort, page, date } = query;
+
     const listMember = detailList;
     const actions = {
       handleChangeCare: this.handleChangeCare,
     };
-    console.log(page);
+    // console.log(page,getusercare);
     // console.log(dataUserCare);
     if (!loadingPage) {
       return (
