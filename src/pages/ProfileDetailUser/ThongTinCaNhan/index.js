@@ -400,58 +400,18 @@ class ThongTinCaNhan extends Component {
     const { form, dispatch } = this.props;
     const { avatarImage } = this.state;
     e.preventDefault();
+    /*  
     const jobs = form.getFieldValue('jobs');
     const assets = form.getFieldValue('assets');
     const hobbys = form.getFieldValue('hobbys');
     const marriage = form.getFieldValue('marriage');
     const hometown = form.getFieldValue('hometown');
-    if (!hometown) {
-      form.setFields({
-        hometown: {
-          errors: [new Error('Vui lòng nhập địa chỉ thường trú')],
-        },
-      });
-    }
-    if (!jobs) {
-      form.setFields({
-        jobs: {
-          errors: [new Error('Vui lòng nhập thêm công việc')],
-        },
-      });
-    }
-    if (!assets) {
-      form.setFields({
-        assets: {
-          errors: [new Error('Vui lòng nhập thêm 1 số tài sản')],
-        },
-      });
-    }
-    if (!hobbys) {
-      form.setFields({
-        hobbys: {
-          errors: [new Error('Vui lòng nhập thêm 1 số sở thích của bạn')],
-        },
-      });
-    }
-    if (!marriage) {
-      form.setFields({
-        marriage: {
-          errors: [new Error('Vui lòng chọn tình trạng hôn nhân của bạn')],
-        },
-      });
-    }
-
+    */
     form.validateFields((err, values) => {
       values.avatar = avatarImage;
       values.vov = this.state.dataUser.vov;
       values.active_friend = this.state.dataUser.active_friend;
       if (!err) {
-        if (!jobs || !assets || !hobbys || !marriage || !hometown) {
-          this.setState({
-            confirmSubmit: false,
-          });
-          return;
-        }
         dispatch({
           type: 'authentication/updateprofileuser',
           payload: values,
@@ -611,7 +571,6 @@ class ThongTinCaNhan extends Component {
               </Form.Item>
               <Form.Item label="Giới tính">
                 {getFieldDecorator('gender', {
-                  rules: [{ required: true, message: 'Vui lòng chọn giới tính' }],
                   initialValue: dataUser.gender,
                 })(
                   <Radio.Group buttonStyle="solid">
@@ -623,7 +582,6 @@ class ThongTinCaNhan extends Component {
               <div className={styles['date-of-birth']}>
                 <Form.Item label="Ngày sinh">
                   {getFieldDecorator('dateinfo', {
-                    rules: [{ required: true, message: 'Vui lòng chọn giới tính' }],
                     initialValue: dataUser.dob_day,
                   })(
                     <Select style={{ minWidth: '100px' }}>
@@ -637,7 +595,6 @@ class ThongTinCaNhan extends Component {
                 </Form.Item>
                 <Form.Item label="Tháng sinh">
                   {getFieldDecorator('monthinfo', {
-                    rules: [{ required: true, message: 'Vui lòng chọn giới tính' }],
                     initialValue: dataUser.dob_month,
                   })(
                     <Select style={{ minWidth: '100px' }}>
@@ -651,7 +608,6 @@ class ThongTinCaNhan extends Component {
                 </Form.Item>
                 <Form.Item label="Năm sinh">
                   {getFieldDecorator('yearinfo', {
-                    rules: [{ required: true, message: 'Vui lòng chọn giới tính' }],
                     initialValue: dataUser.dob_year,
                   })(
                     <Select style={{ minWidth: '100px' }}>
@@ -666,7 +622,6 @@ class ThongTinCaNhan extends Component {
               </div>
               <Form.Item label="Thường trú">
                 {getFieldDecorator('address', {
-                  rules: [{ required: true, message: 'Vui lòng chọn nơi thường trú' }],
                   onChange: e => this.handleChangehometown(e),
                   initialValue: dataUser.address || '',
                 })(
@@ -681,7 +636,6 @@ class ThongTinCaNhan extends Component {
               </Form.Item>
               <Form.Item label="Quê quán">
                 {getFieldDecorator('hometown', {
-                  rules: [{ required: true, message: 'Vui lòng chọn địa chỉ' }],
                   initialValue: dataUser.hometown || '',
                 })(
                   <Input
@@ -722,7 +676,6 @@ class ThongTinCaNhan extends Component {
               </div>
               <Form.Item label="Trình độc học vấn">
                 {getFieldDecorator('education', {
-                  rules: [{ required: true, message: 'Nhập trình độ học vấn của bạn' }],
                   initialValue: dataUser.education ? dataUser.education.education : '',
                   onChange: e => this.onChangeEducation(e),
                 })(
@@ -822,7 +775,10 @@ class ThongTinCaNhan extends Component {
                 </Button>
               </Form.Item>
               {this.state.confirmSubmit && (
-                <span style={{ color: 'green' }}>Thay đổi thành công</span>
+                <span style={{ color: 'red' }}>
+                  Thông tin cập nhập của bạn đã được gửi đi ban biên tập sẽ xác nhận và cập nhập.
+                  cảm ơn bạn tham website
+                </span>
               )}
             </Form>
           </div>
