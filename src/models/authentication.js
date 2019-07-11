@@ -159,10 +159,16 @@ export default {
     },
     *getusercare({ payload }, { call, put }) {
       const response = yield call(getUserCare, payload);
+      // console.log(response);
       if (response && response.status === 'ok') {
         yield put({
           type: 'getUserCare',
           payload: response.data || [],
+        });
+      } else {
+        yield put({
+          type: 'getUserCare',
+          payload: [],
         });
       }
     },
@@ -368,6 +374,7 @@ export default {
         d.push(obj);
         arr = d;
       }
+      // console.log(arr);
       return {
         ...state,
         getuserbyid: b,
