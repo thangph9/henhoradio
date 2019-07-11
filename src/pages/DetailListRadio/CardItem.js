@@ -105,9 +105,6 @@ class CardItem extends PureComponent {
                 <Icon style={{ paddingRight: '8px' }} type="smile" />
                 <span className={styles['span-discription']}>Mã số kết bạn: {v.gcode}</span>
               </div>
-              <div className={styles['duration-item']}>
-                <Icon style={{ paddingRight: '8px' }} type="clock-circle" />
-              </div>
             </div>
           </div>
           <a className={caredStyle}>{caredConfirm}</a>

@@ -327,7 +327,7 @@ class ListRadio extends PureComponent {
     const actions = {
       handleChangeCare: this.handleChangeCare,
     };
-    // console.log(page,getusercare);
+    console.log(page, getusercare);
     // console.log(dataUserCare);
     if (!loadingPage) {
       return (
@@ -396,19 +396,21 @@ class ListRadio extends PureComponent {
                   return <CardItem key={v.membersid} item={v} isCare={logs} {...actions} />;
                 })}
             </div>
-            <Pagination
-              style={{
-                padding: '5px',
-                display: 'table',
-                margin: '0 auto',
-                marginTop: '30px',
-                marginBottom: '20px',
-              }}
-              onChange={(v1, v2) => this.handleChangePagination(v1, v2)}
-              current={Number(page) > 0 ? Number(page) : 1}
-              pageSize={20}
-              total={dataFilter ? dataFilter.length : detailList.length}
-            />
+            {page > 1 && (
+              <Pagination
+                style={{
+                  padding: '5px',
+                  display: 'table',
+                  margin: '0 auto',
+                  marginTop: '30px',
+                  marginBottom: '20px',
+                }}
+                onChange={(v1, v2) => this.handleChangePagination(v1, v2)}
+                defaultCurrent={Number(page)}
+                pageSize={20}
+                total={dataFilter ? dataFilter.length : detailList.length}
+              />
+            )}
           </div>
           <div className={styles.footer}>
             <HHRFooter />
