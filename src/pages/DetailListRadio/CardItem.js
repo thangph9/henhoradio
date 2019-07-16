@@ -17,6 +17,13 @@ class CardItem extends PureComponent {
     handleChangeCare(value, careItem);
   };
 
+  handleVisibleModal = () => {
+    const { visiableInfo } = this.state;
+    this.setState({
+      visiableInfo: !visiableInfo,
+    });
+  };
+
   render() {
     const { item, isCare } = this.props;
     const v = item;
@@ -61,7 +68,10 @@ class CardItem extends PureComponent {
 
     return (
       <div className={styles['cart-item']}>
-        <article className={`${styles['material-card']} ${styles['mc-active']}`}>
+        <article
+          className={`${styles['material-card']} ${styles['mc-active']}`}
+          onClick={() => this.handleVisibleModal()}
+        >
           <h2>
             <span className={styles['span-title']}>{v.name}</span>
             <strong>
