@@ -11,5 +11,6 @@ router.use('/tracklist', require('./track'));
 router.use('/members', require('./members'));
 router.use('/menu', require('./menu'));
 router.use('/about', require('./about'));
+router.use('/DATA', require('./public'));
 
 module.exports = router;
