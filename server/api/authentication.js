@@ -39,7 +39,7 @@ function register(req, res) {
     function validParams(callback) {
       try {
         PARAM_IS_VALID.phone = params.phone;
-        PARAM_IS_VALID.gender = params.gender;
+        PARAM_IS_VALID.gender = params.gender.toUpperCase();
         PARAM_IS_VALID.fullname = params.fullname;
         PARAM_IS_VALID.address = params.address;
         PARAM_IS_VALID.password = params.password;
@@ -1155,10 +1155,11 @@ function getUserCare(req, res) {
       function verify(callback) {
         try {
           legit = jwt.verify(token, jwtpublic, verifyOptions);
-          callback(null, legit);
+          // callback(null, legit);
         } catch (e) {
           console.log(e);
         }
+        callback(null, null);
       },
       function findUserCare(callback) {
         try {
