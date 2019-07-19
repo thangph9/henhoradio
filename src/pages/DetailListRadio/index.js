@@ -13,7 +13,6 @@ const { Option } = Select;
 
 function locationGenerate(query, v1) {
   const { date, gender, sort, radio } = query;
-  console.log(query);
   let path = {};
   if (date) {
     if (sort) {
@@ -49,6 +48,7 @@ function locationGenerate(query, v1) {
 class ListRadio extends PureComponent {
   state = {
     loadingPage: true,
+    loading: true,
     data: [],
   };
 
@@ -73,6 +73,14 @@ class ListRadio extends PureComponent {
         loadingPage: false,
       });
     }
+    this.setState({
+      loading: true,
+    });
+    setTimeout(() => {
+      this.setState({
+        loading: false,
+      });
+    }, 150);
   }
 
   onChangeDate(value1, value2) {
@@ -167,6 +175,7 @@ class ListRadio extends PureComponent {
       location: { query },
       history,
     } = this.props;
+
     history.push(locationGenerate(query, v1));
     console.log(v2);
   }
@@ -181,17 +190,37 @@ class ListRadio extends PureComponent {
         <Redirect to={{ pathname: '/home/detail-list', search: '?page=1&radio=ALL&gender=ALL' }} />
       );
     }
-    const { loadingPage, data } = this.state;
+    const { loadingPage, data, loading } = this.state;
     const { radio, gender, sort, page, date } = query;
 
-    const listMember = data.filter(e => {
+    let listMember = data.filter(e => {
       if (radio === 'ALL') return e;
+      if (radio === 'VALID') return e.id !== undefined;
       return e.location === radio;
     });
+    listMember = listMember.filter(e => {
+      if (gender === 'ALL') return e;
+      return e.gender.toUpperCase() === gender.toUpperCase();
+    });
+    const defaultSort = listMember;
+    if (sort === 'newest') {
+      listMember.sort((e, f) => {
+        console.log(e.created, f.created);
+        return 1;
+      });
+    }
+    if (sort === 'special') {
+      console.log(sort);
+    }
+    if (sort === 'default') {
+      listMember = defaultSort;
+    }
+
     const actions = {
       handleChangeCare: this.handleChangeCare,
     };
     // console.log(page, getusercare);
+
     if (!loadingPage) {
       return (
         <div className={styles['detail-list-page']} style={{ background: '#f3f5f9' }}>
@@ -248,8 +277,10 @@ class ListRadio extends PureComponent {
                 </Select>
               </div>
             </div>
+            {loading && <PageLoading />}
             <div className={styles.row}>
               {listMember.length > 0 &&
+                !loading &&
                 listMember.map(v => {
                   let find = [];
                   let logs = false;
