@@ -4,6 +4,7 @@ import {
   addFakeList,
   updateFakeList,
   trackList,
+  fetchDataAPIPublic,
 } from '@/services/api';
 
 export default {
@@ -12,6 +13,7 @@ export default {
   state: {
     list: [],
     tracklist: [],
+    data: [],
   },
 
   effects: {
@@ -29,6 +31,7 @@ export default {
         payload: Array.isArray(response) ? response : [],
       });
     },
+
     *submit({ payload }, { call, put }) {
       let callback;
       if (payload.id) {
@@ -49,9 +52,22 @@ export default {
         payload: response.data || [],
       });
     },
+    *fetchPublicDataAPI({ payload }, { call, put }) {
+      const response = yield call(fetchDataAPIPublic, payload);
+      yield put({
+        type: 'fetchAPIPublicData',
+        payload: response.data || [],
+      });
+    },
   },
 
   reducers: {
+    fetchAPIPublicData(state, action) {
+      return {
+        ...state,
+        data: action.payload,
+      };
+    },
     queryList(state, action) {
       return {
         ...state,

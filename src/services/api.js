@@ -23,6 +23,13 @@ export async function removeRule(params) {
   });
 }
 
+export async function fetchDataAPIPublic() {
+  return request('/api/DATA/DT', {
+    method: 'GET',
+    headers: { 'X-Access-Token': JSON.parse(localStorage.getItem('token')) },
+  });
+}
+
 export async function addRule(params) {
   return request('/api/rule', {
     method: 'POST',

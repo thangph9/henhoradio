@@ -68,10 +68,7 @@ class CardItem extends PureComponent {
 
     return (
       <div className={styles['cart-item']}>
-        <article
-          className={`${styles['material-card']} ${styles['mc-active']}`}
-          onClick={() => this.handleVisibleModal()}
-        >
+        <article className={`${styles['material-card']} ${styles['mc-active']}`}>
           <h2>
             <span className={styles['span-title']}>{v.name}</span>
             <strong>
@@ -79,7 +76,7 @@ class CardItem extends PureComponent {
               {moment(v.timeup).format('DD/MM/YYYY')}
             </strong>
           </h2>
-          <div className={styles['mc-content']}>
+          <div className={styles['mc-content']} onClick={() => this.handleVisibleModal()}>
             <div className={styles['img-container']} />
 
             <div className={styles['mc-description']}>
@@ -87,7 +84,7 @@ class CardItem extends PureComponent {
                 <p>
                   Để kết bạn với <span className={styles.bold}>{v.name}</span> vui lòng soạn tin
                   theo cú pháp: <span className={styles.bold}>HHR</span>
-                  <span className={styles.bold}>{v.gcode} </span>
+                  <span className={styles.bold}> {v.gcode} </span>
                   Gửi <span className={styles.bold}>8779</span>.
                 </p>
               </Modal>

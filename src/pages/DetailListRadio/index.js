@@ -13,6 +13,7 @@ const { Option } = Select;
 
 function locationGenerate(query, v1) {
   const { date, gender, sort, radio } = query;
+  console.log(query);
   let path = {};
   if (date) {
     if (sort) {
@@ -40,112 +41,45 @@ function locationGenerate(query, v1) {
   return path;
 }
 
-@connect(({ authentication, members }) => ({
+@connect(({ authentication, members, list }) => ({
   authentication,
   members,
+  list,
 }))
 class ListRadio extends PureComponent {
   state = {
     loadingPage: true,
-    detailList: [],
-    dataFilter: [],
-    arrFilter: ['', '', ''],
+    data: [],
   };
 
   componentDidMount() {
     const { dispatch } = this.props;
     dispatch({
-      type: 'members/getmembers',
+      type: 'list/fetchPublicDataAPI',
     });
     dispatch({
       type: 'authentication/getusercare',
     });
-    const { arrFilter } = this.state;
-    const {
-      location: { query },
-    } = this.props;
-    const { radio, gender, date } = query;
-    if (radio) {
-      if (radio === 'ALL') {
-        arrFilter[1] = '';
-      } else arrFilter[1] = radio;
-    }
-    if (gender) {
-      if (gender === 'ALL') {
-        arrFilter[2] = '';
-      } else arrFilter[2] = gender;
-    }
-    if (date) arrFilter[0] = date.replace(/_/g, '/');
   }
 
   componentWillReceiveProps(nextProps) {
     const {
-      members: { getmembers },
+      list: { data },
     } = this.props;
-    const { members } = nextProps;
-    // const { arrFilter, detailList } = this.state;
-    if (getmembers !== members.getmembers) {
+    const { list } = nextProps;
+    if (data !== list.data) {
       this.setState({
-        detailList: members.getmembers,
+        data: list.data,
         loadingPage: false,
       });
     }
-    /*
-    if (getusercare !== nextProps.getusercare) {
-      this.setState({
-        dataUserCare: nextProps.getusercare,
-      });
-    }
-    */
   }
-
-  /*
-   componentWillUpdate(nextProps, nextState) {
-    
-    const { arrFilter, detailList } = this.state;
-       
-    if (arrFilter !== nextState.arrFilter) {
-      if (nextState.arrFilter) {
-        let dataArr = detailList;
-        nextState.arrFilter.forEach((e,i)=>{
-              dataArr = dataArr.filter((value) => {
-                if (i === 0) {
-                  const timeCreate = new Date(value.timeup);
-                  const stringTime = `${`${timeCreate.getDate()}`}/${`${timeCreate.getMonth() +
-                    1}`}/${timeCreate.getFullYear()}`;
-                  return stringTime === nextState.arrFilter[0];
-                }
-                if (i === 1) {
-                  return value.location === nextState.arrFilter[1];
-                }
-                return value.gender === nextState.arrFilter[2];
-              });
-        })
-        this.setState({
-          dataFilter: dataArr,
-        });
-      }
-    } 
-  }
-*/
 
   onChangeDate(value1, value2) {
-    const { arrFilter } = this.state;
     const {
       location: { query },
       history,
     } = this.props;
-    arrFilter[0] = value2;
-    this.setState(
-      {
-        arrFilter: undefined,
-      },
-      () => {
-        this.setState({
-          arrFilter,
-        });
-      }
-    );
     const { radio, sort, gender } = query;
     let path = {};
     if (value2 === '') {
@@ -199,24 +133,11 @@ class ListRadio extends PureComponent {
   };
 
   handleChangeGender(e) {
-    const { arrFilter } = this.state;
     const {
       location: { query },
       history,
     } = this.props;
-    if (e === 'ALL') {
-      arrFilter[2] = '';
-    } else arrFilter[2] = e;
-    this.setState(
-      {
-        arrFilter: undefined,
-      },
-      () => {
-        this.setState({
-          arrFilter,
-        });
-      }
-    );
+    query.gender = e;
     history.push(locationGenerate(query, 1));
   }
 
@@ -225,89 +146,29 @@ class ListRadio extends PureComponent {
       location: { query },
       history,
     } = this.props;
-    const { radio, date, gender } = query;
-    let path = {};
-    if (date) {
-      if (e !== 'default') {
-        path = {
-          pathname: '/home/detail-list',
-          search: `?page=1&radio=${radio}&gender=${gender}&sort=${e}&date=${date}`,
-        };
-      } else {
-        path = {
-          pathname: '/home/detail-list',
-          search: `?page=1&radio=${radio}&gender=${gender}&date=${date}`,
-        };
-      }
-    } else if (e !== 'default') {
-      path = {
-        pathname: '/home/detail-list',
-        search: `?page=1&radio=${radio}&gender=${gender}&sort=${e}`,
-      };
-    } else {
-      path = {
-        pathname: '/home/detail-list',
-        search: `?page=1&radio=${radio}&gender=${gender}`,
-      };
-    }
-    history.push(path);
+    const { page } = query;
+    query.sort = e;
+    history.push(locationGenerate(query, page));
   }
 
   handleChangeRadio(e) {
-    const { arrFilter } = this.state;
     const {
       location: { query },
       history,
     } = this.props;
-    if (e === 'ALL') {
-      arrFilter[1] = '';
-    } else arrFilter[1] = e;
-    this.setState(
-      {
-        arrFilter: undefined,
-      },
-      () => {
-        this.setState({
-          arrFilter,
-        });
-      }
-    );
-    const { gender, date, sort } = query;
-    let path = {};
-    if (date) {
-      if (sort) {
-        path = {
-          pathname: '/home/detail-list',
-          search: `?page=1&radio=${e}&gender=${gender}&sort=${sort}&date=${date}`,
-        };
-      } else {
-        path = {
-          pathname: '/home/detail-list',
-          search: `?page=1&radio=${e}&gender=${gender}&date=${date}`,
-        };
-      }
-    } else if (sort) {
-      path = {
-        pathname: '/home/detail-list',
-        search: `?page=1&radio=${e}&gender=${gender}&sort=${sort}`,
-      };
-    } else {
-      path = {
-        pathname: '/home/detail-list',
-        search: `?page=1&radio=${e}&gender=${gender}`,
-      };
-    }
-    history.push(path);
+    const { page } = query;
+    query.radio = e;
+    history.push(locationGenerate(query, page));
   }
 
   handleChangePagination(v1, v2) {
-    console.log(v2);
     window.scrollTo(0, 0);
     const {
       location: { query },
       history,
     } = this.props;
     history.push(locationGenerate(query, v1));
+    console.log(v2);
   }
 
   render() {
@@ -320,15 +181,17 @@ class ListRadio extends PureComponent {
         <Redirect to={{ pathname: '/home/detail-list', search: '?page=1&radio=ALL&gender=ALL' }} />
       );
     }
-    const { loadingPage, detailList, dataFilter } = this.state;
+    const { loadingPage, data } = this.state;
     const { radio, gender, sort, page, date } = query;
 
-    const listMember = detailList;
+    const listMember = data.filter(e => {
+      if (radio === 'ALL') return e;
+      return e.location === radio;
+    });
     const actions = {
       handleChangeCare: this.handleChangeCare,
     };
-    console.log(page, getusercare);
-    // console.log(dataUserCare);
+    // console.log(page, getusercare);
     if (!loadingPage) {
       return (
         <div className={styles['detail-list-page']} style={{ background: '#f3f5f9' }}>
@@ -358,7 +221,8 @@ class ListRadio extends PureComponent {
                 >
                   <Option value="HN">Hà Nội</Option>
                   <Option value="HCM">Hồ Chí Minh</Option>
-                  <Option value="ALL">Cả hai đài</Option>
+                  <Option value="VALID">Chưa lên sóng</Option>
+                  <Option value="ALL">Tất cả</Option>
                 </Select>
               </div>
               <div className={`${styles['filter-gender']} ${styles['item-filter']}`}>
@@ -408,12 +272,9 @@ class ListRadio extends PureComponent {
                 onChange={(v1, v2) => this.handleChangePagination(v1, v2)}
                 defaultCurrent={Number(page)}
                 pageSize={20}
-                total={dataFilter ? dataFilter.length : detailList.length}
+                total={data.length}
               />
             )}
-          </div>
-          <div className={styles.footer}>
-            <HHRFooter />
           </div>
         </div>
       );
