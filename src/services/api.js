@@ -23,8 +23,8 @@ export async function removeRule(params) {
   });
 }
 
-export async function fetchDataAPIPublic() {
-  return request('/api/DATA/DT', {
+export async function fetchDataAPIPublic(params) {
+  return request(`/api/DATA/DT?${stringify(params)}`, {
     method: 'GET',
     headers: { 'X-Access-Token': JSON.parse(localStorage.getItem('token')) },
   });

@@ -4,8 +4,9 @@ import { DatePicker, Select, Pagination } from 'antd';
 import PageLoading from '@/components/PageLoading';
 import { Redirect } from 'react-router-dom';
 import moment from 'moment';
-import HHRFooter from '@/layouts/HHRFooter';
+// import HHRFooter from '@/layouts/HHRFooter';
 import CardItem from './CardItem';
+import DataNotFound from './DataNotFound';
 import styles from './index.less';
 
 const dateFormat = 'DD/MM/YYYY';
@@ -53,9 +54,13 @@ class ListRadio extends PureComponent {
   };
 
   componentDidMount() {
-    const { dispatch } = this.props;
+    const {
+      dispatch,
+      location: { query },
+    } = this.props;
     dispatch({
       type: 'list/fetchPublicDataAPI',
+      payload: query,
     });
     dispatch({
       type: 'authentication/getusercare',
@@ -85,38 +90,17 @@ class ListRadio extends PureComponent {
 
   onChangeDate(value1, value2) {
     const {
+      dispatch,
       location: { query },
       history,
     } = this.props;
-    const { radio, sort, gender } = query;
-    let path = {};
-    if (value2 === '') {
-      if (sort) {
-        path = {
-          pathname: '/home/detail-list',
-          search: `?page=1&radio=${radio}&gender=${gender}&sort=${sort}`,
-        };
-      } else {
-        path = {
-          pathname: '/home/detail-list',
-          search: `?page=1&radio=${radio}&gender=${gender}`,
-        };
-      }
-    } else if (sort) {
-      path = {
-        pathname: '/home/detail-list',
-        search: `?page=1&radio=${radio}&gender=${gender}&sort=${sort}&date=${value2.replace(
-          /\//g,
-          '_'
-        )}`,
-      };
-    } else {
-      path = {
-        pathname: '/home/detail-list',
-        search: `?page=1&radio=${radio}&gender=${gender}&date=${value2.replace(/\//g, '_')}`,
-      };
-    }
-    history.push(path);
+    const { page } = query;
+    query.date = value2.replace(/\//g, '_');
+    dispatch({
+      type: 'list/fetchPublicDataAPI',
+      payload: query,
+    });
+    history.push(locationGenerate(query, page));
   }
 
   //---------------------------------
@@ -142,40 +126,59 @@ class ListRadio extends PureComponent {
 
   handleChangeGender(e) {
     const {
+      dispatch,
       location: { query },
       history,
     } = this.props;
     query.gender = e;
+    dispatch({
+      type: 'list/fetchPublicDataAPI',
+      payload: query,
+    });
     history.push(locationGenerate(query, 1));
   }
 
   handleChangeSort(e) {
     const {
+      dispatch,
       location: { query },
       history,
     } = this.props;
     const { page } = query;
     query.sort = e;
+    dispatch({
+      type: 'list/fetchPublicDataAPI',
+      payload: query,
+    });
     history.push(locationGenerate(query, page));
   }
 
   handleChangeRadio(e) {
     const {
+      dispatch,
       location: { query },
       history,
     } = this.props;
     const { page } = query;
     query.radio = e;
     history.push(locationGenerate(query, page));
+    dispatch({
+      type: 'list/fetchPublicDataAPI',
+      payload: query,
+    });
   }
 
   handleChangePagination(v1, v2) {
     window.scrollTo(0, 0);
     const {
+      dispatch,
       location: { query },
       history,
     } = this.props;
-
+    dispatch({
+      type: 'list/fetchPublicDataAPI',
+      payload: query,
+    });
     history.push(locationGenerate(query, v1));
     console.log(v2);
   }
@@ -192,35 +195,11 @@ class ListRadio extends PureComponent {
     }
     const { loadingPage, data, loading } = this.state;
     const { radio, gender, sort, page, date } = query;
-
-    let listMember = data.filter(e => {
-      if (radio === 'ALL') return e;
-      if (radio === 'VALID') return e.id !== undefined;
-      return e.location === radio;
-    });
-    listMember = listMember.filter(e => {
-      if (gender === 'ALL') return e;
-      return e.gender.toUpperCase() === gender.toUpperCase();
-    });
-    const defaultSort = listMember;
-    if (sort === 'newest') {
-      listMember.sort((e, f) => {
-        console.log(e.created, f.created);
-        return 1;
-      });
-    }
-    if (sort === 'special') {
-      console.log(sort);
-    }
-    if (sort === 'default') {
-      listMember = defaultSort;
-    }
-
     const actions = {
       handleChangeCare: this.handleChangeCare,
     };
     // console.log(page, getusercare);
-
+    const listMember = data;
     if (!loadingPage) {
       return (
         <div className={styles['detail-list-page']} style={{ background: '#f3f5f9' }}>
@@ -230,13 +209,13 @@ class ListRadio extends PureComponent {
                 {date ? (
                   <DatePicker
                     defaultValue={moment(date.replace(/_/g, '/'), dateFormat)}
-                    format="D/M/YYYY"
+                    format="DD/MM/YYYY"
                     onChange={(e, v) => this.onChangeDate(e, v)}
                     placeholder="Lựa chọn"
                   />
                 ) : (
                   <DatePicker
-                    format="D/M/YYYY"
+                    format="DD/MM/YYYY"
                     onChange={(e, v) => this.onChangeDate(e, v)}
                     placeholder="Lựa chọn"
                   />
@@ -290,6 +269,7 @@ class ListRadio extends PureComponent {
                   }
                   return <CardItem key={v.membersid} item={v} isCare={logs} {...actions} />;
                 })}
+              {listMember.length === 0 && !loading && <DataNotFound />}
             </div>
             {page > 1 && (
               <Pagination
@@ -313,9 +293,6 @@ class ListRadio extends PureComponent {
     return (
       <div>
         <PageLoading />
-        <div style={{ marginTop: '1000px' }} className={styles.footer}>
-          <HHRFooter />
-        </div>
       </div>
     );
   }
