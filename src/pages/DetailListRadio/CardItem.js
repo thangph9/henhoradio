@@ -25,7 +25,7 @@ class CardItem extends PureComponent {
   };
 
   render() {
-    const { item, isCare } = this.props;
+    const { item } = this.props;
     const v = item;
     const { visiableInfo, playing } = this.state;
     // const loadedPersent = loaded ? (loaded * 100) / duration : 0;
@@ -33,7 +33,7 @@ class CardItem extends PureComponent {
     // console.log("Is Care ",isCare);
     let caredStyle = styles['mc-btn-action'];
     let caredConfirm = <Icon type="bars" />;
-    if (isCare) {
+    if (item.isCare) {
       caredStyle = `${styles['mc-btn-action']} ${styles.cared}`;
       caredConfirm = (
         <Popconfirm

@@ -7,6 +7,7 @@ import moment from 'moment';
 // import HHRFooter from '@/layouts/HHRFooter';
 import CardItem from './CardItem';
 import DataNotFound from './DataNotFound';
+import HeaderTip from './HeaderTipContent';
 import styles from './index.less';
 
 const dateFormat = 'DD/MM/YYYY';
@@ -50,7 +51,10 @@ class ListRadio extends PureComponent {
   state = {
     loadingPage: true,
     loading: true,
-    data: [],
+    data: {
+      list: [],
+      pagination: {},
+    },
   };
 
   componentDidMount() {
@@ -62,9 +66,11 @@ class ListRadio extends PureComponent {
       type: 'list/fetchPublicDataAPI',
       payload: query,
     });
+    /*
     dispatch({
       type: 'authentication/getusercare',
     });
+    */
   }
 
   componentWillReceiveProps(nextProps) {
@@ -78,6 +84,7 @@ class ListRadio extends PureComponent {
         loadingPage: false,
       });
     }
+
     this.setState({
       loading: true,
     });
@@ -175,6 +182,7 @@ class ListRadio extends PureComponent {
       location: { query },
       history,
     } = this.props;
+    query.page = v1;
     dispatch({
       type: 'list/fetchPublicDataAPI',
       payload: query,
@@ -186,7 +194,6 @@ class ListRadio extends PureComponent {
   render() {
     const {
       location: { search, query },
-      authentication: { getusercare },
     } = this.props;
     if (search === '') {
       return (
@@ -194,12 +201,13 @@ class ListRadio extends PureComponent {
       );
     }
     const { loadingPage, data, loading } = this.state;
-    const { radio, gender, sort, page, date } = query;
+    const { radio, gender, sort, date } = query;
     const actions = {
       handleChangeCare: this.handleChangeCare,
     };
     // console.log(page, getusercare);
-    const listMember = data;
+    const listMember = data.list;
+    const { pagination } = data;
     if (!loadingPage) {
       return (
         <div className={styles['detail-list-page']} style={{ background: '#f3f5f9' }}>
@@ -257,21 +265,14 @@ class ListRadio extends PureComponent {
               </div>
             </div>
             {loading && <PageLoading />}
+            <div>{listMember.length > 0 && !loading && <HeaderTip data={pagination} />}</div>
             <div className={styles.row}>
               {listMember.length > 0 &&
                 !loading &&
-                listMember.map(v => {
-                  let find = [];
-                  let logs = false;
-                  if (getusercare) {
-                    find = getusercare.filter(k => k.user_id === v.membersid);
-                    logs = find && find.length > 0;
-                  }
-                  return <CardItem key={v.membersid} item={v} isCare={logs} {...actions} />;
-                })}
+                listMember.map(v => <CardItem key={v.membersid} item={v} {...actions} />)}
               {listMember.length === 0 && !loading && <DataNotFound />}
             </div>
-            {page > 1 && (
+            {listMember.length > 0 && !loading && (
               <Pagination
                 style={{
                   padding: '5px',
@@ -281,9 +282,9 @@ class ListRadio extends PureComponent {
                   marginBottom: '20px',
                 }}
                 onChange={(v1, v2) => this.handleChangePagination(v1, v2)}
-                defaultCurrent={Number(page)}
-                pageSize={20}
-                total={data.length}
+                defaultCurrent={pagination.current ? pagination.current : 1}
+                pageSize={pagination.page ? pagination.page : 20}
+                total={pagination.total ? pagination.total : 20}
               />
             )}
           </div>
