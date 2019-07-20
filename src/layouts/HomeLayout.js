@@ -1,16 +1,5 @@
-/* eslint-disable vars-on-top */
-/* eslint-disable no-var */
-/* eslint-disable class-methods-use-this */
-/* eslint-disable lines-between-class-members */
-/* eslint-disable react/sort-comp */
-/* eslint-disable dot-notation */
-/* eslint-disable prefer-template */
-/* eslint-disable import/newline-after-import */
-/* eslint-disable react/jsx-tag-spacing */
-/* eslint-disable react/destructuring-assignment */
-/* eslint-disable no-unused-vars */
 import React from 'react';
-import { Layout } from 'antd';
+// import { Layout } from 'antd';
 import DocumentTitle from 'react-document-title';
 import isEqual from 'lodash/isEqual';
 import memoizeOne from 'memoize-one';
@@ -19,20 +8,19 @@ import { ContainerQuery } from 'react-container-query';
 import classNames from 'classnames';
 import pathToRegexp from 'path-to-regexp';
 import PageLoading from '@/components/PageLoading';
-import { enquireScreen, unenquireScreen } from 'enquire-js';
+import { unenquireScreen } from 'enquire-js';
 import { formatMessage } from 'umi/locale';
-// eslint-disable-next-line no-unused-vars
-import SiderMenu from '@/components/SiderMenu';
-import Authorized from '@/utils/Authorized';
+// import SiderMenu from '@/components/SiderMenu';
+// import Authorized from '@/utils/Authorized';
 import SettingDrawer from '@/components/SettingDrawer';
 import logo from '../assets/logo.svg';
 import HHRFooter from './HHRFooter';
 import Header from './Header';
 import Context from './MenuContext';
-import Exception403 from '../pages/Exception/403';
+// import Exception403 from '../pages/Exception/403';
 import styles from './HomeLayout.less';
 
-const { Content } = Layout;
+// const { Content } = Layout;
 
 // Conversion router to menu.
 function formatter(data, parentAuthority, parentName) {
@@ -92,12 +80,13 @@ const query = {
     minWidth: 1600,
   },
 };
-@connect(({ list, myprops, authentication, user, menu }) => ({
+@connect(({ list, myprops, authentication, user, menu, members }) => ({
   list,
   myprops,
   authentication,
   user,
   getmenu: menu.getmenu,
+  members,
 }))
 class HomeLayout extends React.PureComponent {
   constructor(props) {
@@ -113,28 +102,8 @@ class HomeLayout extends React.PureComponent {
     isMobile: false,
     menuData: this.getMenuData(),
   };
-  componentDidMount() {}
 
-  componentDidUpdate(preProps) {
-    // After changing to phone mode,
-    // if collapsed is true, you need to click twice to display
-    this.breadcrumbNameMap = this.getBreadcrumbNameMap();
-    const { isMobile } = this.state;
-    const { collapsed } = this.props;
-    if (isMobile && !preProps.isMobile && !collapsed) {
-      this.handleMenuCollapse(false);
-    }
-    if (this.props.location.pathname !== preProps.location.pathname) {
-      window.scrollTo(0, 0);
-    }
-  }
-
-  componentWillUnmount() {
-    cancelAnimationFrame(this.renderRef);
-    unenquireScreen(this.enquireHandler);
-  }
-
-  componentWillMount() {
+  componentDidMount() {
     const { dispatch } = this.props;
     dispatch({
       type: 'user/getsetting',
@@ -146,12 +115,36 @@ class HomeLayout extends React.PureComponent {
   }
 
   componentWillReceiveProps(nextProps) {
-    if (this.props.getmenu !== nextProps.getmenu) {
+    const { getmenu } = this.props;
+    if (getmenu !== nextProps.getmenu) {
       this.setState({
         loadedMenu: true,
         menu: nextProps.getmenu,
       });
     }
+  }
+
+  componentDidUpdate(preProps) {
+    // After changing to phone mode,
+    // if collapsed is true, you need to click twice to display
+    this.breadcrumbNameMap = this.getBreadcrumbNameMap();
+    const { isMobile } = this.state;
+    const {
+      collapsed,
+      location: { pathname },
+    } = this.props;
+    const { location } = preProps;
+    if (isMobile && !preProps.isMobile && !collapsed) {
+      this.handleMenuCollapse(false);
+    }
+    if (pathname !== location.pathname) {
+      window.scrollTo(0, 0);
+    }
+  }
+
+  componentWillUnmount() {
+    cancelAnimationFrame(this.renderRef);
+    unenquireScreen(this.enquireHandler);
   }
 
   getContext() {
@@ -235,6 +228,16 @@ class HomeLayout extends React.PureComponent {
     });
   };
 
+  handleClickMenuHeader() {
+    const { myprops, dispatch } = this.props;
+    if (myprops.menu_header === true) {
+      dispatch({
+        type: 'myprops/menu_header',
+        payload: false,
+      });
+    }
+  }
+
   renderSettingDrawer() {
     // Do not render SettingDrawer in production
     // unless it is deployed in preview.pro.ant.design as demo
@@ -243,15 +246,6 @@ class HomeLayout extends React.PureComponent {
       return null;
     }
     return <SettingDrawer />;
-  }
-
-  handleClickMenuHeader() {
-    if (this.props.myprops.menu_header === true) {
-      this.props.dispatch({
-        type: 'myprops/menu_header',
-        payload: false,
-      });
-    }
   }
 
   render() {
@@ -265,16 +259,17 @@ class HomeLayout extends React.PureComponent {
     const { isMobile, menuData, loadedMenu, menu } = this.state;
     // eslint-disable-next-line no-unused-vars
     const isTop = PropsLayout === 'topmenu';
-    const routerConfig = this.matchParamsPath(pathname);
+    // const routerConfig = this.matchParamsPath(pathname);
     if (!loadedMenu) {
       return <PageLoading />;
     }
+
     const layout = (
       <div
         style={{ background: 'rgb(243, 245, 249)', minHeight: '100vh' }}
-        className={
-          styles['default-layout__container___13v1V'] + ' ' + styles['home__defaultLayout___Q6Udu']
-        }
+        className={`${styles['default-layout__container___13v1V']}  ${
+          styles.home__defaultLayout___Q6Udu
+        }`}
       >
         <Header
           getmenu={menu}
@@ -300,6 +295,10 @@ class HomeLayout extends React.PureComponent {
                   className={classNames(params)}
                 >
                   {layout}
+                </div>
+
+                <div>
+                  <HHRFooter />
                 </div>
               </Context.Provider>
             )}
