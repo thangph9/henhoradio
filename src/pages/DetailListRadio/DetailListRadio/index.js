@@ -1,10 +1,10 @@
 import React, { PureComponent } from 'react';
 import { connect } from 'dva';
 import { DatePicker, Select, Pagination, Row, Col } from 'antd';
+
 import { Redirect } from 'react-router-dom';
 import moment from 'moment';
 // import HHRFooter from '@/layouts/HHRFooter';
-
 import CardItem from './CardItem';
 import PageLoading from '@/components/PageLoading';
 import DataNotFound from './DataNotFound';
